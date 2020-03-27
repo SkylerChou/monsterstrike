@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package controller;
+package controllers;
 
-import collisionproject.util.CommandSolver.KeyListener;
-import collisionproject.util.CommandSolver.MouseCommandListener;
+import monsterstrike.util.CommandSolver.KeyListener;
+import monsterstrike.util.CommandSolver.MouseCommandListener;
 import java.awt.Graphics;
 import scenes.Scene;
 

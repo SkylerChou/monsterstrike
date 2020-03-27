@@ -3,19 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package collisionproject.gameobject;
+package monsterstrike.gameobject;
 
-import collisionproject.util.Global;
-import interfaceSkills.Anger;
-import interfaceSkills.CriticalAttack;
-import interfaceSkills.DecreaseHalfAttack;
-import interfaceSkills.Heal;
-import interfaceSkills.NormalAttack;
-import interfaceSkills.Skills;
+import controllers.IRC;
+import monsterstrike.util.Global;
+import interfaceskills.*;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import javax.imageio.ImageIO;
 
 public class Marble extends GameObject {
 
@@ -24,6 +18,7 @@ public class Marble extends GameObject {
     private Vector normal;
     private Vector tangent;
     private int mass;
+    private float theta;
     private float v;
     private float currentV;
     private float a;
@@ -38,9 +33,11 @@ public class Marble extends GameObject {
 
     public Marble(String path, String name, int x, int y, int[] info, int attribute) {
         super(x, y, info[0], info[1], info[2]);
+        this.img = IRC.getInstance().tryGetImage(path);
         this.mass = info[3];
         this.v = info[4];
         this.currentV = this.v;
+        this.theta = 0;
         this.a = 1;
         this.fiction = 5;
         this.go = new Vector(0, 0);
@@ -51,11 +48,6 @@ public class Marble extends GameObject {
         this.attribute = attribute;
         this.skills = new Skills[5];
         this.setSkills();
-        try {
-            img = ImageIO.read(getClass().getResource(path));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -73,10 +65,6 @@ public class Marble extends GameObject {
             this.isCollide = true;
         }
         this.offset(go.getX() * this.currentV, go.getY() * this.currentV);
-    }
-
-    public float getV() {
-        return this.currentV;
     }
 
     public void reset() {
@@ -142,14 +130,11 @@ public class Marble extends GameObject {
     public void setVectors(Marble other) {
         if (this.go.getValue() != 0) {
             this.normal = new Vector(other.getCenterX() - this.getCenterX(), other.getCenterY() - this.getCenterY());
-            float theta = (float) Math.acos(dot(this.go, this.normal) / (this.go.getValue() * this.normal.getValue()));
-            System.out.println(Math.toDegrees(theta));
+            this.theta = (float) Math.acos(dot(this.go, this.normal) / (this.go.getValue() * this.normal.getValue()));
             float norValue = (float) (this.go.getValue() * Math.cos(theta));
-            float tanValue = (float) (this.go.getValue() * Math.sin(theta));
             Vector nor = new Vector(this.normal.getUnitX() * norValue, this.normal.getUnitY() * norValue);
             this.normal = nor;
-            Vector tan = new Vector(nor.getTanX(), nor.getTanY());
-            this.tangent = new Vector(tan.getUnitX() * tanValue, tan.getUnitY() * tanValue);
+            this.tangent = new Vector(this.go.getX() - this.normal.getX(), this.go.getY() - this.normal.getY());
         }
     }
 
@@ -184,6 +169,18 @@ public class Marble extends GameObject {
 
     public void setAtk(int atk) {
         this.atk = atk;
+    }
+
+    public float getCurrentV() {
+        return this.currentV;
+    }
+
+    public float getV() {
+        return this.v;
+    }
+
+    public void setCurrentV(float v) {
+        this.currentV = v;
     }
 
     public float getMass() {
@@ -235,5 +232,9 @@ public class Marble extends GameObject {
     public void useSkill(Marble target) {
         int r = (int) (Math.random() * 2);
         this.skills[r].useSkill(this, target);
+    }
+    
+    public void start(){
+        
     }
 }

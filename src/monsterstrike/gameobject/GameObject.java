@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package collisionproject.gameobject;
+package monsterstrike.gameobject;
 
-import collisionproject.graph.*;
-import collisionproject.util.Global;
+import monsterstrike.graph.*;
+import monsterstrike.util.Global;
 import java.awt.Color;
 import java.awt.Graphics;
 
@@ -27,7 +27,7 @@ public abstract class GameObject {
     public float getCenterY() {
         return this.collider.centerY();
     }
-    
+
     public float getX() {
         return this.rect.left();
     }
@@ -38,6 +38,14 @@ public abstract class GameObject {
 
     public float getR() {
         return this.collider.getR();
+    }
+
+    public float getWidth() {
+        return this.rect.width();
+    }
+
+    public float getHeight() {
+        return this.rect.height();
     }
 
     public boolean isCollision(GameObject obj) {
@@ -61,14 +69,14 @@ public abstract class GameObject {
         this.rect.offset(0, y - this.rect.centerY());
         this.collider.offset(0, y - this.collider.centerY());
     }
-    
-    public void paint(Graphics g){
+
+    public void paint(Graphics g) {
         paintComponent(g);
-        if(Global.IS_DEBUG){
+        if (Global.IS_DEBUG) {
             g.setColor(Color.RED);
-            g.drawRect((int)this.rect.left(), (int)this.rect.top(), (int)this.rect.width(), (int)this.rect.height());
+            g.drawRect((int) this.rect.left(), (int) this.rect.top(), (int) this.rect.width(), (int) this.rect.height());
             g.setColor(Color.BLUE);
-            g.drawOval((int)this.collider.getX(), (int)this.collider.getY(), (int)(2*this.collider.getR()), (int)(2*this.collider.getR()));
+            g.drawOval((int) this.collider.getX(), (int) this.collider.getY(), (int) (2 * this.collider.getR()), (int) (2 * this.collider.getR()));
             g.setColor(Color.BLACK);
         }
     }
@@ -76,5 +84,6 @@ public abstract class GameObject {
     public abstract void paintComponent(Graphics g);
 
     public abstract void update();
+
 
 }

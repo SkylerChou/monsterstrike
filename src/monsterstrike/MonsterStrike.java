@@ -3,20 +3,20 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package collisionproject;
+package monsterstrike;
 
-import collisionproject.util.CommandSolver;
-import collisionproject.util.Global;
+import monsterstrike.util.CommandSolver;
+import monsterstrike.util.Global;
 import java.awt.event.KeyEvent;
 import javax.swing.JFrame;
 
-public class CollisionProject {
+public class MonsterStrike {
 
     public static void main(String[] args) {
 
         JFrame f = new JFrame();
         GameJPanel jp = new GameJPanel();
-        f.setTitle("碰撞");
+        f.setTitle("Monster Strike");
         f.setSize(Global.FRAME_X, Global.FRAME_Y);
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         f.add(jp);
@@ -24,10 +24,10 @@ public class CollisionProject {
 
         CommandSolver cs = new CommandSolver.Builder(jp, Global.MILLISEC_PER_UPDATE,
                 new int[][]{
-                    {KeyEvent.VK_W, Global.UP},
-                    {KeyEvent.VK_A, Global.LEFT},
-                    {KeyEvent.VK_S, Global.DOWN},
-                    {KeyEvent.VK_D, Global.RIGHT}
+                    {KeyEvent.VK_UP, Global.UP},
+                    {KeyEvent.VK_LEFT, Global.LEFT},
+                    {KeyEvent.VK_DOWN, Global.DOWN},
+                    {KeyEvent.VK_RIGHT, Global.RIGHT}
                 }).enableMouseTrack(jp).enableKeyboardTrack(jp)
                 .gen();
         cs.start();

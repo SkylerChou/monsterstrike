@@ -5,9 +5,9 @@
  */
 package scenes;
 
-import collisionproject.util.CommandSolver.KeyListener;
-import collisionproject.util.CommandSolver.MouseCommandListener;
-import controller.SceneController;
+import monsterstrike.util.CommandSolver.KeyListener;
+import monsterstrike.util.CommandSolver.MouseCommandListener;
+import controllers.SceneController;
 import java.awt.Graphics;
 
 public abstract class Scene {

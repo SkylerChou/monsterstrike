@@ -3,14 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package interfaceSkills;
+package interfaceskills;
 
-import collisionproject.gameobject.Marble;
+import monsterstrike.gameobject.Marble;
 
-/**
- *
- * @author kim19
- */
 public class Anger implements Skills{
 
     @Override

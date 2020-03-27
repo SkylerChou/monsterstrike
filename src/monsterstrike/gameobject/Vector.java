@@ -1,4 +1,4 @@
-package collisionproject.gameobject;
+package monsterstrike.gameobject;
 
 public class Vector {
 
