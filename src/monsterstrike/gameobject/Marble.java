@@ -10,14 +10,19 @@ import monsterstrike.util.Global;
 import interfaceskills.*;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import monsterstrike.util.Delay;
 
 public class Marble extends GameObject {
 
-    private BufferedImage img;
+    private BufferedImage img1;
+    private BufferedImage img2;
+    private BufferedImage currentImg;
     private Vector go;
     private Vector normal;
     private Vector tangent;
+    private Delay delay;
     private int mass;
+    private int count;
     private float theta;
     private float v;
     private float currentV;
@@ -31,9 +36,14 @@ public class Marble extends GameObject {
     private int attribute;
     private Skills[] skills;
 
-    public Marble(String path, String name, int x, int y, int[] info, int attribute) {
+    public Marble(String[] path, String name, int x, int y, int[] info, int attribute) {
         super(x, y, info[0], info[1], info[2]);
-        this.img = IRC.getInstance().tryGetImage(path);
+        this.img1 = IRC.getInstance().tryGetImage(path[0]);
+        this.img2 = IRC.getInstance().tryGetImage(path[1]);
+        this.currentImg = this.img1;
+        this.delay = new Delay(15);
+        this.delay.start();
+        this.count = 0;
         this.mass = info[3];
         this.v = info[4];
         this.currentV = this.v;
@@ -52,6 +62,18 @@ public class Marble extends GameObject {
 
     @Override
     public void update() {
+        if (this.delay.isTrig()) {
+            this.count++;
+            if (this.count % 2 != 0) {
+                this.currentImg = this.img2;
+            } else {
+                this.currentImg = this.img1;
+            }
+        }
+        move();
+    }
+    
+    public void move(){
         if (this.isCollide) {
             this.currentV -= 0.1 * fiction;
             if (this.currentV < 0) {
@@ -209,7 +231,7 @@ public class Marble extends GameObject {
 
     @Override
     public void paintComponent(Graphics g) {
-        g.drawImage(img, (int) this.getX(), (int) this.getY(), null);
+        g.drawImage(currentImg, (int) this.getX(), (int) this.getY(), null);
         g.drawOval((int) (this.getCenterX() - this.getR()),
                 (int) (this.getCenterY() - this.getR()),
                 (int) (2 * this.getR()), (int) (2 * this.getR()));

@@ -37,16 +37,13 @@ public class SpecialEffect extends GameObject {
     }
 
     @Override
-    public void update() {
-        
+    public void update() {        
         if (this.delay.isTrig()) {
             this.count++;
             if (this.count % 2 != 0) {
                 this.currentImg = this.img2;
-                System.out.println("img2");
             } else {
                 this.currentImg = this.img1;
-                System.out.println("img1");
             }
         }
     }
