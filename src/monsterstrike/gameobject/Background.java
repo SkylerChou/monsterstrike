@@ -8,24 +8,22 @@ package monsterstrike.gameobject;
 import controllers.IRC;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import monsterstrike.util.Global;
 
-public class Background {
+public class Background extends SenceObject{
 
-    private int x;
-    private int y;
-    private int width;
-    private int height;
     private BufferedImage img;
 
     public Background(String path, int x, int y, int width, int height) {
+        super(x, y, Global.SCREAN_X, Global.SCREAN_Y);
         this.img = IRC.getInstance().tryGetImage(path);
-        this.x = x;
-        this.y = y;
-        this.width = width;
-        this.height = height;
     }
 
+    @Override
+     public void update() {}
+     
+    @Override
     public void paint(Graphics g) {
-        g.drawImage(img, x, y, width, height, null);
+        g.drawImage(img, (int)this.rect.centerX(), (int)this.rect.centerY(), Global.SCREAN_X, Global.SCREAN_Y, null);
     }
 }
