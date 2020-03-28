@@ -35,7 +35,7 @@ public class MainScene extends Scene {
 
     @Override
     public void sceneBegin() {
-        this.background = new Background(ImgInfo.BACKGROUND, 0, 0, Global.SCREAN_X, Global.SCREAN_Y);
+        this.background = new Background(ImgInfo.BACKGROUND, 0, 0, Global.SCREEN_X, Global.SCREEN_Y);
         this.marbles = new ArrayList<>();
         this.shine = new ArrayList<>();
         this.marbles.add(new Marble(ImgInfo.SWEETPOTATO, "番薯", POS_AX, POS_AY, ImgInfo.SWEETPOTATO_INFO, 0));//冰
@@ -64,7 +64,6 @@ public class MainScene extends Scene {
             for (int i = 0; i < this.marbles.size(); i++) {
                 for (int j = i + 1; j < this.marbles.size(); j++) {
                     if (this.marbles.get(i).isCollision(this.marbles.get(j))) {
-                        this.marbles.get(i).setIsCollide(true);
                         this.marbles.get(i).useSkill(this.marbles.get(j));
                         this.marbles.set(j, this.marbles.get(i).strike(this.marbles.get(j)));
                     }
@@ -74,24 +73,20 @@ public class MainScene extends Scene {
         if (checkAllStop()) {
             if (this.count != 0) {
                 this.currentIdx = this.count % 3;
-                for (int i = 0; i < this.marbles.size(); i++) {
-                    this.marbles.get(i).reset();
-                }
+//                for (int i = 0; i < this.marbles.size(); i++) {
+//                    this.marbles.get(i).reset();
+//                }
             }
         }
     }
 
     private boolean checkAllStop() {
-        int j = 0;
         for (int i = 0; i < this.marbles.size(); i++) {
-            if (this.marbles.get(i).getCurrentV() == 0 || this.marbles.get(i).getGoVec().getValue() == 0) {
-                j++;
+            if (this.marbles.get(i).getGoVec().getValue() != 0) {
+                return false;
             }
         }
-        if (j == 3) {
-            return true;
-        }
-        return false;
+        return true;
     }
 
     @Override
@@ -145,7 +140,11 @@ public class MainScene extends Scene {
                 } else {
                     arrow.setDegree((float) Math.acos(vector.getX() / vector.getValue()));
                 }
-                arrow.setResizeMag(vector.getValue() / arrow.getWidth());
+                float value = vector.getValue();
+                if(vector.getValue() > 10*marbles.get(currentIdx).getR()){
+                    value = 10*marbles.get(currentIdx).getR();
+                }
+                arrow.setResizeMag(value / arrow.getWidth());
                 arrow.setShow(true);
             }
             if (checkAllStop() && state == CommandSolver.MouseState.RELEASED) {
@@ -154,7 +153,7 @@ public class MainScene extends Scene {
                 Vector vector = new Vector(this.startX - this.endX, this.startY - this.endY);
                 arrow.setDegree((float) Math.acos(vector.getX() / vector.getValue()));
                 arrow.setResizeMag(vector.getValue() / arrow.getWidth());
-                marbles.get(currentIdx).setGo(vector.getUnitVec());
+                marbles.get(currentIdx).setGo(vector.multiplyScalar(0.1f));
                 count++;
                 arrow.setShow(false);
             }

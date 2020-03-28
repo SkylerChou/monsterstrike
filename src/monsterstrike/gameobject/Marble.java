@@ -17,19 +17,15 @@ public class Marble extends GameObject {
     private BufferedImage img1;
     private BufferedImage img2;
     private BufferedImage currentImg;
-    private Vector go;
-    private Vector normal;
-    private Vector tangent;
-    private Delay delay;
-    private int mass;
-    private int count;
-    private float theta;
-    private float v;
-    private float currentV;
-    private float a;
-    private float fiction;
-    private Marble other;
+    private Vector goVec;
+    private Vector norVec;
+    private Vector tanVec;
+    private float mass;
     private boolean isCollide;
+    private Marble other;
+    private Delay delay;
+    private int count;
+
     private String name;
     private int hp = 100;
     private int atk = 20;
@@ -41,19 +37,13 @@ public class Marble extends GameObject {
         this.img1 = IRC.getInstance().tryGetImage(path[0]);
         this.img2 = IRC.getInstance().tryGetImage(path[1]);
         this.currentImg = this.img1;
-        this.delay = new Delay(15);
-        this.delay.start();
-        this.count = 0;
         this.mass = info[3];
-        this.v = info[4];
-        this.currentV = this.v;
-        this.theta = 0;
-        this.a = 1;
-        this.fiction = 5;
-        this.go = new Vector(0, 0);
-        this.normal = new Vector(0, 0);
-        this.tangent = new Vector(0, 0);
+        this.goVec = new Vector(0, 0);
+        this.norVec = new Vector(0, 0);
+        this.tanVec = new Vector(0, 0);
         this.isCollide = false;
+        this.delay = new Delay(20);
+        this.count = 0;
         this.name = name;
         this.attribute = attribute;
         this.skills = new Skills[5];
@@ -70,49 +60,42 @@ public class Marble extends GameObject {
                 this.currentImg = this.img1;
             }
         }
+        isBound();
         move();
     }
-    
-    public void move(){
-        if (this.isCollide) {
-            this.currentV -= 0.1 * fiction;
-            if (this.currentV < 0) {
-                this.currentV = 0;
-            }
-        } else if (!this.isCollide && this.go.getValue() != 0) {
-            this.currentV += 0.2 * this.a;
-        }
 
-        if (this.isBound()) {
-            this.isCollide = true;
-        }
-        this.offset(go.getX() * this.currentV, go.getY() * this.currentV);
-    }
-
-    public void reset() {
+    public void move() {
         this.isCollide = false;
-        this.go = new Vector(0, 0);
-        this.normal = new Vector(0, 0);
-        this.tangent = new Vector(0, 0);
-        this.currentV = this.v;
+        if (this.goVec.getValue() > 0) {
+            this.goVec.setValue(this.goVec.getValue() - 0.3f);
+            if (this.goVec.getValue() <= 0.01) {
+                this.goVec.setValue(0);
+            }
+        }
+        this.offset(this.goVec.getX(), this.goVec.getY());
     }
+
 
     public boolean isBound() {
-        if (this.getCenterX() - this.getR() <= 0 || this.getCenterX() + this.getR() >= Global.SCREAN_X
-                || this.getCenterY() - this.getR() <= 0 || this.getCenterY() + this.getR() >= Global.SCREAN_Y) {
+        if (this.getCenterX() - this.getR() <= 0
+                || this.getCenterX() + this.getR() >= Global.SCREEN_X
+                || this.getCenterY() - this.getR() <= 0
+                || this.getCenterY() + this.getR() >= Global.SCREEN_Y) {
             if (this.getCenterX() - this.getR() <= 0) {
                 this.setCenterX(this.getR());
-                go.setX(-go.getX());
-            } else if (this.getCenterX() + this.getR() >= Global.SCREAN_X) {
-                this.setCenterX(Global.SCREAN_X - this.getR());
-                go.setX(-go.getX());
+                this.goVec.setX(-this.goVec.getX());
+            }
+            if (this.getCenterX() + this.getR() >= Global.SCREEN_X) {
+                this.setCenterX(Global.SCREEN_X - this.getR());
+                this.goVec.setX(-this.goVec.getX());
             }
             if (this.getCenterY() - this.getR() <= 0) {
                 this.setCenterY(this.getR());
-                go.setY(-go.getY());
-            } else if (this.getCenterY() + this.getR() >= Global.SCREAN_Y) {
-                this.setCenterY(Global.SCREAN_Y - this.getR());
-                go.setY(-go.getY());
+                this.goVec.setY(-this.goVec.getY());
+            }
+            if (this.getCenterY() + this.getR() >= Global.SCREEN_Y) {
+                this.setCenterY(Global.SCREEN_Y - this.getR());
+                this.goVec.setY(-this.goVec.getY());
             }
             return true;
         }
@@ -120,53 +103,37 @@ public class Marble extends GameObject {
     }
 
     public Marble strike(Marble other) {
+        this.isCollide = true;
         this.other = other;
-        if (this.distWith(other) < this.getR() + other.getR()) {
-            Vector v1 = new Vector(this.getCenterX() - other.getCenterX(), this.getCenterY() - other.getCenterY());
-            Vector v2 = v1.resizeVec(this.getR() + other.getR());
-            float moveValue = (v2.getValue() - v1.getValue()) / 2;
-            this.setCenterX(this.getCenterX() + moveValue * v1.getUnitX());
-            this.setCenterY(this.getCenterY() + moveValue * v1.getUnitY());
-            this.other.setCenterX(this.other.getCenterX() - moveValue * v1.getUnitX());
-            this.other.setCenterY(this.other.getCenterY() - moveValue * v1.getUnitY());
+
+        Vector nor = new Vector(this.other.getCenterX() - this.getCenterX(),
+                this.other.getCenterY() - this.getCenterY());
+        updateDir(nor);
+        if (nor.getValue() < this.getR() + this.other.getR()) {
+            this.move();
+            this.other.move();
         }
-        this.setVectors(this.other);
-        this.other.setVectors(this);
-        float aX = this.normal.getX();
-        float aY = this.normal.getY();
-        float bX = this.other.normal.getX();
-        float bY = this.other.normal.getY();
-
-        float aXn = ((this.getMass() - this.other.getMass()) * aX + 2 * this.other.getMass() * bX) / (this.getMass() + this.other.getMass());
-        float aYn = ((this.getMass() - this.other.getMass()) * aY + 2 * this.other.getMass() * bY) / (this.getMass() + this.other.getMass());
-        float bXn = ((this.other.getMass() - this.getMass()) * bX + 2 * this.getMass() * aX) / (this.other.getMass() + this.getMass());
-        float bYn = ((this.other.getMass() - this.getMass()) * bY + 2 * this.getMass() * aY) / (this.other.getMass() + this.getMass());
-
-        this.setGo(new Vector(aXn + this.tangent.getX(),
-                aYn + this.tangent.getY()));
-        this.other.setGo(new Vector(bXn + this.other.tangent.getX(),
-                bYn + this.other.tangent.getY()));
         return this.other;
     }
 
-    public void setVectors(Marble other) {
-        if (this.go.getValue() != 0) {
-            this.normal = new Vector(other.getCenterX() - this.getCenterX(), other.getCenterY() - this.getCenterY());
-            this.theta = (float) Math.acos(dot(this.go, this.normal) / (this.go.getValue() * this.normal.getValue()));
-            float norValue = (float) (this.go.getValue() * Math.cos(theta));
-            Vector nor = new Vector(this.normal.getUnitX() * norValue, this.normal.getUnitY() * norValue);
-            this.normal = nor;
-            this.tangent = new Vector(this.go.getX() - this.normal.getX(), this.go.getY() - this.normal.getY());
-        }
-    }
+    private void updateDir(Vector nor) {
+        this.norVec = this.goVec.getCosProjectionVec(nor);
+        this.tanVec = this.goVec.getSinProjectionVec(nor);
 
-    private float distWith(Marble other) {
-        return (float) Math.sqrt(Math.pow(this.getCenterX() - other.getCenterX(), 2)
-                + Math.pow(this.getCenterY() - other.getCenterY(), 2));
-    }
+        this.other.norVec = this.other.goVec.getCosProjectionVec(nor.multiplyScalar(-1));
+        this.other.tanVec = this.other.goVec.getSinProjectionVec(nor.multiplyScalar(-1));
 
-    private float dot(Vector v1, Vector v2) {
-        return v1.getX() * v2.getX() + v1.getY() * v2.getY();
+        float m11 = (this.mass - this.other.mass) / (this.mass + this.other.mass);
+        float m12 = (2 * this.other.mass) / (this.mass + this.other.mass);
+        float m21 = (2 * this.mass) / (this.mass + this.other.mass);
+        float m22 = (this.other.mass - this.mass) / (this.mass + this.other.mass);
+        Vector newNor1 = this.norVec.multiplyScalar(m11).plus(this.other.norVec.multiplyScalar(m12));
+        Vector newNor2 = this.norVec.multiplyScalar(m21).plus(this.other.norVec.multiplyScalar(m22));
+
+        this.norVec = newNor1;
+        this.goVec = this.norVec.plus(this.tanVec);
+        this.other.norVec = newNor2;
+        this.other.goVec = this.other.norVec.plus(this.other.tanVec);
     }
 
     public String getName() {
@@ -193,36 +160,24 @@ public class Marble extends GameObject {
         this.atk = atk;
     }
 
-    public float getCurrentV() {
-        return this.currentV;
-    }
-
-    public float getV() {
-        return this.v;
-    }
-
-    public void setCurrentV(float v) {
-        this.currentV = v;
-    }
-
     public float getMass() {
         return this.mass;
     }
 
     public Vector getNorVec() {
-        return this.normal;
+        return this.norVec;
     }
 
     public Vector getTanVec() {
-        return this.tangent;
+        return this.tanVec;
     }
 
     public Vector getGoVec() {
-        return this.go;
+        return this.goVec;
     }
 
     public void setGo(Vector go) {
-        this.go = go;
+        this.goVec = go;
     }
 
     public void setIsCollide(boolean isCollide) {
@@ -254,9 +209,5 @@ public class Marble extends GameObject {
     public void useSkill(Marble target) {
         int r = (int) (Math.random() * 2);
         this.skills[r].useSkill(this, target);
-    }
-    
-    public void start(){
-        
     }
 }

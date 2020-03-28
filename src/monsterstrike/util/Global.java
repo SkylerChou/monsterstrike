@@ -12,8 +12,8 @@ public class Global {
     //視窗大小
     public static final int FRAME_X = 800;
     public static final int FRAME_Y = 600;
-    public static final int SCREAN_X = FRAME_X - 8 - 8;
-    public static final int SCREAN_Y = FRAME_Y - 31 - 8;
+    public static final int SCREEN_X = FRAME_X - 8 - 8;
+    public static final int SCREEN_Y = FRAME_Y - 31 - 8;
 
     //資料刷新時間
     public static final int UPDATE_TIMES_PER_SEC = 120; //每秒更新60次
