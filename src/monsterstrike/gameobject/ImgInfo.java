@@ -28,9 +28,9 @@ public class ImgInfo {
     public static final int[] ARROW_INFO = {200, 200, 100};
     //Menu
     public static final String MENU = "/resources/menu.png";
-    public static final int[] MENU_INFO = {Global.SCREAN_X, Global.SCREAN_Y};//img_width, img_height
+    public static final int[] MENU_INFO = {Global.SCREEN_X, Global.SCREEN_Y};//img_width, img_height
     //Menu 按鈕
-    public static final String[] BLUESTART = {"/resources/bluestart1.png", "/resources/bluestart2.png"};
+    public static final String[] EXIT = {"/resources/exit1.png", "/resources/exit2.png"};
     public static final String[] HOWTOPLAY = {"/resources/howtoplay1.png", "/resources/howtoplay2.png"};
     public static final String[] MULTIPLAYER = {"/resources/multiplayer1.png", "/resources/multiplayer2.png"};
     public static final String[] SINGLE = {"/resources/single1.png", "/resources/single2.png"};

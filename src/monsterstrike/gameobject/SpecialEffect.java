@@ -25,7 +25,7 @@ public class SpecialEffect extends GameObject {
 
         this.delay = new Delay(25);
         this.delay.start();
-        this.currentImg = img1;
+        this.currentImg =this.img1;
         this.count = 0;
     }
 
@@ -37,7 +37,8 @@ public class SpecialEffect extends GameObject {
     }
 
     @Override
-    public void update() {        
+    public void update() {
+        
         if (this.delay.isTrig()) {
             this.count++;
             if (this.count % 2 != 0) {

@@ -25,6 +25,7 @@ public class MainScene extends Scene {
     private ArrayList<Marble> marbles;
     private ArrayList<SpecialEffect> shine;
     private Arrow arrow;
+    private boolean isShine;
     private int currentIdx;
     private Delay delay;
     private int count;
@@ -38,17 +39,19 @@ public class MainScene extends Scene {
         this.background = new Background(ImgInfo.BACKGROUND, 0, 0, Global.SCREEN_X, Global.SCREEN_Y);
         this.marbles = new ArrayList<>();
         this.shine = new ArrayList<>();
-        this.marbles.add(new Marble(ImgInfo.SWEETPOTATO, "番薯", POS_AX, POS_AY, ImgInfo.SWEETPOTATO_INFO, 0));//冰
-        this.marbles.add(new Marble(ImgInfo.DEVIL, "小惡魔", POS_BX, POS_BY, ImgInfo.DEVIL_INFO, 1));//火
-        this.marbles.add(new Marble(ImgInfo.RICEBALL, "飯糰", POS_CX, POS_CY, ImgInfo.RICEBALL_INFO, 2));//草
+        this.marbles.add(new Marble(ImgInfo.GREENGENIE, "綠水靈", POS_AX, POS_AY, ImgInfo.GREENGENIE_INFO, 0));//冰
+        this.marbles.add(new Marble(ImgInfo.MUSHROOM, "菇菇寶貝", POS_BX, POS_BY, ImgInfo.MUSHROOM_INFO, 1));//火
+        this.marbles.add(new Marble(ImgInfo.PIG, "肥肥", POS_CX, POS_CY, ImgInfo.PIG_INFO, 2));//草
         this.shine.add(new SpecialEffect(ImgInfo.SHINE_ICE, (int) this.marbles.get(currentIdx).getCenterX(), (int) this.marbles.get(currentIdx).getCenterX(), ImgInfo.SHINE_INFO));
         this.shine.add(new SpecialEffect(ImgInfo.SHINE_FIRE, (int) this.marbles.get(currentIdx).getCenterX(), (int) this.marbles.get(currentIdx).getCenterX(), ImgInfo.SHINE_INFO));
         this.shine.add(new SpecialEffect(ImgInfo.SHINE_GRASS, (int) this.marbles.get(currentIdx).getCenterX(), (int) this.marbles.get(currentIdx).getCenterX(), ImgInfo.SHINE_INFO));
         this.arrow = new Arrow(ImgInfo.ARROW, 0, 0, ImgInfo.ARROW_INFO);
+
         this.currentIdx = 0;
         this.delay = new Delay(5);
         this.delay.start();
         this.count = 0;
+        this.isShine = true;
     }
 
     @Override
@@ -64,6 +67,7 @@ public class MainScene extends Scene {
             for (int i = 0; i < this.marbles.size(); i++) {
                 for (int j = i + 1; j < this.marbles.size(); j++) {
                     if (this.marbles.get(i).isCollision(this.marbles.get(j))) {
+                        this.marbles.get(i).setIsCollide(true);
                         this.marbles.get(i).useSkill(this.marbles.get(j));
                         this.marbles.set(j, this.marbles.get(i).strike(this.marbles.get(j)));
                     }
@@ -73,20 +77,26 @@ public class MainScene extends Scene {
         if (checkAllStop()) {
             if (this.count != 0) {
                 this.currentIdx = this.count % 3;
-//                for (int i = 0; i < this.marbles.size(); i++) {
-//                    this.marbles.get(i).reset();
-//                }
+                for (int i = 0; i < this.marbles.size(); i++) {
+                    this.marbles.get(i).reset();
+                }
             }
+            this.isShine = true;
+            
         }
     }
 
     private boolean checkAllStop() {
+        int j = 0;
         for (int i = 0; i < this.marbles.size(); i++) {
-            if (this.marbles.get(i).getGoVec().getValue() != 0) {
-                return false;
+            if (this.marbles.get(i).getCurrentV() == 0 || this.marbles.get(i).getGoVec().getValue() == 0) {
+                j++;
             }
         }
-        return true;
+        if (j == 3) {
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -100,7 +110,9 @@ public class MainScene extends Scene {
         if (this.arrow.getShow()) {
             this.arrow.paint(g);
         }
-        this.shine.get(currentIdx).paint(g);
+        if (isShine) {
+            this.shine.get(currentIdx).paint(g);
+        }
         for (int i = 0; i < this.marbles.size(); i++) {
             this.marbles.get(i).paint(g);
         }
@@ -129,22 +141,19 @@ public class MainScene extends Scene {
             if (checkAllStop() && state == CommandSolver.MouseState.PRESSED) {
                 this.startX = e.getX();
                 this.startY = e.getY();
-            }
 
-            if (checkAllStop() && state == CommandSolver.MouseState.DRAGGED) {
                 arrow.setCenterX(marbles.get(currentIdx).getCenterX());
                 arrow.setCenterY(marbles.get(currentIdx).getCenterY());
+
+            }
+            if (checkAllStop() && state == CommandSolver.MouseState.DRAGGED) {
                 Vector vector = new Vector(this.startX - e.getX(), this.startY - e.getY());
                 if (this.startY - e.getY() > 0) {
                     arrow.setDegree((float) -Math.acos(vector.getX() / vector.getValue()));
                 } else {
                     arrow.setDegree((float) Math.acos(vector.getX() / vector.getValue()));
                 }
-                float value = vector.getValue();
-                if(vector.getValue() > 10*marbles.get(currentIdx).getR()){
-                    value = 10*marbles.get(currentIdx).getR();
-                }
-                arrow.setResizeMag(value / arrow.getWidth());
+                arrow.setResizeMag(vector.getValue() / arrow.getWidth());
                 arrow.setShow(true);
             }
             if (checkAllStop() && state == CommandSolver.MouseState.RELEASED) {
@@ -153,7 +162,7 @@ public class MainScene extends Scene {
                 Vector vector = new Vector(this.startX - this.endX, this.startY - this.endY);
                 arrow.setDegree((float) Math.acos(vector.getX() / vector.getValue()));
                 arrow.setResizeMag(vector.getValue() / arrow.getWidth());
-                marbles.get(currentIdx).setGo(vector.multiplyScalar(0.1f));
+                marbles.get(currentIdx).setGo(vector.getUnitVec());
                 count++;
                 arrow.setShow(false);
             }

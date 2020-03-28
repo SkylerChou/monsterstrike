@@ -4,7 +4,6 @@
  * and open the template in the editor.
  */
 package monsterstrike.gameobject;
-
 import controllers.IRC;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -24,12 +23,12 @@ public class Arrow extends GameObject {
         this.isShow = false;
         this.resizeMag = 1;
     }
-    
+
     public void setShow(boolean isShow) {
         this.isShow = isShow;
     }
-
-    public boolean getShow() {
+    
+    public boolean getShow(){
         return this.isShow;
     }
 
@@ -40,8 +39,8 @@ public class Arrow extends GameObject {
     public void setResizeMag(float resizeMag) {
         this.resizeMag = resizeMag;
     }
-
-    public void reset() {
+    
+    public void reset(){
         this.resizeMag = 1;
     }
 
@@ -55,11 +54,12 @@ public class Arrow extends GameObject {
         Graphics2D g2d = (Graphics2D) g;
         AffineTransform oldForm = g2d.getTransform();
         g2d.rotate(-this.rad, this.getCenterX(), this.getCenterY());
+//        g2d.scale(this.resizeMag, this.resizeMag);
         g2d.drawImage(img, (int) (this.getCenterX()-0.5*this.resizeMag*this.getWidth()), 
-                (int) (this.getCenterY()-0.5*this.getHeight()),
-                (int) (this.resizeMag*this.getWidth()),(int)(this.getHeight()), null);
+                (int) (this.getCenterY()-0.5*this.resizeMag*this.getHeight()),
+                (int) (this.resizeMag*this.getWidth()),(int)(this.resizeMag*this.getHeight()), null);
         g2d.setTransform(oldForm);
-
+        
     }
 
 }

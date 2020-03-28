@@ -15,7 +15,7 @@ public class Background extends SenceObject{
     private BufferedImage img;
 
     public Background(String path, int x, int y, int width, int height) {
-        super(x, y, Global.SCREAN_X, Global.SCREAN_Y);
+        super(x, y, Global.SCREEN_X, Global.SCREEN_Y);
         this.img = IRC.getInstance().tryGetImage(path);
     }
 
@@ -24,6 +24,6 @@ public class Background extends SenceObject{
      
     @Override
     public void paint(Graphics g) {
-        g.drawImage(img, (int)this.rect.centerX(), (int)this.rect.centerY(), Global.SCREAN_X, Global.SCREAN_Y, null);
+        g.drawImage(img, (int)this.rect.centerX(), (int)this.rect.centerY(), Global.SCREEN_X, Global.SCREEN_Y, null);
     }
 }

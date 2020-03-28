@@ -57,7 +57,7 @@ public class Dino extends SenceObject {
 
     @Override
     public void paint(Graphics g) {
-        g.drawImage(img, Global.SCREAN_X / 2 - 150, Global.SCREAN_Y / 2 - 35, Global.SCREAN_X / 2 - 150 + 48, Global.SCREAN_Y / 2 - 35 + 48,
+        g.drawImage(img, Global.SCREEN_X / 2 - 150, Global.SCREEN_Y / 2 - 35, Global.SCREEN_X / 2 - 150 + 48, Global.SCREEN_Y / 2 - 35 + 48,
                 24 * this.currentStep, 0,
                 24 * this.currentStep + 24,
                 24, null);
