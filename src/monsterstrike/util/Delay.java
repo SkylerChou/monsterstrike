@@ -12,7 +12,7 @@ public class Delay {
     
     public Delay(int delayFrame){
         this.delayFrame = delayFrame;
-        this.counter = 0;
+        this.counter = delayFrame;
         this.isPause = true;
     }
     

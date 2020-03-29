@@ -6,42 +6,37 @@
 package scenes;
 
 import monsterstrike.graph.Vector;
-import monsterstrike.gameobject.*;
-import monsterstrike.util.*;
 import controllers.SceneController;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import monsterstrike.gameobject.*;
+import monsterstrike.util.*;
 
-public class MainScene extends Scene {
-
-    public static final int POS_AX = 100;
-    public static final int POS_AY = 100;
-    public static final int POS_BX = Global.FRAME_X / 2;
-    public static final int POS_BY = Global.FRAME_Y - 100;
-    public static final int POS_CX = Global.FRAME_X - 100;
-    public static final int POS_CY = 100;
+public class Stage1Scene extends Scene {
 
     private Background background;
     private ArrayList<Marble> marbles;
+    private ArrayList<Marble> enimies;
     private ArrayList<SpecialEffect> shine;
     private Arrow arrow;
     private int currentIdx;
     private Delay delay;
     private int count;
 
-    public MainScene(SceneController sceneController) {
+    public Stage1Scene(SceneController sceneController) {
         super(sceneController);
     }
 
     @Override
     public void sceneBegin() {
-        this.background = new Background(ImgInfo.BACKGROUND, 0, 0, Global.SCREEN_X, Global.SCREEN_Y);
+        this.background = new Background(ImgInfo.BACKGROUND_GRASS, 0, 0, Global.SCREEN_X, Global.SCREEN_Y);
         this.marbles = new ArrayList<>();
         this.shine = new ArrayList<>();
-        this.marbles.add(new ReboundMarble(ImgInfo.SWEETPOTATO, "番薯", POS_AX, POS_AY, ImgInfo.SWEETPOTATO_INFO, 0));//冰
-        this.marbles.add(new ReboundMarble(ImgInfo.DEVIL, "小惡魔", POS_BX, POS_BY, ImgInfo.DEVIL_INFO, 1));//火
-        this.marbles.add(new ReboundMarble(ImgInfo.RICEBALL, "飯糰", POS_CX, POS_CY, ImgInfo.RICEBALL_INFO, 2));//草
+        this.enimies = new ArrayList<>();
+        this.marbles.add(new ReboundMarble(ImgInfo.SWEETPOTATO, "番薯", Global.POSITION_X[0], Global.POSITION_Y[0], ImgInfo.SWEETPOTATO_INFO, 0));//冰
+        this.marbles.add(new PenetrateMarble(ImgInfo.DEVIL, "小惡魔", Global.POSITION_X[1], Global.POSITION_Y[1], ImgInfo.DEVIL_INFO, 1));//火
+        this.marbles.add(new ReboundMarble(ImgInfo.RICEBALL, "飯糰", Global.POSITION_X[2], Global.POSITION_Y[2], ImgInfo.RICEBALL_INFO, 2));//草
         this.shine.add(new SpecialEffect(ImgInfo.SHINE_ICE, (int) this.marbles.get(currentIdx).getCenterX(), (int) this.marbles.get(currentIdx).getCenterX(), ImgInfo.SHINE_INFO));
         this.shine.add(new SpecialEffect(ImgInfo.SHINE_FIRE, (int) this.marbles.get(currentIdx).getCenterX(), (int) this.marbles.get(currentIdx).getCenterX(), ImgInfo.SHINE_INFO));
         this.shine.add(new SpecialEffect(ImgInfo.SHINE_GRASS, (int) this.marbles.get(currentIdx).getCenterX(), (int) this.marbles.get(currentIdx).getCenterX(), ImgInfo.SHINE_INFO));
@@ -50,10 +45,19 @@ public class MainScene extends Scene {
         this.delay = new Delay(5);
         this.delay.start();
         this.count = 0;
+
+        this.enimies.add(new StandMarble(ImgInfo.ZOMBIE, "殭屍", Global.ENEMYPOS_X[0], Global.ENEMYPOS_Y[0], ImgInfo.ZOMBIE_INFO, 0));//冰
+        this.enimies.add(new StandMarble(ImgInfo.SKULL, "骷髏頭", Global.ENEMYPOS_X[1], Global.ENEMYPOS_Y[1], ImgInfo.SKULL_INFO, 1));//火
+        this.enimies.add(new StandMarble(ImgInfo.SPIKY, "刺刺", Global.ENEMYPOS_X[2], Global.ENEMYPOS_Y[2], ImgInfo.SPIKY_INFO, 2));//草
     }
 
     @Override
     public void sceneUpdate() {
+        for (int i = 0; i < this.enimies.size(); i++) {
+            if (this.enimies.get(i).getIsCollide()) {
+                this.enimies.get(i).update();
+            }
+        }
         this.shine.get(currentIdx).update();
         this.shine.get(currentIdx).setCenterX(this.marbles.get(currentIdx).getCenterX());
         this.shine.get(currentIdx).setCenterY(this.marbles.get(currentIdx).getCenterY());
@@ -65,8 +69,20 @@ public class MainScene extends Scene {
             for (int i = 0; i < this.marbles.size(); i++) {
                 for (int j = i + 1; j < this.marbles.size(); j++) {
                     if (this.marbles.get(i).isCollision(this.marbles.get(j))) {
-                        this.marbles.get(i).useSkill(0, this.marbles.get(j));
                         this.marbles.set(j, this.marbles.get(i).strike(this.marbles.get(j)));
+                        for (int k = 0; k < this.enimies.size(); k++) {
+                            this.marbles.get(j).useSkill(1, this.enimies.get(k));
+                        }
+                    }
+                }
+            }
+
+            for (int i = 0; i < this.marbles.size(); i++) {
+                for (int j = 0; j < this.enimies.size(); j++) {
+                    if (this.marbles.get(i).isCollision(this.enimies.get(j))) {
+                        this.marbles.get(i).strike(this.enimies.get(j));
+                        this.enimies.get(j).setIsCollide(true);
+                        this.marbles.get(i).useSkill(0, this.enimies.get(j));
                     }
                 }
             }
@@ -74,6 +90,11 @@ public class MainScene extends Scene {
         if (checkAllStop()) {
             if (this.count != 0) {
                 this.currentIdx = this.count % 3;
+            }
+            for (int j = 0; j < this.enimies.size(); j++) {
+                if (this.enimies.get(j).getIsCollide()) {
+                    this.enimies.get(j).setIsCollide(false);
+                }
             }
         }
     }
@@ -101,6 +122,9 @@ public class MainScene extends Scene {
         this.shine.get(currentIdx).paint(g);
         for (int i = 0; i < this.marbles.size(); i++) {
             this.marbles.get(i).paint(g);
+        }
+        for (int i = 0; i < this.enimies.size(); i++) {
+            this.enimies.get(i).paint(g);
         }
     }
 
@@ -139,8 +163,8 @@ public class MainScene extends Scene {
                     arrow.setDegree((float) Math.acos(vector.getX() / vector.getValue()));
                 }
                 float value = vector.getValue();
-                if(vector.getValue() > 10*marbles.get(currentIdx).getR()){
-                    value = 10*marbles.get(currentIdx).getR();
+                if (vector.getValue() > 10 * marbles.get(currentIdx).getR()) {
+                    value = 10 * marbles.get(currentIdx).getR();
                 }
                 arrow.setResizeMag(value / arrow.getWidth());
                 arrow.setShow(true);

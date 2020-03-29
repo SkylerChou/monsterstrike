@@ -6,12 +6,12 @@
 package monsterstrike.util;
 
 public class Global {
-    
+
     public static final boolean IS_DEBUG = false;
-    
+
     //視窗大小
-    public static final int FRAME_X = 800;
-    public static final int FRAME_Y = 600;
+    public static final int FRAME_X = 1280;
+    public static final int FRAME_Y = 680;
     public static final int SCREEN_X = FRAME_X - 8 - 8;
     public static final int SCREEN_Y = FRAME_Y - 31 - 8;
 
@@ -22,16 +22,28 @@ public class Global {
     //畫面更新時間
     public static final int FRAME_LIMIT = 120;
     public static final int LIMIT_DELTA_TIME = 1000 / FRAME_LIMIT;
-    
+
     public static final int LEFT = 0;
     public static final int UP = 1;
     public static final int RIGHT = 2;
     public static final int DOWN = 3;
-    
+
     public static final int NORMAL_MARBLE_R = 50;
     public static final int GENIE_MASS = 1;
+
+    public static final int[] POSITION_X = {random(60,250), random(60,250), random(60,250)};
+    public static final int[] POSITION_Y = {170, 340, 510};
+
+    public static final int[] ENEMYPOS_X = {850, 1000, 850};
+    public static final int[] ENEMYPOS_Y = {170, 340, 510};
     
-    public static final int[] POSITION_X = {100, 700, 400};
-    public static final int[] POSITION_Y = {100, 100, 500};
-       
+    public static int random(int min, int max) {
+        if (min > max) {
+            int tmp = min;
+            min = max;
+            max = tmp;
+        }
+        return (int) (Math.random() * (max - min + 1) + min);
+    }
+
 }

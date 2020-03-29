@@ -5,6 +5,7 @@
  */
 package monsterstrike.gameobject;
 
+import monsterstrike.graph.Vector;
 import controllers.IRC;
 import monsterstrike.util.Global;
 import interfaceskills.*;
@@ -12,19 +13,17 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import monsterstrike.util.Delay;
 
-public class Marble extends GameObject {
+public abstract class Marble extends GameObject {
 
-    private BufferedImage img1;
-    private BufferedImage img2;
-    private BufferedImage currentImg;
-    private Vector goVec;
-    private Vector norVec;
-    private Vector tanVec;
+    protected Vector goVec;
+    protected Vector norVec;
+    protected Vector tanVec;
+    protected Marble other;
     private float mass;
-    private boolean isCollide;
-    private Marble other;
+    protected boolean isCollide;
     private Delay delay;
     private int count;
+    private int collideTimes;
 
     private String name;
     private int hp = 100;
@@ -32,11 +31,8 @@ public class Marble extends GameObject {
     private int attribute;
     private Skills[] skills;
 
-    public Marble(String[] path, String name, int x, int y, int[] info, int attribute) {
+    public Marble(String name, int x, int y, int[] info, int attribute) {
         super(x, y, info[0], info[1], info[2]);
-        this.img1 = IRC.getInstance().tryGetImage(path[0]);
-        this.img2 = IRC.getInstance().tryGetImage(path[1]);
-        this.currentImg = this.img1;
         this.mass = info[3];
         this.goVec = new Vector(0, 0);
         this.norVec = new Vector(0, 0);
@@ -52,14 +48,6 @@ public class Marble extends GameObject {
 
     @Override
     public void update() {
-        if (this.delay.isTrig()) {
-            this.count++;
-            if (this.count % 2 != 0) {
-                this.currentImg = this.img2;
-            } else {
-                this.currentImg = this.img1;
-            }
-        }
         isBound();
         move();
     }
@@ -75,7 +63,6 @@ public class Marble extends GameObject {
         this.offset(this.goVec.getX(), this.goVec.getY());
     }
 
-
     public boolean isBound() {
         if (this.getCenterX() - this.getR() <= 0
                 || this.getCenterX() + this.getR() >= Global.SCREEN_X
@@ -83,58 +70,26 @@ public class Marble extends GameObject {
                 || this.getCenterY() + this.getR() >= Global.SCREEN_Y) {
             if (this.getCenterX() - this.getR() <= 0) {
                 this.setCenterX(this.getR());
-                this.goVec.setX(-this.goVec.getX());
+                this.getGoVec().setX(-this.getGoVec().getX());
             }
             if (this.getCenterX() + this.getR() >= Global.SCREEN_X) {
                 this.setCenterX(Global.SCREEN_X - this.getR());
-                this.goVec.setX(-this.goVec.getX());
+                this.getGoVec().setX(-this.getGoVec().getX());
             }
             if (this.getCenterY() - this.getR() <= 0) {
                 this.setCenterY(this.getR());
-                this.goVec.setY(-this.goVec.getY());
+                this.getGoVec().setY(-this.getGoVec().getY());
             }
             if (this.getCenterY() + this.getR() >= Global.SCREEN_Y) {
                 this.setCenterY(Global.SCREEN_Y - this.getR());
-                this.goVec.setY(-this.goVec.getY());
+                this.getGoVec().setY(-this.getGoVec().getY());
             }
             return true;
         }
         return false;
     }
 
-    public Marble strike(Marble other) {
-        this.isCollide = true;
-        this.other = other;
-
-        Vector nor = new Vector(this.other.getCenterX() - this.getCenterX(),
-                this.other.getCenterY() - this.getCenterY());
-        updateDir(nor);
-        if (nor.getValue() < this.getR() + this.other.getR()) {
-            this.move();
-            this.other.move();
-        }
-        return this.other;
-    }
-
-    private void updateDir(Vector nor) {
-        this.norVec = this.goVec.getCosProjectionVec(nor);
-        this.tanVec = this.goVec.getSinProjectionVec(nor);
-
-        this.other.norVec = this.other.goVec.getCosProjectionVec(nor.multiplyScalar(-1));
-        this.other.tanVec = this.other.goVec.getSinProjectionVec(nor.multiplyScalar(-1));
-
-        float m11 = (this.mass - this.other.mass) / (this.mass + this.other.mass);
-        float m12 = (2 * this.other.mass) / (this.mass + this.other.mass);
-        float m21 = (2 * this.mass) / (this.mass + this.other.mass);
-        float m22 = (this.other.mass - this.mass) / (this.mass + this.other.mass);
-        Vector newNor1 = this.norVec.multiplyScalar(m11).plus(this.other.norVec.multiplyScalar(m12));
-        Vector newNor2 = this.norVec.multiplyScalar(m21).plus(this.other.norVec.multiplyScalar(m22));
-
-        this.norVec = newNor1;
-        this.goVec = this.norVec.plus(this.tanVec);
-        this.other.norVec = newNor2;
-        this.other.goVec = this.other.norVec.plus(this.other.tanVec);
-    }
+    public abstract Marble strike(Marble other);
 
     public String getName() {
         return this.name;
@@ -176,6 +131,14 @@ public class Marble extends GameObject {
         return this.goVec;
     }
 
+    public void setNorVec(Vector nor) {
+        this.norVec = nor;
+    }
+
+    public void setTanVec(Vector tan) {
+        this.tanVec = tan;
+    }
+
     public void setGo(Vector go) {
         this.goVec = go;
     }
@@ -183,14 +146,13 @@ public class Marble extends GameObject {
     public void setIsCollide(boolean isCollide) {
         this.isCollide = isCollide;
     }
+    
+    public boolean getIsCollide(){
+        return this.isCollide;
+    }
 
     @Override
-    public void paintComponent(Graphics g) {
-        g.drawImage(currentImg, (int) this.getX(), (int) this.getY(), null);
-        g.drawOval((int) (this.getCenterX() - this.getR()),
-                (int) (this.getCenterY() - this.getR()),
-                (int) (2 * this.getR()), (int) (2 * this.getR()));
-    }
+    public abstract void paintComponent(Graphics g);
 
     private void setSkills() {
         Skills skills[] = {
@@ -206,8 +168,7 @@ public class Marble extends GameObject {
         }
     }
 
-    public void useSkill(Marble target) {
-        int r = (int) (Math.random() * 2);
-        this.skills[r].useSkill(this, target);
+    public void useSkill(int r, Marble target) {
+        this.skills[r].useSkill(this, target);        
     }
 }

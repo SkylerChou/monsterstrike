@@ -1,4 +1,4 @@
-package monsterstrike.gameobject;
+package monsterstrike.graph;
 
 public class Vector {
 

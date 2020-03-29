@@ -16,12 +16,22 @@ public class ImgInfo {
     public static final String[] SWEETPOTATO = {"/resources/sweetPotato1.png", "/resources/sweetPotato2.png"};
     public static final int[] SWEETPOTATO_INFO = {140, 140, 40, 2, 50};
 
+    public static final String[] ZOMBIE = {"/resources/zombie1.png", "/resources/zombie2.png"};
+    public static final int[] ZOMBIE_INFO = {150, 150, 60, 2, 50};
+
+    public static final String[] SKULL = {"/resources/skull1.png"};
+    public static final int[] SKULL_INFO = {150, 150, 60, 2, 50};
+
+    public static final String[] SPIKY = {"/resources/spiky1.png"};
+    public static final int[] SPIKY_INFO = {150, 150, 60, 2, 50};
+
+    
     public static final int[] SHINE_INFO = {130, 130, 65, 0, 0};
     public static final String[] SHINE_ICE = {"/resources/ice1.png", "/resources/ice2.png"};   
     public static final String[] SHINE_FIRE = {"/resources/fire1.png", "/resources/fire2.png"};   
     public static final String[] SHINE_GRASS = {"/resources/grass1.png", "/resources/grass2.png"};
-
-
+        
+    public static final String BACKGROUND_GRASS = "/resources/backgroundGrass.png";
     public static final String BACKGROUND = "/resources/background2.png";
     public static final String ARROW = "/resources/arrow.png";
     public static final int[] ARROW_INFO = {230, 230, 100};
