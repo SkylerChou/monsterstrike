@@ -3,12 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package interfaceskills;
+package monsterstrike.gameobject;
 
-import monsterstrike.gameobject.marble.Marble;
-
-public interface Skills {
-
-    public void useSkill(Marble self,Marble target);
-
+public class Renderer {
+    
 }

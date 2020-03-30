@@ -32,22 +32,28 @@ public class MonsterStrike {
                 .gen();
         cs.start();
 
-        long startTime = System.currentTimeMillis();
+        long startTime = System.nanoTime();
         long passedUpdated = 0; //當前已經更新的次數
-        long lastRepaintTime = System.currentTimeMillis();
-
+        long lastRepaintTime = System.nanoTime();
+        long t = System.nanoTime();
+        int FPS = 0;
         while (true) {
-            long currentTime = System.currentTimeMillis();//系統當前時間
+            long currentTime = System.nanoTime();//系統當前時間
             long totalTime = currentTime - startTime; //從開始到現在經過的時間(隨著遊戲開啟時間越長 totalTime 越大)
             long targetTotalUpdated = totalTime / Global.MILLISEC_PER_UPDATE; //從開始到現在遊戲邏輯應該更新的次數;
-
+            
             while (passedUpdated < targetTotalUpdated) { //若當前更新的次數小於實際應更新的次數
                 //update 追上實際應更新的次數
                 cs.update();
                 jp.update();
                 passedUpdated++;
+                FPS++;
             }
-
+            if(currentTime - t > 1000000000){
+                System.out.println("FPS" + FPS);
+                FPS = 0;
+                t = currentTime;
+            }
             if (Global.LIMIT_DELTA_TIME <= currentTime - lastRepaintTime) {
                 lastRepaintTime = currentTime;
                 f.repaint();

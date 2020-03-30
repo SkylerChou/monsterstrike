@@ -3,14 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package monsterstrike.gameobject;
+package monsterstrike.gameobject.marble;
 
 import controllers.IRC;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import monsterstrike.graph.Vector;
 import monsterstrike.util.Delay;
-import monsterstrike.util.Global;
 
 public class StandMarble extends Marble {
 
@@ -26,7 +25,7 @@ public class StandMarble extends Marble {
         this.img1 = IRC.getInstance().tryGetImage(path[0]);
         this.originX = this.getCenterX();
         this.originY = this.getCenterY();
-        this.delay = new Delay(5);
+        this.delay = new Delay(15);
         this.count = 0;
     }
 
@@ -39,34 +38,36 @@ public class StandMarble extends Marble {
     @Override
     public void move() {
         if (this.delay.isTrig()) {
-            if (this.count == 28) {
+
+            if (this.count % 2 == 0) {
+                this.offset(this.goVec.getX(), this.goVec.getY());
+            } else {
+                this.offset(-this.goVec.getX(), -this.goVec.getY());
+            }
+
+            this.count++;
+            if (this.count == 2) {
                 this.count = 0;
                 this.isCollide = false;
             }
-            if (this.count % 4 == 0) {
-                this.offset(5, -5);
-            } else if (this.count % 4 == 1) {
-                this.offset(0, 5);
-            } else if (this.count % 4 == 2) {
-                this.offset(-5, -5);
-            } else {
-                this.offset(0, 5);
-            }
-            this.count++;
         }
     }
 
     @Override
     public Marble strike(Marble other) {
+        this.goVec = new Vector(this.getCenterX() - other.getCenterX(),
+                this.getCenterY() - other.getCenterY());
         return null;
     }
 
     @Override
     public void paintComponent(Graphics g) {
+//        if (this.getHp() > 0) {
         g.drawImage(img1, (int) this.getX(), (int) this.getY(), null);
-        g.drawOval((int) (this.getCenterX() - this.getR()),
-                (int) (this.getCenterY() - this.getR()),
-                (int) (2 * this.getR()), (int) (2 * this.getR()));
+//        }
+//        g.drawOval((int) (this.getCenterX() - this.getR()),
+//                (int) (this.getCenterY() - this.getR()),
+//                (int) (2 * this.getR()), (int) (2 * this.getR()));
     }
 
 }

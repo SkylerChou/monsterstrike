@@ -14,10 +14,6 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-/**
- *
- * @author yuin8
- */
 public class CommandSolver extends Thread {
 
     public enum MouseState {
@@ -544,10 +540,10 @@ public class CommandSolver extends Thread {
 
     @Override
     public void run() {
-        long startTime = System.currentTimeMillis();
+        long startTime = System.nanoTime();
         long passedFrames = 0;
         while (true) {
-            long currentTime = System.currentTimeMillis();
+            long currentTime = System.nanoTime();
             long totalTime = currentTime - startTime;
             long targetTotalFrames = totalTime / deltaTime;
             while (passedFrames < targetTotalFrames) {

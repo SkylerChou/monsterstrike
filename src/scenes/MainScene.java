@@ -5,6 +5,8 @@
  */
 package scenes;
 
+import monsterstrike.gameobject.marble.Marble;
+import monsterstrike.gameobject.marble.ReboundMarble;
 import monsterstrike.graph.Vector;
 import monsterstrike.gameobject.*;
 import monsterstrike.util.*;

@@ -5,7 +5,7 @@
  */
 package interfaceskills;
 
-import monsterstrike.gameobject.Marble;
+import monsterstrike.gameobject.marble.Marble;
 
 
 public class NormalAttack implements Skills {
@@ -33,9 +33,9 @@ public class NormalAttack implements Skills {
 
     @Override
     public void useSkill(Marble self, Marble target) {
-        System.out.println(self.getName()+ " 發動普通攻擊 !");
+//        System.out.println(self.getName()+ " 發動普通攻擊 !");
         target.setHp(target.getHp() - self.getAtk());
-        System.out.println(target.getName() + " 剩下血量 :" + target.getHp()+ "點");
+//        System.out.println(target.getName() + " 剩下血量 :" + target.getHp()+ "點");
     }
 
 }

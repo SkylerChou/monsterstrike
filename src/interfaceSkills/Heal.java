@@ -5,7 +5,7 @@
  */
 package interfaceskills;
 
-import monsterstrike.gameobject.Marble;
+import monsterstrike.gameobject.marble.Marble;
 
 /**
  *

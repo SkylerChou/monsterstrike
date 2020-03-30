@@ -3,17 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package monsterstrike.gameobject;
+package monsterstrike.gameobject.marble;
 
-import monsterstrike.graph.Vector;
 import controllers.IRC;
-import monsterstrike.util.Global;
-import interfaceskills.*;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import monsterstrike.graph.Vector;
 import monsterstrike.util.Delay;
 
-public class PenetrateMarble extends Marble {
+public class ReboundMarble extends Marble {
 
     private BufferedImage img1;
     private BufferedImage img2;
@@ -22,7 +20,7 @@ public class PenetrateMarble extends Marble {
     private Delay delay;
     private int count;
 
-    public PenetrateMarble(String[] path, String name, int x, int y, int[] info, int attribute) {
+    public ReboundMarble(String[] path, String name, int x, int y, int[] info, int attribute) {
         super(name, x, y, info, attribute);
         this.img1 = IRC.getInstance().tryGetImage(path[0]);
         this.img2 = IRC.getInstance().tryGetImage(path[1]);
@@ -53,13 +51,14 @@ public class PenetrateMarble extends Marble {
         this.other = other;
         Vector nor = new Vector(this.other.getCenterX() - this.getCenterX(),
                 this.other.getCenterY() - this.getCenterY());
-
-        if (nor.getValue() <= this.getR() + this.other.getR()) {
+        Vector originGo = this.goVec;
+        updateDir(nor);
+        if (nor.getValue() < this.getR() + this.other.getR()) {
             if (other instanceof StandMarble) {
-                this.goVec.setValue(this.goVec.getValue() * 0.8f);
+                this.setGo(nor.resizeVec(-1 * originGo.getValue()));
+                this.goVec.setValue(originGo.getValue() * 0.7f);
                 this.offset(this.goVec.getX(), this.goVec.getY());
             } else {
-                updateDir(nor);
                 this.offset(this.goVec.getX(), this.goVec.getY());
                 this.other.offset(this.other.goVec.getX(), this.other.goVec.getY());
             }
@@ -94,4 +93,5 @@ public class PenetrateMarble extends Marble {
                 (int) (this.getCenterY() - this.getR()),
                 (int) (2 * this.getR()), (int) (2 * this.getR()));
     }
+
 }

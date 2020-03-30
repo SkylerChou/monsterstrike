@@ -8,13 +8,13 @@ package monsterstrike.gameobject;
 public class ImgInfo {
 
     public static final String[] DEVIL = {"/resources/devil1.png", "/resources/devil2.png"};
-    public static final int[] DEVIL_INFO = {136, 136, 40, 1, 50};//img_width, img_height, r, mass, velocity
+    public static final int[] DEVIL_INFO = {136, 136, 40, 1, 20};//img_width, img_height, r, mass, velocity
 
     public static final String[] RICEBALL = {"/resources/riceBall1.png","/resources/riceBall2.png"};
-    public static final int[] RICEBALL_INFO = {140, 140, 40, 1, 50};
+    public static final int[] RICEBALL_INFO = {140, 140, 40, 1, 22};
 
     public static final String[] SWEETPOTATO = {"/resources/sweetPotato1.png", "/resources/sweetPotato2.png"};
-    public static final int[] SWEETPOTATO_INFO = {140, 140, 40, 2, 50};
+    public static final int[] SWEETPOTATO_INFO = {140, 140, 40, 2, 21};
 
     public static final String[] ZOMBIE = {"/resources/zombie1.png", "/resources/zombie2.png"};
     public static final int[] ZOMBIE_INFO = {150, 150, 60, 2, 50};

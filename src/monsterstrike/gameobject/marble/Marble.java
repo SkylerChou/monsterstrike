@@ -3,15 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package monsterstrike.gameobject;
+package monsterstrike.gameobject.marble;
 
 import monsterstrike.graph.Vector;
 import controllers.IRC;
 import monsterstrike.util.Global;
 import interfaceskills.*;
 import java.awt.Graphics;
-import java.awt.image.BufferedImage;
-import monsterstrike.util.Delay;
+import monsterstrike.gameobject.GameObject;
 
 public abstract class Marble extends GameObject {
 
@@ -21,29 +20,32 @@ public abstract class Marble extends GameObject {
     protected Marble other;
     private float mass;
     protected boolean isCollide;
-    private Delay delay;
-    private int count;
-    private int collideTimes;
+    protected boolean useSkill;
+    private float fiction;
+    private float velocity;
+
 
     private String name;
     private int hp = 100;
     private int atk = 20;
     private int attribute;
     private Skills[] skills;
+    
 
     public Marble(String name, int x, int y, int[] info, int attribute) {
         super(x, y, info[0], info[1], info[2]);
         this.mass = info[3];
+        this.velocity = info[4];
         this.goVec = new Vector(0, 0);
         this.norVec = new Vector(0, 0);
         this.tanVec = new Vector(0, 0);
         this.isCollide = false;
-        this.delay = new Delay(20);
-        this.count = 0;
         this.name = name;
         this.attribute = attribute;
         this.skills = new Skills[5];
         this.setSkills();
+        this.useSkill = false;
+        this.fiction = 0.05f*this.mass;
     }
 
     @Override
@@ -55,8 +57,8 @@ public abstract class Marble extends GameObject {
     public void move() {
         this.isCollide = false;
         if (this.goVec.getValue() > 0) {
-            this.goVec.setValue(this.goVec.getValue() - 0.3f);
-            if (this.goVec.getValue() <= 0.01) {
+            this.goVec.setValue(this.goVec.getValue() - this.fiction);
+            if (this.goVec.getValue() <= 0) {
                 this.goVec.setValue(0);
             }
         }
@@ -91,30 +93,6 @@ public abstract class Marble extends GameObject {
 
     public abstract Marble strike(Marble other);
 
-    public String getName() {
-        return this.name;
-    }
-
-    public int getAttribute() {
-        return this.attribute;
-    }
-
-    public int getHp() {
-        return this.hp;
-    }
-
-    public int getAtk() {
-        return this.atk;
-    }
-
-    public void setHp(int hp) {
-        this.hp = hp;
-    }
-
-    public void setAtk(int atk) {
-        this.atk = atk;
-    }
-
     public float getMass() {
         return this.mass;
     }
@@ -146,9 +124,40 @@ public abstract class Marble extends GameObject {
     public void setIsCollide(boolean isCollide) {
         this.isCollide = isCollide;
     }
-    
-    public boolean getIsCollide(){
+
+    public boolean getIsCollide() {
         return this.isCollide;
+    }
+    
+    public float getVelocity(){
+        return this.velocity;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public int getAttribute() {
+        return this.attribute;
+    }
+
+    public int getHp() {
+        return this.hp;
+    }
+
+    public int getAtk() {
+        return this.atk;
+    }
+
+    public void setHp(int hp) {
+        if (hp < 0) {
+            hp = 0;
+        }
+        this.hp = hp;
+    }
+
+    public void setAtk(int atk) {
+        this.atk = atk;
     }
 
     @Override
@@ -169,6 +178,7 @@ public abstract class Marble extends GameObject {
     }
 
     public void useSkill(int r, Marble target) {
-        this.skills[r].useSkill(this, target);        
+        this.useSkill = true;
+        this.skills[r].useSkill(this, target);
     }
 }

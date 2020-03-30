@@ -5,7 +5,10 @@
  */
 package scenes;
 
-import monsterstrike.gameobject.marble.*;
+import monsterstrike.gameobject.marble.PenetrateMarble;
+import monsterstrike.gameobject.marble.Marble;
+import monsterstrike.gameobject.marble.StandMarble;
+import monsterstrike.gameobject.marble.ReboundMarble;
 import monsterstrike.graph.Vector;
 import controllers.SceneController;
 import java.awt.Graphics;
@@ -14,7 +17,7 @@ import java.util.ArrayList;
 import monsterstrike.gameobject.*;
 import monsterstrike.util.*;
 
-public class Stage1Scene extends Scene {
+public class Stage2Scene extends Scene {
 
     private Background background;
     private ArrayList<Marble> marbles;
@@ -22,15 +25,16 @@ public class Stage1Scene extends Scene {
     private ArrayList<SpecialEffect> shine;
     private Arrow arrow;
     private int currentIdx;
+    private Delay delay;
     private int count;
 
-    public Stage1Scene(SceneController sceneController) {
+    public Stage2Scene(SceneController sceneController) {
         super(sceneController);
     }
 
     @Override
     public void sceneBegin() {
-        this.background = new Background(ImgInfo.BACKGROUND_GRASS, 0, 0, Global.SCREEN_X, Global.SCREEN_Y);
+        this.background = new Background(ImgInfo.BACKGROUND, 0, 0, Global.SCREEN_X, Global.SCREEN_Y);
         this.marbles = new ArrayList<>();
         this.shine = new ArrayList<>();
         this.enimies = new ArrayList<>();
@@ -42,6 +46,8 @@ public class Stage1Scene extends Scene {
         this.shine.add(new SpecialEffect(ImgInfo.SHINE_GRASS, (int) this.marbles.get(currentIdx).getCenterX(), (int) this.marbles.get(currentIdx).getCenterX(), ImgInfo.SHINE_INFO));
         this.arrow = new Arrow(ImgInfo.ARROW, 0, 0, ImgInfo.ARROW_INFO);
         this.currentIdx = 0;
+        this.delay = new Delay(5);
+        this.delay.start();
         this.count = 0;
 
         this.enimies.add(new StandMarble(ImgInfo.ZOMBIE, "殭屍", Global.ENEMYPOS_X[0], Global.ENEMYPOS_Y[0], ImgInfo.ZOMBIE_INFO, 0));//冰
@@ -59,29 +65,29 @@ public class Stage1Scene extends Scene {
         this.shine.get(currentIdx).update();
         this.shine.get(currentIdx).setCenterX(this.marbles.get(currentIdx).getCenterX());
         this.shine.get(currentIdx).setCenterY(this.marbles.get(currentIdx).getCenterY());
+        if (this.delay.isTrig()) {
+            for (int i = 0; i < this.marbles.size(); i++) {
+                this.marbles.get(i).update();
+            }
 
-        for (int i = 0; i < this.marbles.size(); i++) {
-            this.marbles.get(i).update();
-        }
-
-        for (int i = 0; i < this.marbles.size(); i++) {
-            for (int j = i + 1; j < this.marbles.size(); j++) {
-                if (this.marbles.get(i).isCollision(this.marbles.get(j))) {
-                    this.marbles.set(j, this.marbles.get(i).strike(this.marbles.get(j)));
-                    for (int k = 0; k < this.enimies.size(); k++) {
-                        this.marbles.get(j).useSkill(1, this.enimies.get(k));
+            for (int i = 0; i < this.marbles.size(); i++) {
+                for (int j = i + 1; j < this.marbles.size(); j++) {
+                    if (this.marbles.get(i).isCollision(this.marbles.get(j))) {
+                        this.marbles.set(j, this.marbles.get(i).strike(this.marbles.get(j)));
+                        for (int k = 0; k < this.enimies.size(); k++) {
+                            this.marbles.get(j).useSkill(1, this.enimies.get(k));
+                        }
                     }
                 }
             }
-        }
 
-        for (int i = 0; i < this.marbles.size(); i++) {
-            for (int j = 0; j < this.enimies.size(); j++) {
-                if (this.marbles.get(i).isCollision(this.enimies.get(j))) {
-                    Marble tmp = this.marbles.get(i).strike(this.enimies.get(j));
-                    this.enimies.get(j).setGo(tmp.getGoVec());
-                    this.enimies.get(j).setIsCollide(true);
-                    this.marbles.get(i).useSkill(0, this.enimies.get(j));
+            for (int i = 0; i < this.marbles.size(); i++) {
+                for (int j = 0; j < this.enimies.size(); j++) {
+                    if (this.marbles.get(i).isCollision(this.enimies.get(j))) {
+                        this.marbles.get(i).strike(this.enimies.get(j));
+                        this.enimies.get(j).setIsCollide(true);
+                        this.marbles.get(i).useSkill(0, this.enimies.get(j));
+                    }
                 }
             }
         }
@@ -95,19 +101,6 @@ public class Stage1Scene extends Scene {
                 }
             }
         }
-
-        if (isEnd()) {
-//            this.sceneController.changeScene(new Stage2Scene(sceneController));
-        }
-    }
-
-    private boolean isEnd() {
-        for (int i = 0; i < this.enimies.size(); i++) {
-            if (this.enimies.get(i).getHp() > 0) {
-                return false;
-            }
-        }
-        return true;
     }
 
     private boolean checkAllStop() {
@@ -174,8 +167,8 @@ public class Stage1Scene extends Scene {
                     arrow.setDegree((float) Math.acos(vector.getX() / vector.getValue()));
                 }
                 float value = vector.getValue();
-                if (vector.getValue() > 10f * marbles.get(currentIdx).getR()) {
-                    value = 10f * marbles.get(currentIdx).getR();
+                if (vector.getValue() > 10 * marbles.get(currentIdx).getR()) {
+                    value = 10 * marbles.get(currentIdx).getR();
                 }
                 arrow.setResizeMag(value / arrow.getWidth());
                 arrow.setShow(true);
@@ -186,7 +179,7 @@ public class Stage1Scene extends Scene {
                 Vector vector = new Vector(this.startX - this.endX, this.startY - this.endY);
                 arrow.setDegree((float) Math.acos(vector.getX() / vector.getValue()));
                 arrow.setResizeMag(vector.getValue() / arrow.getWidth());
-                marbles.get(currentIdx).setGo(vector.resizeVec(marbles.get(currentIdx).getVelocity()));
+                marbles.get(currentIdx).setGo(vector.multiplyScalar(0.1f));
                 count++;
                 arrow.setShow(false);
             }
