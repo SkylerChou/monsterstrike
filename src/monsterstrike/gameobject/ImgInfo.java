@@ -31,12 +31,15 @@ public class ImgInfo {
     public static final int[] MENU_INFO = {Global.SCREEN_X, Global.SCREEN_Y};//img_width, img_height
     //Menu 按鈕
     public static final String[] EXIT = {"/resources/exit1.png", "/resources/exit2.png"};
+    public static final String[] RANK = {"/resources/rank1.png", "/resources/rank2.png"};
     public static final String[] HOWTOPLAY = {"/resources/howtoplay1.png", "/resources/howtoplay2.png"};
     public static final String[] MULTIPLAYER = {"/resources/multiplayer1.png", "/resources/multiplayer2.png"};
     public static final String[] SINGLE = {"/resources/single1.png", "/resources/single2.png"};
     public static final int[] MAINBUTTON_INFO = {100, 25};//img_width, img_height
     
     public static final String DINO = "/resources/Dino.png";
+     public static final int[] DINO_INFO = {50, 50};//img_width, img_height
+    
     
     public static final String[] SETTING = {"/resources/setting1.png", "/resources/setting2.png"};
     public static final String[] SOUND = {"/resources/turnon.png", "/resources/turnoff.png"};

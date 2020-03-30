@@ -25,20 +25,18 @@ public class SpecialEffect extends GameObject {
 
         this.delay = new Delay(25);
         this.delay.start();
-        this.currentImg =this.img1;
+        this.currentImg = this.img1;
         this.count = 0;
     }
 
     @Override
     public void paintComponent(Graphics g) {
-//        g.drawImage(this.currentImg, (int) (this.getCenterX() - this.getR()), (int) (this.getCenterY() - this.getR()), null);
         g.drawImage(this.currentImg, (int) (this.getCenterX() - this.getR()), (int) (this.getCenterY() - this.getR()), 130, 130, null);
 
     }
 
     @Override
     public void update() {
-        
         if (this.delay.isTrig()) {
             this.count++;
             if (this.count % 2 != 0) {

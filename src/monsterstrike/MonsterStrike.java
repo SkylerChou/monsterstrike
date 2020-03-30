@@ -27,8 +27,9 @@ public class MonsterStrike {
                     {KeyEvent.VK_UP, Global.UP},
                     {KeyEvent.VK_LEFT, Global.LEFT},
                     {KeyEvent.VK_DOWN, Global.DOWN},
-                    {KeyEvent.VK_RIGHT, Global.RIGHT}
-                }).enableMouseTrack(jp).enableKeyboardTrack(jp)
+                    {KeyEvent.VK_RIGHT, Global.RIGHT},
+                    {KeyEvent.VK_ENTER,Global.ENTER}
+                }).enableMouseTrack(jp).enableKeyboardTrack(jp).keyCleanMode()
                 .gen();
         cs.start();
 

@@ -7,6 +7,7 @@ package scenes;
 
 import controllers.SceneController;
 import java.awt.Graphics;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import monsterstrike.gameobject.Background;
 import monsterstrike.gameobject.Button;
@@ -20,47 +21,55 @@ import monsterstrike.util.Global;
  *
  * @author kim19
  */
-public class Menu extends Scene{
+public class Menu extends Scene {
 
     private Background menu;
     private Dino dino;
     private ArrayList<Button> buttons;
     private Delay delay;
-    private int count;
-    
+
     public Menu(SceneController sceneController) {
         super(sceneController);
+
     }
 
     @Override
     public void sceneBegin() {
-        this.menu=new Background(ImgInfo.MENU,0,0,Global.SCREEN_X, Global.SCREEN_Y);
-        this.buttons=new ArrayList<>();
-        this.dino=new Dino(ImgInfo.DINO,0,0,50,50,Dino.STEPS_WALK);
-        this.buttons.add(new Button(ImgInfo.SINGLE,Global.SCREEN_X/2-90,Global.SCREEN_Y/2-30,100,25));
-        this.buttons.add(new Button(ImgInfo.MULTIPLAYER,Global.SCREEN_X/2-90,Global.SCREEN_Y/2+20,100,25));
-        this.buttons.add(new Button(ImgInfo.HOWTOPLAY,Global.SCREEN_X/2-90,Global.SCREEN_Y/2+70,100,25));
-        this.buttons.add(new Button(ImgInfo.EXIT,Global.SCREEN_X/2-90,Global.SCREEN_Y/2+120,100,25));
-        
-        this.delay=new Delay(5);
+        this.menu = new Background(ImgInfo.MENU, 0, 0, Global.SCREEN_X, Global.SCREEN_Y);
+        this.buttons = new ArrayList<>();
+        this.dino = new Dino(ImgInfo.DINO, Global.SCREEN_X / 2 - 150, Global.SCREEN_Y / 2 - 35, Dino.STEPS_WALK);
+        this.buttons.add(new Button(ImgInfo.SINGLE, Global.SCREEN_X / 2 - 90, Global.SCREEN_Y / 2 - 35, ImgInfo.MAINBUTTON_INFO[0], ImgInfo.MAINBUTTON_INFO[1]));
+        this.buttons.add(new Button(ImgInfo.MULTIPLAYER, Global.SCREEN_X / 2 - 90, Global.SCREEN_Y / 2 + 15, ImgInfo.MAINBUTTON_INFO[0], ImgInfo.MAINBUTTON_INFO[1]));
+        this.buttons.add(new Button(ImgInfo.RANK, Global.SCREEN_X / 2 - 90, Global.SCREEN_Y / 2 + 65, ImgInfo.MAINBUTTON_INFO[0], ImgInfo.MAINBUTTON_INFO[1]));
+        this.buttons.add(new Button(ImgInfo.HOWTOPLAY, Global.SCREEN_X / 2 - 90, Global.SCREEN_Y / 2 + 115, ImgInfo.MAINBUTTON_INFO[0], ImgInfo.MAINBUTTON_INFO[1]));
+        this.buttons.add(new Button(ImgInfo.EXIT, Global.SCREEN_X / 2 - 90, Global.SCREEN_Y / 2 + 165, ImgInfo.MAINBUTTON_INFO[0], ImgInfo.MAINBUTTON_INFO[1]));
+
+        this.delay = new Delay(30);
         this.delay.start();
-        this.count=0;
     }
 
     @Override
     public void sceneUpdate() {
         this.dino.update();
+        for (int i = 0; i < this.buttons.size(); i++) {
+            if (this.dino.getCenterY()  == this.buttons.get(i).getCenterY()) {
+                if(this.delay.isTrig()){
+                   this.buttons.get(i).update(); 
+                }
+            }
+        }
+
     }
 
     @Override
     public void sceneEnd() {
-        
+
     }
 
     @Override
     public void paint(Graphics g) {
         this.menu.paint(g);
-        for(int i=0;i<this.buttons.size();i++){
+        for (int i = 0; i < this.buttons.size(); i++) {
             this.buttons.get(i).paint(g);
         }
         this.dino.paint(g);
@@ -68,12 +77,52 @@ public class Menu extends Scene{
 
     @Override
     public CommandSolver.KeyListener getKeyListener() {
-      return null;
+        return new MyKeyListener();
     }
 
     @Override
     public CommandSolver.MouseCommandListener getMouseListener() {
         return null;
     }
-    
+
+    public class MyMouseListener implements CommandSolver.MouseCommandListener {
+
+        @Override
+        public void mouseTrig(MouseEvent e, CommandSolver.MouseState state, long trigTime) {
+
+        }
+    }
+
+    public class MyKeyListener implements CommandSolver.KeyListener {
+
+        @Override
+        public void keyPressed(int commandCode, long trigTime) {
+            if (dino.getIsStand()) {
+                dino.setStand(false);
+                switch (commandCode) {
+                    case Global.UP:
+                        dino.setDir(Global.UP);
+                        dino.move();
+                        break;
+                    case Global.DOWN:
+                        dino.setDir(Global.DOWN);
+                        dino.move();
+                        break;
+                    case Global.ENTER:
+                        dino.setDinoRun();
+                        break;
+                }
+            }
+        }
+
+        @Override
+        public void keyReleased(int commandCode, long trigTime) {
+            dino.reset();
+            dino.setStand(true);
+        }
+
+        @Override
+        public void keyTyped(char c, long trigTime) {
+        }
+    }
 }

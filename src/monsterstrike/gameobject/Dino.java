@@ -25,16 +25,29 @@ public class Dino extends SenceObject {
     private int currentStep;
     private int[] steps;
     private int count;
-    private Delay delay;
+    private boolean isStand;
 
-    public Dino(String path, int x, int y, int width, int height, int[] steps) {
-        super(x, y, 24, 24);
+    private Delay delay;
+    private int dir;
+
+    public Dino(String path, int x, int y, int[] steps) {
+        super(x, y, ImgInfo.DINO_INFO[0], ImgInfo.DINO_INFO[1]);
         this.img = IRC.getInstance().tryGetImage(path);
         this.currentStep = 0;
         this.count = 0;
+        this.dir = 0;
         this.steps = steps;
         this.delay = new Delay(10);
         this.delay.start();
+        this.isStand = true;
+    }
+
+    public void setDir(int dir) {
+        this.dir = dir;
+    }
+
+    public void setStand(boolean isStand) {
+        this.isStand = isStand;
     }
 
     @Override
@@ -45,6 +58,37 @@ public class Dino extends SenceObject {
             }
             this.currentStep = this.steps[this.count++];
         }
+    }
+    
+    public void move() {
+        if (!this.isStand) {
+            switch (this.dir) {
+                case Global.UP:
+                     if(this.getCenterY()<Global.SCREEN_Y / 2 - 30){
+                         break;
+                     }
+                    this.offset(0, -50);
+                    break;
+                case Global.DOWN:
+                    if(this.getCenterY()>Global.SCREEN_Y / 2 +115){
+                         break;
+                     }
+                    this.offset(0, 50);
+                    break;
+            }
+        }
+    }
+
+    public boolean getIsStand() {
+        return this.isStand;
+    }
+
+    public void setDinoRun() {
+        this.steps = STEPS_RUN;
+    }
+
+    public void reset() {
+        this.steps = STEPS_WALK;
     }
 
     public void pause() {
@@ -57,7 +101,8 @@ public class Dino extends SenceObject {
 
     @Override
     public void paint(Graphics g) {
-        g.drawImage(img, Global.SCREEN_X / 2 - 150, Global.SCREEN_Y / 2 - 35, Global.SCREEN_X / 2 - 150 + 48, Global.SCREEN_Y / 2 - 35 + 48,
+        g.drawImage(img, (int)this.getCenterX(), (int)this.getCenterY(), 
+                (int)(this.getCenterX() + this.getWidth()), (int)(this.getCenterY() + this.getHeight()),
                 24 * this.currentStep, 0,
                 24 * this.currentStep + 24,
                 24, null);
