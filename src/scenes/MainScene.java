@@ -5,8 +5,7 @@
  */
 package scenes;
 
-import monsterstrike.gameobject.marble.Marble;
-import monsterstrike.gameobject.marble.ReboundMarble;
+import monsterstrike.gameobject.marble.*;
 import monsterstrike.graph.Vector;
 import monsterstrike.gameobject.*;
 import monsterstrike.util.*;
@@ -28,6 +27,7 @@ public class MainScene extends Scene {
     private ArrayList<Marble> marbles;
     private ArrayList<SpecialEffect> shine;
     private Arrow arrow;
+    private boolean isShine;
     private int currentIdx;
     private Delay delay;
     private int count;
@@ -40,7 +40,7 @@ public class MainScene extends Scene {
     @Override
     public void sceneBegin() {
         this.idx = 0;
-        this.background = new Background(ImgInfo.BACKGROUND_PATH[idx], 
+        this.background = new Background(ImgInfo.BACKGROUND_PATH[idx],
                 2 * ImgInfo.BACKGROUND_SIZE[idx][0], ImgInfo.BACKGROUND_SIZE[idx][1]);
         this.marbles = new ArrayList<>();
         this.shine = new ArrayList<>();
@@ -51,10 +51,12 @@ public class MainScene extends Scene {
         this.shine.add(new SpecialEffect(ImgInfo.SHINE_FIRE, (int) this.marbles.get(currentIdx).getCenterX(), (int) this.marbles.get(currentIdx).getCenterX(), ImgInfo.SHINE_INFO));
         this.shine.add(new SpecialEffect(ImgInfo.SHINE_GRASS, (int) this.marbles.get(currentIdx).getCenterX(), (int) this.marbles.get(currentIdx).getCenterX(), ImgInfo.SHINE_INFO));
         this.arrow = new Arrow(ImgInfo.ARROW, 0, 0, ImgInfo.ARROW_INFO);
+
         this.currentIdx = 0;
         this.delay = new Delay(5);
         this.delay.start();
         this.count = 0;
+        this.isShine = true;
     }
 
     @Override
@@ -102,7 +104,9 @@ public class MainScene extends Scene {
         if (this.arrow.getShow()) {
             this.arrow.paint(g);
         }
-        this.shine.get(currentIdx).paint(g);
+        if (isShine) {
+            this.shine.get(currentIdx).paint(g);
+        }
         for (int i = 0; i < this.marbles.size(); i++) {
             this.marbles.get(i).paint(g);
         }

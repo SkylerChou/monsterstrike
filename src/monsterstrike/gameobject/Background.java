@@ -10,34 +10,33 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import monsterstrike.util.Global;
 
-public class Background {
+public class Background extends SenceObject{
 
-    private int x;
-    private int y;
     private BufferedImage img;
     private int idx;
 
     public Background(String path, int x, int y) {
+        super(x, y, Global.SCREEN_X, Global.SCREEN_Y);
         this.img = IRC.getInstance().tryGetImage(path);
-        this.x = x;
-        this.y = y;
         this.idx = 1;
     }
 
     public void offset(int dx) {
-        this.x += dx;
+        this.offset(dx, 0);
     }
     
-    public void setX(int x){
-        this.x = x;
-    }
-    
-    public int getX(){
-        return this.x;
-    }
 
+    @Override
+     public void update() {}
+     
+    @Override
     public void paint(Graphics g) {
         g.drawImage(img, 0, 0, Global.SCREEN_X, Global.SCREEN_Y,
-                this.x-ImgInfo.BACKGROUND_SIZE[idx][0], 0, this.x, this.y, null);
+                (int)this.getX()-ImgInfo.BACKGROUND_SIZE[idx][0], 0, 
+                (int)this.getX(), ImgInfo.BACKGROUND_SIZE[idx][1], null);
+    }
+    
+    public void paintMenu(Graphics g){
+        g.drawImage(img, 0, 0, Global.SCREEN_X, Global.SCREEN_Y, null);
     }
 }

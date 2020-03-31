@@ -10,7 +10,7 @@ public class Global {
     public static final boolean IS_DEBUG = false;
 
     //視窗大小
-    public static final int FRAME_X = 1280;
+    public static final int FRAME_X =1280;
     public static final int FRAME_Y = 680;
     public static final int SCREEN_X = FRAME_X - 8 - 8;
     public static final int SCREEN_Y = FRAME_Y - 31 - 8;
@@ -27,7 +27,8 @@ public class Global {
     public static final int UP = 1;
     public static final int RIGHT = 2;
     public static final int DOWN = 3;
-
+    public static final int ENTER=4;
+    
     public static final int NORMAL_MARBLE_R = 50;
     public static final int GENIE_MASS = 1;
 
