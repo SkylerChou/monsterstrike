@@ -49,8 +49,8 @@ public class MonsterStrike {
                 passedUpdated++;
                 FPS++;
             }
-            if(currentTime - t > 1000000000){
-                System.out.println("FPS" + FPS);
+            if(currentTime - t > Math.pow(10, 9)){
+                System.out.println("FPS: " + FPS);
                 FPS = 0;
                 t = currentTime;
             }

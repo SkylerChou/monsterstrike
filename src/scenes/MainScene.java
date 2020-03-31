@@ -31,6 +31,7 @@ public class MainScene extends Scene {
     private int currentIdx;
     private Delay delay;
     private int count;
+    private int idx; //背景idx
 
     public MainScene(SceneController sceneController) {
         super(sceneController);
@@ -38,12 +39,14 @@ public class MainScene extends Scene {
 
     @Override
     public void sceneBegin() {
-        this.background = new Background(ImgInfo.BACKGROUND, 0, 0, Global.SCREEN_X, Global.SCREEN_Y);
+        this.idx = 0;
+        this.background = new Background(ImgInfo.BACKGROUND_PATH[idx], 
+                2 * ImgInfo.BACKGROUND_SIZE[idx][0], ImgInfo.BACKGROUND_SIZE[idx][1]);
         this.marbles = new ArrayList<>();
         this.shine = new ArrayList<>();
-        this.marbles.add(new ReboundMarble(ImgInfo.SWEETPOTATO, "番薯", POS_AX, POS_AY, ImgInfo.SWEETPOTATO_INFO, 0));//冰
-        this.marbles.add(new ReboundMarble(ImgInfo.DEVIL, "小惡魔", POS_BX, POS_BY, ImgInfo.DEVIL_INFO, 1));//火
-        this.marbles.add(new ReboundMarble(ImgInfo.RICEBALL, "飯糰", POS_CX, POS_CY, ImgInfo.RICEBALL_INFO, 2));//草
+        this.marbles.add(new ReboundMarble(ImgInfo.SWEETPOTATO, "番薯", POS_AX, POS_AY, ImgInfo.SWEETPOTATO_INFO));//冰
+        this.marbles.add(new ReboundMarble(ImgInfo.DEVIL, "小惡魔", POS_BX, POS_BY, ImgInfo.DEVIL_INFO));//火
+        this.marbles.add(new ReboundMarble(ImgInfo.RICEBALL, "飯糰", POS_CX, POS_CY, ImgInfo.RICEBALL_INFO));//草
         this.shine.add(new SpecialEffect(ImgInfo.SHINE_ICE, (int) this.marbles.get(currentIdx).getCenterX(), (int) this.marbles.get(currentIdx).getCenterX(), ImgInfo.SHINE_INFO));
         this.shine.add(new SpecialEffect(ImgInfo.SHINE_FIRE, (int) this.marbles.get(currentIdx).getCenterX(), (int) this.marbles.get(currentIdx).getCenterX(), ImgInfo.SHINE_INFO));
         this.shine.add(new SpecialEffect(ImgInfo.SHINE_GRASS, (int) this.marbles.get(currentIdx).getCenterX(), (int) this.marbles.get(currentIdx).getCenterX(), ImgInfo.SHINE_INFO));
@@ -59,20 +62,19 @@ public class MainScene extends Scene {
         this.shine.get(currentIdx).update();
         this.shine.get(currentIdx).setCenterX(this.marbles.get(currentIdx).getCenterX());
         this.shine.get(currentIdx).setCenterY(this.marbles.get(currentIdx).getCenterY());
-        if (this.delay.isTrig()) {
-            for (int i = 0; i < this.marbles.size(); i++) {
-                this.marbles.get(i).update();
-            }
+        for (int i = 0; i < this.marbles.size(); i++) {
+            this.marbles.get(i).update();
+        }
 
-            for (int i = 0; i < this.marbles.size(); i++) {
-                for (int j = i + 1; j < this.marbles.size(); j++) {
-                    if (this.marbles.get(i).isCollision(this.marbles.get(j))) {
-                        this.marbles.get(i).useSkill(0, this.marbles.get(j));
-                        this.marbles.set(j, this.marbles.get(i).strike(this.marbles.get(j)));
-                    }
+        for (int i = 0; i < this.marbles.size(); i++) {
+            for (int j = i + 1; j < this.marbles.size(); j++) {
+                if (this.marbles.get(i).isCollision(this.marbles.get(j))) {
+                    this.marbles.get(i).useSkill(0, this.marbles.get(j));
+                    this.marbles.set(j, this.marbles.get(i).strike(this.marbles.get(j)));
                 }
             }
         }
+
         if (checkAllStop()) {
             if (this.count != 0) {
                 this.currentIdx = this.count % 3;
@@ -141,8 +143,8 @@ public class MainScene extends Scene {
                     arrow.setDegree((float) Math.acos(vector.getX() / vector.getValue()));
                 }
                 float value = vector.getValue();
-                if(vector.getValue() > 10*marbles.get(currentIdx).getR()){
-                    value = 10*marbles.get(currentIdx).getR();
+                if (vector.getValue() > 10 * marbles.get(currentIdx).getR()) {
+                    value = 10 * marbles.get(currentIdx).getR();
                 }
                 arrow.setResizeMag(value / arrow.getWidth());
                 arrow.setShow(true);
@@ -153,7 +155,7 @@ public class MainScene extends Scene {
                 Vector vector = new Vector(this.startX - this.endX, this.startY - this.endY);
                 arrow.setDegree((float) Math.acos(vector.getX() / vector.getValue()));
                 arrow.setResizeMag(vector.getValue() / arrow.getWidth());
-                marbles.get(currentIdx).setGo(vector.multiplyScalar(0.1f));
+                marbles.get(currentIdx).setGo(vector.resizeVec(marbles.get(currentIdx).getVelocity()));
                 count++;
                 arrow.setShow(false);
             }

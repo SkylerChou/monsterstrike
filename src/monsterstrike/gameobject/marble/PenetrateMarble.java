@@ -20,12 +20,11 @@ public class PenetrateMarble extends Marble {
     private Delay delay;
     private int count;
 
-    public PenetrateMarble(String[] path, String name, int x, int y, int[] info, int attribute) {
-        super(name, x, y, info, attribute);
+    public PenetrateMarble(String[] path, String name, int x, int y, int[] info) {
+        super(name, x, y, info);
         this.img1 = IRC.getInstance().tryGetImage(path[0]);
         this.img2 = IRC.getInstance().tryGetImage(path[1]);
         this.currentImg = this.img1;
-
         this.delay = new Delay(20);
         this.count = 0;
         this.isCollide = false;

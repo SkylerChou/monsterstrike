@@ -19,7 +19,7 @@ public class GameJPanel extends javax.swing.JPanel implements KeyListener, Mouse
     
     public GameJPanel() {
         sceneController = new SceneController();
-        sceneController.changeScene(new Stage1Scene(sceneController));
+        sceneController.changeScene(new MainScene(sceneController));
     }
 
     public void update() {

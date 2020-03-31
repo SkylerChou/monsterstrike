@@ -15,17 +15,13 @@ public class StandMarble extends Marble {
 
     private BufferedImage img1;
 
-    private float originX;
-    private float originY;
     private Delay delay;
     private int count;
 
-    public StandMarble(String[] path, String name, int x, int y, int[] info, int attribute) {
-        super(name, x, y, info, attribute);
+    public StandMarble(String[] path, String name, int x, int y, int[] info) {
+        super(name, x, y, info);
         this.img1 = IRC.getInstance().tryGetImage(path[0]);
-        this.originX = this.getCenterX();
-        this.originY = this.getCenterY();
-        this.delay = new Delay(15);
+        this.delay = new Delay(10);
         this.count = 0;
     }
 
@@ -38,7 +34,6 @@ public class StandMarble extends Marble {
     @Override
     public void move() {
         if (this.delay.isTrig()) {
-
             if (this.count % 2 == 0) {
                 this.offset(this.goVec.getX(), this.goVec.getY());
             } else {
@@ -62,9 +57,9 @@ public class StandMarble extends Marble {
 
     @Override
     public void paintComponent(Graphics g) {
-//        if (this.getHp() > 0) {
-        g.drawImage(img1, (int) this.getX(), (int) this.getY(), null);
-//        }
+        if (this.getHp() > 0) {
+            g.drawImage(img1, (int) this.getX(), (int) this.getY(), null);
+        }
 //        g.drawOval((int) (this.getCenterX() - this.getR()),
 //                (int) (this.getCenterY() - this.getR()),
 //                (int) (2 * this.getR()), (int) (2 * this.getR()));

@@ -6,7 +6,6 @@
 package monsterstrike.gameobject.marble;
 
 import monsterstrike.graph.Vector;
-import controllers.IRC;
 import monsterstrike.util.Global;
 import interfaceskills.*;
 import java.awt.Graphics;
@@ -24,7 +23,6 @@ public abstract class Marble extends GameObject {
     private float fiction;
     private float velocity;
 
-
     private String name;
     private int hp = 100;
     private int atk = 20;
@@ -32,20 +30,20 @@ public abstract class Marble extends GameObject {
     private Skills[] skills;
     
 
-    public Marble(String name, int x, int y, int[] info, int attribute) {
+    public Marble(String name, int x, int y, int[] info) {
         super(x, y, info[0], info[1], info[2]);
         this.mass = info[3];
         this.velocity = info[4];
+        this.attribute = info[5];
         this.goVec = new Vector(0, 0);
         this.norVec = new Vector(0, 0);
         this.tanVec = new Vector(0, 0);
         this.isCollide = false;
-        this.name = name;
-        this.attribute = attribute;
+        this.name = name;        
         this.skills = new Skills[5];
         this.setSkills();
         this.useSkill = false;
-        this.fiction = 0.05f*this.mass;
+        this.fiction = 0.05f * this.mass;
     }
 
     @Override
@@ -128,8 +126,8 @@ public abstract class Marble extends GameObject {
     public boolean getIsCollide() {
         return this.isCollide;
     }
-    
-    public float getVelocity(){
+
+    public float getVelocity() {
         return this.velocity;
     }
 
@@ -178,7 +176,6 @@ public abstract class Marble extends GameObject {
     }
 
     public void useSkill(int r, Marble target) {
-        this.useSkill = true;
         this.skills[r].useSkill(this, target);
     }
 }

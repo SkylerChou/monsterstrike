@@ -5,13 +5,13 @@
  */
 package scenes;
 
-import monsterstrike.gameobject.marble.*;
 import monsterstrike.graph.Vector;
 import controllers.SceneController;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import monsterstrike.gameobject.*;
+import monsterstrike.gameobject.marble.*;
 import monsterstrike.util.*;
 
 public class Stage1Scene extends Scene {
@@ -21,8 +21,12 @@ public class Stage1Scene extends Scene {
     private ArrayList<Marble> enimies;
     private ArrayList<SpecialEffect> shine;
     private Arrow arrow;
+
     private int currentIdx;
     private int count;
+    private int state;
+    private Delay dropDelay;
+    private int idx;
 
     public Stage1Scene(SceneController sceneController) {
         super(sceneController);
@@ -30,74 +34,119 @@ public class Stage1Scene extends Scene {
 
     @Override
     public void sceneBegin() {
-        this.background = new Background(ImgInfo.BACKGROUND_GRASS, 0, 0, Global.SCREEN_X, Global.SCREEN_Y);
+//        this.background = new Background(ImgInfo.BACKGROUND_GRASS, 2 * ImgInfo.BACKGROUND_GRASS_W, ImgInfo.BACKGROUND_GRASS_H);
+        this.idx = 1;
+        this.background = new Background(ImgInfo.BACKGROUND_PATH[idx], 2 * ImgInfo.BACKGROUND_SIZE[idx][0], ImgInfo.BACKGROUND_SIZE[idx][1]);
         this.marbles = new ArrayList<>();
         this.shine = new ArrayList<>();
         this.enimies = new ArrayList<>();
-        this.marbles.add(new ReboundMarble(ImgInfo.SWEETPOTATO, "番薯", Global.POSITION_X[0], Global.POSITION_Y[0], ImgInfo.SWEETPOTATO_INFO, 0));//冰
-        this.marbles.add(new PenetrateMarble(ImgInfo.DEVIL, "小惡魔", Global.POSITION_X[1], Global.POSITION_Y[1], ImgInfo.DEVIL_INFO, 1));//火
-        this.marbles.add(new ReboundMarble(ImgInfo.RICEBALL, "飯糰", Global.POSITION_X[2], Global.POSITION_Y[2], ImgInfo.RICEBALL_INFO, 2));//草
+        this.marbles.add(new ReboundMarble(ImgInfo.SWEETPOTATO, "番薯", Global.POSITION_X[0], Global.POSITION_Y[0], ImgInfo.SWEETPOTATO_INFO));//冰
+        this.marbles.add(new PenetrateMarble(ImgInfo.DEVIL, "小惡魔", Global.POSITION_X[1], Global.POSITION_Y[1], ImgInfo.DEVIL_INFO));//火
+        this.marbles.add(new ReboundMarble(ImgInfo.RICEBALL, "飯糰", Global.POSITION_X[2], Global.POSITION_Y[2], ImgInfo.RICEBALL_INFO));//草
         this.shine.add(new SpecialEffect(ImgInfo.SHINE_ICE, (int) this.marbles.get(currentIdx).getCenterX(), (int) this.marbles.get(currentIdx).getCenterX(), ImgInfo.SHINE_INFO));
         this.shine.add(new SpecialEffect(ImgInfo.SHINE_FIRE, (int) this.marbles.get(currentIdx).getCenterX(), (int) this.marbles.get(currentIdx).getCenterX(), ImgInfo.SHINE_INFO));
         this.shine.add(new SpecialEffect(ImgInfo.SHINE_GRASS, (int) this.marbles.get(currentIdx).getCenterX(), (int) this.marbles.get(currentIdx).getCenterX(), ImgInfo.SHINE_INFO));
         this.arrow = new Arrow(ImgInfo.ARROW, 0, 0, ImgInfo.ARROW_INFO);
         this.currentIdx = 0;
         this.count = 0;
-
-        this.enimies.add(new StandMarble(ImgInfo.ZOMBIE, "殭屍", Global.ENEMYPOS_X[0], Global.ENEMYPOS_Y[0], ImgInfo.ZOMBIE_INFO, 0));//冰
-        this.enimies.add(new StandMarble(ImgInfo.SKULL, "骷髏頭", Global.ENEMYPOS_X[1], Global.ENEMYPOS_Y[1], ImgInfo.SKULL_INFO, 1));//火
-        this.enimies.add(new StandMarble(ImgInfo.SPIKY, "刺刺", Global.ENEMYPOS_X[2], Global.ENEMYPOS_Y[2], ImgInfo.SPIKY_INFO, 2));//草
+        for (int i = 0; i < 3; i++) {
+            this.enimies.add(new StandMarble(ImgInfo.ENEMY_PATH[i], ImgInfo.ENEMY_NAME[i], Global.ENEMYPOS_X[i], -100, ImgInfo.ENEMY_INFO[i]));
+        }
+        this.state = 0;
     }
 
     @Override
     public void sceneUpdate() {
-        for (int i = 0; i < this.enimies.size(); i++) {
-            if (this.enimies.get(i).getIsCollide()) {
-                this.enimies.get(i).update();
+        if (this.state == 0) {
+            this.background.setX(2 * ImgInfo.BACKGROUND_SIZE[idx][0]);
+            this.dropEnemies();
+        } else if (this.state == 1) {            
+            for (int i = 0; i < this.enimies.size(); i++) {
+                if (this.enimies.get(i).getIsCollide()) {
+                    this.enimies.get(i).update();
+                }
             }
-        }
-        this.shine.get(currentIdx).update();
-        this.shine.get(currentIdx).setCenterX(this.marbles.get(currentIdx).getCenterX());
-        this.shine.get(currentIdx).setCenterY(this.marbles.get(currentIdx).getCenterY());
+            this.shine.get(currentIdx).setShine(true);
+            this.shine.get(currentIdx).update();
+            this.shine.get(currentIdx).setCenterX(this.marbles.get(currentIdx).getCenterX());
+            this.shine.get(currentIdx).setCenterY(this.marbles.get(currentIdx).getCenterY());
 
-        for (int i = 0; i < this.marbles.size(); i++) {
-            this.marbles.get(i).update();
-        }
+            for (int i = 0; i < this.marbles.size(); i++) {
+                this.marbles.get(i).update();
+            }
 
-        for (int i = 0; i < this.marbles.size(); i++) {
-            for (int j = i + 1; j < this.marbles.size(); j++) {
-                if (this.marbles.get(i).isCollision(this.marbles.get(j))) {
-                    this.marbles.set(j, this.marbles.get(i).strike(this.marbles.get(j)));
-                    for (int k = 0; k < this.enimies.size(); k++) {
-                        this.marbles.get(j).useSkill(1, this.enimies.get(k));
+            for (int i = 0; i < this.marbles.size(); i++) {
+                for (int j = i + 1; j < this.marbles.size(); j++) {
+                    if (this.marbles.get(i).isCollision(this.marbles.get(j))) {
+                        this.marbles.set(j, this.marbles.get(i).strike(this.marbles.get(j)));
+                        for (int k = 0; k < this.enimies.size(); k++) {
+                            this.marbles.get(j).useSkill(1, this.enimies.get(k));
+                        }
                     }
                 }
             }
-        }
 
-        for (int i = 0; i < this.marbles.size(); i++) {
-            for (int j = 0; j < this.enimies.size(); j++) {
-                if (this.marbles.get(i).isCollision(this.enimies.get(j))) {
-                    Marble tmp = this.marbles.get(i).strike(this.enimies.get(j));
-                    this.enimies.get(j).setGo(tmp.getGoVec());
-                    this.enimies.get(j).setIsCollide(true);
-                    this.marbles.get(i).useSkill(0, this.enimies.get(j));
+            for (int i = 0; i < this.marbles.size(); i++) {
+                for (int j = 0; j < this.enimies.size(); j++) {
+                    if (this.marbles.get(i).isCollision(this.enimies.get(j))) {
+                        Marble tmp = this.marbles.get(i).strike(this.enimies.get(j));
+                        this.enimies.get(j).setGo(tmp.getGoVec());
+                        this.enimies.get(j).setIsCollide(true);
+                        this.marbles.get(i).useSkill(0, this.enimies.get(j));
+                        if (this.enimies.get(j).getHp() <= 0) {
+                            this.enimies.get(j).setCenterY(Global.FRAME_Y + 200); //敵人死亡
+                        }
+                    }
                 }
             }
-        }
-        if (checkAllStop()) {
-            if (this.count != 0) {
-                this.currentIdx = this.count % 3;
-            }
-            for (int j = 0; j < this.enimies.size(); j++) {
-                if (this.enimies.get(j).getIsCollide()) {
-                    this.enimies.get(j).setIsCollide(false);
+            if (checkAllStop()) {
+                if (this.count != 0) {
+                    this.currentIdx = this.count % 3;
+                }
+                for (int j = 0; j < this.enimies.size(); j++) {
+                    if (this.enimies.get(j).getIsCollide()) {
+                        this.enimies.get(j).setIsCollide(false);
+                    }
+                }
+                
+                if (isEnd()) {
+                    this.shine.get(currentIdx).setShine(false);
+                    this.state = 2;                    
                 }
             }
+
+        } else if (state == 2) {
+            scrollScene();
+            resetEnemies();
         }
 
-        if (isEnd()) {
-//            this.sceneController.changeScene(new Stage2Scene(sceneController));
+    }
+
+    private void resetEnemies() {
+        for (int i = 0; i < 3; i++) {
+            this.enimies.set(i, new StandMarble(ImgInfo.ENEMY_PATH[i], ImgInfo.ENEMY_NAME[i], Global.ENEMYPOS_X[i], -100, ImgInfo.ENEMY_INFO[i]));
+        }
+    }
+
+    private void scrollScene() {
+        if (this.background.getX() > ImgInfo.BACKGROUND_SIZE[idx][0]) {
+            this.background.offset(-5);
+        }
+        if (this.background.getX() <= ImgInfo.BACKGROUND_SIZE[idx][0]) {
+            this.state = 0;
+        }
+    }
+
+    private void dropEnemies() {
+        for (int i = 0; i < this.enimies.size(); i++) {
+            if (this.enimies.get(i).getCenterY() < Global.ENEMYPOS_Y[i]) {
+                this.enimies.get(i).offset(0, Global.ENEMYPOS_Y[i] / 40);
+            }
+        }
+        for (int i = 0; i < this.enimies.size(); i++) {
+            if (this.enimies.get(i).getCenterY() >= Global.ENEMYPOS_Y[i]) {
+                this.state = 1;
+            }
         }
     }
 

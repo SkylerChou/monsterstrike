@@ -17,6 +17,7 @@ public class SpecialEffect extends GameObject {
     private BufferedImage currentImg;
     private Delay delay;
     private int count;
+    private boolean isShine;
 
     public SpecialEffect(String[] path, int x, int y, int[] info) {
         super(x, y, info[0], info[1], info[2]);
@@ -27,17 +28,22 @@ public class SpecialEffect extends GameObject {
         this.delay.start();
         this.currentImg = img1;
         this.count = 0;
+        this.isShine = false;
     }
 
     @Override
     public void paintComponent(Graphics g) {
-//        g.drawImage(this.currentImg, (int) (this.getCenterX() - this.getR()), (int) (this.getCenterY() - this.getR()), null);
-        g.drawImage(this.currentImg, (int) (this.getCenterX() - this.getR()), (int) (this.getCenterY() - this.getR()), 130, 130, null);
+        if (this.isShine) {
+            g.drawImage(this.currentImg, (int) (this.getCenterX() - this.getR()), (int) (this.getCenterY() - this.getR()), 130, 130, null);
+        }
+    }
 
+    public void setShine(boolean isShine) {
+        this.isShine = isShine;
     }
 
     @Override
-    public void update() {        
+    public void update() {
         if (this.delay.isTrig()) {
             this.count++;
             if (this.count % 2 != 0) {
