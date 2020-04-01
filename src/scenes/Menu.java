@@ -27,10 +27,11 @@ public class Menu extends Scene {
     private Dino dino;
     private ArrayList<Button> buttons;
     private Delay delay;
+    private boolean isEnter;
 
     public Menu(SceneController sceneController) {
         super(sceneController);
-
+        
     }
 
     @Override
@@ -43,7 +44,7 @@ public class Menu extends Scene {
         this.buttons.add(new Button(ImgInfo.RANK, Global.SCREEN_X / 2 - 90, Global.SCREEN_Y / 2 + 65, ImgInfo.MAINBUTTON_INFO[0], ImgInfo.MAINBUTTON_INFO[1]));
         this.buttons.add(new Button(ImgInfo.HOWTOPLAY, Global.SCREEN_X / 2 - 90, Global.SCREEN_Y / 2 + 115, ImgInfo.MAINBUTTON_INFO[0], ImgInfo.MAINBUTTON_INFO[1]));
         this.buttons.add(new Button(ImgInfo.EXIT, Global.SCREEN_X / 2 - 90, Global.SCREEN_Y / 2 + 165, ImgInfo.MAINBUTTON_INFO[0], ImgInfo.MAINBUTTON_INFO[1]));
-
+        this.isEnter = false;
         this.delay = new Delay(30);
         this.delay.start();
     }
@@ -52,11 +53,27 @@ public class Menu extends Scene {
     public void sceneUpdate() {
         this.dino.update();
         for (int i = 0; i < this.buttons.size(); i++) {
-            if (this.dino.getCenterY()  == this.buttons.get(i).getCenterY()) {
-                if(this.delay.isTrig()){
-                   this.buttons.get(i).update(); 
+            if (this.dino.getCenterY() == this.buttons.get(i).getCenterY()) {
+                if (this.delay.isTrig()) {
+                    this.buttons.get(i).update();
                 }
             }
+        }
+        
+        if (this.isEnter && this.dino.getCenterY() == Global.SCREEN_Y / 2 - 35) {
+            sceneController.changeScene(new Stage1Scene(sceneController));
+            this.isEnter = false;
+        } else if (this.isEnter && this.dino.getCenterY() == Global.SCREEN_Y / 2 + 15) {
+            sceneController.changeScene(new MainScene(sceneController));
+            this.isEnter = false;
+        } else if (this.isEnter && this.dino.getCenterY() == Global.SCREEN_Y / 2 + 65) {
+
+        } else if (this.isEnter && this.dino.getCenterY() == Global.SCREEN_Y / 2 + 115) {
+            this.isEnter = false;
+
+        } else if (this.isEnter && this.dino.getCenterY() == Global.SCREEN_Y / 2 + 165) {
+            System.exit(1);
+            this.isEnter = false;
         }
 
     }
@@ -109,6 +126,7 @@ public class Menu extends Scene {
                         dino.move();
                         break;
                     case Global.ENTER:
+                        isEnter = true;
                         dino.setDinoRun();
                         break;
                 }
