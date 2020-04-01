@@ -35,7 +35,7 @@ public class Menu extends Scene {
 
     @Override
     public void sceneBegin() {
-        this.menu = new Background(ImgInfo.MENU, 0, 0);
+        this.menu = new Background(ImgInfo.MENU, 0, 0, 1);
         this.buttons = new ArrayList<>();
         this.dino = new Dino(ImgInfo.DINO, Global.SCREEN_X / 2 - 150, Global.SCREEN_Y / 2 - 35, Dino.STEPS_WALK);
         this.buttons.add(new Button(ImgInfo.SINGLE, Global.SCREEN_X / 2 - 90, Global.SCREEN_Y / 2 - 35, ImgInfo.MAINBUTTON_INFO[0], ImgInfo.MAINBUTTON_INFO[1]));

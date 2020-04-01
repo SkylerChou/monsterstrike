@@ -5,20 +5,31 @@
  */
 package interfaceskills;
 
+import java.awt.Graphics;
 import monsterstrike.gameobject.marble.Marble;
 
 /**
  *
  * @author kim19
  */
-public class DecreaseHalfAttack implements Skills{
+public class DecreaseHalfAttack implements Skills {
 
     @Override
     public void useSkill(Marble self, Marble target) {
-        int atk = self.getAtk() /2;
+        int atk = self.getAtk() / 2;
         System.out.print(self.getName() + " 爆擊 !");
         target.setHp(target.getHp() - atk);
         System.out.println(target.getName() + " 剩下血量 :" + target.getHp() + "點");
     }
-    
+
+    @Override
+    public void update() {
+
+    }
+
+    @Override
+    public void paintSkill(Graphics g) {
+
+    }
+
 }
