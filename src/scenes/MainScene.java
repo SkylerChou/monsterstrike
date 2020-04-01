@@ -32,6 +32,7 @@ public class MainScene extends Scene {
     private Delay delay;
     private int count;
     private int idx; //背景idx
+    private Button setting;
 
     public MainScene(SceneController sceneController) {
         super(sceneController);
@@ -45,15 +46,16 @@ public class MainScene extends Scene {
         this.marbles = new ArrayList<>();
         this.shine = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
-            this.marbles.add(new ReboundMarble(ImgInfo.MYMARBLE_PATH[i], ImgInfo.MYMARBLE_NAME[i], Global.POSITION_X[i], Global.POSITION_Y[i], ImgInfo.MYMARBLE_INFO[i]));  
+            this.marbles.add(new ReboundMarble(ImgInfo.MYMARBLE_PATH[i], ImgInfo.MYMARBLE_NAME[i], Global.POSITION_X[i], Global.POSITION_Y[i], ImgInfo.MYMARBLE_INFO[i]));
         }
         this.shine.add(new SpecialEffect(ImgInfo.SHINE_ICE, (int) this.marbles.get(currentIdx).getCenterX(), (int) this.marbles.get(currentIdx).getCenterX(), ImgInfo.SHINE_INFO));
         this.shine.add(new SpecialEffect(ImgInfo.SHINE_FIRE, (int) this.marbles.get(currentIdx).getCenterX(), (int) this.marbles.get(currentIdx).getCenterX(), ImgInfo.SHINE_INFO));
         this.shine.add(new SpecialEffect(ImgInfo.SHINE_GRASS, (int) this.marbles.get(currentIdx).getCenterX(), (int) this.marbles.get(currentIdx).getCenterX(), ImgInfo.SHINE_INFO));
         this.arrow = new Arrow(ImgInfo.ARROW, 0, 0, ImgInfo.ARROW_INFO);
+        this.setting = new Button(ImgInfo.SETTING, 0, 0, ImgInfo.SETTING_INFO[0], ImgInfo.SETTING_INFO[1]);
 
         this.currentIdx = 0;
-        this.delay = new Delay(5);
+        this.delay = new Delay(25);
         this.delay.start();
         this.count = 0;
         this.isShine = true;
@@ -61,6 +63,9 @@ public class MainScene extends Scene {
 
     @Override
     public void sceneUpdate() {
+        if (this.delay.isTrig()) {
+            this.setting.update();
+        }
         this.shine.get(currentIdx).update();
         this.shine.get(currentIdx).setCenterX(this.marbles.get(currentIdx).getCenterX());
         this.shine.get(currentIdx).setCenterY(this.marbles.get(currentIdx).getCenterY());
@@ -101,6 +106,7 @@ public class MainScene extends Scene {
     @Override
     public void paint(Graphics g) {
         this.background.paint(g);
+        this.setting.paintOther(g, ImgInfo.SETTING_INFO);
         if (this.arrow.getShow()) {
             this.arrow.paint(g);
         }

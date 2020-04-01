@@ -46,15 +46,6 @@ public class ImgInfo {
 
     //屬性光圈
 
-    public static final String GREENGENIE = "/resources/greenGenie1.png";
-    public static final int[] GREENGENIE_INFO = {200, 200, 55, 1, 50};//img_width, img_height, r, mass, velocity
-
-    public static final String MUSHROOM = "/resources/mushroom1.png";
-    public static final int[] MUSHROOM_INFO = {100, 100, 50, 1, 50};
-
-    public static final String PIG = "/resources/pig1.png";
-    public static final int[] PIG_INFO = {130, 130, 50, 2, 50};
-
     public static final int[] SHINE_INFO = {130, 130, 65, 0, 0};
     public static final String[] SHINE_ICE = {"/resources/ice1.png", "/resources/ice2.png"};
     public static final String[] SHINE_FIRE = {"/resources/fire1.png", "/resources/fire2.png"};
@@ -100,5 +91,5 @@ public class ImgInfo {
     public static final String[] SOUND = {"/resources/turnon.png", "/resources/turnoff.png"};
     public static final String[] CONTROL = {"/resources/start.png", "/resources/stop.png"};
     public static final String RETURN = "/resources/return.png";
-    public static final int[] SETTING_INFO = {25, 25};//img_width, img_height   
+    public static final int[] SETTING_INFO = {50, 50};//img_width, img_height   
 }

@@ -7,7 +7,6 @@ package scenes;
 
 import controllers.SceneController;
 import java.awt.Graphics;
-import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import monsterstrike.gameobject.Background;
 import monsterstrike.gameobject.Button;
@@ -27,11 +26,12 @@ public class Menu extends Scene {
     private Dino dino;
     private ArrayList<Button> buttons;
     private Delay delay;
+
     private boolean isEnter;
 
     public Menu(SceneController sceneController) {
         super(sceneController);
-        
+
     }
 
     @Override
@@ -45,21 +45,21 @@ public class Menu extends Scene {
         this.buttons.add(new Button(ImgInfo.HOWTOPLAY, Global.SCREEN_X / 2 - 90, Global.SCREEN_Y / 2 + 115, ImgInfo.MAINBUTTON_INFO[0], ImgInfo.MAINBUTTON_INFO[1]));
         this.buttons.add(new Button(ImgInfo.EXIT, Global.SCREEN_X / 2 - 90, Global.SCREEN_Y / 2 + 165, ImgInfo.MAINBUTTON_INFO[0], ImgInfo.MAINBUTTON_INFO[1]));
         this.isEnter = false;
-        this.delay = new Delay(30);
+        this.delay = new Delay(25);
         this.delay.start();
     }
 
     @Override
     public void sceneUpdate() {
         this.dino.update();
-        for (int i = 0; i < this.buttons.size(); i++) {
-            if (this.dino.getCenterY() == this.buttons.get(i).getCenterY()) {
-                if (this.delay.isTrig()) {
+        if (this.delay.isTrig()) {
+            for (int i = 0; i < this.buttons.size(); i++) {
+                if (this.dino.getCenterY() == this.buttons.get(i).getCenterY()) {
                     this.buttons.get(i).update();
                 }
             }
         }
-        
+
         if (this.isEnter && this.dino.getCenterY() == Global.SCREEN_Y / 2 - 35) {
             sceneController.changeScene(new Stage1Scene(sceneController));
             this.isEnter = false;
@@ -75,7 +75,6 @@ public class Menu extends Scene {
             System.exit(1);
             this.isEnter = false;
         }
-
     }
 
     @Override
@@ -100,14 +99,6 @@ public class Menu extends Scene {
     @Override
     public CommandSolver.MouseCommandListener getMouseListener() {
         return null;
-    }
-
-    public class MyMouseListener implements CommandSolver.MouseCommandListener {
-
-        @Override
-        public void mouseTrig(MouseEvent e, CommandSolver.MouseState state, long trigTime) {
-
-        }
     }
 
     public class MyKeyListener implements CommandSolver.KeyListener {
