@@ -20,8 +20,8 @@ public class SkillRenderer {
     private int imgNum;
     private boolean isStop;
 
-    public SkillRenderer(int skillIdx, int imgNum, int delay) {
-        this.img = IRC.getInstance().tryGetImage(SKILL_PATH[skillIdx]);
+    public SkillRenderer(int skillIdx, int attribute, int imgNum, int delay) {
+        this.img = IRC.getInstance().tryGetImage(SKILL_PATH[skillIdx][attribute]);
         this.skillIdx = skillIdx;
         this.imgIdx = 0;
         this.imgNum = imgNum;
@@ -32,10 +32,10 @@ public class SkillRenderer {
 
     public void update() {
         if (this.delay.isTrig()) {          
-            if (this.imgIdx++ == this.imgNum - 1) {                 
-                this.imgIdx = 0;
+            if (this.imgIdx++ == this.imgNum - 1) {         
                 this.stop();
                 this.isStop = true;
+                this.imgIdx = this.imgNum - 1;
             }
         }
     }
@@ -58,9 +58,9 @@ public class SkillRenderer {
 
     public void paint(Graphics g, int x, int y, int w, int h) {
         g.drawImage(img, x, y, x + w, y + h,
-                imgIdx * SKILL_UNIT[skillIdx], 0,
-                (imgIdx + 1) * SKILL_UNIT[skillIdx],
-                SKILL_UNIT[skillIdx], null);
+                imgIdx * SKILL_UNIT[skillIdx][0], 0,
+                (imgIdx + 1) * SKILL_UNIT[skillIdx][0],
+                SKILL_UNIT[skillIdx][1], null);
 
     }
 }

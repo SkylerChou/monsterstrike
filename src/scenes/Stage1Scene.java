@@ -25,7 +25,6 @@ public class Stage1Scene extends Scene {
     private int currentIdx;
     private int count;
     private int state;
-    private Delay dropDelay;
     private int idx;
 
     public Stage1Scene(SceneController sceneController) {
@@ -34,7 +33,7 @@ public class Stage1Scene extends Scene {
 
     @Override
     public void sceneBegin() {
-        this.idx = 2;
+        this.idx = 3;
         this.background = new Background(ImgInfo.BACKGROUND_PATH[idx], 2 * ImgInfo.BACKGROUND_SIZE[idx][0], ImgInfo.BACKGROUND_SIZE[idx][1], idx);
         this.marbles = new ArrayList<>();
         this.shine = new ArrayList<>();
@@ -42,10 +41,8 @@ public class Stage1Scene extends Scene {
         for (int i = 0; i < 3; i++) {
             this.marbles.add(new ReboundMarble(ImgInfo.MYMARBLE_PATH[i], ImgInfo.MYMARBLE_NAME[i], Global.POSITION_X[i], Global.POSITION_Y[i], ImgInfo.MYMARBLE_INFO[i]));
             this.enimies.add(new StandMarble(ImgInfo.ENEMY_PATH[i], ImgInfo.ENEMY_NAME[i], Global.ENEMYPOS_X[i], -100, ImgInfo.ENEMY_INFO[i]));
-        }
-        this.shine.add(new SpecialEffect(ImgInfo.SHINE_ICE, (int) this.marbles.get(currentIdx).getCenterX(), (int) this.marbles.get(currentIdx).getCenterX(), ImgInfo.SHINE_INFO));
-        this.shine.add(new SpecialEffect(ImgInfo.SHINE_FIRE, (int) this.marbles.get(currentIdx).getCenterX(), (int) this.marbles.get(currentIdx).getCenterX(), ImgInfo.SHINE_INFO));
-        this.shine.add(new SpecialEffect(ImgInfo.SHINE_GRASS, (int) this.marbles.get(currentIdx).getCenterX(), (int) this.marbles.get(currentIdx).getCenterX(), ImgInfo.SHINE_INFO));
+            this.shine.add(new SpecialEffect(ImgInfo.SHINE_PATH[ImgInfo.MYMARBLE_INFO[i][5]], (int) this.marbles.get(currentIdx).getCenterX(), (int) this.marbles.get(currentIdx).getCenterX(), ImgInfo.SHINE_INFO));
+        }        
         this.arrow = new Arrow(ImgInfo.ARROW, 0, 0, ImgInfo.ARROW_INFO);
         this.currentIdx = 0;
         this.count = 0;
@@ -126,6 +123,10 @@ public class Stage1Scene extends Scene {
         }
     }
 
+    public ArrayList<Marble> getMarbles() {
+        return marbles;
+    }
+    
     private void scrollScene() {
         if (this.background.getX() > ImgInfo.BACKGROUND_SIZE[idx][0]) {
             this.background.offset(-5);

@@ -34,9 +34,9 @@ public class ImgInfo {
     private static final int[] GRAYTEETH_INFO = {145, 145, 50, 2, 50, 0};
 
     //My怪獸
-    public static final String[][] MYMARBLE_PATH = {GRAYTEETH, BLUETEETH, RICEBALL, DEVIL};
-    public static final String[] MYMARBLE_NAME = {"灰齒怪", "獨眼藍怪", "飯糰", "小惡魔"};
-    public static final int[][] MYMARBLE_INFO = {GRAYTEETH_INFO, BLUETEETH_INFO, RICEBALL_INFO, DEVIL_INFO};
+    public static final String[][] MYMARBLE_PATH = {GRAYTEETH, RICEBALL, DEVIL, BLUETEETH, SWEETPOTATO, GRAYTEETH};
+    public static final String[] MYMARBLE_NAME = {"灰齒怪", "飯糰", "小惡魔", "獨眼藍怪", "番薯", "綠齒怪"};
+    public static final int[][] MYMARBLE_INFO = {GRAYTEETH_INFO, RICEBALL_INFO, DEVIL_INFO, BLUETEETH_INFO, SWEETPOTATO_INFO, GRAYTEETH_INFO};
     
     
     //敵人怪獸
@@ -46,20 +46,13 @@ public class ImgInfo {
 
     //屬性光圈
 
-    public static final String GREENGENIE = "/resources/greenGenie1.png";
-    public static final int[] GREENGENIE_INFO = {200, 200, 55, 1, 50};//img_width, img_height, r, mass, velocity
-
-    public static final String MUSHROOM = "/resources/mushroom1.png";
-    public static final int[] MUSHROOM_INFO = {100, 100, 50, 1, 50};
-
-    public static final String PIG = "/resources/pig1.png";
-    public static final int[] PIG_INFO = {130, 130, 50, 2, 50};
-
     public static final int[] SHINE_INFO = {130, 130, 65, 0, 0};
-    public static final String[] SHINE_ICE = {"/resources/ice1.png", "/resources/ice2.png"};
-    public static final String[] SHINE_FIRE = {"/resources/fire1.png", "/resources/fire2.png"};
-    public static final String[] SHINE_GRASS = {"/resources/grass1.png", "/resources/grass2.png"};
-
+    private static final String[] SHINE_ICE = {"/resources/ice1.png", "/resources/ice2.png"};
+    private static final String[] SHINE_FIRE = {"/resources/fire1.png", "/resources/fire2.png"};
+    private static final String[] SHINE_GRASS = {"/resources/grass1.png", "/resources/grass2.png"};
+    
+    public static final String[][] SHINE_PATH = {SHINE_ICE, SHINE_FIRE, SHINE_GRASS};
+    
     
     //背景
     public static final String GRASS_PATH = "/resources/backgroundGrass1.png";

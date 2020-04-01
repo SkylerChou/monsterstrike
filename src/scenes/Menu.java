@@ -72,7 +72,7 @@ public class Menu extends Scene {
             this.isEnter = false;
 
         } else if (this.isEnter && this.dino.getCenterY() == Global.SCREEN_Y / 2 + 165) {
-            System.exit(1);
+            System.exit(0);
             this.isEnter = false;
         }
 
