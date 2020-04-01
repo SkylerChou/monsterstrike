@@ -5,14 +5,13 @@
  */
 package interfaceskills;
 
-import java.awt.Graphics;
 import monsterstrike.gameobject.marble.Marble;
 
 /**
  *
  * @author kim19
  */
-public class Heal implements Skills {
+public class Heal implements Skills{
 
     @Override
     public void useSkill(Marble self, Marble target) {
@@ -20,15 +19,5 @@ public class Heal implements Skills {
         self.setHp(self.getHp() + self.getAtk());
         System.out.println(self.getName() + " 剩下血量" + self.getHp() + "點");
     }
-
-    @Override
-    public void update() {
-
-    }
-
-    @Override
-    public void paintSkill(Graphics g) {
-
-    }
-
+    
 }

@@ -5,15 +5,10 @@
  */
 package interfaceskills;
 
-import java.awt.Graphics;
 import monsterstrike.gameobject.marble.Marble;
 
 public interface Skills {
 
-    public void useSkill(Marble self, Marble target);
-
-    public void update();
-
-    public void paintSkill(Graphics g);
+    public void useSkill(Marble self,Marble target);
 
 }

@@ -32,7 +32,6 @@ public class PenetrateMarble extends Marble {
 
     @Override
     public void update() {
-        this.delay.start();
         if (this.delay.isTrig()) {
             this.count++;
             if (this.count % 2 != 0) {
@@ -91,6 +90,5 @@ public class PenetrateMarble extends Marble {
         g.drawOval((int) (this.getCenterX() - this.getR()),
                 (int) (this.getCenterY() - this.getR()),
                 (int) (2 * this.getR()), (int) (2 * this.getR()));
-        
     }
 }
