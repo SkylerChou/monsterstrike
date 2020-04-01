@@ -17,7 +17,7 @@ public class Button extends SenceObject {
     private int count;
 
     public Button(String[] path, int x, int y, int width, int height) {
-        super(x, y, width, height);
+        super(x, y, ImgInfo.MAINBUTTON_INFO[0], ImgInfo.MAINBUTTON_INFO[1]);
         this.img1 = IRC.getInstance().tryGetImage(path[0]);
         this.img2 = IRC.getInstance().tryGetImage(path[1]);
         this.currentImg = this.img1;
@@ -25,16 +25,16 @@ public class Button extends SenceObject {
 
     @Override
     public void update() {
-        this.count++;
-        if (this.count % 2 != 0) {
-            this.currentImg = this.img2;
-        } else {
-            this.currentImg = this.img1;
-        }
+            this.count++;
+            if (this.count % 2 != 0) {
+                this.currentImg = this.img2;
+            } else {
+                this.currentImg = this.img1;
+            }
     }
 
     @Override
     public void paint(Graphics g) {
-        g.drawImage(this.currentImg, (int) this.getCenterX(), (int) this.getCenterY(), 200, 50, null);
+        g.drawImage(this.currentImg, (int) this.getCenterX(), (int)this.getCenterY(), 200, 50, null);
     }
 }

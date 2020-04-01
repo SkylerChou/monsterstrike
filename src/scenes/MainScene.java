@@ -32,8 +32,6 @@ public class MainScene extends Scene {
     private Delay delay;
     private int count;
     private int idx; //背景idx
-    private Button returnMenu;
-    private boolean isReturn;
 
     public MainScene(SceneController sceneController) {
         super(sceneController);
@@ -43,23 +41,22 @@ public class MainScene extends Scene {
     public void sceneBegin() {
         this.idx = 0;
         this.background = new Background(ImgInfo.BACKGROUND_PATH[idx],
-                2 * ImgInfo.BACKGROUND_SIZE[idx][0], ImgInfo.BACKGROUND_SIZE[idx][1]);
+                2 * ImgInfo.BACKGROUND_SIZE[idx][0], ImgInfo.BACKGROUND_SIZE[idx][1], idx);
         this.marbles = new ArrayList<>();
         this.shine = new ArrayList<>();
-        this.marbles.add(new ReboundMarble(ImgInfo.SWEETPOTATO, "番薯", POS_AX, POS_AY, ImgInfo.SWEETPOTATO_INFO));//冰
-        this.marbles.add(new ReboundMarble(ImgInfo.DEVIL, "小惡魔", POS_BX, POS_BY, ImgInfo.DEVIL_INFO));//火
-        this.marbles.add(new ReboundMarble(ImgInfo.RICEBALL, "飯糰", POS_CX, POS_CY, ImgInfo.RICEBALL_INFO));//草
+        for (int i = 0; i < 3; i++) {
+            this.marbles.add(new ReboundMarble(ImgInfo.MYMARBLE_PATH[i], ImgInfo.MYMARBLE_NAME[i], Global.POSITION_X[i], Global.POSITION_Y[i], ImgInfo.MYMARBLE_INFO[i]));  
+        }
         this.shine.add(new SpecialEffect(ImgInfo.SHINE_ICE, (int) this.marbles.get(currentIdx).getCenterX(), (int) this.marbles.get(currentIdx).getCenterX(), ImgInfo.SHINE_INFO));
         this.shine.add(new SpecialEffect(ImgInfo.SHINE_FIRE, (int) this.marbles.get(currentIdx).getCenterX(), (int) this.marbles.get(currentIdx).getCenterX(), ImgInfo.SHINE_INFO));
         this.shine.add(new SpecialEffect(ImgInfo.SHINE_GRASS, (int) this.marbles.get(currentIdx).getCenterX(), (int) this.marbles.get(currentIdx).getCenterX(), ImgInfo.SHINE_INFO));
         this.arrow = new Arrow(ImgInfo.ARROW, 0, 0, ImgInfo.ARROW_INFO);
-        this.returnMenu=new Button(ImgInfo.HOME,100,100,ImgInfo.SETTING_INFO[0],ImgInfo.SETTING_INFO[1]);
+
         this.currentIdx = 0;
         this.delay = new Delay(5);
         this.delay.start();
         this.count = 0;
         this.isShine = true;
-        this.isReturn = false;
     }
 
     @Override
@@ -85,9 +82,6 @@ public class MainScene extends Scene {
                 this.currentIdx = this.count % 3;
             }
         }
-        if(this.isReturn){
-            sceneController.changeScene(new Menu(sceneController));
-        }
     }
 
     private boolean checkAllStop() {
@@ -107,7 +101,6 @@ public class MainScene extends Scene {
     @Override
     public void paint(Graphics g) {
         this.background.paint(g);
-        this.returnMenu.paint(g);
         if (this.arrow.getShow()) {
             this.arrow.paint(g);
         }
@@ -138,7 +131,7 @@ public class MainScene extends Scene {
 
         @Override
         public void mouseTrig(MouseEvent e, CommandSolver.MouseState state, long trigTime) {
-           
+
             if (checkAllStop() && state == CommandSolver.MouseState.PRESSED) {
                 this.startX = e.getX();
                 this.startY = e.getY();

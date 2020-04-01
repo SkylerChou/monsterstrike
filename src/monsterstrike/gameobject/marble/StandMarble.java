@@ -57,9 +57,9 @@ public class StandMarble extends Marble {
 
     @Override
     public void paintComponent(Graphics g) {
-        if (this.getHp() > 0) {
+//        if (this.getHp() > 0) {
             g.drawImage(img1, (int) this.getX(), (int) this.getY(), null);
-        }
+//        }
 //        g.drawOval((int) (this.getCenterX() - this.getR()),
 //                (int) (this.getCenterY() - this.getR()),
 //                (int) (2 * this.getR()), (int) (2 * this.getR()));

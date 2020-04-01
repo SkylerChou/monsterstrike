@@ -15,10 +15,10 @@ public class Background extends SenceObject{
     private BufferedImage img;
     private int idx;
 
-    public Background(String path, int x, int y) {
+    public Background(String path, int x, int y, int idx) {
         super(x, y, Global.SCREEN_X, Global.SCREEN_Y);
         this.img = IRC.getInstance().tryGetImage(path);
-        this.idx = 1;
+        this.idx = idx;
     }
 
     public void offset(int dx) {

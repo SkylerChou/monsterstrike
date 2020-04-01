@@ -7,6 +7,7 @@ package scenes;
 
 import controllers.SceneController;
 import java.awt.Graphics;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import monsterstrike.gameobject.Background;
 import monsterstrike.gameobject.Button;
@@ -26,7 +27,6 @@ public class Menu extends Scene {
     private Dino dino;
     private ArrayList<Button> buttons;
     private Delay delay;
-    private boolean isEnter;
 
     public Menu(SceneController sceneController) {
         super(sceneController);
@@ -35,7 +35,7 @@ public class Menu extends Scene {
 
     @Override
     public void sceneBegin() {
-        this.menu = new Background(ImgInfo.MENU, 0, 0);
+        this.menu = new Background(ImgInfo.MENU, 0, 0, 1);
         this.buttons = new ArrayList<>();
         this.dino = new Dino(ImgInfo.DINO, Global.SCREEN_X / 2 - 150, Global.SCREEN_Y / 2 - 35, Dino.STEPS_WALK);
         this.buttons.add(new Button(ImgInfo.SINGLE, Global.SCREEN_X / 2 - 90, Global.SCREEN_Y / 2 - 35, ImgInfo.MAINBUTTON_INFO[0], ImgInfo.MAINBUTTON_INFO[1]));
@@ -46,34 +46,19 @@ public class Menu extends Scene {
 
         this.delay = new Delay(30);
         this.delay.start();
-        this.isEnter = false;
     }
 
     @Override
     public void sceneUpdate() {
         this.dino.update();
         for (int i = 0; i < this.buttons.size(); i++) {
-            if (this.dino.getCenterY() == this.buttons.get(i).getCenterY()) {
-                if (this.delay.isTrig()) {
-                    this.buttons.get(i).update();
+            if (this.dino.getCenterY()  == this.buttons.get(i).getCenterY()) {
+                if(this.delay.isTrig()){
+                   this.buttons.get(i).update(); 
                 }
             }
         }
-        if (this.isEnter && this.dino.getCenterY() == Global.SCREEN_Y / 2 - 35) {
-            sceneController.changeScene(new Stage1Scene(sceneController));
-             this.isEnter=false;
-        } else if (this.isEnter && this.dino.getCenterY() == Global.SCREEN_Y / 2 + 15) {
-            sceneController.changeScene(new MainScene(sceneController));
-            this.isEnter=false;
-        } else if (this.isEnter && this.dino.getCenterY() == Global.SCREEN_Y / 2 + 65) {
 
-        } else if (this.isEnter && this.dino.getCenterY() == Global.SCREEN_Y / 2 + 115) {
-             this.isEnter=false;
-
-        } else if (this.isEnter && this.dino.getCenterY() == Global.SCREEN_Y / 2 + 165) {
-            System.exit(1);
-             this.isEnter=false;
-        }
     }
 
     @Override
@@ -100,6 +85,14 @@ public class Menu extends Scene {
         return null;
     }
 
+    public class MyMouseListener implements CommandSolver.MouseCommandListener {
+
+        @Override
+        public void mouseTrig(MouseEvent e, CommandSolver.MouseState state, long trigTime) {
+
+        }
+    }
+
     public class MyKeyListener implements CommandSolver.KeyListener {
 
         @Override
@@ -117,7 +110,6 @@ public class Menu extends Scene {
                         break;
                     case Global.ENTER:
                         dino.setDinoRun();
-                        isEnter = true;
                         break;
                 }
             }

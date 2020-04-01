@@ -32,6 +32,7 @@ public class ReboundMarble extends Marble {
 
     @Override
     public void update() {
+        this.delay.start();
         if (this.delay.isTrig()) {
             this.count++;
             if (this.count % 2 != 0) {
@@ -39,6 +40,9 @@ public class ReboundMarble extends Marble {
             } else {
                 this.currentImg = this.img1;
             }
+        }
+        if (this.getCurrentSkill() != null) {
+            this.getCurrentSkill().update();
         }
         isBound();
         move();

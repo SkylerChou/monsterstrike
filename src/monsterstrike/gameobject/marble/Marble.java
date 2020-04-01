@@ -28,6 +28,7 @@ public abstract class Marble extends GameObject {
     private int atk = 20;
     private int attribute;
     private Skills[] skills;
+        private Skills currentSkill;
     
 
     public Marble(String name, int x, int y, int[] info) {
@@ -44,6 +45,7 @@ public abstract class Marble extends GameObject {
         this.setSkills();
         this.useSkill = false;
         this.fiction = 0.05f * this.mass;
+        this.currentSkill = null;
     }
 
     @Override
@@ -146,6 +148,10 @@ public abstract class Marble extends GameObject {
     public int getAtk() {
         return this.atk;
     }
+    
+    public Skills getCurrentSkill(){
+        return this.currentSkill;
+    }
 
     public void setHp(int hp) {
         if (hp < 0) {
@@ -157,13 +163,19 @@ public abstract class Marble extends GameObject {
     public void setAtk(int atk) {
         this.atk = atk;
     }
+    
+    public void paintSkill(Graphics g) {
+        if (this.currentSkill != null) {
+            this.currentSkill.paintSkill(g);
+        }
+    }
 
     @Override
     public abstract void paintComponent(Graphics g);
 
     private void setSkills() {
         Skills skills[] = {
-            new NormalAttack(),
+            new NormalAttack(this.attribute),
             new CriticalAttack(),
             new DecreaseHalfAttack(),
             new Heal(),
@@ -177,5 +189,6 @@ public abstract class Marble extends GameObject {
 
     public void useSkill(int r, Marble target) {
         this.skills[r].useSkill(this, target);
+        this.currentSkill = this.skills[r];
     }
 }

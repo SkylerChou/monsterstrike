@@ -59,20 +59,20 @@ public class Dino extends SenceObject {
             this.currentStep = this.steps[this.count++];
         }
     }
-
+    
     public void move() {
         if (!this.isStand) {
             switch (this.dir) {
                 case Global.UP:
-                    if (this.getCenterY() < Global.SCREEN_Y / 2 - 30) {
-                        break;
-                    }
+                     if(this.getCenterY()<Global.SCREEN_Y / 2 - 30){
+                         break;
+                     }
                     this.offset(0, -50);
                     break;
                 case Global.DOWN:
-                    if (this.getCenterY() > Global.SCREEN_Y / 2 + 115) {
-                        break;
-                    }
+                    if(this.getCenterY()>Global.SCREEN_Y / 2 +115){
+                         break;
+                     }
                     this.offset(0, 50);
                     break;
             }
@@ -101,8 +101,8 @@ public class Dino extends SenceObject {
 
     @Override
     public void paint(Graphics g) {
-        g.drawImage(img, (int) this.getCenterX(), (int) this.getCenterY(),
-                (int) (this.getCenterX() + this.getWidth()), (int) (this.getCenterY() + this.getHeight()),
+        g.drawImage(img, (int)this.getCenterX(), (int)this.getCenterY(), 
+                (int)(this.getCenterX() + this.getWidth()), (int)(this.getCenterY() + this.getHeight()),
                 24 * this.currentStep, 0,
                 24 * this.currentStep + 24,
                 24, null);
