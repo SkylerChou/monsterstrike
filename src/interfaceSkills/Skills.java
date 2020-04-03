@@ -6,14 +6,19 @@
 package interfaceskills;
 
 import java.awt.Graphics;
+import java.util.ArrayList;
 import monsterstrike.gameobject.marble.Marble;
 
 public interface Skills {
 
-    public void useSkill(Marble self, Marble target);
+    public void genSkill(Marble self, Marble target);
+    
+    public void genSkill(Marble self, ArrayList<Marble> target);
 
     public void update();
 
+    public ArrayList<SkillComponent> getSkillComponent();
+    
     public void paintSkill(Graphics g);
 
 }

@@ -9,7 +9,7 @@ import controllers.IRC;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
-public class Button extends SenceObject {
+public class Button extends SceneObject {
 
     private BufferedImage img1;
     private BufferedImage img2;

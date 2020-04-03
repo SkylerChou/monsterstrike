@@ -15,7 +15,7 @@ import monsterstrike.util.Global;
  *
  * @author kim19
  */
-public class Dino extends SenceObject {
+public class Dino extends SceneObject {
 
     public static final int[] STEPS_WALK = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
     public static final int[] STEPS_RUN = {16, 17, 18, 19, 20, 21, 22, 23};

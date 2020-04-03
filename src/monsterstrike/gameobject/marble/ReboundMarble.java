@@ -19,20 +19,20 @@ public class ReboundMarble extends Marble {
 
     private Delay delay;
     private int count;
-   
+
     public ReboundMarble(String[] path, String name, int x, int y, int[] info) {
         super(name, x, y, info);
         this.img1 = IRC.getInstance().tryGetImage(path[0]);
         this.img2 = IRC.getInstance().tryGetImage(path[1]);
         this.currentImg = this.img1;
         this.delay = new Delay(20);
+        this.delay.start();
         this.count = 0;
         this.isCollide = false;
     }
 
     @Override
     public void update() {
-        this.delay.start();
         if (this.delay.isTrig()) {
             this.count++;
             if (this.count % 2 != 0) {
@@ -56,14 +56,19 @@ public class ReboundMarble extends Marble {
                 this.other.getCenterY() - this.getCenterY());
         Vector originGo = this.goVec;
         updateDir(nor);
-        if (nor.getValue() < this.getR() + this.other.getR()) {
-            if (other instanceof StandMarble) {
-                this.setGo(nor.resizeVec(-1 * originGo.getValue()));
-                this.goVec.setValue(originGo.getValue() * 0.7f);
-                this.offset(this.goVec.getX(), this.goVec.getY());
-            } else {
-                this.offset(this.goVec.getX(), this.goVec.getY());
-                this.other.offset(this.other.goVec.getX(), this.other.goVec.getY());
+        if (nor.getValue() <= this.getR() + this.other.getR()) {
+            if (this.goVec.getValue() == 0 && this.other.goVec.getValue() == 0) {
+                this.offset(-nor.getUnitX(), -nor.getUnitY());
+                this.other.offset(nor.getUnitX(), nor.getUnitY());
+            }else{
+                if (other instanceof StandMarble) {
+                    this.setGo(nor.resizeVec(-1 * originGo.getValue()));
+                    this.offset(this.goVec.getX(), this.goVec.getY());
+                    this.goVec.setValue(originGo.getValue() * 0.8f);
+                } else {
+                    this.offset(this.goVec.getX(), this.goVec.getY());
+                    this.other.offset(this.other.goVec.getX(), this.other.goVec.getY());
+                }
             }
         }
         return this.other;

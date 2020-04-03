@@ -7,6 +7,7 @@ package scenes;
 
 import monsterstrike.graph.Vector;
 import controllers.SceneController;
+import interfaceskills.SkillComponent;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -33,7 +34,7 @@ public class Stage1Scene extends Scene {
 
     @Override
     public void sceneBegin() {
-        this.idx = 3;
+        this.idx = 2;
         this.background = new Background(ImgInfo.BACKGROUND_PATH[idx], 2 * ImgInfo.BACKGROUND_SIZE[idx][0], ImgInfo.BACKGROUND_SIZE[idx][1], idx);
         this.marbles = new ArrayList<>();
         this.shine = new ArrayList<>();
@@ -42,11 +43,10 @@ public class Stage1Scene extends Scene {
             this.marbles.add(new ReboundMarble(ImgInfo.MYMARBLE_PATH[i], ImgInfo.MYMARBLE_NAME[i], Global.POSITION_X[i], Global.POSITION_Y[i], ImgInfo.MYMARBLE_INFO[i]));
             this.enimies.add(new StandMarble(ImgInfo.ENEMY_PATH[i], ImgInfo.ENEMY_NAME[i], Global.ENEMYPOS_X[i], -100, ImgInfo.ENEMY_INFO[i]));
             this.shine.add(new SpecialEffect(ImgInfo.SHINE_PATH[ImgInfo.MYMARBLE_INFO[i][5]], (int) this.marbles.get(currentIdx).getCenterX(), (int) this.marbles.get(currentIdx).getCenterX(), ImgInfo.SHINE_INFO));
-        }        
+        }
         this.arrow = new Arrow(ImgInfo.ARROW, 0, 0, ImgInfo.ARROW_INFO);
         this.currentIdx = 0;
         this.count = 0;
-
         this.state = 0;
     }
 
@@ -61,39 +61,22 @@ public class Stage1Scene extends Scene {
                     this.enimies.get(i).update();
                 }
             }
-            this.shine.get(currentIdx).setShine(true);
-            this.shine.get(currentIdx).update();
-            this.shine.get(currentIdx).setCenterX(this.marbles.get(currentIdx).getCenterX());
-            this.shine.get(currentIdx).setCenterY(this.marbles.get(currentIdx).getCenterY());
 
             for (int i = 0; i < this.marbles.size(); i++) {
                 this.marbles.get(i).update();
             }
 
-            for (int i = 0; i < this.marbles.size(); i++) {
-                for (int j = i + 1; j < this.marbles.size(); j++) {
-                    if (this.marbles.get(i).isCollision(this.marbles.get(j))) {
-                        this.marbles.set(j, this.marbles.get(i).strike(this.marbles.get(j)));
-                        for (int k = 0; k < this.enimies.size(); k++) {
-//                            this.marbles.get(j).useSkill(1, this.enimies.get(k));
-                        }
-                    }
+            setShine();
+            normalAttack();
+            criticalAttack();
+
+            for (int i = 0; i < this.enimies.size(); i++) {
+                if (this.enimies.get(i).getHp() <= 0) {
+                    this.enimies.get(i).setCenterY(Global.FRAME_Y + 200);
+                    this.enimies.remove(i); //敵人死亡
                 }
             }
 
-            for (int i = 0; i < this.marbles.size(); i++) {
-                for (int j = 0; j < this.enimies.size(); j++) {
-                    if (this.marbles.get(i).isCollision(this.enimies.get(j)) && this.marbles.get(i).getGoVec().getValue()>0) {
-                        Marble tmp = this.marbles.get(i).strike(this.enimies.get(j));
-                        this.enimies.get(j).setGo(tmp.getGoVec());
-                        this.enimies.get(j).setIsCollide(true);
-                        this.marbles.get(i).useSkill(0, this.enimies.get(j));
-                        if (this.enimies.get(j).getHp() <= 0) {
-                            this.enimies.get(j).setCenterY(Global.FRAME_Y + 200); //敵人死亡
-                        }
-                    }
-                }
-            }
             if (checkAllStop()) {
                 if (this.count != 0) {
                     this.currentIdx = this.count % 3;
@@ -103,8 +86,11 @@ public class Stage1Scene extends Scene {
                         this.enimies.get(j).setIsCollide(false);
                     }
                 }
+                for (int i = 0; i < this.marbles.size(); i++) {
+                    this.marbles.get(i).setUseSkill(true);
+                }
 
-                if (isEnd()) {
+                if (this.enimies.isEmpty() && allSkillStop()) {
                     this.shine.get(currentIdx).setShine(false);
                     this.state = 2;
                 }
@@ -112,26 +98,98 @@ public class Stage1Scene extends Scene {
 
         } else if (state == 2) {
             scrollScene();
-            resetEnemies();
         }
 
     }
 
-    private void resetEnemies() {
-        for (int i = 0; i < 3; i++) {
-            this.enimies.set(i, new StandMarble(ImgInfo.ENEMY_PATH[i], ImgInfo.ENEMY_NAME[i], Global.ENEMYPOS_X[i], -100, ImgInfo.ENEMY_INFO[i]));
-        }
+    @Override
+    public void sceneEnd() {
+
     }
 
     public ArrayList<Marble> getMarbles() {
         return marbles;
     }
-    
+
+    private boolean allSkillStop() {
+        for (int i = 0; i < this.marbles.size(); i++) {
+            ArrayList<SkillComponent> skills = this.marbles.get(i).getSkillComponent();
+            for (int j = 0; j < skills.size(); j++) {
+                if (!skills.get(j).getStop()) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    private void resetEnemies() {
+        for (int i = 0; i < 3; i++) {
+            this.enimies.add(new StandMarble(ImgInfo.ENEMY_PATH[i], ImgInfo.ENEMY_NAME[i], Global.random(100, 700), -100, ImgInfo.ENEMY_INFO[i]));
+        }
+    }
+
+    private void setShine() {
+        this.shine.get(currentIdx).setShine(true);
+        this.shine.get(currentIdx).update();
+        this.shine.get(currentIdx).setCenterX(this.marbles.get(currentIdx).getCenterX());
+        this.shine.get(currentIdx).setCenterY(this.marbles.get(currentIdx).getCenterY());
+    }
+
+    private void criticalAttack() {
+        for (int j = 0; j < this.marbles.size(); j++) {
+            if (j == currentIdx) {
+                continue;
+            }
+            for (int i = 0; i < this.marbles.size(); i++) {
+                if (i != j && this.marbles.get(i).isCollision(this.marbles.get(j))) {
+                    this.marbles.set(j, this.marbles.get(i).strike(this.marbles.get(j)));
+                    if (i == currentIdx) {
+                        this.marbles.get(j).setGo(this.marbles.get(j).getGoVec().multiplyScalar(0.1f));
+                        if (this.marbles.get(j).getUseSkill()) {
+                            this.marbles.get(j).genSkill(1, this.enimies);
+
+//                        ArrayList<SkillComponent> skills = this.marbles.get(j).getSkillComponent();
+//                        for (int l = 0; l < skills.size(); l++) {                            
+//                                if (skills.get(l).isCollision(this.enimies.get(k))) {
+//                                    int atk = (int) (this.marbles.get(j).getAtk() * Math.random() * 2 + 1);
+//                                    this.enimies.get(k).setHp(this.enimies.get(k).getHp() - atk);
+//                                    
+//                                }                           
+//                        }
+                        }
+                        this.marbles.get(j).setUseSkill(false);
+                    }
+                }
+            }
+        }
+    }
+
+    private void normalAttack() {
+        for (int i = 0; i < this.marbles.size(); i++) {
+            for (int j = 0; j < this.enimies.size(); j++) {
+                if (this.marbles.get(i).isCollision(this.enimies.get(j)) && this.marbles.get(i).getGoVec().getValue() > 0) {
+                    Marble tmp = this.marbles.get(i).strike(this.enimies.get(j));
+                    this.enimies.get(j).setGo(tmp.getGoVec());
+                    this.enimies.get(j).setIsCollide(true);
+                    this.marbles.get(i).genSkill(0, this.enimies.get(j));
+                    ArrayList<SkillComponent> skills = this.marbles.get(i).getSkillComponent();
+                    for (int l = 0; l < skills.size(); l++) {
+                        if (skills.get(l).isCollision(this.enimies.get(j))) {
+                            this.enimies.get(j).setHp(this.enimies.get(j).getHp() - this.marbles.get(i).getAtk());
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     private void scrollScene() {
         if (this.background.getX() > ImgInfo.BACKGROUND_SIZE[idx][0]) {
-            this.background.offset(-5);
+            this.background.offset(-10);
         }
         if (this.background.getX() <= ImgInfo.BACKGROUND_SIZE[idx][0]) {
+            resetEnemies();
             this.state = 0;
         }
     }
@@ -149,15 +207,6 @@ public class Stage1Scene extends Scene {
         }
     }
 
-    private boolean isEnd() {
-        for (int i = 0; i < this.enimies.size(); i++) {
-            if (this.enimies.get(i).getHp() > 0) {
-                return false;
-            }
-        }
-        return true;
-    }
-
     private boolean checkAllStop() {
         for (int i = 0; i < this.marbles.size(); i++) {
             if (this.marbles.get(i).getGoVec().getValue() != 0) {
@@ -165,11 +214,6 @@ public class Stage1Scene extends Scene {
             }
         }
         return true;
-    }
-
-    @Override
-    public void sceneEnd() {
-
     }
 
     @Override
@@ -187,7 +231,7 @@ public class Stage1Scene extends Scene {
         }
         for (int i = 0; i < this.marbles.size(); i++) {
             this.marbles.get(i).paintSkill(g);
-        }       
+        }
     }
 
     @Override

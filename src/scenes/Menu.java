@@ -9,13 +9,8 @@ import controllers.SceneController;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import monsterstrike.gameobject.Background;
-import monsterstrike.gameobject.Button;
-import monsterstrike.gameobject.Dino;
-import monsterstrike.gameobject.ImgInfo;
-import monsterstrike.util.CommandSolver;
-import monsterstrike.util.Delay;
-import monsterstrike.util.Global;
+import monsterstrike.gameobject.*;
+import monsterstrike.util.*;
 
 /**
  *
@@ -70,7 +65,6 @@ public class Menu extends Scene {
 
         } else if (this.isEnter && this.dino.getCenterY() == Global.SCREEN_Y / 2 + 115) {
             this.isEnter = false;
-
         } else if (this.isEnter && this.dino.getCenterY() == Global.SCREEN_Y / 2 + 165) {
             System.exit(0);
             this.isEnter = false;

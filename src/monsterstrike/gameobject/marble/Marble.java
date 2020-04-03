@@ -9,6 +9,7 @@ import monsterstrike.graph.Vector;
 import monsterstrike.util.Global;
 import interfaceskills.*;
 import java.awt.Graphics;
+import java.util.ArrayList;
 import monsterstrike.gameobject.GameObject;
 
 public abstract class Marble extends GameObject {
@@ -28,8 +29,7 @@ public abstract class Marble extends GameObject {
     private int atk = 20;
     private int attribute;
     private Skills[] skills;
-        private Skills currentSkill;
-    
+    private Skills currentSkill;
 
     public Marble(String name, int x, int y, int[] info) {
         super(x, y, info[0], info[1], info[2]);
@@ -40,10 +40,10 @@ public abstract class Marble extends GameObject {
         this.norVec = new Vector(0, 0);
         this.tanVec = new Vector(0, 0);
         this.isCollide = false;
-        this.name = name;        
+        this.name = name;
         this.skills = new Skills[5];
         this.setSkills();
-        this.useSkill = false;
+        this.useSkill = true;
         this.fiction = 0.05f * this.mass;
         this.currentSkill = null;
     }
@@ -109,6 +109,14 @@ public abstract class Marble extends GameObject {
         return this.goVec;
     }
 
+    public boolean getUseSkill() {
+        return this.useSkill;
+    }
+
+    public void setUseSkill(Boolean useSkill) {
+        this.useSkill = useSkill;
+    }
+
     public void setNorVec(Vector nor) {
         this.norVec = nor;
     }
@@ -148,8 +156,8 @@ public abstract class Marble extends GameObject {
     public int getAtk() {
         return this.atk;
     }
-    
-    public Skills getCurrentSkill(){
+
+    public Skills getCurrentSkill() {
         return this.currentSkill;
     }
 
@@ -163,7 +171,7 @@ public abstract class Marble extends GameObject {
     public void setAtk(int atk) {
         this.atk = atk;
     }
-    
+
     public void paintSkill(Graphics g) {
         if (this.currentSkill != null) {
             this.currentSkill.paintSkill(g);
@@ -176,10 +184,10 @@ public abstract class Marble extends GameObject {
     private void setSkills() {
         Skills skills[] = {
             new NormalAttack(this.attribute),
-            new CriticalAttack(),
-            new DecreaseHalfAttack(),
+            new CriticalAttack(this.attribute),
+            new DecreaseHalfAttack(this.attribute),
             new Heal(),
-            new Anger()
+            new Anger(this.attribute)
         };
 
         for (int i = 0; i < skills.length; i++) {
@@ -187,8 +195,20 @@ public abstract class Marble extends GameObject {
         }
     }
 
-    public void useSkill(int r, Marble target) {
-        this.skills[r].useSkill(this, target);
+    public void genSkill(int r, Marble target) {
+        this.skills[r].genSkill(this, target);
         this.currentSkill = this.skills[r];
+    }
+
+    public void genSkill(int r, ArrayList<Marble> target) {
+        this.skills[r].genSkill(this, target);
+        this.currentSkill = this.skills[r];
+    }
+
+    public ArrayList<SkillComponent> getSkillComponent() {
+        if (this.currentSkill.getSkillComponent() != null) {
+            return this.currentSkill.getSkillComponent();
+        }
+        return null;
     }
 }

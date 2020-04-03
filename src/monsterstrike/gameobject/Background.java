@@ -10,7 +10,7 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import monsterstrike.util.Global;
 
-public class Background extends SenceObject{
+public class Background extends SceneObject{
 
     private BufferedImage img;
     private int idx;

@@ -6,19 +6,25 @@
 package interfaceskills;
 
 public class SkillImg {
-    public static final String[] EXPLODE_PATH = {"/resources/drop.png", "/resources/explode.png", "/resources/explodeGrass.png"};
-    public static final int[] EXPLODE_UNIT = {77, 77};
-    public static final int[] EXPLODE_NUM = {9,6,6};
+
+    private static final String SKILL_ROOT = "/resources/skills/";
+    private static final String[] EXPLODE_PATH = {SKILL_ROOT + "drop.png", SKILL_ROOT + "explode.png", SKILL_ROOT + "explodeGrass.png"};
+    private static final int[] EXPLODE_UNIT_X = {77, 77, 77};
+    private static final int[] EXPLODE_UNIT_Y = {77, 77, 77};
+    private static final int[] EXPLODE_NUM = {9, 6, 6};
+
+    private static final String[] TORNADO_PATH = {SKILL_ROOT + "spray.png", SKILL_ROOT + "fireTornado.png", SKILL_ROOT + "tornado.png"};
+    private static final int[] TORNADO_UNIT_X = {94, 150, 112};
+    private static final int[] TORNADO_UNIT_Y = {150, 150, 150};
+    private static final int[] TORNADO_NUM = {10, 11, 9};
     
-    private static final String[] FIRETORNADO_PATH = {"/resources/fireTornado.png"};
-    private static final int[] FIRETORNADO_UNIT = {124, 124};
-    private static final int[] FIRETORNADO_NUM = {11};
-    private static final String[] SPRAY_PATH = {"/resources/spray.png"};
-    private static final int[] SPRAY_UNIT = {77,124};
-    private static final int[] SPRAY_NUM = {10};
-    
-    
-    public static final String[][] SKILL_PATH = {EXPLODE_PATH, SPRAY_PATH, FIRETORNADO_PATH};
-    public static final int[][] SKILL_UNIT = {EXPLODE_UNIT, SPRAY_UNIT, FIRETORNADO_UNIT};
-    public static final int[][] SKILL_NUM = {EXPLODE_NUM, SPRAY_NUM, FIRETORNADO_NUM};
+    private static final String[] LASER_PATH = {SKILL_ROOT + "blueBeam.png", SKILL_ROOT + "redBeam.png", SKILL_ROOT + "greenBeam.png"};
+    private static final int[] LASER_UNIT_X = {150, 150, 150};
+    private static final int[] LASER_UNIT_Y = {1000, 1000, 1000};
+    private static final int[] LASER_NUM = {4, 4, 4};
+
+    public static final String[][] SKILL_PATH = {EXPLODE_PATH, TORNADO_PATH, LASER_PATH};
+    public static final int[][] SKILL_UNIT_X = {EXPLODE_UNIT_X, TORNADO_UNIT_X, LASER_UNIT_X};
+    public static final int[][] SKILL_UNIT_Y = {EXPLODE_UNIT_Y, TORNADO_UNIT_Y, LASER_UNIT_Y};
+    public static final int[][] SKILL_NUM = {EXPLODE_NUM, TORNADO_NUM, LASER_NUM};
 }

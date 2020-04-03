@@ -15,6 +15,7 @@ public class SkillRenderer {
 
     private BufferedImage img;
     private int imgIdx;
+    private int attribute;
     private Delay delay;
     private int skillIdx;
     private int imgNum;
@@ -23,6 +24,7 @@ public class SkillRenderer {
     public SkillRenderer(int skillIdx, int attribute, int imgNum, int delay) {
         this.img = IRC.getInstance().tryGetImage(SKILL_PATH[skillIdx][attribute]);
         this.skillIdx = skillIdx;
+        this.attribute = attribute;
         this.imgIdx = 0;
         this.imgNum = imgNum;
         this.delay = new Delay(delay);
@@ -58,9 +60,9 @@ public class SkillRenderer {
 
     public void paint(Graphics g, int x, int y, int w, int h) {
         g.drawImage(img, x, y, x + w, y + h,
-                imgIdx * SKILL_UNIT[skillIdx][0], 0,
-                (imgIdx + 1) * SKILL_UNIT[skillIdx][0],
-                SKILL_UNIT[skillIdx][1], null);
+                imgIdx * SKILL_UNIT_X[skillIdx][attribute], 0,
+                (imgIdx + 1) * SKILL_UNIT_X[skillIdx][attribute],
+                SKILL_UNIT_Y[skillIdx][attribute], null);
 
     }
 }

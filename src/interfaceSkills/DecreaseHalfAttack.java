@@ -6,6 +6,7 @@
 package interfaceskills;
 
 import java.awt.Graphics;
+import java.util.ArrayList;
 import monsterstrike.gameobject.marble.Marble;
 
 /**
@@ -14,17 +15,32 @@ import monsterstrike.gameobject.marble.Marble;
  */
 public class DecreaseHalfAttack implements Skills {
 
+    private int attribute;   
+    
+    public DecreaseHalfAttack(int attribute) {
+        this.attribute = attribute;
+    }
+    
     @Override
-    public void useSkill(Marble self, Marble target) {
+    public void genSkill(Marble self, Marble target) {
         int atk = self.getAtk() / 2;
         System.out.print(self.getName() + " 爆擊 !");
         target.setHp(target.getHp() - atk);
         System.out.println(target.getName() + " 剩下血量 :" + target.getHp() + "點");
     }
+    
+    @Override
+    public void genSkill(Marble self, ArrayList<Marble> target) {
+    }
 
     @Override
     public void update() {
 
+    }
+    
+    @Override
+    public ArrayList<SkillComponent> getSkillComponent(){
+        return null;
     }
 
     @Override

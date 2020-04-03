@@ -6,6 +6,7 @@
 package interfaceskills;
 
 import java.awt.Graphics;
+import java.util.ArrayList;
 import monsterstrike.gameobject.marble.Marble;
 
 /**
@@ -15,15 +16,24 @@ import monsterstrike.gameobject.marble.Marble;
 public class Heal implements Skills {
 
     @Override
-    public void useSkill(Marble self, Marble target) {
+    public void genSkill(Marble self, Marble target) {
         System.out.print(self.getName() + " 使出治癒回復" + self.getAtk() + "點生命,");
         self.setHp(self.getHp() + self.getAtk());
         System.out.println(self.getName() + " 剩下血量" + self.getHp() + "點");
+    }
+    
+    @Override
+    public void genSkill(Marble self, ArrayList<Marble> target) {
     }
 
     @Override
     public void update() {
 
+    }
+    
+    @Override
+    public ArrayList<SkillComponent> getSkillComponent(){
+        return null;
     }
 
     @Override

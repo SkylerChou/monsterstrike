@@ -5,22 +5,24 @@
  */
 package monsterstrike.gameobject;
 
-import monsterstrike.graph.*;
-import monsterstrike.util.Global;
-import java.awt.Color;
 import java.awt.Graphics;
+import monsterstrike.graph.Rect;
 
-public abstract class GameObject {
+/**
+ *
+ * @author kim19
+ */
+public abstract class SceneObject {
 
-    private Circle collider;
-    private Rect rect;
+    protected Rect rect;
+    protected Rect collider;
 
-    public GameObject(int x, int y, int width, int height, int r) {
+    public SceneObject(int x, int y, int width, int height) {
         this.rect = Rect.genWithCenter(x, y, width, height);
-        this.collider = new Circle(x, y, r);
+        this.collider=Rect.genWithCenter(x, y, width, height);
     }
 
-    public float getCenterX() {
+   public float getCenterX() {
         return this.collider.centerX();
     }
 
@@ -36,10 +38,6 @@ public abstract class GameObject {
         return this.rect.top();
     }
 
-    public float getR() {
-        return this.collider.getR();
-    }
-
     public float getWidth() {
         return this.rect.width();
     }
@@ -48,16 +46,14 @@ public abstract class GameObject {
         return this.rect.height();
     }
 
-    public boolean isCollision(GameObject obj) {
-        if (this.collider == null || obj.collider == null) {
-            return false;
-        }
-        return Circle.intersects(this.collider, obj.collider);
-    }
 
     public void offset(float dx, float dy) {
         this.rect.offset(dx, dy);
         this.collider.offset(dx, dy);
+    }
+    
+    public void setX(float x){
+        this.rect.setLeft(x);
     }
 
     public void setCenterX(float x) {
@@ -70,19 +66,7 @@ public abstract class GameObject {
         this.collider.offset(0, y - this.collider.centerY());
     }
 
-    public void paint(Graphics g) {
-        paintComponent(g);
-        if (Global.IS_DEBUG) {
-            g.setColor(Color.RED);
-            g.drawRect((int) this.rect.left(), (int) this.rect.top(), (int) this.rect.width(), (int) this.rect.height());
-            g.setColor(Color.BLUE);
-            g.drawOval((int) this.collider.getX(), (int) this.collider.getY(), (int) (2 * this.collider.getR()), (int) (2 * this.collider.getR()));
-            g.setColor(Color.BLACK);
-        }
-    }
-
-    public abstract void paintComponent(Graphics g);
+    public abstract void paint(Graphics g);
 
     public abstract void update();
-
 }

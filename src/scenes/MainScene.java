@@ -70,7 +70,7 @@ public class MainScene extends Scene {
         for (int i = 0; i < this.marbles.size(); i++) {
             for (int j = i + 1; j < this.marbles.size(); j++) {
                 if (this.marbles.get(i).isCollision(this.marbles.get(j))) {
-                    this.marbles.get(i).useSkill(0, this.marbles.get(j));
+                    this.marbles.get(i).genSkill(0, this.marbles.get(j));
                     this.marbles.set(j, this.marbles.get(i).strike(this.marbles.get(j)));
                 }
             }

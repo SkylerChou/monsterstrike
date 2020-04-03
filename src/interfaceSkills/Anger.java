@@ -6,12 +6,19 @@
 package interfaceskills;
 
 import java.awt.Graphics;
+import java.util.ArrayList;
 import monsterstrike.gameobject.marble.Marble;
 
 public class Anger implements Skills {
 
+    private int attribute;
+
+    public Anger(int attribute) {
+        this.attribute = attribute;
+    }
+
     @Override
-    public void useSkill(Marble self, Marble target) {
+    public void genSkill(Marble self, Marble target) {
         int atk = (int) (self.getAtk() * 1.5f);
         System.out.print(self.getName() + "處於憤怒狀態 ! 攻擊力提升1.5倍");
         target.setHp(target.getHp() - atk);
@@ -19,8 +26,17 @@ public class Anger implements Skills {
     }
 
     @Override
+    public void genSkill(Marble self, ArrayList<Marble> target) {
+    }
+    
+    @Override
     public void update() {
 
+    }
+    
+    @Override
+    public ArrayList<SkillComponent> getSkillComponent(){
+        return null;
     }
 
     @Override

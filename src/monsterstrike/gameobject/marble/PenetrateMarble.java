@@ -90,7 +90,6 @@ public class PenetrateMarble extends Marble {
         g.drawImage(currentImg, (int) this.getX(), (int) this.getY(), null);
         g.drawOval((int) (this.getCenterX() - this.getR()),
                 (int) (this.getCenterY() - this.getR()),
-                (int) (2 * this.getR()), (int) (2 * this.getR()));
-        
+                (int) (2 * this.getR()), (int) (2 * this.getR()));       
     }
 }

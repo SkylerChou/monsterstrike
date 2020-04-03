@@ -8,13 +8,15 @@ package interfaceskills;
 import java.awt.Graphics;
 import monsterstrike.gameobject.GameObject;
 
-public class Explosion extends GameObject {
+public class PickSkill extends GameObject {
 
     private SkillRenderer renderer;
+    private int skillIdx;
 
-    public Explosion(int attribute,int imgNum, int x, int y) {
-        super(x, y, SkillImg.EXPLODE_UNIT[0], SkillImg.EXPLODE_UNIT[1], SkillImg.EXPLODE_UNIT[0] / 2);
-        this.renderer = new SkillRenderer(0, attribute, imgNum, 3);
+    public PickSkill(int skillIdx, int attribute,int imgNum, int x, int y, int delay) {
+        super(x, y, SkillImg.SKILL_UNIT_X[skillIdx][attribute], SkillImg.SKILL_UNIT_Y[skillIdx][attribute], SkillImg.SKILL_UNIT_X[skillIdx][attribute] / 2);
+        this.renderer = new SkillRenderer(skillIdx, attribute, imgNum, delay);
+        this.skillIdx = skillIdx;
     }
 
     public void setIsStop(boolean isStop) {
@@ -34,9 +36,25 @@ public class Explosion extends GameObject {
     public void update() {
         if (!this.renderer.getIsStop()) {
             this.renderer.update();
+            this.move();
         }else{
             this.setCenterX(-100);
             this.setCenterY(-100);
+        }
+    }
+    
+    public void move(){
+        switch(skillIdx){
+            case 0:
+                break;
+            case 1:
+                break;
+            case 2:
+                break;
+            case 3:
+                break;
+            case 4:
+                break;
         }
     }
 
