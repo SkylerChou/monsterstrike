@@ -92,4 +92,8 @@ public class ImgInfo {
     public static final String[] CONTROL = {"/resources/start.png", "/resources/stop.png"};
     public static final String RETURN = "/resources/return.png";
     public static final int[] SETTING_INFO = {50, 50};//img_width, img_height   
+    
+    //黑洞
+    public static final String[] BALCKHOLE={"/resources/blackhole1.png","/resources/blackhole2.png"};
+    public static final int[] BLACKHOLE_INFO={200,200,40};//img_width, img_height 
 }

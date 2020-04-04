@@ -13,7 +13,7 @@ import java.awt.Graphics;
 public abstract class GameObject {
 
     private Circle collider;
-    private Rect rect;
+    protected Rect rect;
 
     public GameObject(int x, int y, int width, int height, int r) {
         this.rect = Rect.genWithCenter(x, y, width, height);

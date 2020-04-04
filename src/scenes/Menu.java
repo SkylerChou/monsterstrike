@@ -64,7 +64,7 @@ public class Menu extends Scene {
             sceneController.changeScene(new Stage1Scene(sceneController));
             this.isEnter = false;
         } else if (this.isEnter && this.dino.getCenterY() == Global.SCREEN_Y / 2 + 15) {
-            sceneController.changeScene(new MainScene(sceneController));
+            sceneController.changeScene(new Mutiplayer(sceneController));
             this.isEnter = false;
         } else if (this.isEnter && this.dino.getCenterY() == Global.SCREEN_Y / 2 + 65) {
 

@@ -10,67 +10,87 @@ import monsterstrike.graph.Vector;
 import monsterstrike.gameobject.*;
 import monsterstrike.util.*;
 import controllers.SceneController;
+import interfaceskills.Explosion;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
-public class MainScene extends Scene {
+public class Mutiplayer extends Scene {
 
-    public static final int POS_AX = 100;
-    public static final int POS_AY = 100;
-    public static final int POS_BX = Global.FRAME_X / 2;
-    public static final int POS_BY = Global.FRAME_Y - 100;
-    public static final int POS_CX = Global.FRAME_X - 100;
-    public static final int POS_CY = 100;
+    public static final int[] POS_X = {150, Global.FRAME_X / 2, Global.FRAME_X - 150};
+    public static final int[] POS_Y = {100, Global.FRAME_Y - 150, 100};
 
     private Background background;
     private ArrayList<Marble> marbles;
     private ArrayList<SpecialEffect> shine;
     private Arrow arrow;
-    private boolean isShine;
+
     private int currentIdx;
     private Delay delay;
     private int count;
     private int idx; //背景idx
     private Button setting;
+    private ArrayList<BlackHole> b;
+    private int num;
 
-    public MainScene(SceneController sceneController) {
+    public Mutiplayer(SceneController sceneController) {
         super(sceneController);
     }
 
     @Override
     public void sceneBegin() {
-        this.idx = 0;
-        this.background = new Background(ImgInfo.BACKGROUND_PATH[idx],
-                2 * ImgInfo.BACKGROUND_SIZE[idx][0], ImgInfo.BACKGROUND_SIZE[idx][1], idx);
+        this.idx = 1;
+        this.background = new Background(ImgInfo.BACKGROUND_PATH[idx], 2 * ImgInfo.BACKGROUND_SIZE[idx][0], ImgInfo.BACKGROUND_SIZE[idx][1], idx);
         this.marbles = new ArrayList<>();
         this.shine = new ArrayList<>();
+        this.b = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
-            this.marbles.add(new ReboundMarble(ImgInfo.MYMARBLE_PATH[i], ImgInfo.MYMARBLE_NAME[i], Global.POSITION_X[i], Global.POSITION_Y[i], ImgInfo.MYMARBLE_INFO[i]));
+            this.marbles.add(new ReboundMarble(ImgInfo.MYMARBLE_PATH[i], ImgInfo.MYMARBLE_NAME[i], POS_X[i], POS_Y[i], ImgInfo.MYMARBLE_INFO[i]));
         }
         this.shine.add(new SpecialEffect(ImgInfo.SHINE_ICE, (int) this.marbles.get(currentIdx).getCenterX(), (int) this.marbles.get(currentIdx).getCenterX(), ImgInfo.SHINE_INFO));
         this.shine.add(new SpecialEffect(ImgInfo.SHINE_FIRE, (int) this.marbles.get(currentIdx).getCenterX(), (int) this.marbles.get(currentIdx).getCenterX(), ImgInfo.SHINE_INFO));
         this.shine.add(new SpecialEffect(ImgInfo.SHINE_GRASS, (int) this.marbles.get(currentIdx).getCenterX(), (int) this.marbles.get(currentIdx).getCenterX(), ImgInfo.SHINE_INFO));
         this.arrow = new Arrow(ImgInfo.ARROW, 0, 0, ImgInfo.ARROW_INFO);
-        this.setting = new Button(ImgInfo.SETTING, 0, 0, ImgInfo.SETTING_INFO[0], ImgInfo.SETTING_INFO[1]);
+//        this.setting = new Button(ImgInfo.SETTING, 0, 0, ImgInfo.SETTING_INFO[0], ImgInfo.SETTING_INFO[1]);
+        this.b.add(new BlackHole(ImgInfo.BALCKHOLE, 300, 300, ImgInfo.BLACKHOLE_INFO));
+        this.b.add(new BlackHole(ImgInfo.BALCKHOLE, 500, 200, ImgInfo.BLACKHOLE_INFO));
+        this.b.add(new BlackHole(ImgInfo.BALCKHOLE, 500, 500, ImgInfo.BLACKHOLE_INFO));
 
         this.currentIdx = 0;
         this.delay = new Delay(25);
         this.delay.start();
         this.count = 0;
-        this.isShine = true;
+        this.num = 24;
     }
 
     @Override
     public void sceneUpdate() {
-        if (this.delay.isTrig()) {
-            this.setting.update();
-        }
+        this.background.setX(2 * ImgInfo.BACKGROUND_SIZE[idx][0]);
+//        if (this.delay.isTrig()) {
+//            this.setting.update();
+//        }
+
+        this.shine.get(currentIdx).setShine(true);
         this.shine.get(currentIdx).update();
         this.shine.get(currentIdx).setCenterX(this.marbles.get(currentIdx).getCenterX());
         this.shine.get(currentIdx).setCenterY(this.marbles.get(currentIdx).getCenterY());
+        for (int i = 0; i < this.b.size(); i++) {
+            this.b.get(i).update();
+        }
         for (int i = 0; i < this.marbles.size(); i++) {
             this.marbles.get(i).update();
+        }
+
+        for (int i = 0; i < this.marbles.size(); i++) {//黑洞移動
+            for (int j = 0; j < this.b.size(); j++) {
+                if (this.marbles.get(i).isCollision(this.b.get(j))) {
+                    this.marbles.get(i).offset(this.b.get(j).getR(), j);
+                    int r=Global.random(0, 2);
+                    int z=Global.random(0, 2);
+                    this.marbles.get(i).setCenterX(this.b.get(r).getCenterX());
+                    this.marbles.get(i).setCenterY(this.b.get(z).getCenterY());
+                }
+            }
         }
 
         for (int i = 0; i < this.marbles.size(); i++) {
@@ -106,13 +126,15 @@ public class MainScene extends Scene {
     @Override
     public void paint(Graphics g) {
         this.background.paint(g);
-        this.setting.paintOther(g, ImgInfo.SETTING_INFO);
+//        this.setting.paintOther(g, ImgInfo.SETTING_INFO);
+        for (int i = 0; i < this.b.size(); i++) {
+            this.b.get(i).paint(g);
+        }
         if (this.arrow.getShow()) {
             this.arrow.paint(g);
         }
-        if (isShine) {
-            this.shine.get(currentIdx).paint(g);
-        }
+        this.shine.get(currentIdx).paint(g);
+
         for (int i = 0; i < this.marbles.size(); i++) {
             this.marbles.get(i).paint(g);
         }
