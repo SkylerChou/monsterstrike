@@ -10,7 +10,6 @@ import monsterstrike.graph.Vector;
 import monsterstrike.gameobject.*;
 import monsterstrike.util.*;
 import controllers.SceneController;
-import interfaceskills.Explosion;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -52,9 +51,9 @@ public class Mutiplayer extends Scene {
         this.shine.add(new SpecialEffect(ImgInfo.SHINE_GRASS, (int) this.marbles.get(currentIdx).getCenterX(), (int) this.marbles.get(currentIdx).getCenterX(), ImgInfo.SHINE_INFO));
         this.arrow = new Arrow(ImgInfo.ARROW, 0, 0, ImgInfo.ARROW_INFO);
 //        this.setting = new Button(ImgInfo.SETTING, 0, 0, ImgInfo.SETTING_INFO[0], ImgInfo.SETTING_INFO[1]);
-        this.b.add(new BlackHole(ImgInfo.BALCKHOLE, 300, 300, ImgInfo.BLACKHOLE_INFO));
-        this.b.add(new BlackHole(ImgInfo.BALCKHOLE, 500, 200, ImgInfo.BLACKHOLE_INFO));
-        this.b.add(new BlackHole(ImgInfo.BALCKHOLE, 500, 500, ImgInfo.BLACKHOLE_INFO));
+        this.b.add(new BlackHole(ImgInfo.BALCKHOLE, 600, 250, ImgInfo.BLACKHOLE_INFO));
+        this.b.add(new BlackHole(ImgInfo.BALCKHOLE, 200, 250, ImgInfo.BLACKHOLE_INFO));
+        this.b.add(new BlackHole(ImgInfo.BALCKHOLE, 780, 250, ImgInfo.BLACKHOLE_INFO));
 
         this.currentIdx = 0;
         this.delay = new Delay(25);
@@ -84,11 +83,32 @@ public class Mutiplayer extends Scene {
         for (int i = 0; i < this.marbles.size(); i++) {//黑洞移動
             for (int j = 0; j < this.b.size(); j++) {
                 if (this.marbles.get(i).isCollision(this.b.get(j))) {
-                    this.marbles.get(i).offset(this.b.get(j).getR(), j);
-                    int r=Global.random(0, 2);
-                    int z=Global.random(0, 2);
+//                    for(int k=0;k<2;k++){
+//                        this.marbles.get(i).offset(20, 20);
+//                        if(this.delay.isTrig()){
+//                          this.marbles.get(i).offset(-20, 20);  
+//                        }
+//                        if(this.delay.isTrig()){
+//                            this.marbles.get(i).offset(-20, -20);
+//                        }
+//                        if(this.delay.isTrig()){
+//                           this.marbles.get(i).offset(20, -20); 
+//                        }
+//                    } 
+                    int r;
+                    do{
+                         r=Global.random(0, 2);
+                         if(r!=j){
+                             break;
+                         }
+                    }while(true);
                     this.marbles.get(i).setCenterX(this.b.get(r).getCenterX());
-                    this.marbles.get(i).setCenterY(this.b.get(z).getCenterY());
+                    if(this.marbles.get(i).getGoVec().getY()>0){
+                        this.marbles.get(i).setCenterY(this.b.get(r).getCenterY()+100);
+                    }else{
+                        this.marbles.get(i).setCenterY(this.b.get(r).getCenterY()-100);
+                    } 
+                    this.marbles.get(i).move();
                 }
             }
         }

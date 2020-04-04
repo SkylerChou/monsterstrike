@@ -10,10 +10,10 @@ import monsterstrike.util.Global;
 public class ImgInfo {
     //屬性 0:冰 1:火 2:草
     private static final String[] DEVIL = {"/resources/devil1.png", "/resources/devil2.png"};
-    private static final int[] DEVIL_INFO = {136, 136, 40, 1, 20, 1};//img_width, img_height, r, mass, velocity, attribute
+    private static final int[] DEVIL_INFO = {136, 136, 40, 1, 10, 1};//img_width, img_height, r, mass, velocity, attribute
 
     private static final String[] RICEBALL = {"/resources/riceBall1.png", "/resources/riceBall2.png"};
-    private static final int[] RICEBALL_INFO = {140, 140, 40, 1, 22, 2};
+    private static final int[] RICEBALL_INFO = {140, 140, 40, 1, 10, 2};
 
     private static final String[] SWEETPOTATO = {"/resources/sweetPotato1.png", "/resources/sweetPotato2.png"};
     private static final int[] SWEETPOTATO_INFO = {140, 140, 40, 2, 21, 0};
@@ -28,10 +28,10 @@ public class ImgInfo {
     private static final int[] SPIKY_INFO = {150, 150, 60, 2, 50, 2};
     
     private static final String[] BLUETEETH = {"/resources/teethblue1.png", "/resources/teethblue2.png"};
-    private static final int[] BLUETEETH_INFO = {145, 145, 50, 2, 50, 0};
+    private static final int[] BLUETEETH_INFO = {145, 145, 50, 2, 10, 0};
         
     private static final String[] GRAYTEETH = {"/resources/teethgray1.png", "/resources/teethgray2.png"};
-    private static final int[] GRAYTEETH_INFO = {145, 145, 50, 2, 50, 0};
+    private static final int[] GRAYTEETH_INFO = {145, 145, 50, 2, 10, 0};
 
     //My怪獸
     public static final String[][] MYMARBLE_PATH = {GRAYTEETH, BLUETEETH, RICEBALL, DEVIL};
