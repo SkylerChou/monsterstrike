@@ -25,7 +25,7 @@ public abstract class Marble extends GameObject {
     private float velocity;
 
     private String name;
-    private int hp = 100;
+    private int hp = 500;
     private int atk = 20;
     private int attribute;
     private Skills[] skills;
@@ -178,6 +178,8 @@ public abstract class Marble extends GameObject {
         }
     }
 
+    public abstract boolean die();
+
     @Override
     public abstract void paintComponent(Graphics g);
 
@@ -206,7 +208,7 @@ public abstract class Marble extends GameObject {
     }
 
     public ArrayList<SkillComponent> getSkillComponent() {
-        if (this.currentSkill.getSkillComponent() != null) {
+        if (this.currentSkill != null) {
             return this.currentSkill.getSkillComponent();
         }
         return null;

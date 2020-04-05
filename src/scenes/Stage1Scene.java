@@ -8,6 +8,7 @@ package scenes;
 import monsterstrike.graph.Vector;
 import controllers.SceneController;
 import interfaceskills.SkillComponent;
+import interfaceskills.SkillImg;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -72,6 +73,7 @@ public class Stage1Scene extends Scene {
 
             for (int i = 0; i < this.enimies.size(); i++) {
                 if (this.enimies.get(i).getHp() <= 0) {
+                    this.enimies.get(i).die();
                     this.enimies.get(i).setCenterY(Global.FRAME_Y + 200);
                     this.enimies.remove(i); //敵人死亡
                 }
@@ -148,15 +150,7 @@ public class Stage1Scene extends Scene {
                         this.marbles.get(j).setGo(this.marbles.get(j).getGoVec().multiplyScalar(0.1f));
                         if (this.marbles.get(j).getUseSkill()) {
                             this.marbles.get(j).genSkill(1, this.enimies);
-
-//                        ArrayList<SkillComponent> skills = this.marbles.get(j).getSkillComponent();
-//                        for (int l = 0; l < skills.size(); l++) {                            
-//                                if (skills.get(l).isCollision(this.enimies.get(k))) {
-//                                    int atk = (int) (this.marbles.get(j).getAtk() * Math.random() * 2 + 1);
-//                                    this.enimies.get(k).setHp(this.enimies.get(k).getHp() - atk);
-//                                    
-//                                }                           
-//                        }
+                            checkStrike(j, this.marbles.get(j).getSkillComponent());
                         }
                         this.marbles.get(j).setUseSkill(false);
                     }
@@ -173,13 +167,56 @@ public class Stage1Scene extends Scene {
                     this.enimies.get(j).setGo(tmp.getGoVec());
                     this.enimies.get(j).setIsCollide(true);
                     this.marbles.get(i).genSkill(0, this.enimies.get(j));
-                    ArrayList<SkillComponent> skills = this.marbles.get(i).getSkillComponent();
-                    for (int l = 0; l < skills.size(); l++) {
-                        if (skills.get(l).isCollision(this.enimies.get(j))) {
-                            this.enimies.get(j).setHp(this.enimies.get(j).getHp() - this.marbles.get(i).getAtk());
-                        }
-                    }
+                    checkStrike(i, j, this.marbles.get(i).getSkillComponent());
                 }
+            }
+        }
+    }
+
+    private void checkStrike(int idx, ArrayList<SkillComponent> skills) {
+        for (int l = 0; l < skills.size(); l++) {
+            for (int k = 0; k < this.enimies.size(); k++) {
+                
+                if ((skills.size() == 4 && inSkillRange(idx)) || skills.get(l).isCollision(this.enimies.get(k))) {
+                    int atk = (int) (this.marbles.get(idx).getAtk() * Math.random() * 2 + 1);
+                    this.enimies.get(k).setHp(this.enimies.get(k).getHp() - atk);
+                    System.out.println(this.enimies.get(k).getName() + "血量:" + this.enimies.get(k).getHp());
+
+                }
+            }
+        }
+    }
+
+    private boolean inSkillRange(int idx) {
+        int left = (int) (this.marbles.get(idx).getCenterX() - SkillImg.SKILL_UNIT_X[2][0] / 2);
+        int right = (int) (this.marbles.get(idx).getCenterX() + SkillImg.SKILL_UNIT_X[2][0] / 2);
+        int top = (int) (this.marbles.get(idx).getCenterY() - SkillImg.SKILL_UNIT_X[2][0] / 2);
+        int bottom = (int) (this.marbles.get(idx).getCenterY() + SkillImg.SKILL_UNIT_X[2][0] / 2);
+        for (int i = 0; i < this.enimies.size(); i++) {
+            if (this.enimies.get(i).getCenterX() + this.enimies.get(i).getR() < left
+                    && this.enimies.get(i).getCenterY() + this.enimies.get(i).getR() < top) {
+                return false;
+            }
+            if (this.enimies.get(i).getCenterX() - this.enimies.get(i).getR() > right
+                    && this.enimies.get(i).getCenterY() + this.enimies.get(i).getR() < top) {
+                return false;
+            }
+            if (this.enimies.get(i).getCenterX() + this.enimies.get(i).getR() < left
+                    && this.enimies.get(i).getCenterY() - this.enimies.get(i).getR() > bottom) {
+                return false;
+            }
+            if (this.enimies.get(i).getCenterX() - this.enimies.get(i).getR() > right
+                    && this.enimies.get(i).getCenterY() - this.enimies.get(i).getR() > bottom) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void checkStrike(int i, int j, ArrayList<SkillComponent> skills) {
+        for (int l = 0; l < skills.size(); l++) {
+            if (skills.get(l).isCollision(this.enimies.get(j))) {
+                this.enimies.get(j).setHp(this.enimies.get(j).getHp() - this.marbles.get(i).getAtk());
             }
         }
     }

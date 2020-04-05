@@ -59,7 +59,6 @@ public class CriticalAttack implements Skills {
                     (int) (self.getCenterX()), (int) (self.getCenterY() + self.getR() + halfLength), DELAY[r]));
             this.skill.add(new SkillComponent(SKILL_IDX[r], this.attribute, SkillImg.SKILL_NUM[SKILL_IDX[r]][this.attribute],
                     (int) (self.getCenterX() - self.getR() - halfLength), (int) (self.getCenterY()), DELAY[r]));
-
         }
     }
 
@@ -81,10 +80,12 @@ public class CriticalAttack implements Skills {
         } else {
             Graphics2D g2d = (Graphics2D) g;
             AffineTransform oldForm = g2d.getTransform();
-            for (int i = 0; i < 4; i++) {
-                g2d.rotate(i * (Math.PI / 2), (int) (this.skill.get(i).getCenterX()), (int) (this.skill.get(i).getCenterY()));
-                this.skill.get(i).paint(g2d);
-                g2d.setTransform(oldForm);
+            if (!this.skill.isEmpty()) {
+                for (int i = 0; i < 4; i++) {
+                    g2d.rotate(i * (Math.PI / 2), (int) (this.skill.get(i).getCenterX()), (int) (this.skill.get(i).getCenterY()));
+                    this.skill.get(i).paint(g2d);
+                    g2d.setTransform(oldForm);
+                }
             }
 
         }

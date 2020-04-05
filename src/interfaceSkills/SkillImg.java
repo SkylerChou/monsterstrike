@@ -20,7 +20,7 @@ public class SkillImg {
     
     private static final String[] LASER_PATH = {SKILL_ROOT + "blueBeam.png", SKILL_ROOT + "redBeam.png", SKILL_ROOT + "greenBeam.png"};
     private static final int[] LASER_UNIT_X = {150, 150, 150};
-    private static final int[] LASER_UNIT_Y = {1000, 1000, 1000};
+    private static final int[] LASER_UNIT_Y = {1300, 1300, 1300};
     private static final int[] LASER_NUM = {4, 4, 4};
 
     public static final String[][] SKILL_PATH = {EXPLODE_PATH, TORNADO_PATH, LASER_PATH};

@@ -56,7 +56,7 @@ public class Menu extends Scene {
         }
         
         if (this.isEnter && this.dino.getCenterY() == Global.SCREEN_Y / 2 - 35) {
-            sceneController.changeScene(new Stage1Scene(sceneController));
+            sceneController.changeScene(new LevelMenu(sceneController));
             this.isEnter = false;
         } else if (this.isEnter && this.dino.getCenterY() == Global.SCREEN_Y / 2 + 15) {
             sceneController.changeScene(new MainScene(sceneController));

@@ -63,6 +63,5 @@ public class SkillRenderer {
                 imgIdx * SKILL_UNIT_X[skillIdx][attribute], 0,
                 (imgIdx + 1) * SKILL_UNIT_X[skillIdx][attribute],
                 SKILL_UNIT_Y[skillIdx][attribute], null);
-
     }
 }

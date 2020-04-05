@@ -10,7 +10,7 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import monsterstrike.util.Global;
 
-public class Background extends SceneObject{
+public class Background extends SceneObject {
 
     private BufferedImage img;
     private int idx;
@@ -24,19 +24,24 @@ public class Background extends SceneObject{
     public void offset(int dx) {
         this.offset(dx, 0);
     }
-    
 
     @Override
-     public void update() {}
-     
+    public void update() {
+    }
+
     @Override
     public void paint(Graphics g) {
         g.drawImage(img, 0, 0, Global.SCREEN_X, Global.SCREEN_Y,
-                (int)this.getX()-ImgInfo.BACKGROUND_SIZE[idx][0], 0, 
-                (int)this.getX(), ImgInfo.BACKGROUND_SIZE[idx][1], null);
+                (int) this.getX() - ImgInfo.BACKGROUND_SIZE[idx][0], 0,
+                (int) this.getX(), ImgInfo.BACKGROUND_SIZE[idx][1], null);
     }
-    
-    public void paintMenu(Graphics g){
+
+    public void paintMenu(Graphics g) {
         g.drawImage(img, 0, 0, Global.SCREEN_X, Global.SCREEN_Y, null);
+    }
+
+    public void paintDemo(Graphics g, int x, int y, int w, int h) {
+        g.drawImage(img, x, y, x + w, y + h,
+                0, 0, ImgInfo.BACKGROUND_SIZE[idx][0], ImgInfo.BACKGROUND_SIZE[idx][1], null);
     }
 }

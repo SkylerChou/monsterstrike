@@ -73,6 +73,11 @@ public class ReboundMarble extends Marble {
         }
         return this.other;
     }
+    
+    @Override
+    public boolean die(){
+        return true;
+    }
 
     private void updateDir(Vector nor) {
         this.norVec = this.goVec.getCosProjectionVec(nor);
