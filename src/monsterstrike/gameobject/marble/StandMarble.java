@@ -106,4 +106,9 @@ public class StandMarble extends Marble {
         }
     }
 
+    @Override
+    public void paintScale(Graphics g, int x, int y, int w, int h) {
+        
+    }
+
 }

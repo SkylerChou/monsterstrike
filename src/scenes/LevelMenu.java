@@ -98,7 +98,7 @@ public class LevelMenu extends Scene {
         }
 
         if (this.count >= 4) {
-            this.background.paintDemo(g, 350, 400, 580, 200);
+            this.background.paintItem(g, 350, 400, 580, 200);
         }
     }
 

@@ -10,6 +10,7 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import monsterstrike.graph.Vector;
 import monsterstrike.util.Delay;
+import monsterstrike.util.Global;
 
 public class ReboundMarble extends Marble {
 
@@ -60,7 +61,7 @@ public class ReboundMarble extends Marble {
             if (this.goVec.getValue() == 0 && this.other.goVec.getValue() == 0) {
                 this.offset(-nor.getUnitX(), -nor.getUnitY());
                 this.other.offset(nor.getUnitX(), nor.getUnitY());
-            }else{
+            } else {
                 if (other instanceof StandMarble) {
                     this.setGo(nor.resizeVec(-1 * originGo.getValue()));
                     this.offset(this.goVec.getX(), this.goVec.getY());
@@ -73,9 +74,9 @@ public class ReboundMarble extends Marble {
         }
         return this.other;
     }
-    
+
     @Override
-    public boolean die(){
+    public boolean die() {
         return true;
     }
 
@@ -100,11 +101,20 @@ public class ReboundMarble extends Marble {
     }
 
     @Override
+    public void paintScale(Graphics g, int x, int y, int w, int h) {
+        g.drawImage(currentImg, x, y, x + w, y + h,
+                0, 0, (int) this.getWidth(), (int) this.getHeight(), null);
+    }
+
+    @Override
     public void paintComponent(Graphics g) {
-        g.drawImage(currentImg, (int) this.getX(), (int) this.getY(), null);
-        g.drawOval((int) (this.getCenterX() - this.getR()),
-                (int) (this.getCenterY() - this.getR()),
-                (int) (2 * this.getR()), (int) (2 * this.getR()));
+        g.drawImage(currentImg, (int) this.getX(), (int) this.getY(),
+                (int) this.getWidth(), (int) this.getHeight(), null);
+        if (Global.IS_DEBUG) {
+            g.drawOval((int) (this.getCenterX() - this.getR()),
+                    (int) (this.getCenterY() - this.getR()),
+                    (int) (2 * this.getR()), (int) (2 * this.getR()));
+        }
     }
 
 }

@@ -19,7 +19,7 @@ public class NormalAttack implements Skills {
 
     public NormalAttack(int attribute) {
         this.attribute = attribute;
-        this.num = 12;
+        this.num = 8;
     }
 
     @Override

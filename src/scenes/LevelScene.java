@@ -9,7 +9,10 @@ import monsterstrike.graph.Vector;
 import controllers.SceneController;
 import interfaceskills.SkillComponent;
 import interfaceskills.SkillImg;
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import monsterstrike.gameobject.*;
@@ -19,9 +22,9 @@ import monsterstrike.util.*;
 public class LevelScene extends Scene {
 
     private Background background;
+    private Item infoForm;
     private ArrayList<Marble> marbles;
     private ArrayList<Marble> enimies;
-    private ArrayList<SpecialEffect> shine;
     private Arrow arrow;
 
     private int currentIdx;
@@ -29,39 +32,45 @@ public class LevelScene extends Scene {
     private int state;
     private int idx;
     private int sceneCount;
+    private int hitCount;
+    private int round;
+
+    private Delay delay;
 
     public LevelScene(SceneController sceneController, int backIdx, Marble[] myMarbles) {
         super(sceneController);
         this.idx = backIdx;
+        this.infoForm = new Item(ImgInfo.INFOFORM_PATH, 0, 0, 4);
         this.marbles = new ArrayList<>();
         for (int i = 0; i < myMarbles.length; i++) {
             this.marbles.add(myMarbles[i]);
         }
-        
+        this.enimies = new ArrayList<>();
+        this.delay = new Delay(5);
+        this.delay.start();
     }
 
     @Override
     public void sceneBegin() {
         this.background = new Background(ImgInfo.BACKGROUND_PATH[idx], 2 * ImgInfo.BACKGROUND_SIZE[idx][0], ImgInfo.BACKGROUND_SIZE[idx][1], idx);
-        this.shine = new ArrayList<>();
-        this.enimies = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
             this.marbles.get(i).setCenterX(Global.POSITION_X[i]);
             this.marbles.get(i).setCenterY(Global.POSITION_Y[i]);
-            int attribute = this.marbles.get(i).getAttribute();
             this.enimies.add(new StandMarble(ImgInfo.ENEMY_PATH[i], ImgInfo.ENEMY_NAME[i], Global.ENEMYPOS_X[i], -100, ImgInfo.ENEMY_INFO[i]));
-            this.shine.add(new SpecialEffect(ImgInfo.SHINE_PATH[attribute], (int) this.marbles.get(currentIdx).getCenterX(), (int) this.marbles.get(currentIdx).getCenterX(), ImgInfo.SHINE_INFO));
         }
-        
+
         this.arrow = new Arrow(ImgInfo.ARROW, 0, 0, ImgInfo.ARROW_INFO);
         this.currentIdx = 0;
         this.count = 0;
         this.state = 0;
         this.sceneCount = 0;
+        this.hitCount = 0;
+        this.round = 0;
     }
 
     @Override
     public void sceneUpdate() {
+//        if (this.delay.isTrig()) {
         if (this.state == 0) {
             this.background.setX(2 * ImgInfo.BACKGROUND_SIZE[idx][0]);
             this.dropEnemies();
@@ -73,10 +82,10 @@ public class LevelScene extends Scene {
             }
 
             for (int i = 0; i < this.marbles.size(); i++) {
+                this.marbles.get(i).updateShine();
                 this.marbles.get(i).update();
             }
 
-            setShine();
             normalAttack();
             criticalAttack();
 
@@ -89,15 +98,20 @@ public class LevelScene extends Scene {
             }
 
             if (checkAllStop()) {
-                if (this.count != 0) {
-                    this.currentIdx = this.count % 3;
-                }
                 for (int i = 0; i < this.marbles.size(); i++) {
                     this.marbles.get(i).setUseSkill(true);
                 }
 
+                if (this.count != 0) {
+                    this.marbles.get(currentIdx).setShine(false);
+                    this.currentIdx = this.count % 3;
+                    this.hitCount = 0;
+                    this.marbles.get(currentIdx).setShine(true);
+                }
+
                 if (this.enimies.isEmpty() && allSkillStop()) {
-                    this.shine.get(currentIdx).setShine(false);
+                    this.marbles.get(currentIdx).setShine(false);
+                    this.round = 0;
                     this.state = 2;
                 }
             }
@@ -108,7 +122,7 @@ public class LevelScene extends Scene {
             }
             scrollScene();
         }
-
+//        }
     }
 
     @Override
@@ -149,13 +163,6 @@ public class LevelScene extends Scene {
         }
     }
 
-    private void setShine() {
-        this.shine.get(currentIdx).setShine(true);
-        this.shine.get(currentIdx).update();
-        this.shine.get(currentIdx).setCenterX(this.marbles.get(currentIdx).getCenterX());
-        this.shine.get(currentIdx).setCenterY(this.marbles.get(currentIdx).getCenterY());
-    }
-
     private void criticalAttack() {
         for (int j = 0; j < this.marbles.size(); j++) {
             if (j == currentIdx) {
@@ -185,7 +192,10 @@ public class LevelScene extends Scene {
                     this.enimies.get(j).setGo(tmp.getGoVec());
                     this.enimies.get(j).setIsCollide(true);
                     this.marbles.get(i).genSkill(0, this.enimies.get(j));
-                    checkStrike(i, j, this.marbles.get(i).getSkillComponent());
+                    if (checkStrike(i, j, this.marbles.get(i).getSkillComponent())) {
+                        this.enimies.get(j).setHp(this.enimies.get(j).getHp() - this.marbles.get(i).getAtk());
+                        this.hitCount++;
+                    }
                 }
             }
         }
@@ -198,11 +208,22 @@ public class LevelScene extends Scene {
                     this.enimies.get(k).setIsCollide(true);
                     int atk = (int) (this.marbles.get(idx).getAtk() * Math.random() * 2 + 1);
                     this.enimies.get(k).setHp(this.enimies.get(k).getHp() - atk);
-                    System.out.println(this.enimies.get(k).getName() + "血量:" + this.enimies.get(k).getHp());
-
+                    this.hitCount++;
+//                    System.out.println(this.enimies.get(k).getName() + "血量:" + this.enimies.get(k).getHp());
                 }
             }
         }
+    }
+
+    private boolean checkStrike(int i, int j, ArrayList<SkillComponent> skills) {
+        for (int l = 0; l < skills.size(); l++) {
+            if (skills.get(l).isCollision(this.enimies.get(j))) {
+                return true;
+//                this.enimies.get(j).setHp(this.enimies.get(j).getHp() - this.marbles.get(i).getAtk());
+//                this.hitCount++;
+            }
+        }
+        return false;
     }
 
     private boolean inSkillRange(int idx) {
@@ -231,14 +252,6 @@ public class LevelScene extends Scene {
         return true;
     }
 
-    private void checkStrike(int i, int j, ArrayList<SkillComponent> skills) {
-        for (int l = 0; l < skills.size(); l++) {
-            if (skills.get(l).isCollision(this.enimies.get(j))) {
-                this.enimies.get(j).setHp(this.enimies.get(j).getHp() - this.marbles.get(i).getAtk());
-            }
-        }
-    }
-
     private void scrollScene() {
         if (this.background.getX() > ImgInfo.BACKGROUND_SIZE[idx][0]) {
             this.background.offset(-10);
@@ -258,6 +271,7 @@ public class LevelScene extends Scene {
         }
         for (int i = 0; i < this.enimies.size(); i++) {
             if (this.enimies.get(i).getCenterY() >= Global.ENEMYPOS_Y[i]) {
+                this.marbles.get(currentIdx).setShine(true);
                 this.state = 1;
             }
         }
@@ -277,19 +291,31 @@ public class LevelScene extends Scene {
         if (this.background != null) {
             this.background.paint(g);
         }
-        if (this.arrow.getShow()) {
+        if (this.arrow != null && this.arrow.getShow()) {
             this.arrow.paint(g);
-        }
-        this.shine.get(currentIdx).paint(g);
-        for (int i = 0; i < this.marbles.size(); i++) {
-            this.marbles.get(i).paint(g);
         }
         for (int i = 0; i < this.enimies.size(); i++) {
             this.enimies.get(i).paint(g);
         }
         for (int i = 0; i < this.marbles.size(); i++) {
-            this.marbles.get(i).paintSkill(g);
+            this.marbles.get(i).paintAll(g);
         }
+        Graphics2D g2d = (Graphics2D) g;
+        g2d.setColor(Color.ORANGE);
+        g2d.setFont(new Font("TimesRoman", Font.BOLD, 48));
+        g2d.drawString("Round " + round, 50, 495);
+        g2d.drawString("Hits " + hitCount, Global.SCREEN_X - 200, 100);
+        g2d.setColor(Color.BLACK);
+        g2d.setFont(new Font("Algerian", Font.PLAIN, 48));
+        this.infoForm.paintItem(g, 0, Global.SCREEN_Y - Global.INFO_H, Global.SCREEN_X, Global.INFO_H);
+        g2d.drawString(""+(sceneCount+1), 900, Global.SCREEN_Y - 40);
+        int w = 0;
+        for (int i = 0; i < this.marbles.size(); i++) {           
+            this.marbles.get(i).paintScale(g, 25 + w, Global.SCREEN_Y - 125, 120, 120);
+            w += 150;
+        }
+        
+
     }
 
     @Override
@@ -341,6 +367,7 @@ public class LevelScene extends Scene {
                 arrow.setResizeMag(vector.getValue() / arrow.getWidth());
                 marbles.get(currentIdx).setGo(vector.resizeVec(marbles.get(currentIdx).getVelocity()));
                 count++;
+                round++;
                 arrow.setShow(false);
             }
         }

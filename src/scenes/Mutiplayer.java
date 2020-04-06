@@ -29,7 +29,7 @@ public class Mutiplayer extends Scene {
     private int count;
     private int idx; //背景idx
     private Button setting;
-    private ArrayList<BlackHole> b;
+    private ArrayList<SpecialEffect> b;
     private int num;
 
     public Mutiplayer(SceneController sceneController) {
@@ -45,14 +45,17 @@ public class Mutiplayer extends Scene {
         this.b = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
             this.marbles.add(new ReboundMarble(ImgInfo.MYMARBLE_PATH[i], ImgInfo.MYMARBLE_NAME[i], POS_X[i], POS_Y[i], ImgInfo.MYMARBLE_INFO[i]));
-            this.shine.add(new SpecialEffect(ImgInfo.SHINE_PATH[ImgInfo.MYMARBLE_INFO[i][5]], (int) this.marbles.get(currentIdx).getCenterX(), (int) this.marbles.get(currentIdx).getCenterX(), ImgInfo.SHINE_INFO));                
+            this.shine.add(new SpecialEffect(ImgInfo.SHINE_PATH[ImgInfo.MYMARBLE_INFO[i][5]], (int) this.marbles.get(currentIdx).getCenterX(), 
+                    (int) this.marbles.get(currentIdx).getCenterX(), ImgInfo.SHINE_INFO, 25));                
+            this.b.add(new BlackHole(ImgInfo.BALCKHOLE, 250*(i+1), 250, ImgInfo.BLACKHOLE_INFO));
+            this.b.get(i).setShine(true);
         }
         
         this.arrow = new Arrow(ImgInfo.ARROW, 0, 0, ImgInfo.ARROW_INFO);
 //        this.setting = new Button(ImgInfo.SETTING, 0, 0, ImgInfo.SETTING_INFO[0], ImgInfo.SETTING_INFO[1]);
-        this.b.add(new BlackHole(ImgInfo.BALCKHOLE, 600, 250, ImgInfo.BLACKHOLE_INFO));
-        this.b.add(new BlackHole(ImgInfo.BALCKHOLE, 200, 250, ImgInfo.BLACKHOLE_INFO));
-        this.b.add(new BlackHole(ImgInfo.BALCKHOLE, 780, 250, ImgInfo.BLACKHOLE_INFO));
+        
+//        this.b.add(new SpecialEffect(ImgInfo.BALCKHOLE, 200, 250, ImgInfo.BLACKHOLE_INFO));
+//        this.b.add(new SpecialEffect(ImgInfo.BALCKHOLE, 780, 250, ImgInfo.BLACKHOLE_INFO));
 
         this.currentIdx = 0;
         this.delay = new Delay(25);
@@ -103,11 +106,12 @@ public class Mutiplayer extends Scene {
                     }while(true);
                     this.marbles.get(i).setCenterX(this.b.get(r).getCenterX());
                     if(this.marbles.get(i).getGoVec().getY()>0){
-                        this.marbles.get(i).setCenterY(this.b.get(r).getCenterY()+100);
+                        this.marbles.get(i).setCenterY(this.b.get(r).getCenterY());
                     }else{
-                        this.marbles.get(i).setCenterY(this.b.get(r).getCenterY()-100);
-                    } 
-                    this.marbles.get(i).move();
+                        this.marbles.get(i).setCenterY(this.b.get(r).getCenterY());
+                    }
+                    this.marbles.get(i).offset(this.marbles.get(i).getGoVec().getX(), this.marbles.get(i).getGoVec().getY());
+//                    this.marbles.get(i).move();
                 }
             }
         }

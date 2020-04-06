@@ -10,7 +10,7 @@ import monsterstrike.util.Global;
 import interfaceskills.*;
 import java.awt.Graphics;
 import java.util.ArrayList;
-import monsterstrike.gameobject.GameObject;
+import monsterstrike.gameobject.*;
 
 public abstract class Marble extends GameObject {
 
@@ -23,6 +23,7 @@ public abstract class Marble extends GameObject {
     protected boolean useSkill;
     private float fiction;
     private float velocity;
+    private SpecialEffect shine;
 
     private String name;
     private int hp = 500;
@@ -36,6 +37,7 @@ public abstract class Marble extends GameObject {
         this.mass = info[3];
         this.velocity = info[4];
         this.attribute = info[5];
+        this.shine = new Shine(ImgInfo.SHINE_PATH[this.attribute], x, y, ImgInfo.SHINE_INFO);
         this.goVec = new Vector(0, 0);
         this.norVec = new Vector(0, 0);
         this.tanVec = new Vector(0, 0);
@@ -54,6 +56,12 @@ public abstract class Marble extends GameObject {
         move();
     }
 
+    public void updateShine() {
+        this.shine.setCenterX(this.getCenterX());
+        this.shine.setCenterY(this.getCenterY());
+        this.shine.update();
+    }
+
     public void move() {
         this.isCollide = false;
         if (this.goVec.getValue() > 0) {
@@ -69,7 +77,7 @@ public abstract class Marble extends GameObject {
         if (this.getCenterX() - this.getR() <= 0
                 || this.getCenterX() + this.getR() >= Global.SCREEN_X
                 || this.getCenterY() - this.getR() <= 0
-                || this.getCenterY() + this.getR() >= Global.SCREEN_Y) {
+                || this.getCenterY() + this.getR() >= Global.SCREEN_Y - Global.INFO_H) {
             if (this.getCenterX() - this.getR() <= 0) {
                 this.setCenterX(this.getR());
                 this.getGoVec().setX(-this.getGoVec().getX());
@@ -82,8 +90,8 @@ public abstract class Marble extends GameObject {
                 this.setCenterY(this.getR());
                 this.getGoVec().setY(-this.getGoVec().getY());
             }
-            if (this.getCenterY() + this.getR() >= Global.SCREEN_Y) {
-                this.setCenterY(Global.SCREEN_Y - this.getR());
+            if (this.getCenterY() + this.getR() >= Global.SCREEN_Y - Global.INFO_H) {
+                this.setCenterY(Global.SCREEN_Y - Global.INFO_H - this.getR());
                 this.getGoVec().setY(-this.getGoVec().getY());
             }
             return true;
@@ -92,6 +100,10 @@ public abstract class Marble extends GameObject {
     }
 
     public abstract Marble strike(Marble other);
+
+    public void setShine(boolean isShine) {
+        this.shine.setShine(isShine);
+    }
 
     public float getMass() {
         return this.mass;
@@ -179,6 +191,14 @@ public abstract class Marble extends GameObject {
     }
 
     public abstract boolean die();
+
+    public void paintAll(Graphics g) {
+        this.shine.paintComponent(g);
+        paintComponent(g);
+        paintSkill(g);
+    }
+    
+    public abstract void paintScale(Graphics g, int x, int y, int w, int h);
 
     @Override
     public abstract void paintComponent(Graphics g);

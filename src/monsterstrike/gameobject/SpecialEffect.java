@@ -14,17 +14,16 @@ public class SpecialEffect extends GameObject {
 
     private BufferedImage img1;
     private BufferedImage img2;
-    private BufferedImage currentImg;
+    protected BufferedImage currentImg;
     private Delay delay;
     private int count;
     private boolean isShine;
 
-    public SpecialEffect(String[] path, int x, int y, int[] info) {
+    public SpecialEffect(String[] path, int x, int y, int[] info, int delayFrame) {
         super(x, y, info[0], info[1], info[2]);
         this.img1 = IRC.getInstance().tryGetImage(path[0]);
         this.img2 = IRC.getInstance().tryGetImage(path[1]);
-
-        this.delay = new Delay(25);
+        this.delay = new Delay(delayFrame);
         this.delay.start();
         this.currentImg = this.img1;
         this.count = 0;
@@ -40,6 +39,10 @@ public class SpecialEffect extends GameObject {
 
     public void setShine(boolean isShine) {
         this.isShine = isShine;
+    }
+    
+    public boolean getIsShine(){
+        return this.isShine;
     }
 
     @Override

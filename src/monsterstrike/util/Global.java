@@ -33,10 +33,12 @@ public class Global {
     public static final int GENIE_MASS = 1;
 
     public static final int[] POSITION_X = {random(60,250), random(60,250), random(60,250)};
-    public static final int[] POSITION_Y = {170, 340, 510};
+    public static final int[] POSITION_Y = {135, 270, 405};
 
     public static final int[] ENEMYPOS_X = {850, 1000, 850};
-    public static final int[] ENEMYPOS_Y = {170, 340, 510};
+    public static final int[] ENEMYPOS_Y = {135, 270, 405};
+    
+    public static final int INFO_H = 135;
     
     public static int random(int min, int max) {
         if (min > max) {

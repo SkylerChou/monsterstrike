@@ -5,50 +5,25 @@
  */
 package monsterstrike.gameobject;
 
-import controllers.IRC;
 import java.awt.Graphics;
-import java.awt.image.BufferedImage;
-import monsterstrike.util.Delay;
-import monsterstrike.util.Global;
 
 /**
  *
  * @author kim19
  */
-public class BlackHole extends GameObject {
+public class BlackHole extends SpecialEffect {
 
-    private BufferedImage img1;
-    private BufferedImage img2;
-    private BufferedImage currentImg;
-    private Delay delay;
-    private int count;
-
+    private int width;
+    private int height;
+    
     public BlackHole(String[] path, int x, int y, int[] info) {
-        super(x, y, info[0], info[1], info[2]);
-        this.img1 = IRC.getInstance().tryGetImage(path[0]);
-        this.img2 = IRC.getInstance().tryGetImage(path[1]);
-
-        this.delay = new Delay(10);
-        this.delay.start();
-        this.currentImg = this.img1;
-        this.count = 0;
+        super(path, x, y, info, 10);
+        this.width = info[0];
+        this.height = info[1];
     }
 
     @Override
     public void paintComponent(Graphics g) {
-        g.drawImage(currentImg, (int) this.getX() ,(int)this.getY(), ImgInfo.BLACKHOLE_INFO[0], ImgInfo.BLACKHOLE_INFO[1], null);
+        g.drawImage(super.currentImg, (int) this.getX() ,(int)this.getY(), this.width, this.height, null);
     }
-
-    @Override
-    public void update() {
-        if (this.delay.isTrig()) {
-            this.count++;
-            if (this.count % 2 != 0) {
-                this.currentImg = this.img2;
-            } else {
-                this.currentImg = this.img1;
-            }
-        }
-    }
-
 }

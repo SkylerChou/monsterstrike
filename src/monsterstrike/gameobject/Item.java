@@ -10,12 +10,12 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import monsterstrike.util.Global;
 
-public class Background extends SceneObject {
+public class Item extends SceneObject{
 
     private BufferedImage img;
     private int idx;
 
-    public Background(String path, int x, int y, int idx) {
+    public Item(String path, int x, int y, int idx) {
         super(x, y, Global.SCREEN_X, Global.SCREEN_Y);
         this.img = IRC.getInstance().tryGetImage(path);
         this.idx = idx;
@@ -44,4 +44,5 @@ public class Background extends SceneObject {
         g.drawImage(img, x, y, x + w, y + h,
                 0, 0, ImgInfo.BACKGROUND_SIZE[idx][0], ImgInfo.BACKGROUND_SIZE[idx][1], null);
     }
+    
 }
