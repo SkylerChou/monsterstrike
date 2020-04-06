@@ -114,4 +114,8 @@ public class ImgInfo {
     public static final String[] CONTROL = {MENU_ROOT + "start.png", MENU_ROOT + "stop.png"};
     public static final String RETURN = MENU_ROOT + "return.png";
     public static final int[] SETTING_INFO = {25, 25};//img_width, img_height   
+
+    //黑洞
+    public static final String[] BALCKHOLE={"/resources/blackhole1.png","/resources/blackhole2.png"};
+    public static final int[] BLACKHOLE_INFO={200,200,40};//img_width, img_height 
 }

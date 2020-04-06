@@ -37,7 +37,7 @@ public class Dino extends SceneObject {
         this.count = 0;
         this.dir = 0;
         this.steps = steps;
-        this.delay = new Delay(10);
+        this.delay = new Delay(5);
         this.delay.start();
         this.isStand = true;
     }

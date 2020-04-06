@@ -17,7 +17,7 @@ public class Button extends SceneObject {
     private int count;
 
     public Button(String[] path, int x, int y, int width, int height) {
-        super(x, y, ImgInfo.MAINBUTTON_INFO[0], ImgInfo.MAINBUTTON_INFO[1]);
+        super(x, y, width, height);
         this.img1 = IRC.getInstance().tryGetImage(path[0]);
         this.img2 = IRC.getInstance().tryGetImage(path[1]);
         this.currentImg = this.img1;
@@ -31,6 +31,10 @@ public class Button extends SceneObject {
             } else {
                 this.currentImg = this.img1;
             }
+    }
+    
+    public void paintOther(Graphics g,int [] size) {
+        g.drawImage(this.currentImg, (int) this.getCenterX(), (int)this.getCenterY(), size[0], size[1], null);
     }
 
     @Override

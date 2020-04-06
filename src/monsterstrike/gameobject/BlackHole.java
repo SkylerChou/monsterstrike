@@ -6,40 +6,37 @@
 package monsterstrike.gameobject;
 
 import controllers.IRC;
-import monsterstrike.util.Delay;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import monsterstrike.util.Delay;
+import monsterstrike.util.Global;
 
-public class SpecialEffect extends GameObject {
+/**
+ *
+ * @author kim19
+ */
+public class BlackHole extends GameObject {
 
     private BufferedImage img1;
     private BufferedImage img2;
     private BufferedImage currentImg;
     private Delay delay;
     private int count;
-    private boolean isShine;
 
-    public SpecialEffect(String[] path, int x, int y, int[] info) {
+    public BlackHole(String[] path, int x, int y, int[] info) {
         super(x, y, info[0], info[1], info[2]);
         this.img1 = IRC.getInstance().tryGetImage(path[0]);
         this.img2 = IRC.getInstance().tryGetImage(path[1]);
 
-        this.delay = new Delay(25);
+        this.delay = new Delay(10);
         this.delay.start();
         this.currentImg = this.img1;
         this.count = 0;
-        this.isShine = false;
     }
 
     @Override
     public void paintComponent(Graphics g) {
-        if (this.isShine) {
-            g.drawImage(this.currentImg, (int) (this.getCenterX() - this.getR()), (int) (this.getCenterY() - this.getR()), ImgInfo.SHINE_INFO[0], ImgInfo.SHINE_INFO[1], null);
-        }
-    }
-
-    public void setShine(boolean isShine) {
-        this.isShine = isShine;
+        g.drawImage(currentImg, (int) this.getX() ,(int)this.getY(), ImgInfo.BLACKHOLE_INFO[0], ImgInfo.BLACKHOLE_INFO[1], null);
     }
 
     @Override
@@ -53,4 +50,5 @@ public class SpecialEffect extends GameObject {
             }
         }
     }
+
 }
