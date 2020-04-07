@@ -46,7 +46,7 @@ public abstract class Marble extends GameObject {
         this.skills = new Skills[5];
         this.setSkills();
         this.useSkill = true;
-        this.fiction =0;
+        this.fiction = 0.1f * this.mass;
         this.currentSkill = null;
     }
 
@@ -60,6 +60,10 @@ public abstract class Marble extends GameObject {
         this.shine.setCenterX(this.getCenterX());
         this.shine.setCenterY(this.getCenterY());
         this.shine.update();
+    }
+
+    public void setFiction(float num) {
+        this.fiction = num * this.mass;
     }
 
     public void move() {
@@ -197,7 +201,7 @@ public abstract class Marble extends GameObject {
         paintComponent(g);
         paintSkill(g);
     }
-    
+
     public abstract void paintScale(Graphics g, int x, int y, int w, int h);
 
     @Override

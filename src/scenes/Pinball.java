@@ -17,7 +17,6 @@ import monsterstrike.gameobject.ImgInfo;
 import monsterstrike.gameobject.ReboundBall;
 import monsterstrike.gameobject.SpecialEffect;
 import monsterstrike.gameobject.marble.Marble;
-import monsterstrike.gameobject.marble.ReboundMarble;
 import monsterstrike.graph.Rect;
 import monsterstrike.graph.Vector;
 import monsterstrike.util.CommandSolver;
@@ -54,17 +53,16 @@ public class Pinball extends Scene {
         this.racket = Rect.genWithCenter(50, 600, 120, 20);
         this.arrow = new Arrow(ImgInfo.ARROW, 0, 0, ImgInfo.ARROW_INFO);
         this.background.setX(2 * ImgInfo.BACKGROUND_SIZE[idx][0]);
+        this.marble.setFiction(0);
     }
 
     @Override
     public void sceneUpdate() {
-//        this.marble.update();
-        System.out.println(this.marble.getCenterY());
+        this.marble.update();
         this.marble.isBound();
         if ((racket.right() >= this.marble.getCenterX() - this.marble.getR() && racket.left() <= this.marble.getCenterX() + this.marble.getR()) && (this.marble.getCenterY() + this.marble.getR() >= 590)) {
             this.marble.setCenterY(580 - this.marble.getR());
             this.marble.getGoVec().setY(-this.marble.getGoVec().getY());
-
         } else {
             this.marble.move();
         }
@@ -83,6 +81,13 @@ public class Pinball extends Scene {
         this.marble.paint(g);
         Graphics2D g2d = (Graphics2D) g;
         this.racket.paint(g2d);
+    }
+
+    private boolean checkStop() {
+        if (this.marble.getGoVec().getValue() != 0) {
+            return false;
+        }
+        return true;
     }
 
     @Override
@@ -107,10 +112,14 @@ public class Pinball extends Scene {
 
                     break;
                 case Global.LEFT:
-                    racket.offset(-8, 0);
+                    if (racket.left() > 0) {
+                        racket.offset(-8, 0);
+                    }
                     break;
                 case Global.RIGHT:
-                    racket.offset(8, 0);
+                    if (racket.right() < Global.SCREEN_X) {
+                        racket.offset(8, 0);
+                    }
                     break;
             }
         }
@@ -137,35 +146,37 @@ public class Pinball extends Scene {
         @Override
         public void mouseTrig(MouseEvent e, CommandSolver.MouseState state, long trigTime) {
 
-            if (state == CommandSolver.MouseState.PRESSED) {
-                this.startX = e.getX();
-                this.startY = e.getY();
-            }
+            if (checkStop()) {
+                if (state == CommandSolver.MouseState.PRESSED) {
+                    this.startX = e.getX();
+                    this.startY = e.getY();
+                }
 
-            if (state == CommandSolver.MouseState.DRAGGED) {
-                arrow.setCenterX(marble.getCenterX());
-                arrow.setCenterY(marble.getCenterY());
-                Vector vector = new Vector(this.startX - e.getX(), this.startY - e.getY());
-                if (this.startY - e.getY() > 0) {
-                    arrow.setDegree((float) -Math.acos(vector.getX() / vector.getValue()));
-                } else {
+                if (state == CommandSolver.MouseState.DRAGGED) {
+                    arrow.setCenterX(marble.getCenterX());
+                    arrow.setCenterY(marble.getCenterY());
+                    Vector vector = new Vector(this.startX - e.getX(), this.startY - e.getY());
+                    if (this.startY - e.getY() > 0) {
+                        arrow.setDegree((float) -Math.acos(vector.getX() / vector.getValue()));
+                    } else {
+                        arrow.setDegree((float) Math.acos(vector.getX() / vector.getValue()));
+                    }
+                    float value = vector.getValue();
+                    if (vector.getValue() > 10 * marble.getR()) {
+                        value = 10 * marble.getR();
+                    }
+                    arrow.setResizeMag(value / arrow.getWidth());
+                    arrow.setShow(true);
+                }
+                if (state == CommandSolver.MouseState.RELEASED) {
+                    this.endX = e.getX();
+                    this.endY = e.getY();
+                    Vector vector = new Vector(this.startX - this.endX, this.startY - this.endY);
                     arrow.setDegree((float) Math.acos(vector.getX() / vector.getValue()));
+                    arrow.setResizeMag(vector.getValue() / arrow.getWidth());
+                    marble.setGo(vector.resizeVec(marble.getVelocity()));
+                    arrow.setShow(false);
                 }
-                float value = vector.getValue();
-                if (vector.getValue() > 10 * marble.getR()) {
-                    value = 10 * marble.getR();
-                }
-                arrow.setResizeMag(value / arrow.getWidth());
-                arrow.setShow(true);
-            }
-            if (state == CommandSolver.MouseState.RELEASED) {
-                this.endX = e.getX();
-                this.endY = e.getY();
-                Vector vector = new Vector(this.startX - this.endX, this.startY - this.endY);
-                arrow.setDegree((float) Math.acos(vector.getX() / vector.getValue()));
-                arrow.setResizeMag(vector.getValue() / arrow.getWidth());
-                marble.setGo(vector.resizeVec(marble.getVelocity()));
-                arrow.setShow(false);
             }
         }
     }

@@ -341,6 +341,7 @@ public class LevelScene extends Scene {
             if (state == 1 && checkAllStop() && mouseState == CommandSolver.MouseState.PRESSED) {
                 this.startX = e.getX();
                 this.startY = e.getY();
+                                System.out.println("press");
             }
 
             if (state == 1 && checkAllStop() && mouseState == CommandSolver.MouseState.DRAGGED) {
@@ -358,6 +359,7 @@ public class LevelScene extends Scene {
                 }
                 arrow.setResizeMag(value / arrow.getWidth());
                 arrow.setShow(true);
+                                System.out.println("drag");
             }
             if (state == 1 && checkAllStop() && mouseState == CommandSolver.MouseState.RELEASED) {
                 this.endX = e.getX();
@@ -369,6 +371,7 @@ public class LevelScene extends Scene {
                 count++;
                 round++;
                 arrow.setShow(false);
+                System.out.println("release");
             }
         }
     }
