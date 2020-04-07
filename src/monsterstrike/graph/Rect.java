@@ -65,7 +65,7 @@ public class Rect {
     }
     
      public void paint(Graphics2D g) {
-        g.fillRect((int)this.centerX(),(int) this.centerY(), (int)this.width(), (int)this.height());
+        g.fillRect((int)this.left,(int) this.top, (int)this.width(), (int)this.height());
     }
        
     public float top() {

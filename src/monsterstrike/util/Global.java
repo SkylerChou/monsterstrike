@@ -7,7 +7,7 @@ package monsterstrike.util;
 
 public class Global {
 
-    public static final boolean IS_DEBUG = true;
+    public static final boolean IS_DEBUG = false;
 
     //視窗大小
     public static final int FRAME_X =1280;

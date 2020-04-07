@@ -33,7 +33,7 @@ public class Pinball extends Scene {
     public static final int POS_Y = 50;
 
     private Background background;
-    private ReboundBall marble;
+    private Marble marble;
     private int idx; //背景idx
     private Rect racket;
     private Button setting;
@@ -49,25 +49,25 @@ public class Pinball extends Scene {
     public void sceneBegin() {
         this.idx = 1;
         this.background = new Background(ImgInfo.BACKGROUND_PATH[idx], 2 * ImgInfo.BACKGROUND_SIZE[idx][0], ImgInfo.BACKGROUND_SIZE[idx][1], idx);
-
-        this.b = new ArrayList<>();
+//        this.b = new ArrayList<>();
         this.marble = new ReboundBall(ImgInfo.MYMARBLE_PATH[0], ImgInfo.MYMARBLE_NAME[0], POS_X, POS_Y, ImgInfo.MYMARBLE_INFO[0]);
         this.racket = Rect.genWithCenter(50, 600, 120, 20);
         this.arrow = new Arrow(ImgInfo.ARROW, 0, 0, ImgInfo.ARROW_INFO);
-         this.background.setX(2 * ImgInfo.BACKGROUND_SIZE[idx][0]);
+        this.background.setX(2 * ImgInfo.BACKGROUND_SIZE[idx][0]);
     }
 
     @Override
     public void sceneUpdate() {
-       
 //        this.marble.update();
         System.out.println(this.marble.getCenterY());
-        this.marble.bound();
-        if ((racket.right() >= this.marble.getCenterX()-this.marble.getR()&& racket.left() <=this.marble.getCenterX()+this.marble.getR())&& (this.marble.getCenterY() + this.marble.getR() >= 590)) {
+        this.marble.isBound();
+        if ((racket.right() >= this.marble.getCenterX() - this.marble.getR() && racket.left() <= this.marble.getCenterX() + this.marble.getR()) && (this.marble.getCenterY() + this.marble.getR() >= 590)) {
             this.marble.setCenterY(580 - this.marble.getR());
             this.marble.getGoVec().setY(-this.marble.getGoVec().getY());
+
+        } else {
+            this.marble.move();
         }
-        this.marble.move();
 
     }
 
