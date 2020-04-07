@@ -90,6 +90,11 @@ public class StandMarble extends Marble {
         }
         return false;
     }
+    
+    @Override
+    public void setStop(){
+        this.delay.stop();
+    }
 
     @Override
     public void paintComponent(Graphics g) {

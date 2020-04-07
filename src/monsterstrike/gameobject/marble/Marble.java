@@ -26,7 +26,7 @@ public abstract class Marble extends GameObject {
     private SpecialEffect shine;
 
     private String name;
-    private int hp = 500;
+    private int hp = 100;
     private int atk = 20;
     private int attribute;
     private Skills[] skills;
@@ -101,9 +101,13 @@ public abstract class Marble extends GameObject {
 
     public abstract Marble strike(Marble other);
 
+    public abstract void setStop();
+    
     public void setShine(boolean isShine) {
         this.shine.setShine(isShine);
     }
+    
+    
 
     public float getMass() {
         return this.mass;

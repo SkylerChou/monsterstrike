@@ -7,17 +7,22 @@ package scenes;
 
 import controllers.SceneController;
 import java.awt.Graphics;
+import java.util.ArrayList;
 import monsterstrike.gameobject.Background;
+import monsterstrike.gameobject.Button;
 import monsterstrike.gameobject.ImgInfo;
 import monsterstrike.gameobject.marble.Marble;
 import monsterstrike.gameobject.marble.ReboundMarble;
 
 import monsterstrike.util.CommandSolver;
+import monsterstrike.util.Delay;
 import monsterstrike.util.Global;
 
 public class LevelMenu extends Scene {
 
     private Marble[] myMarbles;
+    private int[] myIdx;
+    private ArrayList<Button> buttons;
     private Background menu;
     private int count;
     private int idx;
@@ -28,15 +33,18 @@ public class LevelMenu extends Scene {
     private boolean isReleased;
     private int x;
     private int y;
+    private Delay delay;
 
     public LevelMenu(SceneController sceneController) {
         super(sceneController);
+        this.myMarbles = new Marble[3];
+        this.myIdx = new int[3];
+        this.buttons = new ArrayList<>();
     }
 
     @Override
     public void sceneBegin() {
         this.menu = new Background(ImgInfo.LEVELBACK_PATH, 0, 0, 1);
-        this.myMarbles = new Marble[3];
         this.count = 0;
         this.idx = 0;
         this.x = 350;
@@ -48,8 +56,18 @@ public class LevelMenu extends Scene {
             this.allMarbles[i] = new ReboundMarble(ImgInfo.MYMARBLE_PATH[i],
                     ImgInfo.MYMARBLE_NAME[i], x, y, ImgInfo.MYMARBLE_INFO[i]);
         }
+        int x = 0;
+        for (int i = 0; i < 3; i++) {
+            buttons.add(new Button(ImgInfo.RIGHT, 420 + x, 180, ImgInfo.CHOOSEBUTTON_INFO[0], ImgInfo.CHOOSEBUTTON_INFO[1]));
+            buttons.add(new Button(ImgInfo.LEFT, 230 + x, 180, ImgInfo.CHOOSEBUTTON_INFO[0], ImgInfo.CHOOSEBUTTON_INFO[1]));
+            x += 290;
+        }
+        buttons.add(new Button(ImgInfo.RIGHT, 950, 470, ImgInfo.CHOOSEBUTTON_INFO[0], ImgInfo.CHOOSEBUTTON_INFO[1]));
+        buttons.add(new Button(ImgInfo.LEFT, 280, 470, ImgInfo.CHOOSEBUTTON_INFO[0], ImgInfo.CHOOSEBUTTON_INFO[1]));
         this.currentMarble = this.allMarbles[0];
         this.isReleased = true;
+        this.delay = new Delay(20);
+        this.delay.start();
     }
 
     @Override
@@ -59,7 +77,14 @@ public class LevelMenu extends Scene {
         if (count == 4) {
             this.background = new Background(ImgInfo.BACKGROUND_PATH[backIdx], 0, 0, this.backIdx);
         } else if (this.count == 5) {
-            sceneController.changeScene(new LevelScene(sceneController, backIdx, myMarbles));
+            sceneController.changeScene(new LevelScene(sceneController, backIdx, myIdx));
+        }
+        if (this.delay.isTrig()) {
+            if(this.count==0){
+                this.count = 1;
+            }
+            this.buttons.get(2 * (count-1)).update();
+            this.buttons.get(2 * (count-1) + 1).update();
         }
     }
 
@@ -69,6 +94,7 @@ public class LevelMenu extends Scene {
         }
         if (this.count > 0 && this.count < 4) {
             myMarbles[this.count - 1] = currentMarble;
+            myIdx[this.count-1] = idx;
             this.idx = 0;
             this.x += 290;
             for (int i = 0; i < allMarbles.length; i++) {
@@ -99,6 +125,11 @@ public class LevelMenu extends Scene {
 
         if (this.count >= 4) {
             this.background.paintItem(g, 350, 400, 580, 200);
+        }
+
+        for (int i = 0; i < this.buttons.size(); i++) {
+            int[] size = new int[]{50, 50};
+            this.buttons.get(i).paintOther(g, size);
         }
     }
 

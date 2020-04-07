@@ -99,6 +99,11 @@ public class ReboundMarble extends Marble {
         this.other.norVec = newNor2;
         this.other.goVec = this.other.norVec.plus(this.other.tanVec);
     }
+    
+    @Override
+    public void setStop(){
+        this.delay.stop();
+    }
 
     @Override
     public void paintScale(Graphics g, int x, int y, int w, int h) {

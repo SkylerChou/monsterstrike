@@ -81,7 +81,7 @@ public class CriticalAttack implements Skills {
             Graphics2D g2d = (Graphics2D) g;
             AffineTransform oldForm = g2d.getTransform();
             if (!this.skill.isEmpty()) {
-                for (int i = 0; i < 4; i++) {
+                for (int i = 0; i < this.skill.size(); i++) {
                     g2d.rotate(i * (Math.PI / 2), (int) (this.skill.get(i).getCenterX()), (int) (this.skill.get(i).getCenterY()));
                     this.skill.get(i).paint(g2d);
                     g2d.setTransform(oldForm);

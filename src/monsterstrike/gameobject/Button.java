@@ -25,20 +25,20 @@ public class Button extends SceneObject {
 
     @Override
     public void update() {
-            this.count++;
-            if (this.count % 2 != 0) {
-                this.currentImg = this.img2;
-            } else {
-                this.currentImg = this.img1;
-            }
+        this.count++;
+        if (this.count % 2 != 0) {
+            this.currentImg = this.img2;
+        } else {
+            this.currentImg = this.img1;
+        }
     }
-    
-    public void paintOther(Graphics g,int [] size) {
-        g.drawImage(this.currentImg, (int) this.getCenterX(), (int)this.getCenterY(), size[0], size[1], null);
+
+    public void paintOther(Graphics g, int[] size) {
+        g.drawImage(this.currentImg, (int) this.getCenterX(), (int) this.getCenterY(), size[0], size[1], null);
     }
 
     @Override
     public void paint(Graphics g) {
-        g.drawImage(this.currentImg, (int) this.getCenterX(), (int)this.getCenterY(), 200, 50, null);
+        g.drawImage(this.currentImg, (int) this.getCenterX(), (int) this.getCenterY(), 200, 50, null);
     }
 }

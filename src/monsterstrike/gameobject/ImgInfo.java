@@ -87,15 +87,24 @@ public class ImgInfo {
     private static final String FIRE_PATH = BACKGROUND_ROOT + "fire.png";
     private static final int[] FIRE_SIZE = {950, 940};
 
-    public static final String INFOFORM_PATH = BACKGROUND_ROOT + "infoForm.png";
-    public static final int[] INFOFORM_SIZE = {1980, 260};
+    public static final String[] BACKGROUND_PATH = {GRASS_PATH, TILE_PATH, ICE_PATH, FIRE_PATH};
+    public static final int[][] BACKGROUND_SIZE = {GRASS_SIZE, TILE_SIZE, ICE_SIZE, FIRE_SIZE};
 
-    public static final String[] BACKGROUND_PATH = {GRASS_PATH, TILE_PATH, ICE_PATH, FIRE_PATH, INFOFORM_PATH};
-    public static final int[][] BACKGROUND_SIZE = {GRASS_SIZE, TILE_SIZE, ICE_SIZE, FIRE_SIZE, INFOFORM_SIZE};
+    //ITEM
+    private static final String ITEM_ROOT = "/resources/items/";
+    private static final String INFOFORM_PATH = ITEM_ROOT + "infoForm.png";
+    private static final int[] INFOFORM_SIZE = {1980, 260};
+    public static final String[] ITEM_PATH = {INFOFORM_PATH};
+    public static final int[][] ITEM_SIZE = {INFOFORM_SIZE};
 
     public static final String ARROW = "/resources/arrow.png";
     public static final int[] ARROW_INFO = {230, 230, 100};
 
+    //LEVEL MENU 按鈕
+    public static final String[] RIGHT = {ITEM_ROOT + "right1.png", ITEM_ROOT + "right2.png"};
+    public static final String[] LEFT = {ITEM_ROOT + "left1.png", ITEM_ROOT + "left2.png"};
+    public static final int[] CHOOSEBUTTON_INFO = {106, 88};
+    
     //Menu
     private static final String MENU_ROOT = "/resources/menu/";
     public static final String MENU = MENU_ROOT + "menu.png";

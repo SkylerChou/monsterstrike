@@ -32,8 +32,8 @@ public class Item extends SceneObject{
     @Override
     public void paint(Graphics g) {
         g.drawImage(img, 0, 0, Global.SCREEN_X, Global.SCREEN_Y,
-                (int) this.getX() - ImgInfo.BACKGROUND_SIZE[idx][0], 0,
-                (int) this.getX(), ImgInfo.BACKGROUND_SIZE[idx][1], null);
+                (int) this.getX() - ImgInfo.ITEM_SIZE[idx][0], 0,
+                (int) this.getX(), ImgInfo.ITEM_SIZE[idx][1], null);
     }
 
     public void paintMenu(Graphics g) {
@@ -42,7 +42,7 @@ public class Item extends SceneObject{
 
     public void paintItem(Graphics g, int x, int y, int w, int h) {
         g.drawImage(img, x, y, x + w, y + h,
-                0, 0, ImgInfo.BACKGROUND_SIZE[idx][0], ImgInfo.BACKGROUND_SIZE[idx][1], null);
+                0, 0, ImgInfo.ITEM_SIZE[idx][0], ImgInfo.ITEM_SIZE[idx][1], null);
     }
     
 }

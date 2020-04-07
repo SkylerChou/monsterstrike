@@ -12,7 +12,6 @@ import interfaceskills.SkillImg;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import monsterstrike.gameobject.*;
@@ -22,7 +21,8 @@ import monsterstrike.util.*;
 public class LevelScene extends Scene {
 
     private Background background;
-    private Item infoForm;
+    private Item item;
+    private int[] myIdx;
     private ArrayList<Marble> marbles;
     private ArrayList<Marble> enimies;
     private Arrow arrow;
@@ -37,14 +37,12 @@ public class LevelScene extends Scene {
 
     private Delay delay;
 
-    public LevelScene(SceneController sceneController, int backIdx, Marble[] myMarbles) {
+    public LevelScene(SceneController sceneController, int backIdx, int[] myIdx) {
         super(sceneController);
         this.idx = backIdx;
-        this.infoForm = new Item(ImgInfo.INFOFORM_PATH, 0, 0, 4);
+        this.item = new Item(ImgInfo.ITEM_PATH[0], 0, 0, 0);
         this.marbles = new ArrayList<>();
-        for (int i = 0; i < myMarbles.length; i++) {
-            this.marbles.add(myMarbles[i]);
-        }
+        this.myIdx = myIdx;
         this.enimies = new ArrayList<>();
         this.delay = new Delay(5);
         this.delay.start();
@@ -53,12 +51,12 @@ public class LevelScene extends Scene {
     @Override
     public void sceneBegin() {
         this.background = new Background(ImgInfo.BACKGROUND_PATH[idx], 2 * ImgInfo.BACKGROUND_SIZE[idx][0], ImgInfo.BACKGROUND_SIZE[idx][1], idx);
-        for (int i = 0; i < 3; i++) {
-            this.marbles.get(i).setCenterX(Global.POSITION_X[i]);
-            this.marbles.get(i).setCenterY(Global.POSITION_Y[i]);
+        for (int i = 0; i < this.myIdx.length; i++) {
+            this.marbles.add(new ReboundMarble(ImgInfo.MYMARBLE_PATH[myIdx[i]],
+                    ImgInfo.MYMARBLE_NAME[myIdx[i]], Global.POSITION_X[i], Global.POSITION_Y[i], ImgInfo.MYMARBLE_INFO[myIdx[i]]));
             this.enimies.add(new StandMarble(ImgInfo.ENEMY_PATH[i], ImgInfo.ENEMY_NAME[i], Global.ENEMYPOS_X[i], -100, ImgInfo.ENEMY_INFO[i]));
         }
-
+        
         this.arrow = new Arrow(ImgInfo.ARROW, 0, 0, ImgInfo.ARROW_INFO);
         this.currentIdx = 0;
         this.count = 0;
@@ -300,22 +298,33 @@ public class LevelScene extends Scene {
         for (int i = 0; i < this.marbles.size(); i++) {
             this.marbles.get(i).paintAll(g);
         }
-        Graphics2D g2d = (Graphics2D) g;
-        g2d.setColor(Color.ORANGE);
-        g2d.setFont(new Font("TimesRoman", Font.BOLD, 48));
-        g2d.drawString("Round " + round, 50, 495);
-        g2d.drawString("Hits " + hitCount, Global.SCREEN_X - 200, 100);
-        g2d.setColor(Color.BLACK);
-        g2d.setFont(new Font("Algerian", Font.PLAIN, 48));
-        this.infoForm.paintItem(g, 0, Global.SCREEN_Y - Global.INFO_H, Global.SCREEN_X, Global.INFO_H);
-        g2d.drawString(""+(sceneCount+1), 900, Global.SCREEN_Y - 40);
+        paintText(g);
+    }
+    
+    private void paintText(Graphics g){
+        g.setColor(Color.BLACK);
+        g.setFont(new Font("VinerHandITC", Font.ITALIC, 44));
+        g.drawString("Hits " + hitCount, Global.SCREEN_X - 200, 100);
+        g.setFont(new Font("VinerHandITC", Font.ITALIC, 36));
+        g.drawString("Round " + round, 30, 495); 
+        g.setColor(new Color(255, 153, 0));
+        g.setFont(new Font("VinerHandITC", Font.ITALIC, 44));
+        g.drawString("Hits " + hitCount, Global.SCREEN_X - 200-3, 100-3);
+        g.setFont(new Font("VinerHandITC", Font.ITALIC, 36));
+        g.drawString("Round " + round, 30-3, 495-3);       
+        g.setColor(Color.BLACK);       
+        this.item.paintItem(g, 0, Global.SCREEN_Y - Global.INFO_H, Global.SCREEN_X, Global.INFO_H);
+        g.setColor(Color.GRAY);
+        g.drawString("Battle "+(sceneCount+1), 800, Global.SCREEN_Y - 40);
+        g.setColor(Color.BLACK); 
+        g.drawString("Battle "+(sceneCount+1), 800-3, Global.SCREEN_Y - 40-3);
         int w = 0;
-        for (int i = 0; i < this.marbles.size(); i++) {           
-            this.marbles.get(i).paintScale(g, 25 + w, Global.SCREEN_Y - 125, 120, 120);
+        for (int i = 0; i < this.myIdx.length; i++) {
+            Marble m = new ReboundMarble(ImgInfo.MYMARBLE_PATH[myIdx[i]],
+                    ImgInfo.MYMARBLE_NAME[myIdx[i]], Global.POSITION_X[i], Global.POSITION_Y[i], ImgInfo.MYMARBLE_INFO[myIdx[i]]);
+            m.paintScale(g, 25 + w, Global.SCREEN_Y - 125, 120, 120);
             w += 150;
         }
-        
-
     }
 
     @Override
