@@ -14,12 +14,12 @@ import monsterstrike.util.Global;
 
 public class ReboundMarble extends Marble {
 
-    private BufferedImage img1;
-    private BufferedImage img2;
-    private BufferedImage currentImg;
+    protected BufferedImage img1;
+    protected BufferedImage img2;
+    protected BufferedImage currentImg;
 
-    private Delay delay;
-    private int count;
+    protected Delay delay;
+    protected int count;
 
     public ReboundMarble(String[] path, String name, int x, int y, int[] info) {
         super(name, x, y, info);

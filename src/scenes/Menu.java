@@ -59,7 +59,7 @@ public class Menu extends Scene {
             sceneController.changeScene(new LevelMenu(sceneController));
             this.isEnter = false;
         } else if (this.isEnter && this.dino.getCenterY() == Global.SCREEN_Y / 2 + 15) {
-            sceneController.changeScene(new Mutiplayer(sceneController));
+            sceneController.changeScene(new Pinball(sceneController));
             this.isEnter = false;
         } else if (this.isEnter && this.dino.getCenterY() == Global.SCREEN_Y / 2 + 65) {
 

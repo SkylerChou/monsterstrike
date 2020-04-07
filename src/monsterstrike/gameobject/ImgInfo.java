@@ -13,7 +13,7 @@ public class ImgInfo {
     private static final String MARBLE_ROOT = "/resources/marbles/";
 
     private static final String[] FIREBALL = {MARBLE_ROOT + "fireBall1.png", MARBLE_ROOT + "fireBall2.png"};
-    private static final int[] FIREBALL_INFO = {120, 120, 40, 1, 40, 1};
+    private static final int[] FIREBALL_INFO = {120, 120, 40, 1, 5, 1};
     private static final String[] RICEBALL = {MARBLE_ROOT + "riceBall1.png", MARBLE_ROOT + "riceBall2.png"};
     private static final int[] RICEBALL_INFO = {120, 120, 40, 1, 40, 2};
     private static final String[] ICEBALL = {MARBLE_ROOT + "iceBall1.png", MARBLE_ROOT + "iceBall2.png"};

@@ -46,7 +46,7 @@ public abstract class Marble extends GameObject {
         this.skills = new Skills[5];
         this.setSkills();
         this.useSkill = true;
-        this.fiction = 0.05f * this.mass;
+        this.fiction =0;
         this.currentSkill = null;
     }
 

@@ -5,6 +5,8 @@
  */
 package monsterstrike.graph;
 
+import java.awt.Graphics2D;
+
 public class Rect {
 
     private float left;
@@ -61,7 +63,11 @@ public class Rect {
     public float left() {
         return this.left;
     }
-
+    
+     public void paint(Graphics2D g) {
+        g.fillRect((int)this.centerX(),(int) this.centerY(), (int)this.width(), (int)this.height());
+    }
+       
     public float top() {
         return this.top;
     }
