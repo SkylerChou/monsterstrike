@@ -35,7 +35,7 @@ public class ImgInfo {
 
     private static final String ENEMY_ROOT = "/resources/marbles/Enemy/";
     private static final String[] ZOMBIE = {ENEMY_ROOT + "zombie1.png", ENEMY_ROOT + "zombie2.png", ENEMY_ROOT + "zombieDie.png"};
-    private static final int[] ZOMBIE_INFO = {150, 150, 60, 2, 40, 0};
+    private static final int[] ZOMBIE_INFO = {150, 150, 60, 2, 40, 2};
     private static final String[] BLUEZOMBIE = {ENEMY_ROOT + "blueZombie1.png", ENEMY_ROOT + "blueZombie2.png", ENEMY_ROOT + "zombieDie.png"};
     private static final int[] BLUEZOMBIE_INFO = {150, 150, 60, 2, 40, 0};
 

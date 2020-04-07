@@ -42,9 +42,9 @@ public class ReboundMarble extends Marble {
                 this.currentImg = this.img1;
             }
         }
-        if (this.getCurrentSkill() != null) {
-            this.getCurrentSkill().update();
-        }
+//        if (this.getCurrentSkill() != null) {
+//            this.getCurrentSkill().update();
+//        }
         isBound();
         move();
     }

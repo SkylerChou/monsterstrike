@@ -63,7 +63,6 @@ public class StandMarble extends Marble {
             } else {
                 this.offset(-this.goVec.getX(), -this.goVec.getY());
             }
-
             this.moveCount++;
             if (this.moveCount == 2) {
                 this.moveCount = 0;

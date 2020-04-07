@@ -15,7 +15,7 @@ import monsterstrike.util.Global;
 public class CriticalAttack implements Skills {
 
     private static final int[] SKILL_IDX = {1, 2};
-    private static final int[] DELAY = {3, 10}; //技能變化動畫
+    private static final int[] DELAY = {5, 15}; //技能變化動畫
     private int attribute;
     private ArrayList<SkillComponent> skill;
     private int r;

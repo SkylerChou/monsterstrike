@@ -34,10 +34,10 @@ public class SkillRenderer {
 
     public void update() {
         if (this.delay.isTrig()) {          
-            if (this.imgIdx++ == this.imgNum - 1) {         
-                this.stop();
+            if (this.imgIdx++ == this.imgNum - 1) {                
                 this.isStop = true;
                 this.imgIdx = this.imgNum - 1;
+                this.stop();
             }
         }
     }
