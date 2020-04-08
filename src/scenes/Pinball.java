@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import monsterstrike.gameobject.Arrow;
 import monsterstrike.gameobject.Background;
 import monsterstrike.gameobject.Button;
-import monsterstrike.gameobject.Dino;
 import monsterstrike.gameobject.ImgInfo;
 import monsterstrike.gameobject.ReboundBall;
 import monsterstrike.gameobject.SpecialEffect;
@@ -38,7 +37,6 @@ public class Pinball extends Scene {
     private ArrayList<Marble> post;
     private int idx; //背景idx
     private Rect racket;
-    private Dino dino;
     private Button setting;
     private ArrayList<SpecialEffect> b;
 
@@ -48,11 +46,11 @@ public class Pinball extends Scene {
         super(sceneController);
         //        this.b = new ArrayList<>();
         this.post = new ArrayList<>();
+
     }
 
     @Override
     public void sceneBegin() {
-        
         for (int i = 0; i < 5; i++) {
             int y = Global.random(100, 200);
             this.post.add(new StandMarble(ImgInfo.POSTS_PATH[i], ImgInfo.POSTS_NAME, 150 + i * 200, 150 + y, ImgInfo.POSTS_INFO[i]));
@@ -66,7 +64,6 @@ public class Pinball extends Scene {
         this.background.setX(2 * ImgInfo.BACKGROUND_SIZE[idx][0]);
         this.marble.setFiction(0);
         this.marble.setVelocity(10);
-        this.dino = new Dino(ImgInfo.BLUEDINOJPG, 500, 500);
     }
 
     @Override
@@ -101,11 +98,9 @@ public class Pinball extends Scene {
 
     @Override
     public void paint(Graphics g) {
-        this.dino.paint(g);
         this.background.paint(g);
         this.arrow.paint(g);
         this.marble.paint(g);
-
         for (int i = 0; i < 5; i++) {
             this.post.get(i).paint(g);
         }
@@ -137,28 +132,10 @@ public class Pinball extends Scene {
         public void keyPressed(int commandCode, long trigTime) {
             switch (commandCode) {
                 case Global.UP:
-                    dino.setDir(Global.UP);
-                    if (dino.getCenterY() - dino.getHeight() / 2 > 0) {
-                        dino.moveArround();
-                    }
+
                     break;
                 case Global.DOWN:
-                    dino.setDir(Global.DOWN);
-                    if (dino.getCenterY() + dino.getHeight() / 2 < Global.SCREEN_Y) {
-                        dino.moveArround();
-                    }
-                    break;
-                case Global.LEFT2:
-                    dino.setDir(Global.LEFT2);
-                    if (dino.getCenterX() - dino.getWidth() / 2 > 0) {
-                        dino.moveArround();
-                    }
-                    break;
-                case Global.RIGHT2:
-                    dino.setDir(Global.RIGHT2);
-                    if (dino.getCenterX() + dino.getWidth() / 2 < Global.SCREEN_X) {
-                        dino.moveArround();
-                    }
+
                     break;
                 case Global.LEFT:
                     if (racket.left() > 0) {

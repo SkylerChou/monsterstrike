@@ -28,8 +28,8 @@ public class ReboundBall extends Marble {
 
     public ReboundBall(String[] path, String name, int x, int y, int[] info) {
         super(name, x, y, info);
-        this.img1 = IRC.getInstance().tryGetPNG(path[0]);
-        this.img2 = IRC.getInstance().tryGetPNG(path[1]);
+        this.img1 = IRC.getInstance().tryGetImage(path[0]);
+        this.img2 = IRC.getInstance().tryGetImage(path[1]);
         this.currentImg = this.img1;
         this.delay = new Delay(20);
         this.delay.start();

@@ -201,12 +201,7 @@ public abstract class Marble extends GameObject {
     public abstract boolean die();
 
     public void paintAll(Graphics g) {
-        if(this.attribute==3||this.attribute==4){
-            this.shine.paintWinds(g);
-        }else{
-            this.shine.paintComponent(g);
-        }
-        
+        this.shine.paintComponent(g);
         paintComponent(g);
         paintSkill(g);
     }

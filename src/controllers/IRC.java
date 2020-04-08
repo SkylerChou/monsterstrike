@@ -6,12 +6,10 @@
 package controllers;
 //ImageResourceController
 
-import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
 
 public class IRC {
 
@@ -19,12 +17,10 @@ public class IRC {
 
         private String path;
         private BufferedImage img;
-        private Image jif;
 
-        public KeyPair(String path, BufferedImage img, Image jif) {
+        public KeyPair(String path, BufferedImage img) {
             this.path = path;
             this.img = img;
-            this.jif = jif;
         }
     }
 
@@ -43,20 +39,12 @@ public class IRC {
         return irc;
     }
 
-    public BufferedImage tryGetPNG(String path) {
+    public BufferedImage tryGetImage(String path) {
         KeyPair pair = findKeyPair(path);
         if (pair == null) {
-            return addPNG(path);
+            return addImage(path);
         }
         return pair.img;
-    }
-
-    public Image tryGetJPG(String path) {
-        KeyPair pair = findKeyPair(path);
-        if (pair == null) {
-            return addJPG(path);
-        }
-        return pair.jif;
     }
 
     private KeyPair findKeyPair(String path) {
@@ -69,23 +57,12 @@ public class IRC {
         return null;
     }
 
-    private BufferedImage addPNG(String path) {
+    private BufferedImage addImage(String path) {
         try {
             BufferedImage img = ImageIO.read(getClass().getResource(path));
-            imgPair.add(new KeyPair(path, img, null));
+            imgPair.add(new KeyPair(path, img));
             return img;
         } catch (IOException e) {
-
-        }
-        return null;
-    }
-
-    private Image addJPG(String path) {
-        try {
-            Image img = new ImageIcon(getClass().getResource(path)).getImage();
-            imgPair.add(new KeyPair(path, null, img));
-            return img;
-        } catch (Exception e) {
 
         }
         return null;

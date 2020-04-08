@@ -21,8 +21,8 @@ public class SpecialEffect extends GameObject {
 
     public SpecialEffect(String[] path, int x, int y, int[] info, int delayFrame) {
         super(x, y, info[0], info[1], info[2]);
-        this.img1 = IRC.getInstance().tryGetPNG(path[0]);
-        this.img2 = IRC.getInstance().tryGetPNG(path[1]);
+        this.img1 = IRC.getInstance().tryGetImage(path[0]);
+        this.img2 = IRC.getInstance().tryGetImage(path[1]);
         this.delay = new Delay(delayFrame);
         this.delay.start();
         this.currentImg = this.img1;
@@ -36,13 +36,7 @@ public class SpecialEffect extends GameObject {
             g.drawImage(this.currentImg, (int) (this.getCenterX() - this.getR()), (int) (this.getCenterY() - this.getR()), ImgInfo.SHINE_INFO[0], ImgInfo.SHINE_INFO[1], null);
         }
     }
-    public void paintWinds(Graphics g) {
-        if (this.isShine) {
-            g.drawImage(this.currentImg, (int)this.rect.left()-20, (int) this.rect.top()-30, 200, 200, null);
-        }
-    }
 
-    
     public void setShine(boolean isShine) {
         this.isShine = isShine;
     }

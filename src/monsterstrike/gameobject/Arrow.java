@@ -20,7 +20,7 @@ public class Arrow extends GameObject {
 
     public Arrow(String path, int x, int y, int[] info) {
         super(x, y, info[0], info[1], info[2]);
-        this.img = IRC.getInstance().tryGetPNG(path);
+        this.img = IRC.getInstance().tryGetImage(path);
         this.isShow = false;
         this.resizeMag = 1;
     }
