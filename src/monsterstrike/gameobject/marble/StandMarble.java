@@ -40,6 +40,20 @@ public class StandMarble extends Marble {
         this.isDie = false;
     }
 
+    public StandMarble(String[] path, String[] name, int x, int y, int[] info) {
+        super(name[0], x, y, info);
+        this.img1 = IRC.getInstance().tryGetImage(path[0]);
+        this.img2 = IRC.getInstance().tryGetImage(path[1]);
+        this.currentImg = this.img1;
+        this.moveDelay = new Delay(10);
+        this.delay = new Delay(8);
+        this.delay.start();
+        this.moveDelay.start();
+        this.moveCount = 0;
+        this.count = 0;
+        this.isDie = false;
+    }
+
     @Override
     public void update() {
         this.delay.start();
@@ -102,13 +116,13 @@ public class StandMarble extends Marble {
             this.renderer.paint(g, (int) this.getX(), (int) this.getY(),
                     (int) this.getWidth(), (int) this.getHeight());
         } else {
-            g.drawImage(currentImg, (int) this.getX(), (int) this.getY(), null);
+            g.drawImage(currentImg, (int) this.getX(), (int) this.getY(),(int) this.getWidth(),(int) this.getHeight(), null);
         }
     }
 
     @Override
     public void paintScale(Graphics g, int x, int y, int w, int h) {
-        
+
     }
 
 }

@@ -17,6 +17,7 @@ import monsterstrike.gameobject.ImgInfo;
 import monsterstrike.gameobject.ReboundBall;
 import monsterstrike.gameobject.SpecialEffect;
 import monsterstrike.gameobject.marble.Marble;
+import monsterstrike.gameobject.marble.StandMarble;
 import monsterstrike.graph.Rect;
 import monsterstrike.graph.Vector;
 import monsterstrike.util.CommandSolver;
@@ -33,6 +34,7 @@ public class Pinball extends Scene {
 
     private Background background;
     private Marble marble;
+    private ArrayList<Marble> post;
     private int idx; //背景idx
     private Rect racket;
     private Button setting;
@@ -42,18 +44,26 @@ public class Pinball extends Scene {
 
     public Pinball(SceneController sceneController) {
         super(sceneController);
+        //        this.b = new ArrayList<>();
+        this.post = new ArrayList<>();
+
     }
 
     @Override
     public void sceneBegin() {
+        for (int i = 0; i < 5; i++) {
+            int y = Global.random(100, 200);
+            this.post.add(new StandMarble(ImgInfo.POSTS_PATH[i], ImgInfo.POSTS_NAME, 150 + i * 200, 150 + y, ImgInfo.POSTS_INFO[i]));
+        }
         this.idx = 1;
         this.background = new Background(ImgInfo.BACKGROUND_PATH[idx], 2 * ImgInfo.BACKGROUND_SIZE[idx][0], ImgInfo.BACKGROUND_SIZE[idx][1], idx);
-//        this.b = new ArrayList<>();
+
         this.marble = new ReboundBall(ImgInfo.MYMARBLE_PATH[0], ImgInfo.MYMARBLE_NAME[0], POS_X, POS_Y, ImgInfo.MYMARBLE_INFO[0]);
         this.racket = Rect.genWithCenter(50, 600, 120, 20);
         this.arrow = new Arrow(ImgInfo.ARROW, 0, 0, ImgInfo.ARROW_INFO);
         this.background.setX(2 * ImgInfo.BACKGROUND_SIZE[idx][0]);
         this.marble.setFiction(0);
+        this.marble.setVelocity(10);
     }
 
     @Override
@@ -66,7 +76,19 @@ public class Pinball extends Scene {
         } else {
             this.marble.move();
         }
-
+        for (int i = 0; i < this.post.size(); i++) {
+            if (this.post.get(i).getIsCollide()) {
+                this.post.get(i).update();
+            }
+        }
+        for (int i = 0; i < this.post.size(); i++) {
+            if (this.marble.isCollision(this.post.get(i)) && this.marble.getGoVec().getValue() > 0) {
+                Marble tmp = this.marble.strike(this.post.get(i));
+                this.post.get(i).setGo(tmp.getGoVec());
+                this.post.get(i).setIsCollide(true);
+                this.marble.genSkill(0, this.post.get(i));
+            }
+        }
     }
 
     @Override
@@ -79,6 +101,10 @@ public class Pinball extends Scene {
         this.background.paint(g);
         this.arrow.paint(g);
         this.marble.paint(g);
+        for (int i = 0; i < 5; i++) {
+            this.post.get(i).paint(g);
+        }
+
         Graphics2D g2d = (Graphics2D) g;
         this.racket.paint(g2d);
     }
@@ -113,12 +139,12 @@ public class Pinball extends Scene {
                     break;
                 case Global.LEFT:
                     if (racket.left() > 0) {
-                        racket.offset(-8, 0);
+                        racket.offset(-7, 0);
                     }
                     break;
                 case Global.RIGHT:
                     if (racket.right() < Global.SCREEN_X) {
-                        racket.offset(8, 0);
+                        racket.offset(7, 0);
                     }
                     break;
             }

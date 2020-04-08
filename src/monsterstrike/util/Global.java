@@ -7,7 +7,7 @@ package monsterstrike.util;
 
 public class Global {
 
-    public static final boolean IS_DEBUG =false;
+    public static final boolean IS_DEBUG =true;
 
     //視窗大小
     public static final int FRAME_X =1280;
@@ -24,8 +24,10 @@ public class Global {
     public static final int LIMIT_DELTA_TIME = (int) Math.pow(10, 9) / FRAME_LIMIT;
 
     public static final int LEFT = 0;
+    public static final int LEFT2 = 6;
     public static final int UP = 1;
     public static final int RIGHT = 2;
+    public static final int RIGHT2 = 5;
     public static final int DOWN = 3;
     public static final int ENTER=4;
     

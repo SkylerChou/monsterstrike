@@ -13,7 +13,7 @@ public class ImgInfo {
     private static final String MARBLE_ROOT = "/resources/marbles/";
 
     private static final String[] FIREBALL = {MARBLE_ROOT + "fireBall1.png", MARBLE_ROOT + "fireBall2.png"};
-    private static final int[] FIREBALL_INFO = {120, 120, 40, 1, 5, 1};
+    private static final int[] FIREBALL_INFO = {120, 120, 40, 1, 30, 1};
     private static final String[] RICEBALL = {MARBLE_ROOT + "riceBall1.png", MARBLE_ROOT + "riceBall2.png"};
     private static final int[] RICEBALL_INFO = {120, 120, 40, 1, 40, 2};
     private static final String[] ICEBALL = {MARBLE_ROOT + "iceBall1.png", MARBLE_ROOT + "iceBall2.png"};
@@ -117,4 +117,11 @@ public class ImgInfo {
     public static final String RETURN = MENU_ROOT + "return.png";
     public static final int[] SETTING_INFO = {25, 25};//img_width, img_height   
 
+    //
+    public static final String[] POST = {MARBLE_ROOT + "mushroom1.png", MARBLE_ROOT + "mushroom2.png"};
+    public static final int[] POST_INFO = {95, 95, 40, 2, 40, 0};//img_width, img_height, r, mass, velocity, attribute
+
+    public static final String[][] POSTS_PATH = {POST, POST, POST, POST,POST};
+    public static final String[] POSTS_NAME = {"香菇"};
+    public static final int[][] POSTS_INFO = {POST_INFO, POST_INFO, POST_INFO, POST_INFO,POST_INFO};
 }

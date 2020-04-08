@@ -156,6 +156,10 @@ public abstract class Marble extends GameObject {
     public float getVelocity() {
         return this.velocity;
     }
+    
+    public void setVelocity(int v){
+        this.velocity=v;
+    }
 
     public String getName() {
         return this.name;
