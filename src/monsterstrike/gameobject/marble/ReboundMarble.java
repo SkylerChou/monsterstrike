@@ -45,7 +45,9 @@ public class ReboundMarble extends Marble {
 //        if (this.getCurrentSkill() != null) {
 //            this.getCurrentSkill().update();
 //        }
-        isBound();
+        if(isBound()){
+            this.goVec.setValue(this.goVec.getValue()-2);
+        }
         move();
     }
 
@@ -65,7 +67,7 @@ public class ReboundMarble extends Marble {
                 if (other instanceof StandMarble) {
                     this.setGo(nor.resizeVec(-1 * originGo.getValue()));
                     this.offset(this.goVec.getX(), this.goVec.getY());
-                    this.goVec.setValue(originGo.getValue() * 0.8f);
+                    this.goVec.setValue(originGo.getValue() - 3);
                 } else {
                     this.offset(this.goVec.getX(), this.goVec.getY());
                     this.other.offset(this.other.goVec.getX(), this.other.goVec.getY());

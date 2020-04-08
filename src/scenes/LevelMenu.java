@@ -80,11 +80,17 @@ public class LevelMenu extends Scene {
             sceneController.changeScene(new LevelScene(sceneController, backIdx, myIdx));
         }
         if (this.delay.isTrig()) {
-            if(this.count==0){
-                this.count = 1;
+            int i = 2 * (count - 1);
+            if (i == -2) {
+                i = 0;
+            } else if (i == 8) {
+                i = 7;
             }
-            this.buttons.get(2 * (count-1)).update();
-            this.buttons.get(2 * (count-1) + 1).update();
+            if (this.buttons.get(i) == null) {
+                System.out.println(i + " " + this.buttons.get(i));
+            }
+            this.buttons.get(i).update();
+            this.buttons.get(i + 1).update();
         }
     }
 
@@ -94,7 +100,7 @@ public class LevelMenu extends Scene {
         }
         if (this.count > 0 && this.count < 4) {
             myMarbles[this.count - 1] = currentMarble;
-            myIdx[this.count-1] = idx;
+            myIdx[this.count - 1] = idx;
             this.idx = 0;
             this.x += 290;
             for (int i = 0; i < allMarbles.length; i++) {
@@ -154,7 +160,7 @@ public class LevelMenu extends Scene {
                         if (count <= 3) {
                             idx--;
                             if (idx < 0) {
-                                idx = 0;
+                                idx = ImgInfo.MYMARBLE_NAME.length + idx;
                             }
                         } else {
                             backIdx--;
@@ -167,7 +173,7 @@ public class LevelMenu extends Scene {
                         if (count <= 3) {
                             idx++;
                             if (idx >= ImgInfo.MYMARBLE_NAME.length) {
-                                idx = ImgInfo.MYMARBLE_NAME.length - 1;
+                                idx = 0;
                             }
                         } else {
                             backIdx++;

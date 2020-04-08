@@ -193,7 +193,7 @@ public class LevelScene extends Scene {
                 if (i != j && this.marbles.get(i).isCollision(this.marbles.get(j))) {
                     this.marbles.set(j, this.marbles.get(i).strike(this.marbles.get(j)));
                     if (i == currentIdx) {
-                        this.marbles.get(j).setGo(this.marbles.get(j).getGoVec().multiplyScalar(0.1f));
+                        this.marbles.get(j).getGoVec().setValue(this.marbles.get(j).getGoVec().getValue() * 0.5f);
                         if (this.marbles.get(j).getUseSkill()) {
                             this.marbles.get(j).genSkill(1, this.enimies);
                             checkStrike(j, this.marbles.get(j).getSkillComponent());
@@ -251,8 +251,7 @@ public class LevelScene extends Scene {
                 if (i == 0) {
                     this.enimies.get(i).genSkill(1, this.marbles);
                     this.enimies.get(i).setUseSkill(false);
-                }
-                if (i!=0 && checkSkillStop(this.enimies.get(i - 1))) {
+                } else if (checkSkillStop(this.enimies.get(i - 1))) {
                     this.enimies.get(i).genSkill(1, this.marbles);
                     this.enimies.get(i).setUseSkill(false);
                 }
@@ -342,7 +341,9 @@ public class LevelScene extends Scene {
         }
         for (int i = 0; i < this.enimies.size(); i++) {
             this.enimies.get(i).paint(g);
-            this.enimies.get(i).paintSkill(g);
+            if (this.enimies.get(i).getCurrentSkill() != null) {
+                this.enimies.get(i).paintSkill(g);
+            }
         }
         for (int i = 0; i < this.marbles.size(); i++) {
             this.marbles.get(i).paintAll(g);
@@ -351,16 +352,22 @@ public class LevelScene extends Scene {
     }
 
     private void paintText(Graphics g) {
-        g.setColor(Color.BLACK);
-        g.setFont(new Font("VinerHandITC", Font.ITALIC, 44));
-        g.drawString("Hits " + hitCount, Global.SCREEN_X - 200, 100);
+
+        if (hitCount > 0) {
+            g.setColor(Color.BLACK);
+            g.setFont(new Font("VinerHandITC", Font.ITALIC, 44));
+            g.drawString("Hits " + hitCount, Global.SCREEN_X - 200, 100);
+            g.setColor(new Color(255, 153, 0));
+            g.drawString("Hits " + hitCount, Global.SCREEN_X - 200 - 3, 100 - 3);
+        }
+        if (round > 0) {
+            g.setColor(Color.BLACK);
+            g.setFont(new Font("VinerHandITC", Font.ITALIC, 36));
+            g.drawString("Round " + round, 30, 495);
+            g.setColor(new Color(255, 153, 0));
+            g.drawString("Round " + round, 30 - 3, 495 - 3);
+        }
         g.setFont(new Font("VinerHandITC", Font.ITALIC, 36));
-        g.drawString("Round " + round, 30, 495);
-        g.setColor(new Color(255, 153, 0));
-        g.setFont(new Font("VinerHandITC", Font.ITALIC, 44));
-        g.drawString("Hits " + hitCount, Global.SCREEN_X - 200 - 3, 100 - 3);
-        g.setFont(new Font("VinerHandITC", Font.ITALIC, 36));
-        g.drawString("Round " + round, 30 - 3, 495 - 3);
         g.setColor(Color.BLACK);
         this.item.paintItem(g, 0, Global.SCREEN_Y - Global.INFO_H, Global.SCREEN_X, Global.INFO_H);
         g.setColor(Color.GRAY);
@@ -397,38 +404,41 @@ public class LevelScene extends Scene {
         @Override
         public void mouseTrig(MouseEvent e, CommandSolver.MouseState mouseState, long trigTime) {
 
-            if (state == 1 && checkAllStop() && mouseState == CommandSolver.MouseState.PRESSED) {
-                this.startX = e.getX();
-                this.startY = e.getY();
-            }
-
-            if (state == 1 && checkAllStop() && mouseState == CommandSolver.MouseState.DRAGGED) {
-                arrow.setCenterX(marbles.get(currentIdx).getCenterX());
-                arrow.setCenterY(marbles.get(currentIdx).getCenterY());
-                Vector vector = new Vector(this.startX - e.getX(), this.startY - e.getY());
-                if (this.startY - e.getY() > 0) {
-                    arrow.setDegree((float) -Math.acos(vector.getX() / vector.getValue()));
+            if (state == 1 && checkAllStop()) {
+                arrow.setResizeMag(0);
+                if (mouseState == CommandSolver.MouseState.PRESSED) {
+                    this.startX = e.getX();
+                    this.startY = e.getY();
+                } else if (mouseState == CommandSolver.MouseState.DRAGGED) {
+                    arrow.setCenterX(marbles.get(currentIdx).getCenterX());
+                    arrow.setCenterY(marbles.get(currentIdx).getCenterY());
+                    Vector vector = new Vector(this.startX - e.getX(), this.startY - e.getY());
+                    if (this.startY - e.getY() > 0) {
+                        arrow.setDegree((float) -Math.acos(vector.getX() / vector.getValue()));
+                    } else {
+                        arrow.setDegree((float) Math.acos(vector.getX() / vector.getValue()));
+                    }
+                    float value = vector.getValue();
+                    if (vector.getValue() > 10f * marbles.get(currentIdx).getR()) {
+                        value = 10f * marbles.get(currentIdx).getR();
+                    }
+                    arrow.setResizeMag(value / arrow.getWidth());
+                    arrow.setShow(true);
                 } else {
+                    arrow.setShow(false);
+                }
+                if (mouseState == CommandSolver.MouseState.RELEASED) {
+                    this.endX = e.getX();
+                    this.endY = e.getY();
+                    Vector vector = new Vector(this.startX - this.endX, this.startY - this.endY);
                     arrow.setDegree((float) Math.acos(vector.getX() / vector.getValue()));
+                    arrow.setResizeMag(vector.getValue() / arrow.getWidth());
+                    marbles.get(currentIdx).setGo(vector.resizeVec(marbles.get(currentIdx).getVelocity()));
+                    count++;
+                    round++;
+                    enemyRound++;
+                    arrow.setShow(false);
                 }
-                float value = vector.getValue();
-                if (vector.getValue() > 10f * marbles.get(currentIdx).getR()) {
-                    value = 10f * marbles.get(currentIdx).getR();
-                }
-                arrow.setResizeMag(value / arrow.getWidth());
-                arrow.setShow(true);
-            }
-            if (state == 1 && checkAllStop() && mouseState == CommandSolver.MouseState.RELEASED) {
-                this.endX = e.getX();
-                this.endY = e.getY();
-                Vector vector = new Vector(this.startX - this.endX, this.startY - this.endY);
-                arrow.setDegree((float) Math.acos(vector.getX() / vector.getValue()));
-                arrow.setResizeMag(vector.getValue() / arrow.getWidth());
-                marbles.get(currentIdx).setGo(vector.resizeVec(marbles.get(currentIdx).getVelocity()));
-                count++;
-                round++;
-                enemyRound++;
-                arrow.setShow(false);
             }
         }
     }

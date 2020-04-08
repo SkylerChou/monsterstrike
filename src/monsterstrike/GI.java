@@ -11,13 +11,14 @@ import monsterstrike.util.CommandSolver.MouseCommandListener;
 import controllers.SceneController;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
+import monsterstrike.GameKernel.GameInterface;
 import scenes.*;
 
-public class GameJPanel extends javax.swing.JPanel implements KeyListener, MouseCommandListener{
+public class GI implements KeyListener, MouseCommandListener, GameInterface{
 
     private SceneController sceneController;
     
-    public GameJPanel() {
+    public GI() {
         sceneController = new SceneController();
         sceneController.changeScene(new Menu(sceneController));
     }
@@ -27,7 +28,7 @@ public class GameJPanel extends javax.swing.JPanel implements KeyListener, Mouse
     }
 
     @Override
-    public void paintComponent(Graphics g) {
+    public void paint(Graphics g) {
         sceneController.paint(g);
     }
 

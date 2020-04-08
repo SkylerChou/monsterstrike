@@ -7,7 +7,7 @@ package monsterstrike.util;
 
 public class Global {
 
-    public static final boolean IS_DEBUG = false;
+    public static final boolean IS_DEBUG = true;
 
     //視窗大小
     public static final int FRAME_X =1280;
@@ -17,11 +17,11 @@ public class Global {
 
     //資料刷新時間
     public static final int UPDATE_TIMES_PER_SEC = 60; //每秒更新60次
-    public static final int MILLISEC_PER_UPDATE = (int) Math.pow(10, 9) / UPDATE_TIMES_PER_SEC; //每更新一次花費的毫秒數
+    public static final int MILLISEC_PER_UPDATE = 1000000000 / UPDATE_TIMES_PER_SEC; //每更新一次花費的毫秒數
 
     //畫面更新時間
-    public static final int FRAME_LIMIT = 120;
-    public static final int LIMIT_DELTA_TIME = (int) Math.pow(10, 9) / FRAME_LIMIT;
+    public static final int FRAME_LIMIT = 60;
+    public static final int LIMIT_DELTA_TIME = 1000000000 / FRAME_LIMIT;
 
     public static final int LEFT = 0;
     public static final int UP = 1;
