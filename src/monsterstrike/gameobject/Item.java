@@ -17,7 +17,7 @@ public class Item extends SceneObject{
 
     public Item(String path, int x, int y, int idx) {
         super(x, y, Global.SCREEN_X, Global.SCREEN_Y);
-        this.img = IRC.getInstance().tryGetImage(path);
+        this.img = IRC.getInstance().tryGetPNG(path);
         this.idx = idx;
     }
 

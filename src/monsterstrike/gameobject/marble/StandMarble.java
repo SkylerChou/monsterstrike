@@ -27,8 +27,8 @@ public class StandMarble extends Marble {
 
     public StandMarble(String[] path, String name, int x, int y, int[] info) {
         super(name, x, y, info);
-        this.img1 = IRC.getInstance().tryGetImage(path[0]);
-        this.img2 = IRC.getInstance().tryGetImage(path[1]);
+        this.img1 = IRC.getInstance().tryGetPNG(path[0]);
+        this.img2 = IRC.getInstance().tryGetPNG(path[1]);
         this.currentImg = this.img1;
         this.moveDelay = new Delay(10);
         this.delay = new Delay(8);
@@ -42,8 +42,8 @@ public class StandMarble extends Marble {
 
     public StandMarble(String[] path, String[] name, int x, int y, int[] info) {
         super(name[0], x, y, info);
-        this.img1 = IRC.getInstance().tryGetImage(path[0]);
-        this.img2 = IRC.getInstance().tryGetImage(path[1]);
+        this.img1 = IRC.getInstance().tryGetPNG(path[0]);
+        this.img2 = IRC.getInstance().tryGetPNG(path[1]);
         this.currentImg = this.img1;
         this.moveDelay = new Delay(10);
         this.delay = new Delay(8);

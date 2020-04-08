@@ -20,7 +20,7 @@ public class MarbleRenderer {
     private boolean isStop;
 
     public MarbleRenderer(String path, int delay) {
-        this.img = IRC.getInstance().tryGetImage(path);
+        this.img = IRC.getInstance().tryGetPNG(path);
         this.imgNum = ImgInfo.DIE_NUM;
         this.delay = new Delay(delay);
         this.delay.start();

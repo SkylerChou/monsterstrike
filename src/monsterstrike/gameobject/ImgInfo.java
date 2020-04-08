@@ -9,7 +9,7 @@ import monsterstrike.util.Global;
 
 public class ImgInfo {
 
-    //屬性 0:冰 1:火 2:草
+    //屬性 0:冰 1:火 2:草 3:暗 4:光
     private static final String MARBLE_ROOT = "/resources/marbles/";
 
     private static final String[] FIREBALL = {MARBLE_ROOT + "fireBall1.png", MARBLE_ROOT + "fireBall2.png"};
@@ -22,11 +22,11 @@ public class ImgInfo {
     private static final int[] SWEETPOTATO_INFO = {120, 120, 40, 2, 40, 0};
 
     private static final String[] DEVIL = {MARBLE_ROOT + "devil1.png", MARBLE_ROOT + "devil2.png"};
-    private static final int[] DEVIL_INFO = {120, 120, 40, 1, 40, 1};//img_width, img_height, r, mass, velocity, attribute
+    private static final int[] DEVIL_INFO = {120, 120, 40, 1, 40, 3};//img_width, img_height, r, mass, velocity, attribute
     private static final String[] BLACKDEVIL = {MARBLE_ROOT + "blackDevil1.png", MARBLE_ROOT + "blackDevil2.png"};
-    private static final int[] BLACKDEVIL_INFO = {120, 120, 40, 1, 40, 1};
+    private static final int[] BLACKDEVIL_INFO = {120, 120, 40, 1, 40, 3};
     private static final String[] LIMBO = {MARBLE_ROOT + "limbo1.png", MARBLE_ROOT + "limbo2.png"};
-    private static final int[] LIMBO_INFO = {150, 150, 40, 1, 40, 1};
+    private static final int[] LIMBO_INFO = {150, 150, 40, 1, 40, 4};
 
     private static final String[] SPIKY = {MARBLE_ROOT + "spiky1.png", MARBLE_ROOT + "spiky2.png", MARBLE_ROOT + "spikyDie.png"};
     private static final int[] SPIKY_INFO = {120, 120, 40, 2, 50, 2};
@@ -68,8 +68,10 @@ public class ImgInfo {
     private static final String[] SHINE_ICE = {MARBLE_ROOT + "ice1.png", MARBLE_ROOT + "ice2.png"};
     private static final String[] SHINE_FIRE = {MARBLE_ROOT + "fire1.png", MARBLE_ROOT + "fire2.png"};
     private static final String[] SHINE_GRASS = {MARBLE_ROOT + "grass1.png", MARBLE_ROOT + "grass2.png"};
+    private static final String[] SHINE_DARK = {MARBLE_ROOT + "dark1.png", MARBLE_ROOT + "dark2.png"};
+    private static final String[] SHINE_LIGHT = {MARBLE_ROOT + "light1.png", MARBLE_ROOT + "light2.png"};
 
-    public static final String[][] SHINE_PATH = {SHINE_ICE, SHINE_FIRE, SHINE_GRASS};
+    public static final String[][] SHINE_PATH = {SHINE_ICE, SHINE_FIRE, SHINE_GRASS, SHINE_DARK,SHINE_LIGHT};
 
     //黑洞
     public static final String[] BALCKHOLE = {"/resources/blackhole1.png", "/resources/blackhole2.png"};
@@ -110,6 +112,12 @@ public class ImgInfo {
 
     public static final String DINO = MENU_ROOT + "Dino.png";
     public static final int[] DINO_INFO = {50, 50};//img_width, img_height  
+    
+    public static final String [] BLUEDINOJPG ={ MARBLE_ROOT + "BlueDinoLeft.jpg",MARBLE_ROOT + "BlueDinoRight.jpg"};
+    public static final String [] REDINOJPG ={ MARBLE_ROOT + "RedDinoLeft.jpg",MARBLE_ROOT + "RedDinoRight.jpg"};
+    public static final String [] YELLOWINOJPG ={ MARBLE_ROOT + "YellowDinoLeft.jpg",MARBLE_ROOT + "YellowDinoRight.jpg"};
+    public static final String [] GREENINOJPG ={ MARBLE_ROOT + "GreenDinoLeft.jpg",MARBLE_ROOT + "GreenDinoRight.jpg"};
+    public static final int[] DINORUN_INFO = {60, 60};//img_width, img_height  
 
     public static final String[] SETTING = {MENU_ROOT + "setting1.png", MENU_ROOT + "setting2.png"};
     public static final String[] SOUND = {MENU_ROOT + "turnon.png", MENU_ROOT + "turnoff.png"};

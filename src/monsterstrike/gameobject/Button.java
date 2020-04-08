@@ -18,8 +18,8 @@ public class Button extends SceneObject {
 
     public Button(String[] path, int x, int y, int width, int height) {
         super(x, y, width, height);
-        this.img1 = IRC.getInstance().tryGetImage(path[0]);
-        this.img2 = IRC.getInstance().tryGetImage(path[1]);
+        this.img1 = IRC.getInstance().tryGetPNG(path[0]);
+        this.img2 = IRC.getInstance().tryGetPNG(path[1]);
         this.currentImg = this.img1;
     }
 

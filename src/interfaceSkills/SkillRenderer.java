@@ -22,7 +22,7 @@ public class SkillRenderer {
     private boolean isStop;
 
     public SkillRenderer(int skillIdx, int attribute, int imgNum, int delay) {
-        this.img = IRC.getInstance().tryGetImage(SKILL_PATH[skillIdx][attribute]);
+        this.img = IRC.getInstance().tryGetPNG(SKILL_PATH[skillIdx][attribute]);
         this.skillIdx = skillIdx;
         this.attribute = attribute;
         this.imgIdx = 0;
