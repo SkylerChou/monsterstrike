@@ -94,10 +94,12 @@ public class LevelScene extends Scene {
             criticalAttack();
 
             for (int i = 0; i < this.enimies.size(); i++) { //判斷敵人是否死亡
-                if (this.enimies.get(i).getHp() <= 0 && this.enimies.get(i).die()) {
+                if (this.enimies.get(i).getHp() <= 0){
                     this.enimies.get(i).setIsCollide(false);
-                    this.enimies.get(i).setCenterY(Global.FRAME_Y + 200);
-                    this.enimies.remove(i);
+                    if (this.enimies.get(i).die()) {
+                        this.enimies.get(i).setCenterY(Global.FRAME_Y + 200);
+                        this.enimies.remove(i);
+                    }
                 }
             }
 

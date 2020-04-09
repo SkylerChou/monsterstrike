@@ -99,7 +99,7 @@ public class GameKernel extends Canvas {
         this.gi = gi;
         this.limitDeltaTimePerMilli = limitDeltaTimePerMilli;
         this.millisecPerUpdate = millisecPerUpdate;
-        System.out.println(this.millisecPerUpdate);
+//        System.out.println(this.millisecPerUpdate);
     }
 
     public void paint() {
