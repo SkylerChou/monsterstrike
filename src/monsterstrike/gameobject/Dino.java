@@ -15,12 +15,16 @@ import monsterstrike.util.Global;
  *
  * @author kim19
  */
-public class Dino extends SceneObject {
+public class Dino extends GameObject {
 
     public static final int[] STEPS_WALK = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
     public static final int[] STEPS_RUN = {16, 17, 18, 19, 20, 21, 22, 23};
+    public static final int[] STEPS_WALKRIGHT = {1, 2, 3, 4, 5, 6, 7, 8, 9};
+    public static final int[] STEPS_WALKLEFT = {22, 21, 20, 19, 18, 17, 16, 15, 14};
     //恐龍行走圖
-    private BufferedImage img;
+    private BufferedImage img1;
+    private BufferedImage img2;
+    private BufferedImage currendImg;
     //動作控制
     private int currentStep;
     private int[] steps;
@@ -31,8 +35,9 @@ public class Dino extends SceneObject {
     private int dir;
 
     public Dino(String path, int x, int y, int[] steps) {
-        super(x, y, ImgInfo.DINO_INFO[0], ImgInfo.DINO_INFO[1]);
-        this.img = IRC.getInstance().tryGetImage(path);
+        super(x, y, ImgInfo.DINO_INFO[0], ImgInfo.DINO_INFO[1],20);
+        this.img1 = IRC.getInstance().tryGetImage(path);
+        this.currendImg = this.img1;
         this.currentStep = 0;
         this.count = 0;
         this.dir = 0;
@@ -40,6 +45,36 @@ public class Dino extends SceneObject {
         this.delay = new Delay(5);
         this.delay.start();
         this.isStand = true;
+    }
+
+    public Dino(String[] path, int x, int y, int[] steps) {
+        super(x, y, ImgInfo.GREENDINO_INFO[0], ImgInfo.GREENDINO_INFO[1],20);
+        this.img1 = IRC.getInstance().tryGetImage(path[0]);
+        this.img2 = IRC.getInstance().tryGetImage(path[1]);
+        this.currendImg = this.img1;
+        this.currentStep = 0;
+        this.count = 0;
+        this.dir = 0;
+        this.steps = steps;
+        this.delay = new Delay(5);
+        this.delay.start();
+        this.isStand = true;
+    }
+
+    public BufferedImage getImg1() {
+        return this.img1;
+    }
+
+    public BufferedImage getImg2() {
+        return this.img2;
+    }
+
+    public void setCurrentImg(BufferedImage img) {
+        this.currendImg = img;
+    }
+
+    public void setSteps(int[] steps) {
+        this.steps = steps;
     }
 
     public void setDir(int dir) {
@@ -59,21 +94,52 @@ public class Dino extends SceneObject {
             this.currentStep = this.steps[this.count++];
         }
     }
-    
+
     public void move() {
         if (!this.isStand) {
             switch (this.dir) {
                 case Global.UP:
-                     if(this.getCenterY()<Global.SCREEN_Y / 2 - 30){
-                         break;
-                     }
+                    if (this.getCenterY() < Global.SCREEN_Y / 2 ) {
+                        break;
+                    }
                     this.offset(0, -50);
                     break;
                 case Global.DOWN:
-                    if(this.getCenterY()>Global.SCREEN_Y / 2 +115){
-                         break;
-                     }
+                    if (this.getCenterY() > Global.SCREEN_Y / 2 + 150) {
+                        break;
+                    }
                     this.offset(0, 50);
+                    break;
+            }
+        }
+    }
+
+    public void moveArround() {
+        if (!this.isStand) {
+            switch (this.dir) {
+                case Global.UP2:
+                    if (this.getCenterY() <= 0) {
+                        break;
+                    }
+                    this.offset(0, -8);
+                    break;
+                case Global.DOWN2:
+                    if (this.getCenterY() >= Global.SCREEN_Y) {
+                        break;
+                    }
+                    this.offset(0, 8);
+                    break;
+                case Global.LEFT2:
+                    if (this.getCenterX() <= 0) {
+                        break;
+                    }
+                    this.offset(-8, 0);
+                    break;
+                case Global.RIGHT2:
+                    if (this.getCenterX() >= Global.SCREEN_X) {
+                        break;
+                    }
+                    this.offset(8, 0);
                     break;
             }
         }
@@ -99,10 +165,12 @@ public class Dino extends SceneObject {
         this.delay.start();
     }
 
+
+
     @Override
-    public void paint(Graphics g) {
-        g.drawImage(img, (int)this.getCenterX(), (int)this.getCenterY(), 
-                (int)(this.getCenterX() + this.getWidth()), (int)(this.getCenterY() + this.getHeight()),
+    public void paintComponent(Graphics g) {
+        g.drawImage(this.currendImg, (int) this.rect.left(), (int) this.rect.top(),
+                (int) this.rect.right(), (int) this.rect.bottom(),
                 24 * this.currentStep, 0,
                 24 * this.currentStep + 24,
                 24, null);

@@ -33,7 +33,7 @@ public class Menu extends Scene {
     public void sceneBegin() {
         this.menu = new Background(ImgInfo.MENU, 0, 0, 1);
         this.buttons = new ArrayList<>();
-        this.dino = new Dino(ImgInfo.DINO, Global.SCREEN_X / 2 - 150, Global.SCREEN_Y / 2 - 35, Dino.STEPS_WALK);
+        this.dino = new Dino(ImgInfo.DINO, Global.SCREEN_X / 2 - 120, Global.SCREEN_Y / 2 - 20, Dino.STEPS_WALK);
         this.buttons.add(new Button(ImgInfo.SINGLE, Global.SCREEN_X / 2 - 90, Global.SCREEN_Y / 2 - 35, ImgInfo.MAINBUTTON_INFO[0], ImgInfo.MAINBUTTON_INFO[1]));
         this.buttons.add(new Button(ImgInfo.MULTIPLAYER, Global.SCREEN_X / 2 - 90, Global.SCREEN_Y / 2 + 15, ImgInfo.MAINBUTTON_INFO[0], ImgInfo.MAINBUTTON_INFO[1]));
         this.buttons.add(new Button(ImgInfo.RANK, Global.SCREEN_X / 2 - 90, Global.SCREEN_Y / 2 + 65, ImgInfo.MAINBUTTON_INFO[0], ImgInfo.MAINBUTTON_INFO[1]));
@@ -49,23 +49,23 @@ public class Menu extends Scene {
         this.dino.update();
         if (this.delay.isTrig()) {
             for (int i = 0; i < this.buttons.size(); i++) {
-                if (this.dino.getCenterY() == this.buttons.get(i).getCenterY()) {
+                if (this.dino.getCenterY()-15 == this.buttons.get(i).getCenterY()) {
                     this.buttons.get(i).update();
                 }
             }
         }
 
-        if (this.isEnter && this.dino.getCenterY() == Global.SCREEN_Y / 2 - 35) {
+        if (this.isEnter && this.dino.getCenterY() == Global.SCREEN_Y / 2 - 20) {
             sceneController.changeScene(new LevelMenu(sceneController));
             this.isEnter = false;
-        } else if (this.isEnter && this.dino.getCenterY() == Global.SCREEN_Y / 2 + 15) {
-            sceneController.changeScene(new Mutiplayer(sceneController));
+        } else if (this.isEnter && this.dino.getCenterY() == Global.SCREEN_Y / 2 + 30) {
+            sceneController.changeScene(new Pinball(sceneController));
             this.isEnter = false;
-        } else if (this.isEnter && this.dino.getCenterY() == Global.SCREEN_Y / 2 + 65) {
+        } else if (this.isEnter && this.dino.getCenterY() == Global.SCREEN_Y / 2 + 80) {
 
-        } else if (this.isEnter && this.dino.getCenterY() == Global.SCREEN_Y / 2 + 115) {
+        } else if (this.isEnter && this.dino.getCenterY() == Global.SCREEN_Y / 2 + 130) {
             this.isEnter = false;
-        } else if (this.isEnter && this.dino.getCenterY() == Global.SCREEN_Y / 2 + 165) {
+        } else if (this.isEnter && this.dino.getCenterY() == Global.SCREEN_Y / 2 + 180) {
             System.exit(0);
             this.isEnter = false;
         }
