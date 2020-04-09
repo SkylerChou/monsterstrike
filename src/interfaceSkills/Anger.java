@@ -19,10 +19,10 @@ public class Anger implements Skills {
 
     @Override
     public void genSkill(Marble self, Marble target) {
-        int atk = (int) (self.getAtk() * 1.5f);
-        System.out.print(self.getName() + "處於憤怒狀態 ! 攻擊力提升1.5倍");
-        target.setHp(target.getHp() - atk);
-        System.out.println(target.getName() + " 剩下血量 :" + target.getHp() + "點");
+        int atk = (int) (self.getInfo().getAtk() * 1.5f);
+        System.out.print(self.getInfo().getName() + "處於憤怒狀態 ! 攻擊力提升1.5倍");
+        target.getInfo().setHp(target.getInfo().getHp() - atk);
+        System.out.println(target.getInfo().getName() + " 剩下血量 :" + target.getInfo().getHp() + "點");
     }
 
     @Override

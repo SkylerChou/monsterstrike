@@ -14,36 +14,12 @@ import monsterstrike.util.Global;
 
 public class PenetrateMarble extends Marble {
 
-    private BufferedImage img1;
-    private BufferedImage img2;
-    private BufferedImage currentImg;
 
-    private Delay delay;
     private int count;
 
-    public PenetrateMarble(String[] path, String name, int x, int y, int[] info) {
-        super(name, x, y, info);
-        this.img1 = IRC.getInstance().tryGetImage(path[0]);
-        this.img2 = IRC.getInstance().tryGetImage(path[1]);
-        this.currentImg = this.img1;
-        this.delay = new Delay(20);
-        this.count = 0;
+    public PenetrateMarble(int x, int y, int w, int h, MarbleInfo info) {
+        super(x, y, w, h, info);
         this.isCollide = false;
-    }
-
-    @Override
-    public void update() {
-        this.delay.start();
-        if (this.delay.isTrig()) {
-            this.count++;
-            if (this.count % 2 != 0) {
-                this.currentImg = this.img2;
-            } else {
-                this.currentImg = this.img1;
-            }
-        }
-        isBound();
-        move();
     }
 
     @Override
@@ -78,10 +54,12 @@ public class PenetrateMarble extends Marble {
         this.other.norVec = this.other.goVec.getCosProjectionVec(nor.multiplyScalar(-1));
         this.other.tanVec = this.other.goVec.getSinProjectionVec(nor.multiplyScalar(-1));
 
-        float m11 = (this.getMass() - this.other.getMass()) / (this.getMass() + this.other.getMass());
-        float m12 = (2 * this.other.getMass()) / (this.getMass() + this.other.getMass());
-        float m21 = (2 * this.getMass()) / (this.getMass() + this.other.getMass());
-        float m22 = (this.other.getMass() - this.getMass()) / (this.getMass() + this.other.getMass());
+        float myM = this.info.getMass();
+        float enyM = this.other.info.getMass();
+        float m11 = (myM - enyM) / (myM + enyM);
+        float m12 = (2 * enyM) / (myM + enyM);
+        float m21 = (2 * myM) / (myM + enyM);
+        float m22 = (enyM - myM) / (myM + enyM);
         Vector newNor1 = this.norVec.multiplyScalar(m11).plus(this.other.norVec.multiplyScalar(m12));
         Vector newNor2 = this.norVec.multiplyScalar(m21).plus(this.other.norVec.multiplyScalar(m22));
 
@@ -90,24 +68,6 @@ public class PenetrateMarble extends Marble {
         this.other.norVec = newNor2;
         this.other.goVec = this.other.norVec.plus(this.other.tanVec);
     }
-    
-    @Override
-    public void setStop(){
-        this.delay.stop();
-    }
 
-    @Override
-    public void paintComponent(Graphics g) {
-        g.drawImage(currentImg, (int) this.getX(), (int) this.getY(), null);
-        if (Global.IS_DEBUG) {
-            g.drawOval((int) (this.getCenterX() - this.getR()),
-                    (int) (this.getCenterY() - this.getR()),
-                    (int) (2 * this.getR()), (int) (2 * this.getR()));
-        }
-    }
 
-    @Override
-    public void paintScale(Graphics g, int x, int y, int w, int h) {
-        
-    }
 }

@@ -33,6 +33,7 @@ public class Dino extends GameObject {
 
     private Delay delay;
     private int dir;
+    private float velocity;
 
     public Dino(String path, int x, int y, int[] steps) {
         super(x, y, ImgInfo.DINO_INFO[0], ImgInfo.DINO_INFO[1],20);
@@ -59,6 +60,7 @@ public class Dino extends GameObject {
         this.delay = new Delay(5);
         this.delay.start();
         this.isStand = true;
+        this.velocity = 8f;
     }
 
     public BufferedImage getImg1() {
@@ -121,32 +123,40 @@ public class Dino extends GameObject {
                     if (this.getCenterY() <= 0) {
                         break;
                     }
-                    this.offset(0, -8);
+                    this.offset(0, -velocity);
                     break;
                 case Global.DOWN2:
                     if (this.getCenterY() >= Global.SCREEN_Y) {
                         break;
                     }
-                    this.offset(0, 8);
+                    this.offset(0, velocity);
                     break;
                 case Global.LEFT2:
                     if (this.getCenterX() <= 0) {
                         break;
                     }
-                    this.offset(-8, 0);
+                    this.offset(-velocity, 0);
                     break;
                 case Global.RIGHT2:
                     if (this.getCenterX() >= Global.SCREEN_X) {
                         break;
                     }
-                    this.offset(8, 0);
+                    this.offset(velocity, 0);
                     break;
             }
         }
     }
+    
+    public float getVelocity(){
+        return this.velocity;
+    }
 
     public boolean getIsStand() {
         return this.isStand;
+    }
+    
+    public int getDir(){
+        return this.dir;
     }
 
     public void setDinoRun() {

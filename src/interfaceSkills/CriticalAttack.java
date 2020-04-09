@@ -35,7 +35,7 @@ public class CriticalAttack implements Skills {
     @Override
     public void genSkill(Marble self, ArrayList<Marble> target) {
 //        int atk = (int) (self.getAtk() * Math.random() * 2 + 1);
-        System.out.print(self.getName() + " 爆擊 !");
+        System.out.print(self.getInfo().getName() + " 爆擊 !");
 //        target.setHp(target.getHp() - atk);
 //        System.out.println(target.getName() + " 剩下血量 :" + target.getHp() + "點");
         this.skill = new ArrayList<>();

@@ -17,9 +17,9 @@ public class Heal implements Skills {
 
     @Override
     public void genSkill(Marble self, Marble target) {
-        System.out.print(self.getName() + " 使出治癒回復" + self.getAtk() + "點生命,");
-        self.setHp(self.getHp() + self.getAtk());
-        System.out.println(self.getName() + " 剩下血量" + self.getHp() + "點");
+        System.out.print(self.getInfo().getName() + " 使出治癒回復" + self.getInfo().getAtk() + "點生命,");
+        self.getInfo().setHp(self.getInfo().getHp() + self.getInfo().getAtk());
+        System.out.println(self.getInfo().getName() + " 剩下血量" + self.getInfo().getHp() + "點");
     }
     
     @Override

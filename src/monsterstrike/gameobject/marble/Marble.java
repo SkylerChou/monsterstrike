@@ -18,45 +18,52 @@ public abstract class Marble extends GameObject {
     protected Vector norVec;
     protected Vector tanVec;
     protected Marble other;
-    private float mass;
+    protected MarbleInfo info;
+    protected MarbleRenderer renderer;
     protected boolean isCollide;
     protected boolean useSkill;
     private float fiction;
-    private float velocity;
     private SpecialEffect shine;
 
-    private String name;
-    private int hp = 200;
-    private int atk = 20;
-    private int attribute;
     private Skills[] skills;
     private Skills currentSkill;
 
-    public Marble(String name, int x, int y, int[] info) {
-        super(x, y, info[0], info[1], info[2]);
-        this.mass = info[3];
-        this.velocity = info[4];
-        this.attribute = info[5];
-        this.shine = new Shine(ImgInfo.SHINE_PATH[this.attribute], x, y, ImgInfo.SHINE_INFO);
+    public Marble(int x, int y, int w, int h, MarbleInfo info) {
+        super(x, y, w, h, (int) (w*info.getRatio()/2));
+        this.info = info;
+        String path = ImgInfo.MARBLE_ROOT + info.getImgName() + ".png";
+        int num = info.getImgW() / info.getImgH();
+        this.renderer = new MarbleRenderer(path, num, 20);
+        this.shine = new Shine(ImgInfo.SHINE_PATH[info.getAttribute()], x, y, ImgInfo.SHINE_INFO);
         this.goVec = new Vector(0, 0);
         this.norVec = new Vector(0, 0);
         this.tanVec = new Vector(0, 0);
         this.isCollide = false;
-        this.name = name;
         this.skills = new Skills[5];
         this.setSkills();
         this.useSkill = true;
-        this.fiction = 0.1f * this.mass;
+        this.fiction = 0.05f * info.getMass();
         this.currentSkill = null;
     }
 
     @Override
     public void update() {
-        isBound();
+//        if(this.renderer.getIsStop()){
+//            this.renderer.start();
+//            this.renderer.setIsStop(false);
+//        }
+        this.renderer.update();
+//        if (this.isCollide) {
+//            this.renderer.updateOnce();
+//            this.isCollide = false;
+//        }
+        if (isBound()) {
+            this.goVec.setValue(this.goVec.getValue() - 2);
+        }
         move();
     }
-    
-    public void updateSkill(){
+
+    public void updateSkill() {
         if (this.getCurrentSkill() != null) {
             this.getCurrentSkill().update();
         }
@@ -66,10 +73,6 @@ public abstract class Marble extends GameObject {
         this.shine.setCenterX(this.getCenterX());
         this.shine.setCenterY(this.getCenterY());
         this.shine.update();
-    }
-
-    public void setFiction(float num) {
-        this.fiction = num * this.mass;
     }
 
     public void move() {
@@ -111,16 +114,22 @@ public abstract class Marble extends GameObject {
 
     public abstract Marble strike(Marble other);
 
-    public abstract void setStop();
-    
     public void setShine(boolean isShine) {
         this.shine.setShine(isShine);
     }
     
+    public Marble duplicateStand(int x, int y, int w, int h){
+        MarbleInfo copyInfo = MarbleInfo.gen(this.info);
+        return new StandMarble(x, y, w, h, copyInfo);
+    }
     
-
-    public float getMass() {
-        return this.mass;
+    public Marble duplicateRebound(int x, int y, int w, int h){
+        MarbleInfo copyInfo = MarbleInfo.gen(this.info);
+        return new ReboundMarble(x, y, w, h, copyInfo);
+    }
+    
+    public MarbleInfo getInfo(){
+        return this.info;
     }
 
     public Vector getNorVec() {
@@ -163,43 +172,8 @@ public abstract class Marble extends GameObject {
         return this.isCollide;
     }
 
-    public float getVelocity() {
-        return this.velocity;
-    }
-    
-    public void setVelocity(int v){
-        this.velocity=v;
-    }
-
-    public String getName() {
-        return this.name;
-    }
-
-    public int getAttribute() {
-        return this.attribute;
-    }
-
-    public int getHp() {
-        return this.hp;
-    }
-
-    public int getAtk() {
-        return this.atk;
-    }
-
     public Skills getCurrentSkill() {
         return this.currentSkill;
-    }
-
-    public void setHp(int hp) {
-        if (hp < 0) {
-            hp = 0;
-        }
-        this.hp = hp;
-    }
-
-    public void setAtk(int atk) {
-        this.atk = atk;
     }
 
     public void paintSkill(Graphics g) {
@@ -216,18 +190,26 @@ public abstract class Marble extends GameObject {
         paintSkill(g);
     }
 
-    public abstract void paintScale(Graphics g, int x, int y, int w, int h);
-
     @Override
-    public abstract void paintComponent(Graphics g);
+    public void paintComponent(Graphics g) {
+        this.renderer.paint(g, (int) (this.getX()),
+                (int) (this.getY()),
+                (int) (this.getWidth()), (int) (this.getHeight()));
+
+        if (Global.IS_DEBUG) {
+            g.drawOval((int) (this.getCenterX() - this.getR()),
+                    (int) (this.getCenterY() - this.getR()),
+                    (int) (2 * this.getR()), (int) (2 * this.getR()));
+        }
+    }
 
     private void setSkills() {
         Skills skills[] = {
-            new NormalAttack(this.attribute),
-            new CriticalAttack(this.attribute),
-            new DecreaseHalfAttack(this.attribute),
+            new NormalAttack(this.info.getAttribute()),
+            new CriticalAttack(this.info.getAttribute()),
+            new DecreaseHalfAttack(this.info.getAttribute()),
             new Heal(),
-            new Anger(this.attribute)
+            new Anger(this.info.getAttribute())
         };
 
         for (int i = 0; i < skills.length; i++) {
@@ -241,6 +223,10 @@ public abstract class Marble extends GameObject {
     }
 
     public void genSkill(int r, ArrayList<Marble> target) {
+        this.skills[r].genSkill(this, target);
+        this.currentSkill = this.skills[r];
+    }
+    public void genSkill(int r, MarbleArray target) {
         this.skills[r].genSkill(this, target);
         this.currentSkill = this.skills[r];
     }

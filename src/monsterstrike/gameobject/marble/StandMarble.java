@@ -5,72 +5,38 @@
  */
 package monsterstrike.gameobject.marble;
 
-import controllers.IRC;
-import java.awt.Graphics;
-import java.awt.image.BufferedImage;
+import monsterstrike.gameobject.ImgInfo;
 import monsterstrike.graph.Vector;
 import monsterstrike.util.Delay;
-import monsterstrike.util.Global;
 
 public class StandMarble extends Marble {
 
-    private BufferedImage img1;
-    private BufferedImage img2;
-    private BufferedImage currentImg;
-    private MarbleRenderer renderer;
-
     private Delay moveDelay;
-    private Delay delay;
-    private int count;
     private int moveCount;
     private boolean isDie;
 
-    public StandMarble(String[] path, String name, int x, int y, int[] info) {
-        super(name, x, y, info);
-        this.img1 = IRC.getInstance().tryGetImage(path[0]);
-        this.img2 = IRC.getInstance().tryGetImage(path[1]);
-        this.currentImg = this.img1;
-        this.moveDelay = new Delay(10);
-        this.delay = new Delay(8);
-        this.delay.start();
+    public StandMarble(int x, int y, int w, int h, MarbleInfo info) {
+        super(x, y, w, h, info);
+        this.moveDelay = new Delay(5);
         this.moveDelay.start();
         this.moveCount = 0;
-        this.count = 0;
-        this.renderer = new MarbleRenderer(path[2], 15);
-        this.isDie = false;
-    }
-
-    public StandMarble(String[] path, String[] name, int x, int y, int[] info) {
-        super(name[0], x, y, info);
-        this.img1 = IRC.getInstance().tryGetImage(path[0]);
-        this.img2 = IRC.getInstance().tryGetImage(path[1]);
-        this.currentImg = this.img1;
-        this.moveDelay = new Delay(10);
-        this.delay = new Delay(8);
-        this.delay.start();
-        this.moveDelay.start();
-        this.moveCount = 0;
-        this.count = 0;
         this.isDie = false;
     }
 
     @Override
     public void update() {
-        this.delay.start();
-        this.moveDelay.start();
-        if (this.delay.isTrig()) {
-            if (this.count % 2 == 0) {
-                this.currentImg = this.img2;
-            } else {
-                this.currentImg = this.img1;
+        if (!this.isDie) {
+            this.renderer.update();
+            if (this.isCollide) {
+                move();
             }
-            this.count++;
         }
-        move();
+
     }
 
     @Override
     public void move() {
+        this.moveDelay.start();
         if (this.moveDelay.isTrig()) {
             if (this.moveCount % 2 == 0) {
                 this.offset(this.goVec.getX(), this.goVec.getY());
@@ -81,7 +47,6 @@ public class StandMarble extends Marble {
             if (this.moveCount == 2) {
                 this.moveCount = 0;
                 this.isCollide = false;
-                this.delay.stop();
                 this.moveDelay.stop();
             }
         }
@@ -94,39 +59,17 @@ public class StandMarble extends Marble {
         return null;
     }
 
+
     @Override
     public boolean die() {
         this.isDie = true;
-        this.renderer.update();
+        String path = ImgInfo.MARBLE_ROOT + this.info.getImgName() + "Die.png";
+        this.renderer = new MarbleRenderer(path, 7, 5);
+
         if (this.renderer.getIsStop()) {
             return true;
         }
         return false;
-    }
-    
-    @Override
-    public void setStop(){
-        this.delay.stop();
-    }
-
-    @Override
-    public void paintComponent(Graphics g) {
-        if (Global.IS_DEBUG) {
-            g.drawOval((int) (this.getCenterX() - this.getR()),
-                    (int) (this.getCenterY() - this.getR()),
-                    (int) (2 * this.getR()), (int) (2 * this.getR()));
-        }
-        if (this.isDie) {
-            this.renderer.paint(g, (int) this.getX(), (int) this.getY(),
-                    (int) this.getWidth(), (int) this.getHeight());
-        } else {
-            g.drawImage(currentImg, (int) this.getX(), (int) this.getY(),(int) this.getWidth(),(int) this.getHeight(), null);
-        }
-    }
-
-    @Override
-    public void paintScale(Graphics g, int x, int y, int w, int h) {
-
     }
 
 }
