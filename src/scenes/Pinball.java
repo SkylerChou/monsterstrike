@@ -55,7 +55,7 @@ public class Pinball extends Scene {
     @Override
     public void sceneBegin() {
         for (int i = 0; i < 5; i++) {
-            int y = Global.random(100, 200);
+            int y = Global.random(50, 200);
             this.post.add(new StandMarble(ImgInfo.POSTS_PATH[i], ImgInfo.POSTS_NAME, 150 + i * 250, 150 + y, ImgInfo.POSTS_INFO[i]));
         }
         this.idx = 1;
@@ -66,7 +66,7 @@ public class Pinball extends Scene {
         this.arrow = new Arrow(ImgInfo.ARROW, 0, 0, ImgInfo.ARROW_INFO);
         this.background.setX(2 * ImgInfo.BACKGROUND_SIZE[idx][0]);
         this.marble.setFiction(0);
-        this.marble.setVelocity(20);
+        this.marble.setVelocity(10);
     }
 
     @Override
@@ -91,6 +91,14 @@ public class Pinball extends Scene {
                 this.post.get(i).setGo(tmp.getGoVec());
                 this.post.get(i).setIsCollide(true);
                 this.marble.genSkill(0, this.post.get(i));
+            }
+        }
+        for (int i = 0; i < this.post.size(); i++) {
+            System.out.println("123");
+            if(this.dino.isCollision(this.post.get(i))){
+                System.out.println("!");
+                this.dino.setCenterX(this.dino.getCenterX()-this.post.get(i).getR());
+                this.dino.setCenterY(this.dino.getCenterY()-this.post.get(i).getR());
             }
         }
          

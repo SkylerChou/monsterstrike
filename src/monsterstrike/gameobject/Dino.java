@@ -15,7 +15,7 @@ import monsterstrike.util.Global;
  *
  * @author kim19
  */
-public class Dino extends SceneObject {
+public class Dino extends GameObject {
 
     public static final int[] STEPS_WALK = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
     public static final int[] STEPS_RUN = {16, 17, 18, 19, 20, 21, 22, 23};
@@ -35,7 +35,7 @@ public class Dino extends SceneObject {
     private int dir;
 
     public Dino(String path, int x, int y, int[] steps) {
-        super(x, y, ImgInfo.DINO_INFO[0], ImgInfo.DINO_INFO[1]);
+        super(x, y, ImgInfo.DINO_INFO[0], ImgInfo.DINO_INFO[1],20);
         this.img1 = IRC.getInstance().tryGetImage(path);
         this.currendImg = this.img1;
         this.currentStep = 0;
@@ -48,7 +48,7 @@ public class Dino extends SceneObject {
     }
 
     public Dino(String[] path, int x, int y, int[] steps) {
-        super(x, y, ImgInfo.GREENDINO_INFO[0], ImgInfo.GREENDINO_INFO[1]);
+        super(x, y, ImgInfo.GREENDINO_INFO[0], ImgInfo.GREENDINO_INFO[1],20);
         this.img1 = IRC.getInstance().tryGetImage(path[0]);
         this.img2 = IRC.getInstance().tryGetImage(path[1]);
         this.currendImg = this.img1;
@@ -99,13 +99,13 @@ public class Dino extends SceneObject {
         if (!this.isStand) {
             switch (this.dir) {
                 case Global.UP:
-                    if (this.getCenterY() < Global.SCREEN_Y / 2 - 30) {
+                    if (this.getCenterY() < Global.SCREEN_Y / 2 ) {
                         break;
                     }
                     this.offset(0, -50);
                     break;
                 case Global.DOWN:
-                    if (this.getCenterY() > Global.SCREEN_Y / 2 + 115) {
+                    if (this.getCenterY() > Global.SCREEN_Y / 2 + 150) {
                         break;
                     }
                     this.offset(0, 50);
@@ -165,10 +165,12 @@ public class Dino extends SceneObject {
         this.delay.start();
     }
 
+
+
     @Override
-    public void paint(Graphics g) {
-        g.drawImage(this.currendImg, (int) this.getCenterX(), (int) this.getCenterY(),
-                (int) (this.getCenterX() + this.getWidth()), (int) (this.getCenterY() + this.getHeight()),
+    public void paintComponent(Graphics g) {
+        g.drawImage(this.currendImg, (int) this.rect.left(), (int) this.rect.top(),
+                (int) this.rect.right(), (int) this.rect.bottom(),
                 24 * this.currentStep, 0,
                 24 * this.currentStep + 24,
                 24, null);

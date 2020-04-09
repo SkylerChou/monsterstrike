@@ -52,7 +52,7 @@ public class ReboundBall extends Marble {
                 if (other instanceof StandMarble) {
                     this.setGo(nor.resizeVec(-1 * originGo.getValue()));
                     this.offset(this.goVec.getX(), this.goVec.getY());
-                    this.goVec.setValue(originGo.getValue() * 0.8f);
+                    this.goVec.setValue(originGo.getValue());
                 } else {
                     this.offset(this.goVec.getX(), this.goVec.getY());
                     this.other.offset(this.other.getGoVec().getX(), this.other.getGoVec().getY());
