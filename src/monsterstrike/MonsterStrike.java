@@ -25,13 +25,13 @@ public class MonsterStrike {
         CommandSolver cs = new CommandSolver.Builder(jp, Global.MILLISEC_PER_UPDATE,
                 new int[][]{
                     {KeyEvent.VK_UP, Global.UP},
-                    {KeyEvent.VK_W, Global.UP},
+                    {KeyEvent.VK_W, Global.UP2},
                     {KeyEvent.VK_LEFT, Global.LEFT},
-                    {KeyEvent.VK_A, Global.LEFT},
+                    {KeyEvent.VK_A, Global.LEFT2},
                     {KeyEvent.VK_DOWN, Global.DOWN},
-                    {KeyEvent.VK_S, Global.DOWN},
+                    {KeyEvent.VK_S, Global.DOWN2},
                     {KeyEvent.VK_RIGHT, Global.RIGHT},
-                    {KeyEvent.VK_D, Global.RIGHT},
+                    {KeyEvent.VK_D, Global.RIGHT2},
                     {KeyEvent.VK_ENTER,Global.ENTER}
                 }).enableMouseTrack(jp).enableKeyboardTrack(jp).keyCleanMode()
                 .gen();

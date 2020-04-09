@@ -107,9 +107,12 @@ public class ImgInfo {
     public static final String[] MULTIPLAYER = {MENU_ROOT + "multiplayer1.png", MENU_ROOT + "multiplayer2.png"};
     public static final String[] SINGLE = {MENU_ROOT + "single1.png", MENU_ROOT + "single2.png"};
     public static final int[] MAINBUTTON_INFO = {100, 25};//img_width, img_height
-
+    //恐龍
     public static final String DINO = MENU_ROOT + "Dino.png";
     public static final int[] DINO_INFO = {50, 50};//img_width, img_height  
+    //彈珠台恐龍
+    public static final String[] GREENDINO = {MARBLE_ROOT + "GreenDinoRight.png", MARBLE_ROOT + "GreenDinoLeft.png"};
+    public static final int[] GREENDINO_INFO = {60, 60};//img_width, img_height  
 
     public static final String[] SETTING = {MENU_ROOT + "setting1.png", MENU_ROOT + "setting2.png"};
     public static final String[] SOUND = {MENU_ROOT + "turnon.png", MENU_ROOT + "turnoff.png"};
@@ -121,7 +124,7 @@ public class ImgInfo {
     public static final String[] POST = {MARBLE_ROOT + "mushroom1.png", MARBLE_ROOT + "mushroom2.png"};
     public static final int[] POST_INFO = {95, 95, 40, 2, 40, 0};//img_width, img_height, r, mass, velocity, attribute
 
-    public static final String[][] POSTS_PATH = {POST, POST, POST, POST,POST};
+    public static final String[][] POSTS_PATH = {POST, POST, POST, POST, POST};
     public static final String[] POSTS_NAME = {"香菇"};
-    public static final int[][] POSTS_INFO = {POST_INFO, POST_INFO, POST_INFO, POST_INFO,POST_INFO};
+    public static final int[][] POSTS_INFO = {POST_INFO, POST_INFO, POST_INFO, POST_INFO, POST_INFO};
 }

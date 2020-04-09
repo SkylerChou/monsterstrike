@@ -26,9 +26,11 @@ public class Global {
     public static final int LEFT = 0;
     public static final int LEFT2 = 6;
     public static final int UP = 1;
+    public static final int UP2 = 7;
     public static final int RIGHT = 2;
     public static final int RIGHT2 = 5;
     public static final int DOWN = 3;
+    public static final int DOWN2 = 8;
     public static final int ENTER=4;
     
     public static final int NORMAL_MARBLE_R = 50;
