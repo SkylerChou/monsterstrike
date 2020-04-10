@@ -20,6 +20,11 @@ public class Background extends SceneObject {
         this.img = IRC.getInstance().tryGetImage(path);
         this.idx = idx;
     }
+    
+    public Background(String path, int x, int y) {
+        super(x, y, Global.SCREEN_X, Global.SCREEN_Y);
+        this.img = IRC.getInstance().tryGetImage(path);
+    }
 
     public void offset(int dx) {
         this.offset(dx, 0);

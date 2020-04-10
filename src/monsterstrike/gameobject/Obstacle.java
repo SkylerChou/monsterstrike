@@ -22,7 +22,7 @@ public class Obstacle extends GameObject {
 
     public Obstacle(String[] path, int x, int y, int w, int h, int r, float mass) {
         super(x, y, w, h, r);
-        this.renderer = new ObjectRenderer(path);
+        this.renderer = new ObjectRenderer(path, 20);
         this.goVec = new Vector(0, 0);
         this.isCollide = false;
         this.mass = mass;

@@ -19,7 +19,7 @@ public abstract class GameObject {
         this.rect = Rect.genWithCenter(x, y, width, height);
         this.collider = new Circle(x, y, r);
     }
-
+    
     public float getCenterX() {
         return this.collider.centerX();
     }

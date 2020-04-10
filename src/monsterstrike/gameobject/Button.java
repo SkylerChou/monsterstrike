@@ -5,40 +5,29 @@
  */
 package monsterstrike.gameobject;
 
-import controllers.IRC;
 import java.awt.Graphics;
-import java.awt.image.BufferedImage;
 
 public class Button extends SceneObject {
 
-    private BufferedImage img1;
-    private BufferedImage img2;
-    private BufferedImage currentImg;
-    private int count;
+    private ObjectRenderer renderer;
 
     public Button(String[] path, int x, int y, int width, int height) {
         super(x, y, width, height);
-        this.img1 = IRC.getInstance().tryGetImage(path[0]);
-        this.img2 = IRC.getInstance().tryGetImage(path[1]);
-        this.currentImg = this.img1;
+        this.renderer = new ObjectRenderer(path, 0);
     }
 
     @Override
     public void update() {
-        this.count++;
-        if (this.count % 2 != 0) {
-            this.currentImg = this.img2;
-        } else {
-            this.currentImg = this.img1;
-        }
+        this.renderer.update();
     }
-
-    public void paintOther(Graphics g, int[] size) {
-        g.drawImage(this.currentImg, (int) this.getCenterX(), (int) this.getCenterY(), size[0], size[1], null);
-    }
+//
+//    public void paintOther(Graphics g, int[] size) {
+//        g.drawImage(this.currentImg, (int) this.getCenterX(), (int) this.getCenterY(), size[0], size[1], null);
+//    }
 
     @Override
     public void paint(Graphics g) {
-        g.drawImage(this.currentImg, (int) this.getCenterX(), (int) this.getCenterY(), 200, 50, null);
+        this.renderer.paint(g, (int)this.getX(), (int)this.getY(), 
+                (int)this.getWidth(), (int)this.getHeight());
     }
 }

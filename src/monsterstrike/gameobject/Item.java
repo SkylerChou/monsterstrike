@@ -8,17 +8,14 @@ package monsterstrike.gameobject;
 import controllers.IRC;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
-import monsterstrike.util.Global;
 
 public class Item extends SceneObject{
 
     private BufferedImage img;
-    private int idx;
 
-    public Item(String path, int x, int y, int idx) {
-        super(x, y, Global.SCREEN_X, Global.SCREEN_Y);
+    public Item(String path, int x, int y, int w, int h) { //centerX, centerY
+        super(x, y, w, h);
         this.img = IRC.getInstance().tryGetImage(path);
-        this.idx = idx;
     }
 
     public void offset(int dx) {
@@ -31,18 +28,12 @@ public class Item extends SceneObject{
 
     @Override
     public void paint(Graphics g) {
-        g.drawImage(img, 0, 0, Global.SCREEN_X, Global.SCREEN_Y,
-                (int) this.getX() - ImgInfo.ITEM_SIZE[idx][0], 0,
-                (int) this.getX(), ImgInfo.ITEM_SIZE[idx][1], null);
-    }
-
-    public void paintMenu(Graphics g) {
-        g.drawImage(img, 0, 0, Global.SCREEN_X, Global.SCREEN_Y, null);
-    }
-
-    public void paintItem(Graphics g, int x, int y, int w, int h) {
-        g.drawImage(img, x, y, x + w, y + h,
-                0, 0, ImgInfo.ITEM_SIZE[idx][0], ImgInfo.ITEM_SIZE[idx][1], null);
+        g.drawImage(img, (int)this.getX(),(int)this.getY(), 
+                (int)this.getWidth(), (int)this.getHeight(), null);
     }
     
+    public void paintResize(Graphics g, float ratio){
+        g.drawImage(img, (int)this.getX(),(int)this.getY(), 
+                (int)(this.getWidth() * ratio), (int)this.getHeight(), null);
+    }
 }

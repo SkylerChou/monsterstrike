@@ -59,14 +59,14 @@ public class LevelMenu extends Scene {
                 this.enemies.add(new Marble(0, 0, 150, 150, this.allMarbleInfo.get(i)));
             }
         }
-        int x = 0;
+        int unitX = Global.SCREEN_X / 5;
         for (int i = 0; i < 3; i++) {
-            buttons.add(new Button(ImgInfo.RIGHT, 420 + x, 180, ImgInfo.CHOOSEBUTTON_INFO[0], ImgInfo.CHOOSEBUTTON_INFO[1]));
-            buttons.add(new Button(ImgInfo.LEFT, 230 + x, 180, ImgInfo.CHOOSEBUTTON_INFO[0], ImgInfo.CHOOSEBUTTON_INFO[1]));
-            x += 290;
+            buttons.add(new Button(ImgInfo.RIGHT, unitX + 190, 220, ImgInfo.CHOOSEBUTTON_INFO[0], ImgInfo.CHOOSEBUTTON_INFO[1]));
+            buttons.add(new Button(ImgInfo.LEFT, unitX, 220, ImgInfo.CHOOSEBUTTON_INFO[0], ImgInfo.CHOOSEBUTTON_INFO[1]));
+            unitX += 290;
         }
-        buttons.add(new Button(ImgInfo.RIGHT, 950, 470, ImgInfo.CHOOSEBUTTON_INFO[0], ImgInfo.CHOOSEBUTTON_INFO[1]));
-        buttons.add(new Button(ImgInfo.LEFT, 280, 470, ImgInfo.CHOOSEBUTTON_INFO[0], ImgInfo.CHOOSEBUTTON_INFO[1]));
+        buttons.add(new Button(ImgInfo.RIGHT, 970, 480, ImgInfo.CHOOSEBUTTON_INFO[0], ImgInfo.CHOOSEBUTTON_INFO[1]));
+        buttons.add(new Button(ImgInfo.LEFT, 300, 480, ImgInfo.CHOOSEBUTTON_INFO[0], ImgInfo.CHOOSEBUTTON_INFO[1]));
         this.currentMarble = this.myMarbles.get(0);
         this.isReleased = true;
         this.delay = new Delay(20);
@@ -75,17 +75,16 @@ public class LevelMenu extends Scene {
 
     @Override
     public void sceneUpdate() {
-
         if (count == 4) {
             this.background = new Background(ImgInfo.BACKGROUND_PATH[backIdx], 0, 0, this.backIdx);
         } else if (this.count == 5) {
             for (int i = 0; i < this.enemies.size(); i++) {
-                if (this.enemies.get(i).getInfo().getAttribute() != backIdx) {                   
-                    continue; 
+                if (this.enemies.get(i).getInfo().getAttribute() != backIdx) {
+                    continue;
                 }
                 this.enemyFightMarbles.add(this.enemies.get(i));
             }
-            
+
             sceneController.changeScene(new LevelScene(sceneController, backIdx, fightMarbles, this.enemyFightMarbles));
         } else {
             this.currentMarble = this.myMarbles.get(idx);
@@ -142,12 +141,11 @@ public class LevelMenu extends Scene {
         }
 
         if (this.count >= 4) {
-            this.background.paintItem(g, 350, 400, 580, 200);
+            this.background.paintItem(g, 350, 380, 580, 200);
         }
 
         for (int i = 0; i < this.buttons.size(); i++) {
-            int[] size = new int[]{50, 50};
-            this.buttons.get(i).paintOther(g, size);
+            this.buttons.get(i).paint(g);
         }
     }
 

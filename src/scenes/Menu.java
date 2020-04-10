@@ -21,6 +21,7 @@ public class Menu extends Scene {
     private Dino dino;
     private ArrayList<Button> buttons;
     private Delay delay;
+    private int h;
 
     private boolean isEnter;
 
@@ -33,12 +34,18 @@ public class Menu extends Scene {
     public void sceneBegin() {
         this.menu = new Background(ImgInfo.MENU, 0, 0, 1);
         this.buttons = new ArrayList<>();
-        this.dino = new Dino(ImgInfo.DINO, Global.SCREEN_X / 2 - 120, Global.SCREEN_Y / 2 - 20, Dino.STEPS_WALK);
-        this.buttons.add(new Button(ImgInfo.SINGLE, Global.SCREEN_X / 2 - 90, Global.SCREEN_Y / 2 - 35, ImgInfo.MAINBUTTON_INFO[0], ImgInfo.MAINBUTTON_INFO[1]));
-        this.buttons.add(new Button(ImgInfo.MULTIPLAYER, Global.SCREEN_X / 2 - 90, Global.SCREEN_Y / 2 + 15, ImgInfo.MAINBUTTON_INFO[0], ImgInfo.MAINBUTTON_INFO[1]));
-        this.buttons.add(new Button(ImgInfo.RANK, Global.SCREEN_X / 2 - 90, Global.SCREEN_Y / 2 + 65, ImgInfo.MAINBUTTON_INFO[0], ImgInfo.MAINBUTTON_INFO[1]));
-        this.buttons.add(new Button(ImgInfo.HOWTOPLAY, Global.SCREEN_X / 2 - 90, Global.SCREEN_Y / 2 + 115, ImgInfo.MAINBUTTON_INFO[0], ImgInfo.MAINBUTTON_INFO[1]));
-        this.buttons.add(new Button(ImgInfo.EXIT, Global.SCREEN_X / 2 - 90, Global.SCREEN_Y / 2 + 165, ImgInfo.MAINBUTTON_INFO[0], ImgInfo.MAINBUTTON_INFO[1]));
+        this.h = 50;
+        this.dino = new Dino(ImgInfo.DINO, Global.SCREEN_X / 2 - 120, Global.SCREEN_Y / 2, Dino.STEPS_WALK);
+//        this.buttons.add(new Button(ImgInfo.SINGLE, Global.SCREEN_X / 2 - 90, Global.SCREEN_Y / 2 - 35, ImgInfo.MAINBUTTON_INFO[0], ImgInfo.MAINBUTTON_INFO[1]));
+//        this.buttons.add(new Button(ImgInfo.MULTIPLAYER, Global.SCREEN_X / 2 - 90, Global.SCREEN_Y / 2 + 15, ImgInfo.MAINBUTTON_INFO[0], ImgInfo.MAINBUTTON_INFO[1]));
+//        this.buttons.add(new Button(ImgInfo.RANK, Global.SCREEN_X / 2 - 90, Global.SCREEN_Y / 2 + 65, ImgInfo.MAINBUTTON_INFO[0], ImgInfo.MAINBUTTON_INFO[1]));
+//        this.buttons.add(new Button(ImgInfo.HOWTOPLAY, Global.SCREEN_X / 2 - 90, Global.SCREEN_Y / 2 + 115, ImgInfo.MAINBUTTON_INFO[0], ImgInfo.MAINBUTTON_INFO[1]));
+//        this.buttons.add(new Button(ImgInfo.EXIT, Global.SCREEN_X / 2 - 90, Global.SCREEN_Y / 2 + 165, ImgInfo.MAINBUTTON_INFO[0], ImgInfo.MAINBUTTON_INFO[1]));
+        this.buttons.add(new Button(ImgInfo.SINGLE, Global.SCREEN_X / 2, Global.SCREEN_Y / 2, ImgInfo.MAINBUTTON_INFO[0], ImgInfo.MAINBUTTON_INFO[1]));
+        this.buttons.add(new Button(ImgInfo.MULTIPLAYER, Global.SCREEN_X / 2, Global.SCREEN_Y / 2 + h, ImgInfo.MAINBUTTON_INFO[0], ImgInfo.MAINBUTTON_INFO[1]));
+        this.buttons.add(new Button(ImgInfo.RANK, Global.SCREEN_X / 2, Global.SCREEN_Y / 2 + 2 * h, ImgInfo.MAINBUTTON_INFO[0], ImgInfo.MAINBUTTON_INFO[1]));
+        this.buttons.add(new Button(ImgInfo.HOWTOPLAY, Global.SCREEN_X / 2, Global.SCREEN_Y / 2 + 3 * h, ImgInfo.MAINBUTTON_INFO[0], ImgInfo.MAINBUTTON_INFO[1]));
+        this.buttons.add(new Button(ImgInfo.EXIT, Global.SCREEN_X / 2, Global.SCREEN_Y / 2 + 4 * h, ImgInfo.MAINBUTTON_INFO[0], ImgInfo.MAINBUTTON_INFO[1]));
         this.isEnter = false;
         this.delay = new Delay(25);
         this.delay.start();
@@ -49,23 +56,23 @@ public class Menu extends Scene {
         this.dino.update();
         if (this.delay.isTrig()) {
             for (int i = 0; i < this.buttons.size(); i++) {
-                if (this.dino.getCenterY()-15 == this.buttons.get(i).getCenterY()) {
+                if (this.dino.getCenterY() == this.buttons.get(i).getCenterY()) {
                     this.buttons.get(i).update();
                 }
             }
         }
 
-        if (this.isEnter && this.dino.getCenterY() == Global.SCREEN_Y / 2 - 20) {
+        if (this.isEnter && this.dino.getCenterY() == Global.SCREEN_Y / 2) {
             sceneController.changeScene(new LevelMenu(sceneController));
             this.isEnter = false;
-        } else if (this.isEnter && this.dino.getCenterY() == Global.SCREEN_Y / 2 + 30) {
-            sceneController.changeScene(new PingPong(sceneController));
+        } else if (this.isEnter && this.dino.getCenterY() == Global.SCREEN_Y / 2 + h) {
+            sceneController.changeScene(new Mutiplayer(sceneController));
             this.isEnter = false;
-        } else if (this.isEnter && this.dino.getCenterY() == Global.SCREEN_Y / 2 + 80) {
+        } else if (this.isEnter && this.dino.getCenterY() == Global.SCREEN_Y / 2 + 2 * h) {
 
-        } else if (this.isEnter && this.dino.getCenterY() == Global.SCREEN_Y / 2 + 130) {
+        } else if (this.isEnter && this.dino.getCenterY() == Global.SCREEN_Y / 2 + 3 * h) {
             this.isEnter = false;
-        } else if (this.isEnter && this.dino.getCenterY() == Global.SCREEN_Y / 2 + 180) {
+        } else if (this.isEnter && this.dino.getCenterY() == Global.SCREEN_Y / 2 + 4 * h) {
             System.exit(0);
             this.isEnter = false;
         }

@@ -22,6 +22,7 @@ public class LevelScene extends Scene {
 
     private Background background;
     private Item item;
+    private Item blood;
     private Marble[] myMarbles; //資訊欄顯示怪物
     private ArrayList<Marble> marbles; //我方出戰怪物
     private MarbleArray enemies; //敵方所有怪物
@@ -36,6 +37,9 @@ public class LevelScene extends Scene {
     private int hitCount;
     private int round;
     private int enemyRound;
+    private int myHp;
+    private int currentHp;
+    private int ratio;
 
     private Delay delay;
 
@@ -43,10 +47,14 @@ public class LevelScene extends Scene {
             Marble[] myMarbles, ArrayList<Marble> enemies) {
         super(sceneController);
         this.idx = backIdx;
-        this.item = new Item(ImgInfo.ITEM_PATH[0], 0, 0, 0);
+        this.item = new Item(ImgInfo.INFOFORM_PATH, Global.SCREEN_X / 2, Global.SCREEN_Y - Global.INFO_H / 2,
+                Global.SCREEN_X, Global.INFO_H);
+        this.blood = new Item(ImgInfo.BLOOD_PATH, ImgInfo.BLOOD_INFO[0], ImgInfo.BLOOD_INFO[1],
+                ImgInfo.BLOOD_INFO[2], ImgInfo.BLOOD_INFO[3]);
         this.marbles = new ArrayList<>();
         this.battleEnemies = new ArrayList<>();
         this.myMarbles = myMarbles;
+        this.myHp = 0;
         int w = 75;
         for (int i = 0; i < myMarbles.length; i++) {
             this.marbles.add(myMarbles[i].duplicate(Global.POSITION_X[i],
@@ -54,10 +62,13 @@ public class LevelScene extends Scene {
             this.myMarbles[i].setCenterX(w);
             this.myMarbles[i].setCenterY(Global.SCREEN_Y - 70);
             w += 150;
+            this.myHp += this.myMarbles[i].getInfo().getHp();
         }
+        this.currentHp = this.myHp;
         this.enemies = new MarbleArray(enemies);
         this.delay = new Delay(5);
         this.delay.start();
+        this.ratio = this.currentHp/this.myHp;
     }
 
     @Override
@@ -109,7 +120,6 @@ public class LevelScene extends Scene {
                     this.battleEnemies.get(i).setIsCollide(false);
                     this.battleEnemies.get(i).setCenterY(Global.FRAME_Y + 200);
                     this.battleEnemies.remove(i);
-
                 }
             }
 
@@ -194,7 +204,7 @@ public class LevelScene extends Scene {
             }
             for (int i = 0; i < this.marbles.size(); i++) {
                 if (i != j && this.marbles.get(i).isCollision(this.marbles.get(j))) {
-                    this.marbles.set(j, (Marble)this.marbles.get(i).strike(this.marbles.get(j)));
+                    this.marbles.set(j, (Marble) this.marbles.get(i).strike(this.marbles.get(j)));
                     if (i == currentIdx) {
                         this.marbles.get(j).getGoVec().setValue(this.marbles.get(j).getGoVec().getValue() * 0.5f);
                         if (this.marbles.get(j).getUseSkill()) {
@@ -212,7 +222,7 @@ public class LevelScene extends Scene {
         for (int i = 0; i < this.marbles.size(); i++) {
             for (int j = 0; j < this.battleEnemies.size(); j++) {
                 if (this.marbles.get(i).isCollision(this.battleEnemies.get(j)) && this.marbles.get(i).getGoVec().getValue() > 0) {
-                    Marble tmp = (Marble)this.marbles.get(i).strike(this.battleEnemies.get(j));
+                    Marble tmp = (Marble) this.marbles.get(i).strike(this.battleEnemies.get(j));
                     this.battleEnemies.get(j).setGo(tmp.getGoVec());
                     this.battleEnemies.get(j).setIsCollide(true);
                     this.marbles.get(i).genSkill(0, this.battleEnemies.get(j));
@@ -317,20 +327,20 @@ public class LevelScene extends Scene {
             sceneEnd();
         }
         ArrayList<Marble> m = this.enemies.sortByLevel();
-        if (this.sceneCount == 0) {            
+        if (this.sceneCount == 0) {
             for (int i = 0; i < 4; i++) {
                 battleEnemies.add(m.get(0).duplicate(Global.ENEMYPOS_X[i], -100, 120, 120));
             }
         } else if (this.sceneCount == 1) {
             for (int i = 0; i < 4; i++) {
-                battleEnemies.add(m.get(1).duplicate(Global.random(100, Global.SCREEN_X-100), -100, 120, 120));
+                battleEnemies.add(m.get(1).duplicate(Global.random(100, Global.SCREEN_X - 100), -100, 120, 120));
             }
-            battleEnemies.add(m.get(2).duplicate(Global.random(100, Global.SCREEN_X-100), -100, 120, 120));
+            battleEnemies.add(m.get(2).duplicate(Global.random(100, Global.SCREEN_X - 100), -100, 120, 120));
         } else {
             for (int i = 0; i < 4; i++) {
-                battleEnemies.add(m.get(2).duplicate(Global.random(100, Global.SCREEN_X-100), -100, 120, 120));
+                battleEnemies.add(m.get(2).duplicate(Global.random(100, Global.SCREEN_X - 100), -100, 120, 120));
             }
-            battleEnemies.add(m.get(3).duplicate(Global.random(100, Global.SCREEN_X-100), -100, 120, 120));       
+            battleEnemies.add(m.get(3).duplicate(Global.random(100, Global.SCREEN_X - 100), -100, 120, 120));
         }
     }
 
@@ -395,7 +405,14 @@ public class LevelScene extends Scene {
         }
         g.setFont(new Font("VinerHandITC", Font.ITALIC, 36));
         g.setColor(Color.BLACK);
-        this.item.paintItem(g, 0, Global.SCREEN_Y - Global.INFO_H, Global.SCREEN_X, Global.INFO_H);
+        this.item.paint(g);
+        this.blood.paintResize(g, this.ratio);
+        g.setFont(new Font("VinerHandITC", Font.ITALIC, 20));
+        g.setColor(Color.BLACK);
+        g.drawString(this.currentHp + " / " + this.myHp, 1100, Global.SCREEN_Y - 100);
+        g.setColor(Color.YELLOW);
+        g.drawString(this.currentHp + " / " + this.myHp, 1100-2, Global.SCREEN_Y - 100-2);      
+        g.setFont(new Font("VinerHandITC", Font.ITALIC, 36));
         g.setColor(Color.GRAY);
         g.drawString("Battle " + (sceneCount + 1), 800, Global.SCREEN_Y - 40);
         g.setColor(Color.BLACK);

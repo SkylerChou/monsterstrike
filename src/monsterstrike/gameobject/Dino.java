@@ -36,7 +36,7 @@ public class Dino extends GameObject {
     private float velocity;
 
     public Dino(String path, int x, int y, int[] steps) {
-        super(x, y, ImgInfo.DINO_INFO[0], ImgInfo.DINO_INFO[1],20);
+        super(x, y, ImgInfo.DINO_INFO[0], ImgInfo.DINO_INFO[1], 20);
         this.img1 = IRC.getInstance().tryGetImage(path);
         this.currendImg = this.img1;
         this.currentStep = 0;
@@ -49,7 +49,7 @@ public class Dino extends GameObject {
     }
 
     public Dino(String[] path, int x, int y, int[] steps) {
-        super(x, y, ImgInfo.GREENDINO_INFO[0], ImgInfo.GREENDINO_INFO[1],20);
+        super(x, y, ImgInfo.GREENDINO_INFO[0], ImgInfo.GREENDINO_INFO[1], 20);
         this.img1 = IRC.getInstance().tryGetImage(path[0]);
         this.img2 = IRC.getInstance().tryGetImage(path[1]);
         this.currendImg = this.img1;
@@ -101,13 +101,13 @@ public class Dino extends GameObject {
         if (!this.isStand) {
             switch (this.dir) {
                 case Global.UP:
-                    if (this.getCenterY() < Global.SCREEN_Y / 2 ) {
+                    if (this.getY() < Global.SCREEN_Y / 2) {
                         break;
                     }
                     this.offset(0, -50);
                     break;
                 case Global.DOWN:
-                    if (this.getCenterY() > Global.SCREEN_Y / 2 + 150) {
+                    if (this.getY() + this.getHeight() > Global.SCREEN_Y / 2 + 200) {
                         break;
                     }
                     this.offset(0, 50);
@@ -146,16 +146,16 @@ public class Dino extends GameObject {
             }
         }
     }
-    
-    public float getVelocity(){
+
+    public float getVelocity() {
         return this.velocity;
     }
 
     public boolean getIsStand() {
         return this.isStand;
     }
-    
-    public int getDir(){
+
+    public int getDir() {
         return this.dir;
     }
 
@@ -174,8 +174,6 @@ public class Dino extends GameObject {
     public void start() {
         this.delay.start();
     }
-
-
 
     @Override
     public void paintComponent(Graphics g) {

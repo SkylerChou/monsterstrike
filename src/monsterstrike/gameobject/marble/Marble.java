@@ -35,7 +35,17 @@ public class Marble extends Ball {
         String path = ImgInfo.MARBLE_ROOT + info.getImgName() + ".png";
         int num = info.getImgW() / info.getImgH();
         this.renderer = new MarbleRenderer(path, num, 20);
-        this.shine = new Shine(ImgInfo.SHINE_PATH[info.getAttribute()], x, y, ImgInfo.SHINE_INFO);
+
+        int[] shineSize = {x, y, w, h};
+        if (info.getAttribute() > 2) {
+            shineSize[0] = (int) (x - 0.25f * w);
+            shineSize[1] = (int) (y - 0.25f * h);
+            shineSize[2] = (int) (1.5f * w);
+            shineSize[3] = (int) (1.5f * h);
+        }
+        this.shine = new SpecialEffect(ImgInfo.SHINE_PATH[info.getAttribute()],
+                shineSize[0], shineSize[1], shineSize[2], shineSize[3],
+                (int) (shineSize[3] * info.getRatio() / 2));
         this.isCollide = false;
         this.skills = new Skills[5];
         this.setSkills();
@@ -58,7 +68,7 @@ public class Marble extends Ball {
         if (isBound()) {
             this.goVec.setValue(this.goVec.getValue() - this.wallFic);
         }
-        
+
     }
 
     @Override
@@ -75,12 +85,12 @@ public class Marble extends Ball {
         this.isDie = true;
         return false;
     }
-    
-    public boolean getIsDie(){
+
+    public boolean getIsDie() {
         return this.isDie;
     }
-    
-    public MarbleRenderer getRenderer(){
+
+    public MarbleRenderer getRenderer() {
         return this.renderer;
     }
 

@@ -18,11 +18,11 @@ public class ObjectRenderer {
     private Delay delay;
     private int count;
 
-    public ObjectRenderer(String[] path) {
+    public ObjectRenderer(String[] path, int delayFrame) {
         this.img1 = IRC.getInstance().tryGetImage(path[0]);
         this.img2 = IRC.getInstance().tryGetImage(path[1]);
         this.currentImg = this.img1;
-        this.delay = new Delay(20);
+        this.delay = new Delay(delayFrame);
         this.delay.start();
         this.count = 0;
     }

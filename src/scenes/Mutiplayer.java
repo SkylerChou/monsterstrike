@@ -21,7 +21,7 @@ public class Mutiplayer extends Scene {
 
     private Background background;
     private ArrayList<Marble> marbles;
-    private ArrayList<SpecialEffect> shine;
+    private ArrayList<MarbleInfo> allMarbleInfo;
     private Arrow arrow;
 
     private int currentIdx;
@@ -40,21 +40,16 @@ public class Mutiplayer extends Scene {
         this.idx = 1;
         this.background = new Background(ImgInfo.BACKGROUND_PATH[idx], 2 * ImgInfo.BACKGROUND_SIZE[idx][0], ImgInfo.BACKGROUND_SIZE[idx][1], idx);
         this.marbles = new ArrayList<>();
-        this.shine = new ArrayList<>();
         this.b = new ArrayList<>();
+        this.allMarbleInfo = FileIO.read("marbleInfo.csv");
         for (int i = 0; i < 3; i++) {
-            this.marbles.add(new ReboundMarble(ImgInfo.MYMARBLE_PATH[i], ImgInfo.MYMARBLE_NAME[i], POS_X[i], POS_Y[i], ImgInfo.MYMARBLE_INFO[i]));
-            this.shine.add(new SpecialEffect(ImgInfo.SHINE_PATH[ImgInfo.MYMARBLE_INFO[i][5]], (int) this.marbles.get(currentIdx).getCenterX(),
-                    (int) this.marbles.get(currentIdx).getCenterX(), ImgInfo.SHINE_INFO, 25));
-            this.b.add(new BlackHole(ImgInfo.BALCKHOLE, 250 * (i + 1), 250, ImgInfo.BLACKHOLE_INFO));
+            this.marbles.add(new Marble(POS_X[i], POS_Y[i], 120, 120, this.allMarbleInfo.get(i)));
+            this.b.add(new SpecialEffect(ImgInfo.BALCKHOLE, 250 * (i + 1), 250, 
+                    ImgInfo.BLACKHOLE_INFO[0], ImgInfo.BLACKHOLE_INFO[1],ImgInfo.BLACKHOLE_INFO[0]/2 ));
             this.b.get(i).setShine(true);
         }
 
         this.arrow = new Arrow(ImgInfo.ARROW, 0, 0, ImgInfo.ARROW_INFO);
-//        this.setting = new Button(ImgInfo.SETTING, 0, 0, ImgInfo.SETTING_INFO[0], ImgInfo.SETTING_INFO[1]);
-
-//        this.b.add(new SpecialEffect(ImgInfo.BALCKHOLE, 200, 250, ImgInfo.BLACKHOLE_INFO));
-//        this.b.add(new SpecialEffect(ImgInfo.BALCKHOLE, 780, 250, ImgInfo.BLACKHOLE_INFO));
         this.currentIdx = 0;
         this.delay = new Delay(25);
         this.delay.start();
@@ -68,10 +63,6 @@ public class Mutiplayer extends Scene {
 //            this.setting.update();
 //        }
 
-        this.shine.get(currentIdx).setShine(true);
-        this.shine.get(currentIdx).update();
-        this.shine.get(currentIdx).setCenterX(this.marbles.get(currentIdx).getCenterX());
-        this.shine.get(currentIdx).setCenterY(this.marbles.get(currentIdx).getCenterY());
         for (int i = 0; i < this.b.size(); i++) {
             this.b.get(i).update();
         }
@@ -147,7 +138,6 @@ public class Mutiplayer extends Scene {
         if (this.arrow.getShow()) {
             this.arrow.paint(g);
         }
-        this.shine.get(currentIdx).paint(g);
 
         for (int i = 0; i < this.marbles.size(); i++) {
             this.marbles.get(i).paint(g);
@@ -201,7 +191,7 @@ public class Mutiplayer extends Scene {
                 Vector vector = new Vector(this.startX - this.endX, this.startY - this.endY);
                 arrow.setDegree((float) Math.acos(vector.getX() / vector.getValue()));
                 arrow.setResizeMag(vector.getValue() / arrow.getWidth());
-                marbles.get(currentIdx).setGo(vector.resizeVec(marbles.get(currentIdx).getVelocity()));
+                marbles.get(currentIdx).setGo(vector.resizeVec(marbles.get(currentIdx).getInfo().getV()));
                 count++;
                 arrow.setShow(false);
             }
