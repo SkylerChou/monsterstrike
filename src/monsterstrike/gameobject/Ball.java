@@ -30,6 +30,16 @@ public class Ball extends GameObject {
         this.mass = mass;
         this.fiction = 0;
     }
+    
+    public Ball(int x, int y, int w, int h, int r) {
+        super(x, y, w, h, r);
+        this.goVec = new Vector(0, 0);
+        this.norVec = new Vector(0, 0);
+        this.tanVec = new Vector(0, 0);
+        this.isCollide = false;
+        this.mass = mass;
+        this.fiction = 0;
+    }
 
     @Override
     public void update() {
@@ -96,22 +106,6 @@ public class Ball extends GameObject {
         return this.other;
     }
     
-    public void hit(Dino dino) {
-        this.isCollide = true;
-        Vector vec = new Vector(dino.getCenterX()-this.getCenterX(), dino.getCenterY()-this.getCenterY());
-        this.norVec = this.goVec.getCosProjectionVec(vec).multiplyScalar(-1);
-        this.tanVec = this.goVec.getSinProjectionVec(vec);
-        this.goVec = this.norVec.plus(this.tanVec);
-    }
-    
-    public void hit(Obstacle ob){
-        this.isCollide = true;
-        Vector vec = new Vector(ob.getCenterX()-this.getCenterX(), ob.getCenterY()-this.getCenterY());
-        this.norVec = this.goVec.getCosProjectionVec(vec).multiplyScalar(-1);
-        this.tanVec = this.goVec.getSinProjectionVec(vec);
-        this.goVec = this.norVec.plus(this.tanVec);
-    }
-
     private void updateDir(Vector nor) {
         this.norVec = this.goVec.getCosProjectionVec(nor);
         this.tanVec = this.goVec.getSinProjectionVec(nor);
@@ -132,6 +126,14 @@ public class Ball extends GameObject {
         this.goVec = this.norVec.plus(this.tanVec);
         this.other.setNorVec(newNor2);
         this.other.setGo(this.other.getNorVec().plus(this.other.getTanVec()));
+    }
+    
+    public void hit(GameObject obj) {
+        this.isCollide = true;
+        Vector vec = new Vector(obj.getCenterX()-this.getCenterX(), obj.getCenterY()-this.getCenterY());
+        this.norVec = this.goVec.getCosProjectionVec(vec).multiplyScalar(-1);
+        this.tanVec = this.goVec.getSinProjectionVec(vec);
+        this.goVec = this.norVec.plus(this.tanVec);
     }
 
     public float getMass() {

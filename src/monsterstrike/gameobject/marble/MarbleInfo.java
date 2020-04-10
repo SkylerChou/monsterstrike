@@ -9,6 +9,7 @@ public class MarbleInfo {
 
     private static final String[] ATTRIBUTE = {"冰", "火", "草", "光", "黯"};
     private static final String[] STATE = {"收服", "野生"};
+    private static final String[] SPECIES = {"反彈", "貫穿"};
     private String name;
     private String imgName;
     private int imgW;
@@ -22,10 +23,11 @@ public class MarbleInfo {
     private int level;
     private int hp;
     private int atk;
+    private int species;
 
     public MarbleInfo(String name, String imgName, int imgW, int imgH, float ratio,
             float mass, float v, int attribute, int level, int hp,
-            int atk, int skillRound, int state) {
+            int atk, int skillRound, int state, int species) {
         this.name = name;
         this.imgName = imgName;
         this.imgH = imgH;
@@ -39,12 +41,13 @@ public class MarbleInfo {
         this.level = level;
         this.atk = atk;
         this.hp = hp;
+        this.species = species;
     }
 
     public static MarbleInfo gen(MarbleInfo info) {
         return new MarbleInfo(info.getName(), info.getImgName(), info.getImgW(), info.getImgH(),
                 info.getRatio(), info.getMass(), info.getV(), info.getAttribute(), info.getLevel(),
-                info.getHp(), info.getAtk(), info.getSkillRound(), info.getState());
+                info.getHp(), info.getAtk(), info.getSkillRound(), info.getState(), info.getSpecies());
     }
 
     public String getName() {
@@ -102,6 +105,10 @@ public class MarbleInfo {
     public int getAtk() {
         return this.atk;
     }
+    
+    public int getSpecies(){
+        return this.species;
+    }
 
     public void setHp(int hp) {
         if (hp < 0) {
@@ -120,6 +127,7 @@ public class MarbleInfo {
                 + " 速度:" + this.v + "(m/s)"
                 + " HP:" + this.hp + " ATK:" + this.atk
                 + " 等級:" + this.level
+                + " Strike:" + SPECIES[this.species]
                 + " 狀態:" + STATE[this.state];
     }
 }

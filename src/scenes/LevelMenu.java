@@ -54,9 +54,9 @@ public class LevelMenu extends Scene {
         this.background = new Background(ImgInfo.BACKGROUND_PATH[this.backIdx], 0, 0, this.backIdx);
         for (int i = 0; i < this.allMarbleInfo.size(); i++) {
             if (this.allMarbleInfo.get(i).getState() == 0) {
-                this.myMarbles.add(new ReboundMarble(this.x, this.y, 150, 150, this.allMarbleInfo.get(i)));
+                this.myMarbles.add(new Marble(this.x, this.y, 150, 150, this.allMarbleInfo.get(i)));
             } else {
-                this.enemies.add(new StandMarble(0, 0, 150, 150, this.allMarbleInfo.get(i)));
+                this.enemies.add(new Marble(0, 0, 150, 150, this.allMarbleInfo.get(i)));
             }
         }
         int x = 0;

@@ -49,7 +49,7 @@ public class LevelScene extends Scene {
         this.myMarbles = myMarbles;
         int w = 75;
         for (int i = 0; i < myMarbles.length; i++) {
-            this.marbles.add(myMarbles[i].duplicateRebound(Global.POSITION_X[i],
+            this.marbles.add(myMarbles[i].duplicate(Global.POSITION_X[i],
                     Global.POSITION_Y[i], 100, 100));
             this.myMarbles[i].setCenterX(w);
             this.myMarbles[i].setCenterY(Global.SCREEN_Y - 70);
@@ -194,7 +194,7 @@ public class LevelScene extends Scene {
             }
             for (int i = 0; i < this.marbles.size(); i++) {
                 if (i != j && this.marbles.get(i).isCollision(this.marbles.get(j))) {
-                    this.marbles.set(j, this.marbles.get(i).strike(this.marbles.get(j)));
+                    this.marbles.set(j, (Marble)this.marbles.get(i).strike(this.marbles.get(j)));
                     if (i == currentIdx) {
                         this.marbles.get(j).getGoVec().setValue(this.marbles.get(j).getGoVec().getValue() * 0.5f);
                         if (this.marbles.get(j).getUseSkill()) {
@@ -212,7 +212,7 @@ public class LevelScene extends Scene {
         for (int i = 0; i < this.marbles.size(); i++) {
             for (int j = 0; j < this.battleEnemies.size(); j++) {
                 if (this.marbles.get(i).isCollision(this.battleEnemies.get(j)) && this.marbles.get(i).getGoVec().getValue() > 0) {
-                    Marble tmp = this.marbles.get(i).strike(this.battleEnemies.get(j));
+                    Marble tmp = (Marble)this.marbles.get(i).strike(this.battleEnemies.get(j));
                     this.battleEnemies.get(j).setGo(tmp.getGoVec());
                     this.battleEnemies.get(j).setIsCollide(true);
                     this.marbles.get(i).genSkill(0, this.battleEnemies.get(j));
@@ -319,23 +319,22 @@ public class LevelScene extends Scene {
         ArrayList<Marble> m = this.enemies.sortByLevel();
         if (this.sceneCount == 0) {            
             for (int i = 0; i < 4; i++) {
-                battleEnemies.add(m.get(0).duplicateStand(Global.ENEMYPOS_X[i], -100, 120, 120));
+                battleEnemies.add(m.get(0).duplicate(Global.ENEMYPOS_X[i], -100, 120, 120));
             }
         } else if (this.sceneCount == 1) {
             for (int i = 0; i < 4; i++) {
-                battleEnemies.add(m.get(1).duplicateStand(Global.random(100, Global.SCREEN_X-100), -100, 120, 120));
+                battleEnemies.add(m.get(1).duplicate(Global.random(100, Global.SCREEN_X-100), -100, 120, 120));
             }
-            battleEnemies.add(m.get(2).duplicateStand(Global.random(100, Global.SCREEN_X-100), -100, 120, 120));
+            battleEnemies.add(m.get(2).duplicate(Global.random(100, Global.SCREEN_X-100), -100, 120, 120));
         } else {
             for (int i = 0; i < 4; i++) {
-                battleEnemies.add(m.get(2).duplicateStand(Global.random(100, Global.SCREEN_X-100), -100, 120, 120));
+                battleEnemies.add(m.get(2).duplicate(Global.random(100, Global.SCREEN_X-100), -100, 120, 120));
             }
-            battleEnemies.add(m.get(3).duplicateStand(Global.random(100, Global.SCREEN_X-100), -100, 120, 120));       
+            battleEnemies.add(m.get(3).duplicate(Global.random(100, Global.SCREEN_X-100), -100, 120, 120));       
         }
     }
 
     private void dropEnemies() {
-        System.out.println(this.battleEnemies.size());
         for (int i = 0; i < this.battleEnemies.size(); i++) {
             if (this.battleEnemies.get(i).getCenterY() < Global.ENEMYPOS_Y[i]) {
                 this.battleEnemies.get(i).offset(0, Global.ENEMYPOS_Y[i] / 40);

@@ -5,62 +5,83 @@
  */
 package monsterstrike.gameobject.marble;
 
-import monsterstrike.graph.Vector;
 import monsterstrike.util.Global;
 import interfaceskills.*;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import monsterstrike.gameobject.*;
 
-public abstract class Marble extends GameObject {
+public class Marble extends Ball {
 
-    protected Vector goVec;
-    protected Vector norVec;
-    protected Vector tanVec;
+    private static final Strike[] SPECIES = {new Rebound(), new Penetrate(), new Stand()};
     protected Marble other;
     protected MarbleInfo info;
     protected MarbleRenderer renderer;
     protected boolean isCollide;
     protected boolean useSkill;
-    private float fiction;
+    private float moveFic;
+    private float strikeFic;
+    private float wallFic;
     private SpecialEffect shine;
+    private Strike species;
+    private boolean isDie;
 
     private Skills[] skills;
     private Skills currentSkill;
 
     public Marble(int x, int y, int w, int h, MarbleInfo info) {
-        super(x, y, w, h, (int) (w*info.getRatio()/2));
+        super(x, y, w, h, (int) (w * info.getRatio() / 2));
         this.info = info;
         String path = ImgInfo.MARBLE_ROOT + info.getImgName() + ".png";
         int num = info.getImgW() / info.getImgH();
         this.renderer = new MarbleRenderer(path, num, 20);
         this.shine = new Shine(ImgInfo.SHINE_PATH[info.getAttribute()], x, y, ImgInfo.SHINE_INFO);
-        this.goVec = new Vector(0, 0);
-        this.norVec = new Vector(0, 0);
-        this.tanVec = new Vector(0, 0);
         this.isCollide = false;
         this.skills = new Skills[5];
         this.setSkills();
         this.useSkill = true;
-        this.fiction = 0.05f * info.getMass();
+        this.moveFic = 0.05f * info.getMass();
+        this.strikeFic = 3;
+        this.wallFic = 2;
+        this.isDie = false;
         this.currentSkill = null;
+        if (info.getState() == 1) {
+            this.species = SPECIES[2];
+        } else {
+            this.species = SPECIES[info.getSpecies()];
+        }
     }
 
     @Override
     public void update() {
-//        if(this.renderer.getIsStop()){
-//            this.renderer.start();
-//            this.renderer.setIsStop(false);
-//        }
-        this.renderer.update();
-//        if (this.isCollide) {
-//            this.renderer.updateOnce();
-//            this.isCollide = false;
-//        }
+        this.species.update(this);
         if (isBound()) {
-            this.goVec.setValue(this.goVec.getValue() - 2);
+            this.goVec.setValue(this.goVec.getValue() - this.wallFic);
         }
-        move();
+        
+    }
+
+    @Override
+    public void move() {
+        this.species.move(this);
+    }
+
+    public Marble strike(Marble target) {
+        this.isCollide = true;
+        return this.species.strike(this, target);
+    }
+
+    public boolean die() {
+        this.isDie = true;
+        return false;
+    }
+    
+    public boolean getIsDie(){
+        return this.isDie;
+    }
+    
+    public MarbleRenderer getRenderer(){
+        return this.renderer;
     }
 
     public void updateSkill() {
@@ -75,17 +96,7 @@ public abstract class Marble extends GameObject {
         this.shine.update();
     }
 
-    public void move() {
-        this.isCollide = false;
-        if (this.goVec.getValue() > 0) {
-            this.goVec.setValue(this.goVec.getValue() - this.fiction);
-            if (this.goVec.getValue() <= 0) {
-                this.goVec.setValue(0);
-            }
-        }
-        this.offset(this.goVec.getX(), this.goVec.getY());
-    }
-
+    @Override
     public boolean isBound() {
         if (this.getCenterX() - this.getR() <= 0
                 || this.getCenterX() + this.getR() >= Global.SCREEN_X
@@ -112,36 +123,25 @@ public abstract class Marble extends GameObject {
         return false;
     }
 
-    public abstract Marble strike(Marble other);
-
     public void setShine(boolean isShine) {
         this.shine.setShine(isShine);
     }
-    
-    public Marble duplicateStand(int x, int y, int w, int h){
-        MarbleInfo copyInfo = MarbleInfo.gen(this.info);
-        return new StandMarble(x, y, w, h, copyInfo);
+
+    public float getStrikeFic() {
+        return this.strikeFic;
     }
-    
-    public Marble duplicateRebound(int x, int y, int w, int h){
-        MarbleInfo copyInfo = MarbleInfo.gen(this.info);
-        return new ReboundMarble(x, y, w, h, copyInfo);
+
+    public float getMoveFic() {
+        return this.moveFic;
     }
-    
-    public MarbleInfo getInfo(){
+
+    public Marble duplicate(int x, int y, int w, int h) {
+        MarbleInfo copyInfo = MarbleInfo.gen(this.info);
+        return new Marble(x, y, w, h, copyInfo);
+    }
+
+    public MarbleInfo getInfo() {
         return this.info;
-    }
-
-    public Vector getNorVec() {
-        return this.norVec;
-    }
-
-    public Vector getTanVec() {
-        return this.tanVec;
-    }
-
-    public Vector getGoVec() {
-        return this.goVec;
     }
 
     public boolean getUseSkill() {
@@ -150,26 +150,6 @@ public abstract class Marble extends GameObject {
 
     public void setUseSkill(Boolean useSkill) {
         this.useSkill = useSkill;
-    }
-
-    public void setNorVec(Vector nor) {
-        this.norVec = nor;
-    }
-
-    public void setTanVec(Vector tan) {
-        this.tanVec = tan;
-    }
-
-    public void setGo(Vector go) {
-        this.goVec = go;
-    }
-
-    public void setIsCollide(boolean isCollide) {
-        this.isCollide = isCollide;
-    }
-
-    public boolean getIsCollide() {
-        return this.isCollide;
     }
 
     public Skills getCurrentSkill() {
@@ -181,8 +161,6 @@ public abstract class Marble extends GameObject {
             this.currentSkill.paintSkill(g);
         }
     }
-
-    public abstract boolean die();
 
     public void paintAll(Graphics g) {
         this.shine.paintComponent(g);
@@ -226,6 +204,7 @@ public abstract class Marble extends GameObject {
         this.skills[r].genSkill(this, target);
         this.currentSkill = this.skills[r];
     }
+
     public void genSkill(int r, MarbleArray target) {
         this.skills[r].genSkill(this, target);
         this.currentSkill = this.skills[r];

@@ -41,8 +41,8 @@ public class FileIO {
                 MarbleInfo m = new MarbleInfo(tmp[0], tmp[1], Integer.parseInt(tmp[2]),
                         Integer.parseInt(tmp[3]), Float.parseFloat(tmp[4]), Float.parseFloat(tmp[5]),
                         Float.parseFloat(tmp[6]), Integer.parseInt(tmp[7]), Integer.parseInt(tmp[8]),
-                        Integer.parseInt(tmp[9]), Integer.parseInt(tmp[10]),
-                        Integer.parseInt(tmp[11]), Integer.parseInt(tmp[12]));
+                        Integer.parseInt(tmp[9]), Integer.parseInt(tmp[10]), Integer.parseInt(tmp[11]),
+                        Integer.parseInt(tmp[12]), Integer.parseInt(tmp[13]));
                 arr.add(m);
             }
             br.close();
@@ -61,7 +61,8 @@ public class FileIO {
                 String tmp = m.getName() + "," + m.getImgName() + "," + m.getImgW() + ","
                         + m.getImgH() + "," + m.getRatio() + "," + m.getMass() + ","
                         + m.getV() + "," + m.getAttribute() + "," + m.getHp() + ","
-                        + m.getAtk() + "," + m.getSkillRound() + "," + m.getState();
+                        + m.getAtk() + "," + m.getSkillRound() + "," + m.getState() + ","
+                        + m.getSpecies();
                 bw.append(tmp);
                 bw.newLine();
             }
