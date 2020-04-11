@@ -27,17 +27,17 @@ public class Obstacle extends GameObject {
         this.isCollide = false;
         this.mass = mass;
         this.moveDelay = new Delay(5);
-        this.moveCount = 0;        
+        this.moveCount = 0;
     }
 
     @Override
     public void update() {
         if (this.isCollide) {
-            move();
+            shake();
         }
     }
-
-    public void move() {
+    
+    public void shake() {
         this.moveDelay.start();
         if (this.moveDelay.isTrig()) {
             if (this.moveCount % 2 == 0) {
@@ -53,11 +53,11 @@ public class Obstacle extends GameObject {
             }
         }
     }
-    
-    public void setGo(Vector go){
+
+    public void setGo(Vector go) {
         this.goVec = go;
     }
-    
+
     public void setIsCollide(boolean isCollide) {
         this.isCollide = isCollide;
     }

@@ -96,21 +96,15 @@ public class Ball extends GameObject {
         return this.other;
     }
     
-    public void hit(Dino dino) {
+    public void hit(GameObject gameObject) {
         this.isCollide = true;
-        Vector vec = new Vector(dino.getCenterX()-this.getCenterX(), dino.getCenterY()-this.getCenterY());
+        Vector vec = new Vector(gameObject.getCenterX()-this.getCenterX(), gameObject.getCenterY()-this.getCenterY());
         this.norVec = this.goVec.getCosProjectionVec(vec).multiplyScalar(-1);
         this.tanVec = this.goVec.getSinProjectionVec(vec);
         this.goVec = this.norVec.plus(this.tanVec);
+        this.offset(this.goVec.getX(), this.goVec.getY());
     }
     
-    public void hit(Obstacle ob){
-        this.isCollide = true;
-        Vector vec = new Vector(ob.getCenterX()-this.getCenterX(), ob.getCenterY()-this.getCenterY());
-        this.norVec = this.goVec.getCosProjectionVec(vec).multiplyScalar(-1);
-        this.tanVec = this.goVec.getSinProjectionVec(vec);
-        this.goVec = this.norVec.plus(this.tanVec);
-    }
 
     private void updateDir(Vector nor) {
         this.norVec = this.goVec.getCosProjectionVec(nor);

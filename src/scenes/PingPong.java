@@ -60,8 +60,8 @@ public class PingPong extends Scene {
         } else {
             this.ball.move();
         }
-        
-        if(this.ball.isCollision(this.dino)){
+
+        if (this.ball.isCollision(this.dino)) {
             this.ball.hit(dino);
         }
         for (int i = 0; i < this.post.size(); i++) {
@@ -81,9 +81,11 @@ public class PingPong extends Scene {
                 Vector vec = new Vector(this.post.get(i).getCenterX() - this.dino.getCenterX(),
                         this.post.get(i).getCenterY() - this.dino.getCenterY());
                 Vector dinoVec = dinoDir();
-                float dx = dinoVec.getCosProjectionVec(vec).getX();
-                float dy = dinoVec.getCosProjectionVec(vec).getY();
-                this.post.get(i).offset(dx, dy);
+//                float dx = dinoVec.getCosProjectionVec(vec).getX();
+//                float dy = dinoVec.getCosProjectionVec(vec).getY();
+                if (!isBound(i)) {
+                    this.post.get(i).offset(dinoVec.getX(), dinoVec.getY());
+                }
             }
         }
     }
@@ -91,6 +93,28 @@ public class PingPong extends Scene {
     @Override
     public void sceneEnd() {
 
+    }
+
+    public boolean isBound(int i) {
+            if (this.post.get(i).getCenterX() - this.post.get(i).getR() <=0
+                    || this.post.get(i).getCenterX()  + this.post.get(i).getR() >=Global.SCREEN_X
+                    || this.post.get(i).getCenterY()  - this.post.get(i).getR() <=0
+                    || this.post.get(i).getCenterY() + this.post.get(i).getR() >= Global.SCREEN_Y) {
+                if (this.post.get(i).getCenterX() - this.post.get(i).getR() <= 0) {
+                    this.post.get(i).setCenterX(this.post.get(i).getR());
+                }
+                if (this.post.get(i).getCenterX() + this.post.get(i).getR() >= Global.SCREEN_X) {
+                    this.post.get(i).setCenterX(Global.SCREEN_X);
+                }
+                if (this.post.get(i).getCenterY() - this.post.get(i).getR() <= 0) {
+                    this.post.get(i).setCenterY(this.post.get(i).getR());
+                }
+                if (this.post.get(i).getCenterY() + this.post.get(i).getR()>= Global.SCREEN_Y) {
+                    this.post.get(i).setCenterY(Global.SCREEN_Y);
+                } 
+            return true;
+        }
+        return false;
     }
 
     private Vector dinoDir() {
