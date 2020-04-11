@@ -170,7 +170,7 @@ public class Dino extends GameObject {
     public void pause() {
         this.delay.pause();
     }
-
+    
     public void start() {
         this.delay.start();
     }
