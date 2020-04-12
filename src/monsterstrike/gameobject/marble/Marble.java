@@ -137,6 +137,10 @@ public class Marble extends Ball {
         this.shine.setShine(isShine);
     }
 
+    public void setMoveFic() {
+        this.moveFic = this.moveFic * 1.5f;
+    }
+
     public float getStrikeFic() {
         return this.strikeFic;
     }
