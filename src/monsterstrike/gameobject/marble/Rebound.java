@@ -18,7 +18,7 @@ public class Rebound implements Strike {
         self.renderer.update();
         move(self);
     }
-    
+
     @Override
     public void move(Marble self) {
         if (self.getGoVec().getValue() > 0) {
@@ -28,6 +28,7 @@ public class Rebound implements Strike {
             }
         }
         self.offset(self.getGoVec().getX(), self.getGoVec().getY());
+
     }
 
     @Override
@@ -41,7 +42,7 @@ public class Rebound implements Strike {
                 self.offset(-nor.getUnitX(), -nor.getUnitY());
                 target.offset(nor.getUnitX(), nor.getUnitY());
             } else {
-                if (target.getInfo().getState()==1) {
+                if (target.getInfo().getState() == 1) {
                     self.setGo(nor.resizeVec(-1 * originGo.getValue()));
                     self.offset(self.getGoVec().getX(), self.getGoVec().getY());
                     self.getGoVec().setValue(originGo.getValue() - self.getStrikeFic());
@@ -78,7 +79,5 @@ public class Rebound implements Strike {
     public boolean die(Marble self) {
         return false;
     }
-
-    
 
 }

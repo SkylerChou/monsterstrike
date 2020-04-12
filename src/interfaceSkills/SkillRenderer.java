@@ -33,13 +33,17 @@ public class SkillRenderer {
     }
 
     public void update() {
-        if (this.delay.isTrig()) {          
-            if (this.imgIdx++ == this.imgNum - 1) {                
-                this.isStop = true;
+        if (this.delay.isTrig()) {
+            if (this.imgIdx++ == this.imgNum - 1) {                               
                 this.imgIdx = this.imgNum - 1;
+                this.isStop = true;
                 this.stop();
             }
         }
+    } 
+    
+    public int getImgIdx(){
+        return this.imgIdx;
     }
 
     public void stop() {

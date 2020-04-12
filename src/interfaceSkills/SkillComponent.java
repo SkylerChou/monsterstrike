@@ -11,51 +11,52 @@ import monsterstrike.gameobject.GameObject;
 public class SkillComponent extends GameObject {
 
     private SkillRenderer renderer;
-    private int skillIdx;
+    private float dx;
+    private float dy;
 
-    public SkillComponent(int skillIdx, int attribute,int imgNum, int x, int y, int delay) {
-        super(x, y, SkillImg.SKILL_UNIT_X[skillIdx][attribute], SkillImg.SKILL_UNIT_Y[skillIdx][attribute], SkillImg.SKILL_UNIT_X[skillIdx][attribute] / 2);
+    public SkillComponent(int skillIdx, int attribute, int imgNum, 
+            int x, int y, int w, int h, int delay) {
+        super(x, y, w, h, h / 2);
         this.renderer = new SkillRenderer(skillIdx, attribute, imgNum, delay);
-        this.skillIdx = skillIdx;
+        this.dx = 0f;
+        this.dy = 0f;
     }
 
-    public void setIsStop(boolean isStop) {
+    public void setStop(boolean isStop) {
         this.renderer.setIsStop(isStop);
-        if (!this.renderer.getIsStop()) {
-            this.renderer.start();
-        } else {
-            this.renderer.stop();
-        }
+    }
+
+    public boolean getIsStop() {
+        return this.renderer.getIsStop();
     }
     
-    public boolean getStop(){
-        return this.renderer.getIsStop();
+    public void setDx(float dx){
+        this.dx = dx;
+    }
+    
+    public void setDy(float dy){
+        this.dy = dy;
+    }
+    
+    public float getDx(){
+        return this.dx;
+    }
+    
+    public float getDy(){
+        return this.dy;
     }
 
     @Override
     public void update() {
-        if (!this.renderer.getIsStop()) {
-            this.renderer.update();
-            this.move();
-        }else{
-            this.setCenterX(-100);
-            this.setCenterY(-100);
-        }
+        this.renderer.update();
+        this.move();
+//        if(this.isOutOfBound()){
+//            this.setStop(true);
+//        }
     }
-    
-    public void move(){
-        switch(skillIdx){
-            case 0:
-                break;
-            case 1:
-                break;
-            case 2:
-                break;
-            case 3:
-                break;
-            case 4:
-                break;
-        }
+
+    public void move() {
+        this.offset(dx, dy);
     }
 
     @Override
@@ -64,4 +65,8 @@ public class SkillComponent extends GameObject {
                 (int) this.getWidth(), (int) this.getHeight());
     }
     
+    public SkillRenderer getRenderer(){
+        return this.renderer;
+    }
+
 }

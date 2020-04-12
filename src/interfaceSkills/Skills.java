@@ -9,16 +9,35 @@ import java.awt.Graphics;
 import java.util.ArrayList;
 import monsterstrike.gameobject.marble.Marble;
 
-public interface Skills {
+public abstract class Skills {
+    protected SkillComponent[] skill;
 
-    public void genSkill(Marble self, Marble target);
-    
-    public void genSkill(Marble self, ArrayList<Marble> target);
+    public Skills(int num) {
+        this.skill = new SkillComponent[num];
+    }
 
-    public void update();
+    public void update() {
+        for (int j = 0; j < this.skill.length; j++) {
+            if (this.skill[j] != null && !this.skill[j].getIsStop()) {
+                this.skill[j].update();
+            } else {
+                this.skill[j] = null;
+            }
+        }
+    }
 
-    public ArrayList<SkillComponent> getSkillComponent();
-    
-    public void paintSkill(Graphics g);
+    public abstract int useSkill(Marble self, ArrayList<Marble> target, int idx);
+
+    public SkillComponent[] getSkillComponent() {
+        return this.skill;
+    }
+
+    public void paintSkill(Graphics g) {
+        for (int j = 0; j < this.skill.length; j++) {
+            if (this.skill[j] != null) {
+                this.skill[j].paint(g);
+            }
+        }
+    }
 
 }

@@ -15,10 +15,11 @@ public class Marble extends Ball {
 
     private static final Strike[] SPECIES = {new Rebound(), new Penetrate(), new Stand()};
     protected Marble other;
+    private Marble detect;
     protected MarbleInfo info;
     protected MarbleRenderer renderer;
     protected boolean isCollide;
-    protected boolean useSkill;
+
     private float moveFic;
     private float strikeFic;
     private float wallFic;
@@ -27,7 +28,8 @@ public class Marble extends Ball {
     private boolean isDie;
 
     private Skills[] skills;
-    private Skills currentSkill;
+    private int skillIdx;
+    private boolean useSkill;
 
     public Marble(int x, int y, int w, int h, MarbleInfo info) {
         super(x, y, w, h, (int) (w * info.getRatio() / 2));
@@ -47,14 +49,15 @@ public class Marble extends Ball {
                 shineSize[0], shineSize[1], shineSize[2], shineSize[3],
                 (int) (shineSize[3] * info.getRatio() / 2));
         this.isCollide = false;
-        this.skills = new Skills[5];
-        this.setSkills();
+        this.skills = new Skills[]{new Explosion(), new Tornado(), new Laser(), 
+            new Bullet(), new Missile()};
+
+        this.skillIdx = 0;
         this.useSkill = true;
         this.moveFic = 0.05f * info.getMass();
         this.strikeFic = 3;
         this.wallFic = 2;
         this.isDie = false;
-        this.currentSkill = null;
         if (info.getState() == 1) {
             this.species = SPECIES[2];
         } else {
@@ -68,7 +71,7 @@ public class Marble extends Ball {
         if (isBound()) {
             this.goVec.setValue(this.goVec.getValue() - this.wallFic);
         }
-
+        this.skills[this.skillIdx].update();
     }
 
     @Override
@@ -92,12 +95,6 @@ public class Marble extends Ball {
 
     public MarbleRenderer getRenderer() {
         return this.renderer;
-    }
-
-    public void updateSkill() {
-        if (this.getCurrentSkill() != null) {
-            this.getCurrentSkill().update();
-        }
     }
 
     public void updateShine() {
@@ -154,6 +151,10 @@ public class Marble extends Ball {
         return this.info;
     }
 
+    public Skills getSkills() {
+        return this.skills[this.skillIdx];
+    }
+
     public boolean getUseSkill() {
         return this.useSkill;
     }
@@ -162,14 +163,13 @@ public class Marble extends Ball {
         this.useSkill = useSkill;
     }
 
-    public Skills getCurrentSkill() {
-        return this.currentSkill;
+    public int useSkill(int skillIdx, ArrayList<Marble> target, int targetIdx) {
+        this.skillIdx = skillIdx;
+        return this.skills[skillIdx].useSkill(this, target, targetIdx);
     }
 
     public void paintSkill(Graphics g) {
-        if (this.currentSkill != null) {
-            this.currentSkill.paintSkill(g);
-        }
+        this.skills[this.skillIdx].paintSkill(g);
     }
 
     public void paintAll(Graphics g) {
@@ -189,41 +189,5 @@ public class Marble extends Ball {
                     (int) (this.getCenterY() - this.getR()),
                     (int) (2 * this.getR()), (int) (2 * this.getR()));
         }
-    }
-
-    private void setSkills() {
-        Skills skills[] = {
-            new NormalAttack(this.info.getAttribute()),
-            new CriticalAttack(this.info.getAttribute()),
-            new DecreaseHalfAttack(this.info.getAttribute()),
-            new Heal(),
-            new Anger(this.info.getAttribute())
-        };
-
-        for (int i = 0; i < skills.length; i++) {
-            this.skills[i] = skills[i];
-        }
-    }
-
-    public void genSkill(int r, Marble target) {
-        this.skills[r].genSkill(this, target);
-        this.currentSkill = this.skills[r];
-    }
-
-    public void genSkill(int r, ArrayList<Marble> target) {
-        this.skills[r].genSkill(this, target);
-        this.currentSkill = this.skills[r];
-    }
-
-    public void genSkill(int r, MarbleArray target) {
-        this.skills[r].genSkill(this, target);
-        this.currentSkill = this.skills[r];
-    }
-
-    public ArrayList<SkillComponent> getSkillComponent() {
-        if (this.currentSkill != null) {
-            return this.currentSkill.getSkillComponent();
-        }
-        return null;
     }
 }

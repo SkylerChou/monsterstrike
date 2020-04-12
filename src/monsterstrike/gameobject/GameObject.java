@@ -19,7 +19,7 @@ public abstract class GameObject {
         this.rect = Rect.genWithCenter(x, y, width, height);
         this.collider = new Circle(x, y, r);
     }
-    
+
     public float getCenterX() {
         return this.collider.centerX();
     }
@@ -79,6 +79,14 @@ public abstract class GameObject {
             g.drawOval((int) this.collider.getX(), (int) this.collider.getY(), (int) (2 * this.collider.getR()), (int) (2 * this.collider.getR()));
             g.setColor(Color.BLACK);
         }
+    }
+
+    public boolean isOutOfBound() {
+        if (this.getX() + this.getWidth() <= 0 || this.getY() + this.getHeight() <= 0
+                || this.getX() >= Global.SCREEN_X || this.getY() >= Global.SCREEN_Y - Global.INFO_H) {
+            return true;
+        }
+        return false;
     }
 
     public abstract void paintComponent(Graphics g);

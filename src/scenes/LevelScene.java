@@ -8,7 +8,6 @@ package scenes;
 import monsterstrike.graph.Vector;
 import controllers.SceneController;
 import interfaceskills.SkillComponent;
-import interfaceskills.SkillImg;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -37,10 +36,11 @@ public class LevelScene extends Scene {
     private int hitCount;
     private int round;
     private int enemyRound;
-    private int myHp;
-    private int currentHp;
-    private int ratio;
-
+    private float myHp;
+    private float currentHp;
+    private float ratio;
+    private int tmpCount;
+    private int tmpCount2;
     private Delay delay;
 
     public LevelScene(SceneController sceneController, int backIdx,
@@ -66,9 +66,11 @@ public class LevelScene extends Scene {
         }
         this.currentHp = this.myHp;
         this.enemies = new MarbleArray(enemies);
-        this.delay = new Delay(5);
+        this.delay = new Delay(20); //敵人依序攻擊delay
         this.delay.start();
-        this.ratio = this.currentHp/this.myHp;
+        this.ratio = this.currentHp / this.myHp;
+        this.tmpCount = 1;
+        this.tmpCount2 = 0;
     }
 
     @Override
@@ -101,19 +103,18 @@ public class LevelScene extends Scene {
                 if (this.battleEnemies.get(i).getIsCollide()) {
                     this.battleEnemies.get(i).update(); //敵人被撞到反應更新
                 }
-                this.battleEnemies.get(i).updateSkill(); //敵人技能更新
+//                this.battleEnemies.get(i).updateSkill(); //敵人技能更新
                 this.battleEnemies.get(i).update();
             }
 
             //我方怪物動畫更新
             for (int i = 0; i < this.marbles.size(); i++) {
                 this.marbles.get(i).updateShine(); //光圈更新
-                this.marbles.get(i).update();      //怪物更新
-                this.marbles.get(i).updateSkill(); //技能更新
+                this.marbles.get(i).update();      //怪物、技能更新
             }
 
-            normalAttack();
-            criticalAttack();
+            strikeEnemies();
+            teamHelp();
 
             for (int i = 0; i < this.battleEnemies.size(); i++) { //判斷敵人是否死亡
                 if (this.battleEnemies.get(i).getInfo().getHp() <= 0) {
@@ -132,12 +133,17 @@ public class LevelScene extends Scene {
                     this.marbles.get(currentIdx).setShine(false);
                     this.currentIdx = this.count % 3;
                     this.hitCount = 0;
+                    this.tmpCount = 0;
                     this.marbles.get(currentIdx).setShine(true);
                 }
                 if (this.enemyRound != 0) {
                     if (enemyRound % 3 == 0) {
                         enemyAttack();
+                        calculateHP();
+                        this.hitCount = 0;
+                        tmpCount = 0;
                     } else {
+                        setCollide();
                         for (int i = 0; i < this.battleEnemies.size(); i++) {
                             this.battleEnemies.get(i).setUseSkill(true);
                         }
@@ -176,6 +182,15 @@ public class LevelScene extends Scene {
         return marbles;
     }
 
+    private void calculateHP() {
+        int tmp = 0;
+        for (int i = 0; i < this.marbles.size(); i++) {
+            tmp += this.marbles.get(i).getInfo().getHp();
+        }
+        this.currentHp = tmp;
+        this.ratio = this.currentHp / this.myHp;
+    }
+
     private boolean allSkillStop(ArrayList<Marble> marbles) {
         for (int i = 0; i < marbles.size(); i++) {
             if (!skillStop(marbles.get(i))) {
@@ -186,129 +201,63 @@ public class LevelScene extends Scene {
     }
 
     private boolean skillStop(Marble marble) {
-        if (marble.getSkillComponent() != null) {
-            ArrayList<SkillComponent> skills = marble.getSkillComponent();
-            for (int j = 0; j < skills.size(); j++) {
-                if (!skills.get(j).getStop()) {
-                    return false; //技能尚未釋放完畢
-                }
+        SkillComponent[] skills = marble.getSkills().getSkillComponent();
+        for (int j = 0; j < skills.length; j++) {
+            if (skills[j] != null && !skills[j].getIsStop()) {
+                return false; //技能尚未釋放完畢
             }
         }
         return true; //技能釋放完畢
     }
+    
+    private void setCollide(){
+        for(int i=0; i<this.marbles.size(); i++){
+            this.marbles.get(i).setIsCollide(false);
+        }
+    }
 
-    private void criticalAttack() {
+    private void teamHelp() {
         for (int j = 0; j < this.marbles.size(); j++) {
             if (j == currentIdx) {
                 continue;
             }
             for (int i = 0; i < this.marbles.size(); i++) {
                 if (i != j && this.marbles.get(i).isCollision(this.marbles.get(j))) {
-                    this.marbles.set(j, (Marble) this.marbles.get(i).strike(this.marbles.get(j)));
+                    this.marbles.set(j, this.marbles.get(i).strike(this.marbles.get(j)));
                     if (i == currentIdx) {
-                        this.marbles.get(j).getGoVec().setValue(this.marbles.get(j).getGoVec().getValue() * 0.5f);
+                        this.marbles.get(j).getGoVec().setValue(this.marbles.get(j).getGoVec().getValue()*0.5f);
                         if (this.marbles.get(j).getUseSkill()) {
-                            this.marbles.get(j).genSkill(1, this.battleEnemies);
-                            checkStrike(j, this.marbles.get(j).getSkillComponent());
+                            int r = Global.random(1, 3);
+                            this.hitCount += this.marbles.get(j).useSkill(r, this.battleEnemies, 0);
+                            this.marbles.get(j).setUseSkill(false);
                         }
-                        this.marbles.get(j).setUseSkill(false);
+                        
                     }
                 }
             }
         }
     }
 
-    private void normalAttack() {
+    private void strikeEnemies() {
         for (int i = 0; i < this.marbles.size(); i++) {
             for (int j = 0; j < this.battleEnemies.size(); j++) {
                 if (this.marbles.get(i).isCollision(this.battleEnemies.get(j)) && this.marbles.get(i).getGoVec().getValue() > 0) {
-                    Marble tmp = (Marble) this.marbles.get(i).strike(this.battleEnemies.get(j));
+                    Marble tmp = this.marbles.get(i).strike(this.battleEnemies.get(j));
                     this.battleEnemies.get(j).setGo(tmp.getGoVec());
-                    this.battleEnemies.get(j).setIsCollide(true);
-                    this.marbles.get(i).genSkill(0, this.battleEnemies.get(j));
-                    if (checkStrike(i, j, this.marbles.get(i).getSkillComponent())) {
-                        this.battleEnemies.get(j).getInfo().setHp(this.battleEnemies.get(j).getInfo().getHp() - this.marbles.get(i).getInfo().getAtk());
-                        this.hitCount++;
-//                        System.out.println(this.battleEnemies.get(j).getInfo().getName() + "血量:" + this.battleEnemies.get(j).getInfo().getHp());
-                    }
+                    this.battleEnemies.get(j).setIsCollide(true);                   
+                    this.hitCount += this.marbles.get(i).useSkill(0, this.battleEnemies, j);
                 }
             }
         }
-    }
-
-    private void checkStrike(int idx, ArrayList<SkillComponent> skills) {
-        for (int l = 0; l < skills.size(); l++) {
-            for (int k = 0; k < this.battleEnemies.size(); k++) {
-                if ((skills.size() == 4 && inSkillRange(idx)) || skills.get(l).isCollision(this.battleEnemies.get(k))) {
-                    this.battleEnemies.get(k).setIsCollide(true);
-                    int atk = (int) (this.marbles.get(idx).getInfo().getAtk() * Math.random() * 2 + 1);
-                    this.battleEnemies.get(k).getInfo().setHp(this.battleEnemies.get(k).getInfo().getHp() - atk);
-                    this.hitCount++;
-//                    System.out.println(this.battleEnemies.get(k).getInfo().getName() + "血量:" + this.battleEnemies.get(k).getInfo().getHp());
-                }
-            }
-        }
-    }
-
-    private boolean checkStrike(int i, int j, ArrayList<SkillComponent> skills) {
-        for (int l = 0; l < skills.size(); l++) {
-            if (skills.get(l).isCollision(this.battleEnemies.get(j))) {
-                return true;
-            }
-        }
-        return false;
     }
 
     private void enemyAttack() {
         for (int i = 0; i < this.battleEnemies.size(); i++) {
-            if (this.battleEnemies.get(i).getUseSkill()) {
-                if (i == 0) {
-                    this.battleEnemies.get(i).genSkill(1, this.marbles);
-                    this.battleEnemies.get(i).setUseSkill(false);
-                } else if (checkSkillStop(this.battleEnemies.get(i - 1))) {
-                    this.battleEnemies.get(i).genSkill(1, this.marbles);
-                    this.battleEnemies.get(i).setUseSkill(false);
-                }
+            if (this.battleEnemies.get(i).getUseSkill() && this.delay.isTrig()) {
+                this.battleEnemies.get(i).useSkill(4, this.marbles, 0);
+                this.battleEnemies.get(i).setUseSkill(false);
             }
         }
-    }
-
-    private boolean checkSkillStop(Marble marble) {
-        ArrayList<SkillComponent> skills = marble.getSkillComponent();
-        if (skills != null) {
-            for (int j = 0; j < skills.size(); j++) {
-                if (!skills.get(j).getStop()) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
-    private boolean inSkillRange(int idx) {
-        int left = (int) (this.marbles.get(idx).getCenterX() - SkillImg.SKILL_UNIT_X[2][0] / 2);
-        int right = (int) (this.marbles.get(idx).getCenterX() + SkillImg.SKILL_UNIT_X[2][0] / 2);
-        int top = (int) (this.marbles.get(idx).getCenterY() - SkillImg.SKILL_UNIT_X[2][0] / 2);
-        int bottom = (int) (this.marbles.get(idx).getCenterY() + SkillImg.SKILL_UNIT_X[2][0] / 2);
-        for (int i = 0; i < this.battleEnemies.size(); i++) {
-            if (this.battleEnemies.get(i).getCenterX() + this.battleEnemies.get(i).getR() < left
-                    && this.battleEnemies.get(i).getCenterY() + this.battleEnemies.get(i).getR() < top) {
-                return false;
-            }
-            if (this.battleEnemies.get(i).getCenterX() - this.battleEnemies.get(i).getR() > right
-                    && this.battleEnemies.get(i).getCenterY() + this.battleEnemies.get(i).getR() < top) {
-                return false;
-            }
-            if (this.battleEnemies.get(i).getCenterX() + this.battleEnemies.get(i).getR() < left
-                    && this.battleEnemies.get(i).getCenterY() - this.battleEnemies.get(i).getR() > bottom) {
-                return false;
-            }
-            if (this.battleEnemies.get(i).getCenterX() - this.battleEnemies.get(i).getR() > right
-                    && this.battleEnemies.get(i).getCenterY() - this.battleEnemies.get(i).getR() > bottom) {
-                return false;
-            }
-        }
-        return true;
     }
 
     private void scrollScene() {
@@ -330,15 +279,18 @@ public class LevelScene extends Scene {
         if (this.sceneCount == 0) {
             for (int i = 0; i < 4; i++) {
                 battleEnemies.add(m.get(0).duplicate(Global.ENEMYPOS_X[i], -100, 120, 120));
+                battleEnemies.get(i).getInfo().setName(battleEnemies.get(i).getInfo().getName() + (i + 1));
             }
         } else if (this.sceneCount == 1) {
             for (int i = 0; i < 4; i++) {
                 battleEnemies.add(m.get(1).duplicate(Global.random(100, Global.SCREEN_X - 100), -100, 120, 120));
+                battleEnemies.get(i).getInfo().setName(battleEnemies.get(i).getInfo().getName() + (i + 1));
             }
             battleEnemies.add(m.get(2).duplicate(Global.random(100, Global.SCREEN_X - 100), -100, 120, 120));
         } else {
             for (int i = 0; i < 4; i++) {
                 battleEnemies.add(m.get(2).duplicate(Global.random(100, Global.SCREEN_X - 100), -100, 120, 120));
+                battleEnemies.get(i).getInfo().setName(battleEnemies.get(i).getInfo().getName() + (i + 1));
             }
             battleEnemies.add(m.get(3).duplicate(Global.random(100, Global.SCREEN_X - 100), -100, 120, 120));
         }
@@ -377,9 +329,7 @@ public class LevelScene extends Scene {
         }
         for (int i = 0; i < this.battleEnemies.size(); i++) {
             this.battleEnemies.get(i).paint(g);
-            if (this.battleEnemies.get(i).getCurrentSkill() != null) {
-                this.battleEnemies.get(i).paintSkill(g);
-            }
+            this.battleEnemies.get(i).paintSkill(g);
         }
         for (int i = 0; i < this.marbles.size(); i++) {
             this.marbles.get(i).paintAll(g);
@@ -390,11 +340,15 @@ public class LevelScene extends Scene {
     private void paintText(Graphics g) {
 
         if (hitCount > 0) {
+            if (tmpCount2 >= hitCount) {
+                tmpCount2 = hitCount;
+            }
             g.setColor(Color.BLACK);
             g.setFont(new Font("VinerHandITC", Font.ITALIC, 44));
-            g.drawString("Hits " + hitCount, Global.SCREEN_X - 200, 100);
+            g.drawString("Hits " + tmpCount2, Global.SCREEN_X - 200, 100);
             g.setColor(new Color(255, 153, 0));
-            g.drawString("Hits " + hitCount, Global.SCREEN_X - 200 - 3, 100 - 3);
+            g.drawString("Hits " + tmpCount2, Global.SCREEN_X - 200 - 3, 100 - 3);
+            tmpCount2 = tmpCount++ / 10 + 1;
         }
         if (round > 0) {
             g.setColor(Color.BLACK);
@@ -403,15 +357,14 @@ public class LevelScene extends Scene {
             g.setColor(new Color(255, 153, 0));
             g.drawString("Round " + round, 30 - 3, 495 - 3);
         }
-        g.setFont(new Font("VinerHandITC", Font.ITALIC, 36));
-        g.setColor(Color.BLACK);
+
         this.item.paint(g);
         this.blood.paintResize(g, this.ratio);
         g.setFont(new Font("VinerHandITC", Font.ITALIC, 20));
         g.setColor(Color.BLACK);
         g.drawString(this.currentHp + " / " + this.myHp, 1100, Global.SCREEN_Y - 100);
         g.setColor(Color.YELLOW);
-        g.drawString(this.currentHp + " / " + this.myHp, 1100-2, Global.SCREEN_Y - 100-2);      
+        g.drawString(this.currentHp + " / " + this.myHp, 1100 - 2, Global.SCREEN_Y - 100 - 2);
         g.setFont(new Font("VinerHandITC", Font.ITALIC, 36));
         g.setColor(Color.GRAY);
         g.drawString("Battle " + (sceneCount + 1), 800, Global.SCREEN_Y - 40);

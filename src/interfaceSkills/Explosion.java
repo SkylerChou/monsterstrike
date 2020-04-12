@@ -5,42 +5,48 @@
  */
 package interfaceskills;
 
-import java.awt.Graphics;
 import java.util.ArrayList;
 import monsterstrike.gameobject.marble.Marble;
+import monsterstrike.graph.Vector;
 
-public class Anger extends Skills {
-    private static final int SKILL_IDX = 4; //技能編號
-    private static final int DELAY = 3; //技能變化動畫
-    private static final int NUM = 8; //釋放一次技能數量
+public class Explosion extends Skills{
+    private static final int SKILL_IDX = 0;
+    private static final int DELAY = 5; //技能變化動畫
+    private static final int NUM = 8;
     private static final int WIDTH = 60;
     private static final int HEIGHT = 60;
-    
     private int hitCount;
 
-    public Anger() {
+    public Explosion() {
         super(NUM);
-        this.hitCount = 0;
     }
-
-//    @Override
-//    public void genSkill(Marble self, Marble target) {
-//        int atk = (int) (self.getInfo().getAtk() * 1.5f);
-//        System.out.print(self.getInfo().getName() + "處於憤怒狀態 ! 攻擊力提升1.5倍");
-//        target.getInfo().setHp(target.getInfo().getHp() - atk);
-//        System.out.println(target.getInfo().getName() + " 剩下血量 :" + target.getInfo().getHp() + "點");
-//    }
+    
+    @Override
+    public void update() {
+        for (int j = 0; j < this.skill.length; j++) {
+            if (this.skill[j] != null && !this.skill[j].getIsStop()) {
+                this.skill[j].update();
+            } else {
+                this.skill[j] = null;
+            }
+        }
+    }
 
     @Override
     public int useSkill(Marble self, ArrayList<Marble> target, int idx) {
-        System.out.println(self.getInfo().getName() + " 發動普通攻擊 !");
+        this.hitCount = 0;
+        System.out.println(self.getInfo().getName() + "普通攻擊!");
         int attr = self.getInfo().getAttribute();
         for (int i = 0; i < this.skill.length; i++) {
             float rad = (float) (Math.toRadians(360 / NUM) * i);
-            float dx = (float) (2 * (self.getR() + target.get(idx).getR()) * Math.cos((Math.PI - rad) / 2) * Math.cos(rad / 2));
-            float dy = (float) (2 * (self.getR() + target.get(idx).getR()) * Math.cos((Math.PI - rad) / 2) * Math.sin(rad / 2));
+            float r2 = self.getR() + target.get(idx).getR();
+            float dx = (float) (2*r2 * Math.cos((Math.PI - rad) / 2) * Math.cos(rad / 2));
+            float dy = (float) (2*r2 * Math.cos((Math.PI - rad) / 2) * Math.sin(rad / 2));
             this.skill[i] = new SkillComponent(SKILL_IDX, attr, SkillImg.SKILL_NUM[0][attr],
-                    (int) (target.get(idx).getCenterX() + dx), (int) (target.get(idx).getCenterY() + dy), WIDTH, HEIGHT,DELAY);
+                    (int) (self.getCenterX() + dx), (int) (self.getCenterY()-r2 + dy), WIDTH, HEIGHT, DELAY);
+            Vector vec = new Vector(this.skill[i].getCenterX()-self.getCenterX(), this.skill[i].getCenterY()-self.getCenterY());
+            this.skill[i].setDx(vec.getUnitX());
+            this.skill[i].setDy(vec.getUnitY());
         }
         for (int i = 0; i < target.size(); i++) {
             if (checkStrike(target.get(i))) {
@@ -59,5 +65,5 @@ public class Anger extends Skills {
             }
         }
         return false;
-    }    
+    }
 }

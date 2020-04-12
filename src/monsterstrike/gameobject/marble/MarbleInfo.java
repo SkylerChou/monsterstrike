@@ -120,6 +120,10 @@ public class MarbleInfo {
     public void setAtk(int atk) {
         this.atk = atk;
     }
+    
+    public void setName(String name){
+        this.name = name;
+    }
 
     @Override
     public String toString() {
