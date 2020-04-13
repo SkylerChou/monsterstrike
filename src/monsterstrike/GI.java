@@ -23,6 +23,7 @@ public class GI implements KeyListener, MouseCommandListener, GameInterface{
         sceneController.changeScene(new Menu(sceneController));
     }
 
+    @Override
     public void update() {
         sceneController.sceneUpdate();
     }

@@ -5,6 +5,9 @@
  */
 package scenes;
 
+import Props.Booster;
+import Props.Heart;
+import Props.Prop;
 import monsterstrike.gameobject.marble.*;
 import monsterstrike.graph.Vector;
 import monsterstrike.gameobject.*;
@@ -29,7 +32,9 @@ public class Mutiplayer extends Scene {
     private int count;
     private int idx; //背景idx
     private Button setting;
-    private ArrayList<SpecialEffect> b;
+    private ArrayList<SpecialEffect> b;//黑洞
+
+    private ArrayList<Prop> props;
 
     public Mutiplayer(SceneController sceneController) {
         super(sceneController);
@@ -41,12 +46,18 @@ public class Mutiplayer extends Scene {
         this.background = new Background(ImgInfo.BACKGROUND_PATH[idx], 2 * ImgInfo.BACKGROUND_SIZE[idx][0], ImgInfo.BACKGROUND_SIZE[idx][1], idx);
         this.marbles = new ArrayList<>();
         this.b = new ArrayList<>();
+        this.props = new ArrayList<>();
         this.allMarbleInfo = FileIO.read("marbleInfo.csv");
         for (int i = 0; i < 3; i++) {
             this.marbles.add(new Marble(POS_X[i], POS_Y[i], 120, 120, this.allMarbleInfo.get(i)));
-            this.b.add(new SpecialEffect(ImgInfo.BALCKHOLE, 250 * (i + 1), 250, 
-                    ImgInfo.BLACKHOLE_INFO[0], ImgInfo.BLACKHOLE_INFO[1],ImgInfo.BLACKHOLE_INFO[0]/2 ));
-            this.b.get(i).setShine(true);
+
+            this.props.add(new Heart(ImgInfo.HEART, 100, 100, ImgInfo.PROPS_INFO[0], ImgInfo.PROPS_INFO[1], ImgInfo.PROPS_INFO[2],"愛心"));
+            this.props.add(new Booster(ImgInfo.SHOE, 300, 100, ImgInfo.PROPS_INFO[0], ImgInfo.PROPS_INFO[1], ImgInfo.PROPS_INFO[2],"加速"));
+            this.props.add(new Booster(ImgInfo.BOOSTER, 500, 100, ImgInfo.PROPS_INFO[0], ImgInfo.PROPS_INFO[1], ImgInfo.PROPS_INFO[2],"加速"));
+
+//            this.b.add(new SpecialEffect(ImgInfo.BALCKHOLE, 250 * (i + 1), 250, 
+//                    ImgInfo.BLACKHOLE_INFO[0], ImgInfo.BLACKHOLE_INFO[1],ImgInfo.BLACKHOLE_INFO[0]/2 ));
+//            this.b.get(i).setShine(true);
         }
 
         this.arrow = new Arrow(ImgInfo.ARROW, 0, 0, ImgInfo.ARROW_INFO);
@@ -69,35 +80,49 @@ public class Mutiplayer extends Scene {
         for (int i = 0; i < this.marbles.size(); i++) {
             this.marbles.get(i).update();
         }
-
-        for (int i = 0; i < this.marbles.size(); i++) {//黑洞移動
-            for (int j = 0; j < this.b.size(); j++) {
-                if (this.marbles.get(i).isCollision(this.b.get(j))) {
+        for (int i = 0; i < this.marbles.size(); i++) {
+            for (int j = 0; j < this.props.size(); j++) {
+                if (this.marbles.get(i).isCollision(this.props.get(j))) {
+                    this.props.get(j).update();
+                    if(this.props.get(j).getName().equals("愛心")){
+                        for (int k= 0; k < this.marbles.size(); k++) {
+                            this.marbles.get(i).getInfo().setHp(this.allMarbleInfo.get(k).getHp()+100);
+                        }
+                    }else if(this.props.get(j).getName().equals("加速")){
+                        this.marbles.get(i).setMoveFic();//這個好像設錯了，會直接不動
+                    }
+                }
+            }
+        }
+        
+//        for (int i = 0; i < this.marbles.size(); i++) {//黑洞移動
+//            for (int j = 0; j < this.b.size(); j++) {
+//                if (this.marbles.get(i).isCollision(this.b.get(j))) {
 //                    for (int k = 0; k < 2; k++) {
 //                        this.marbles.get(i).offset(20, 20);
 //                        this.marbles.get(i).offset(-20, 20);
 //                        this.marbles.get(i).offset(-20, -20);
 //                        this.marbles.get(i).offset(20, -20);
 //                    }
-                    int r;
-                    do {
-                        r = Global.random(0, 2);
-                        if (r != j) {
-                            break;
-                        }
-                    } while (true);
-                    this.marbles.get(i).setCenterX(this.b.get(r).getCenterX());
-                    if (this.marbles.get(i).getGoVec().getY() > 0) {
-                        this.marbles.get(i).setCenterY(this.b.get(r).getCenterY());
-                    } else {
-                        this.marbles.get(i).setCenterY(this.b.get(r).getCenterY()+100);
-                    }
-                    this.marbles.get(i).offset(this.marbles.get(i).getGoVec().getX(), this.marbles.get(i).getGoVec().getY());
+//                    int r;
+//                    do {
+//                        r = Global.random(0, 2);
+//                        if (r != j) {
+//                            break;
+//                        }
+//                    } while (true);
+//                    this.marbles.get(i).setCenterX(this.b.get(r).getCenterX());
+//                    if (this.marbles.get(i).getGoVec().getY() > 0) {
+//                        this.marbles.get(i).setCenterY(this.b.get(r).getCenterY());
+//                    } else {
+//                        this.marbles.get(i).setCenterY(this.b.get(r).getCenterY()+100);
+//                    }
+//                    this.marbles.get(i).offset(this.marbles.get(i).getGoVec().getX(), this.marbles.get(i).getGoVec().getY());
 //                    this.marbles.get(i).move();
-                }
-            }
-        }
-
+//                }
+//            }
+//        }
+        
         for (int i = 0; i < this.marbles.size(); i++) {
             for (int j = i + 1; j < this.marbles.size(); j++) {
                 if (this.marbles.get(i).isCollision(this.marbles.get(j))) {
@@ -131,10 +156,14 @@ public class Mutiplayer extends Scene {
     @Override
     public void paint(Graphics g) {
         this.background.paint(g);
-//        this.setting.paintOther(g, ImgInfo.SETTING_INFO);
-        for (int i = 0; i < this.b.size(); i++) {
-            this.b.get(i).paint(g);
+        for (int i = 0; i < this.props.size(); i++) {
+           this.props.get(i).paint(g); 
         }
+        
+//        this.setting.paintOther(g, ImgInfo.SETTING_INFO);
+//        for (int i = 0; i < this.b.size(); i++) {
+//            this.b.get(i).paint(g);
+//        }
         if (this.arrow.getShow()) {
             this.arrow.paint(g);
         }

@@ -88,7 +88,7 @@ public class ImgInfo {
 
     //PingPong用
     private static final String[] FIREBALL = {MARBLE_ROOT + "fireBall1.png", MARBLE_ROOT + "fireBall2.png"};
-    private static final int[] FIREBALL_INFO = {120, 120, 40, 1, 30, 1};
+    private static final int[] FIREBALL_INFO = {90, 90, 40, 1, 30, 1};
     public static final String[][] MYMARBLE_PATH = {FIREBALL};
     public static final String[] MYMARBLE_NAME = {"火球"};
     public static final int[][] MYMARBLE_INFO = {FIREBALL_INFO};
@@ -97,5 +97,12 @@ public class ImgInfo {
     public static final int[] POST_INFO = {95, 95, 40, 2};
 
     public static final String PINGPONG = BACKGROUND_ROOT + "battleback6.png";
+    
+    //Props 
+    public static final String PROPS_ROOT = "/resources/props/";
+    public static final String[] HEART = {PROPS_ROOT + "heart1.png", PROPS_ROOT + "heart2.png"};
+    public static final String[] SHOE = {PROPS_ROOT + "shoe1.png", PROPS_ROOT + "shoe2.png"};
+    public static final String[] BOOSTER = {PROPS_ROOT + "Booster1.png", PROPS_ROOT + "Booster2.png"};
+    public static final int[] PROPS_INFO = {50, 50, 25};
 
 }

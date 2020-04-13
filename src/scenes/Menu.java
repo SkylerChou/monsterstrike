@@ -21,6 +21,7 @@ public class Menu extends Scene {
     private Dino dino;
     private ArrayList<Button> buttons;
     private Delay delay;
+    private Delay delay2;
     private int h;
 
     private boolean isEnter;
@@ -36,11 +37,6 @@ public class Menu extends Scene {
         this.buttons = new ArrayList<>();
         this.h = 50;
         this.dino = new Dino(ImgInfo.DINO, Global.SCREEN_X / 2 - 120, Global.SCREEN_Y / 2, Dino.STEPS_WALK);
-//        this.buttons.add(new Button(ImgInfo.SINGLE, Global.SCREEN_X / 2 - 90, Global.SCREEN_Y / 2 - 35, ImgInfo.MAINBUTTON_INFO[0], ImgInfo.MAINBUTTON_INFO[1]));
-//        this.buttons.add(new Button(ImgInfo.MULTIPLAYER, Global.SCREEN_X / 2 - 90, Global.SCREEN_Y / 2 + 15, ImgInfo.MAINBUTTON_INFO[0], ImgInfo.MAINBUTTON_INFO[1]));
-//        this.buttons.add(new Button(ImgInfo.RANK, Global.SCREEN_X / 2 - 90, Global.SCREEN_Y / 2 + 65, ImgInfo.MAINBUTTON_INFO[0], ImgInfo.MAINBUTTON_INFO[1]));
-//        this.buttons.add(new Button(ImgInfo.HOWTOPLAY, Global.SCREEN_X / 2 - 90, Global.SCREEN_Y / 2 + 115, ImgInfo.MAINBUTTON_INFO[0], ImgInfo.MAINBUTTON_INFO[1]));
-//        this.buttons.add(new Button(ImgInfo.EXIT, Global.SCREEN_X / 2 - 90, Global.SCREEN_Y / 2 + 165, ImgInfo.MAINBUTTON_INFO[0], ImgInfo.MAINBUTTON_INFO[1]));
         this.buttons.add(new Button(ImgInfo.SINGLE, Global.SCREEN_X / 2, Global.SCREEN_Y / 2, ImgInfo.MAINBUTTON_INFO[0], ImgInfo.MAINBUTTON_INFO[1]));
         this.buttons.add(new Button(ImgInfo.MULTIPLAYER, Global.SCREEN_X / 2, Global.SCREEN_Y / 2 + h, ImgInfo.MAINBUTTON_INFO[0], ImgInfo.MAINBUTTON_INFO[1]));
         this.buttons.add(new Button(ImgInfo.RANK, Global.SCREEN_X / 2, Global.SCREEN_Y / 2 + 2 * h, ImgInfo.MAINBUTTON_INFO[0], ImgInfo.MAINBUTTON_INFO[1]));
@@ -80,7 +76,7 @@ public class Menu extends Scene {
 
     @Override
     public void sceneEnd() {
-
+        
     }
 
     @Override
