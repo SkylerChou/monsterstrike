@@ -16,6 +16,16 @@ public class Delay {
         this.isPause = true;
     }
     
+    public Delay(int delayFrame, boolean isTrig){
+        if (isTrig) {
+            this.counter = delayFrame;
+        } else {
+            this.counter = 0;
+        }       
+        this.delayFrame = delayFrame;
+        this.isPause = true;
+    }
+    
     public void start(){
         this.isPause = false;
     }

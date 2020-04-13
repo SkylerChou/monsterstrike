@@ -59,13 +59,16 @@ public class Menu extends Scene {
         }
 
         if (this.isEnter && this.dino.getCenterY() == Global.SCREEN_Y / 2) {
-            sceneController.changeScene(new LevelMenu(sceneController));
+            
+            sceneController.changeScene(new Loading(sceneController));
+//            sceneController.changeScene(new LevelMenu(sceneController));
             this.isEnter = false;
         } else if (this.isEnter && this.dino.getCenterY() == Global.SCREEN_Y / 2 + h) {
             sceneController.changeScene(new PingPong(sceneController));
             this.isEnter = false;
         } else if (this.isEnter && this.dino.getCenterY() == Global.SCREEN_Y / 2 + 2 * h) {
-
+            sceneController.changeScene(new Mutiplayer(sceneController));
+            this.isEnter = false;
         } else if (this.isEnter && this.dino.getCenterY() == Global.SCREEN_Y / 2 + 3 * h) {
             this.isEnter = false;
         } else if (this.isEnter && this.dino.getCenterY() == Global.SCREEN_Y / 2 + 4 * h) {

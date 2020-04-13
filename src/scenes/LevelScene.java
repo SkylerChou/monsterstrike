@@ -160,7 +160,7 @@ public class LevelScene extends Scene {
 
         } else if (state == 2) { //若跑完3個小關回到選單，否則移動背景進入下一小關
             if (this.sceneCount == 2) {
-                sceneController.changeScene(new LevelMenu(sceneController));
+                sceneController.changeScene(new Loading(sceneController));
             }
             scrollScene();
         }

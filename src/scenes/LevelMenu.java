@@ -33,9 +33,10 @@ public class LevelMenu extends Scene {
     private int y;
     private Delay delay;
 
-    public LevelMenu(SceneController sceneController) {
+    public LevelMenu(SceneController sceneController ) {
         super(sceneController);
-        this.allMarbleInfo = FileIO.read("marbleInfo.csv");
+//        this.allMarbleInfo = FileIO.read("marbleInfo.csv");
+        this.allMarbleInfo = null;
         this.myMarbles = new ArrayList<>();
         this.enemies = new ArrayList<>();
         this.fightMarbles = new Marble[3];

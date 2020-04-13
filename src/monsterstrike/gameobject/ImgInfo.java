@@ -99,7 +99,7 @@ public class ImgInfo {
     public static final String PINGPONG = BACKGROUND_ROOT + "battleback6.png";
     
     //Props 
-    public static final String PROPS_ROOT = "/resources/props/";
+    private static final String PROPS_ROOT = "/resources/props/";
     public static final String[] HEART = {PROPS_ROOT + "heart1.png", PROPS_ROOT + "heart2.png"};
     public static final String[] SHOE = {PROPS_ROOT + "shoe1.png", PROPS_ROOT + "shoe2.png"};
     public static final String[] BOOSTER = {PROPS_ROOT + "Booster1.png", PROPS_ROOT + "Booster2.png"};

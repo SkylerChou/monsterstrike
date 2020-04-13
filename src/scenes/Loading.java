@@ -7,38 +7,50 @@ package scenes;
 
 import controllers.SceneController;
 import java.awt.Graphics;
+import java.util.ArrayList;
 import monsterstrike.gameobject.Background;
 import monsterstrike.gameobject.Dino;
 import monsterstrike.gameobject.ImgInfo;
+import monsterstrike.gameobject.marble.MarbleInfo;
 import monsterstrike.util.CommandSolver;
+import monsterstrike.util.Delay;
 import monsterstrike.util.Global;
 
 /**
  *
  * @author kim19
  */
-public class Loading extends Scene{
+public class Loading extends Scene {
+
     private Background loading;
     private Dino dino;
-    
+    private ArrayList<MarbleInfo> allMarbleInfo;
+    private Delay delay;
+
     public Loading(SceneController sceneController) {
         super(sceneController);
     }
 
     @Override
     public void sceneBegin() {
-         this.loading= new Background(ImgInfo.MENU, 0, 0, 1);
-         this.dino= new Dino(ImgInfo.DINO, Global.SCREEN_X / 2 , Global.SCREEN_Y / 2, Dino.STEPS_WALK);
+        this.loading = new Background(ImgInfo.MENU, 0, 0, 1);
+        this.dino = new Dino(ImgInfo.DINO, Global.SCREEN_X / 2, Global.SCREEN_Y / 2, Dino.STEPS_WALK);
+        this.allMarbleInfo = FileIO.read("marbleInfo.csv");
+        this.delay = new Delay(180, false);
+        this.delay.start();
     }
 
     @Override
     public void sceneUpdate() {
         this.dino.update();
+        if (this.delay.isTrig()) {
+            sceneController.changeScene(new LevelMenu(sceneController));
+        }
     }
 
     @Override
     public void sceneEnd() {
-        
+
     }
 
     @Override
@@ -56,5 +68,5 @@ public class Loading extends Scene{
     public CommandSolver.MouseCommandListener getMouseListener() {
         return null;
     }
-    
+
 }

@@ -59,10 +59,8 @@ public class Mutiplayer extends Scene {
 //                    ImgInfo.BLACKHOLE_INFO[0], ImgInfo.BLACKHOLE_INFO[1],ImgInfo.BLACKHOLE_INFO[0]/2 ));
 //            this.b.get(i).setShine(true);
 //            this.marbles.add(new ReboundMarble(ImgInfo.MYMARBLE_PATH[i], ImgInfo.MYMARBLE_NAME[i], POS_X[i], POS_Y[i], ImgInfo.MYMARBLE_INFO[i]));
-            this.shine.add(new SpecialEffect(ImgInfo.SHINE_PATH[ImgInfo.MYMARBLE_INFO[i][5]], (int) this.marbles.get(currentIdx).getCenterX(),
-                    (int) this.marbles.get(currentIdx).getCenterX(), ImgInfo.SHINE_INFO, 25));
-            this.b.add(new BlackHole(ImgInfo.BALCKHOLE, 250 * (i + 1), 250, ImgInfo.BLACKHOLE_INFO));
-            this.b.get(i).setShine(true);
+//            this.b.add(new SpecialEffect(ImgInfo.BALCKHOLE, 250 * (i + 1), 250, ImgInfo.BLACKHOLE_INFO));
+//            this.b.get(i).setShine(true);
         }
 
         this.arrow = new Arrow(ImgInfo.ARROW, 0, 0, ImgInfo.ARROW_INFO);
@@ -82,9 +80,11 @@ public class Mutiplayer extends Scene {
         for (int i = 0; i < this.b.size(); i++) {
             this.b.get(i).update();
         }
+        
         for (int i = 0; i < this.marbles.size(); i++) {
             this.marbles.get(i).update();
         }
+        
         for (int i = 0; i < this.marbles.size(); i++) {
             for (int j = 0; j < this.props.size(); j++) {
                 if (this.marbles.get(i).isCollision(this.props.get(j))) {
@@ -94,7 +94,7 @@ public class Mutiplayer extends Scene {
                             this.marbles.get(i).getInfo().setHp(this.allMarbleInfo.get(k).getHp()+100);
                         }
                     }else if(this.props.get(j).getName().equals("加速")){
-                        this.marbles.get(i).setMoveFic();//這個好像設錯了，會直接不動
+                        this.marbles.get(i).setVelocity(1.2f);//這個好像設錯了，會直接不動
                     }
                 }
             }
@@ -127,11 +127,12 @@ public class Mutiplayer extends Scene {
 //                }
 //            }
 //        }
-        
+       
         for (int i = 0; i < this.marbles.size(); i++) {
             for (int j = i + 1; j < this.marbles.size(); j++) {
                 if (this.marbles.get(i).isCollision(this.marbles.get(j))) {
-                    this.marbles.get(i).genSkill(0, this.marbles.get(j));
+                    
+//                    this.marbles.get(i).useSkill(0, this.marbles.get(j));
                     this.marbles.set(j, this.marbles.get(i).strike(this.marbles.get(j)));
                 }
             }
@@ -225,11 +226,10 @@ public class Mutiplayer extends Scene {
                 Vector vector = new Vector(this.startX - this.endX, this.startY - this.endY);
                 arrow.setDegree((float) Math.acos(vector.getX() / vector.getValue()));
                 arrow.setResizeMag(vector.getValue() / arrow.getWidth());
-<<<<<<< HEAD
                 marbles.get(currentIdx).setGo(vector.resizeVec(marbles.get(currentIdx).getInfo().getV()));
-=======
+
 //                marbles.get(currentIdx).setGo(vector.resizeVec(marbles.get(currentIdx).getVelocity()));
->>>>>>> Dino
+
                 count++;
                 arrow.setShow(false);
             }
