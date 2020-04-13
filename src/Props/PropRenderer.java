@@ -21,7 +21,7 @@ public class PropRenderer {
     private boolean isStop;
 
     public PropRenderer(int propIdx, int imgNum, int delay) {
-        this.img = IRC.getInstance().tryGetImage(ImgInfo.PROP_PATH[propIdx]);
+//        this.img = IRC.getInstance().tryGetImage(ImgInfo.PROP_PATH[propIdx]);
         this.propIdx = propIdx;
         this.imgIdx = 0;
         this.imgNum = imgNum;
@@ -61,9 +61,9 @@ public class PropRenderer {
     }
 
     public void paint(Graphics g, int x, int y, int w, int h) {
-        g.drawImage(img, x, y, x + w, y + h,
-                imgIdx * PROP_UNIT_X[propIdx], 0,
-                (imgIdx + 1) * PROP_UNIT_X[propIdx],
-                PROP_UNIT_Y[propIdx], null);
+//        g.drawImage(img, x, y, x + w, y + h,
+//                imgIdx * PROP_UNIT_X[propIdx], 0,
+//                (imgIdx + 1) * PROP_UNIT_X[propIdx],
+//                PROP_UNIT_Y[propIdx], null);
     }
 }

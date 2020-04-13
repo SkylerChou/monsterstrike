@@ -6,6 +6,8 @@
 package scenes;
 
 import controllers.SceneController;
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
@@ -26,6 +28,10 @@ public class PingPong extends Scene {
     private Rect racket;
     private Dino dino;
     private Arrow arrow;
+    private SpecialEffect home;
+
+    private int dinoGetNum;
+    private int Score;
 
     public PingPong(SceneController sceneController) {
         super(sceneController);
@@ -39,27 +45,39 @@ public class PingPong extends Scene {
             this.post.add(new Obstacle(ImgInfo.POSTS_PATH, 150 + i * 250, 150 + y,
                     ImgInfo.POST_INFO[0], ImgInfo.POST_INFO[1], ImgInfo.POST_INFO[2], ImgInfo.POST_INFO[3]));
         }
+        this.home = new SpecialEffect(ImgInfo.BALCKHOLE, 1000, 500,
+                ImgInfo.BLACKHOLE_INFO[0], ImgInfo.BLACKHOLE_INFO[1], 40);
+        this.home.setShine(true);
         this.background = new Background(ImgInfo.PINGPONG, 0, 0);
         this.dino = new Dino(ImgInfo.GREENDINO, 500, 500, Dino.STEPS_WALKRIGHT);
-        this.ball = new Ball(ImgInfo.MYMARBLE_PATH[0], POS_X, POS_Y, 120, 120, 40, 1);
+        this.ball = new Ball(ImgInfo.MYMARBLE_PATH[0], POS_X, POS_Y, 100, 100, 25, 1);
         this.racket = Rect.genWithCenter(50, 600, 120, 20);
         this.arrow = new Arrow(ImgInfo.ARROW, 0, 0, ImgInfo.ARROW_INFO);
         this.background.setX(2 * ImgInfo.BACKGROUND_SIZE[idx][0]);
+        this.dinoGetNum = 0;
     }
 
     @Override
     public void sceneUpdate() {
-        if (this.ball.getGoVec().getValue() == 0) {
+        this.home.update();
+        if (this.ball.getGoVec().getValue() == 0) {//dino一開始不能推香菇
             this.dino.update();
+            for (int i = 0; i < this.post.size(); i++) {//dino不會進到香菇裡面
+                if (this.dino.isCollision(this.post.get(i))) {
+                    Vector dinoVec = dinoDir();
+                    this.dino.offset(-dinoVec.getX(), -dinoVec.getY());
+                }
+            }
         } else {
             this.ball.update();
-            this.ball.isBound();
             this.dino.update();
+            this.ball.isBound();
             if ((racket.right() >= this.ball.getCenterX() - this.ball.getR()
                     && racket.left() <= this.ball.getCenterX() + this.ball.getR())
                     && (this.ball.getCenterY() + this.ball.getR() >= 590)) {
                 this.ball.setCenterY(580 - this.ball.getR());
                 this.ball.getGoVec().setY(-this.ball.getGoVec().getY());
+                this.Score+=10;  
             } else {
                 this.ball.move();
             }
@@ -81,18 +99,25 @@ public class PingPong extends Scene {
             }
             for (int i = 0; i < this.post.size(); i++) {
                 if (this.dino.isCollision(this.post.get(i))) {
-                    Vector vec = new Vector(this.post.get(i).getCenterX() - this.dino.getCenterX(),
-                            this.post.get(i).getCenterY() - this.dino.getCenterY());
+                    this.dinoGetNum++;
                     Vector dinoVec = dinoDir();
-//                float dx = dinoVec.getCosProjectionVec(vec).getX();
-//                float dy = dinoVec.getCosProjectionVec(vec).getY();
-                    if (!isBound(i)) {
+                    if (!isBound(i) && this.dinoGetNum == 1) {
                         this.post.get(i).offset(dinoVec.getX(), dinoVec.getY());
                     }
                 }
             }
+            for (int i = 0; i < this.post.size(); i++) {
+                if (!this.dino.isCollision(this.post.get(i))) {
+                    this.dinoGetNum = 0;
+                }
+            }
+            for (int i = 0; i < this.post.size(); i++) {
+                if (this.home.isCollision(this.post.get(i))) {
+                    this.Score+=5;
+                    this.post.remove(i);
+                }
+            }
         }
-
     }
 
     @Override
@@ -100,11 +125,57 @@ public class PingPong extends Scene {
 
     }
 
+    private boolean canMove(int idx) {
+        switch (this.dino.getDir()) {
+            case Global.LEFT2:
+                for (int i = 0; i < this.post.size(); i++) {
+                    if (idx == i) {
+                        continue;
+                    }
+                    if (this.post.get(idx).left() <= this.post.get(i).right()) {
+                        return false;
+                    }
+                }
+                break;
+            case Global.UP2:
+                for (int i = 0; i < this.post.size(); i++) {
+                    if (idx == i) {
+                        continue;
+                    }
+                    if (this.post.get(idx).top() <= this.post.get(i).bottom()) {
+                        return false;
+                    }
+                }
+                break;
+            case Global.RIGHT2:
+                for (int i = 0; i < this.post.size(); i++) {
+                    if (idx == i) {
+                        continue;
+                    }
+                    if (this.post.get(idx).right() <= this.post.get(i).left()) {
+                        return false;
+                    }
+                }
+                break;
+            case Global.DOWN2:
+                for (int i = 0; i < this.post.size(); i++) {
+                    if (idx == i) {
+                        continue;
+                    }
+                    if (this.post.get(idx).bottom() <= this.post.get(i).top()) {
+                        return false;
+                    }
+                }
+                break;
+        }
+        return true;
+    }
+
     public boolean isBound(int i) {
         if ((this.post.get(i).getCenterX() - this.post.get(i).getR() <= 0 && this.dino.getDir() == Global.LEFT2)
                 || (this.post.get(i).getCenterX() + this.post.get(i).getR() >= Global.SCREEN_X && this.dino.getDir() == Global.RIGHT2)
                 || (this.post.get(i).getCenterY() - this.post.get(i).getR() <= 0 && this.dino.getDir() == Global.UP2)
-                || (this.post.get(i).getCenterY() + this.post.get(i).getR() >= Global.SCREEN_Y && this.dino.getDir() == Global.DOWN2)) {
+                || (this.post.get(i).getCenterY() + this.post.get(i).getR() >= Global.SCREEN_Y - 100 && this.dino.getDir() == Global.DOWN2)) {
             if (this.post.get(i).getCenterX() - this.post.get(i).getR() <= 0) {
                 this.post.get(i).setCenterX(this.post.get(i).getR());
             }
@@ -114,8 +185,8 @@ public class PingPong extends Scene {
             if (this.post.get(i).getCenterY() - this.post.get(i).getR() <= 0) {
                 this.post.get(i).setCenterY(this.post.get(i).getR());
             }
-            if (this.post.get(i).getCenterY() + this.post.get(i).getR() >= Global.SCREEN_Y) {
-                this.post.get(i).setCenterY(Global.SCREEN_Y - this.post.get(i).getR());
+            if (this.post.get(i).getCenterY() + this.post.get(i).getR() >= Global.SCREEN_Y - 100) {
+                this.post.get(i).setCenterY(Global.SCREEN_Y - 100 - this.post.get(i).getR());
             }
             return true;
         }
@@ -147,16 +218,23 @@ public class PingPong extends Scene {
     public void paint(Graphics g) {
         this.background.paintMenu(g);
         this.arrow.paint(g);
+        this.home.paint(g);
         this.dino.paint(g);
         this.ball.paint(g);
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < this.post.size(); i++) {
             this.post.get(i).paint(g);
         }
-
         Graphics2D g2d = (Graphics2D) g;
         this.racket.paint(g2d);
+        this.paintText(g);
     }
 
+     private void paintText(Graphics g) {
+         g.setColor(Color.BLACK);
+            g.setFont(new Font("VinerHandITC", Font.ITALIC, 44));
+            g.drawString("Score " + Score, Global.SCREEN_X /2-50, 50);
+     }
+    
     @Override
     public CommandSolver.KeyListener getKeyListener() {
         return new MyKeyListener();
@@ -198,12 +276,12 @@ public class PingPong extends Scene {
                     break;
                 case Global.LEFT:
                     if (racket.left() > 0) {
-                        racket.offset(-10, 0);
+                        racket.offset(-12, 0);
                     }
                     break;
                 case Global.RIGHT:
                     if (racket.right() < Global.SCREEN_X) {
-                        racket.offset(10, 0);
+                        racket.offset(12, 0);
                     }
                     break;
             }
