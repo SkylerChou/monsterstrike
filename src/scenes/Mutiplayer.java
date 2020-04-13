@@ -58,6 +58,11 @@ public class Mutiplayer extends Scene {
 //            this.b.add(new SpecialEffect(ImgInfo.BALCKHOLE, 250 * (i + 1), 250, 
 //                    ImgInfo.BLACKHOLE_INFO[0], ImgInfo.BLACKHOLE_INFO[1],ImgInfo.BLACKHOLE_INFO[0]/2 ));
 //            this.b.get(i).setShine(true);
+//            this.marbles.add(new ReboundMarble(ImgInfo.MYMARBLE_PATH[i], ImgInfo.MYMARBLE_NAME[i], POS_X[i], POS_Y[i], ImgInfo.MYMARBLE_INFO[i]));
+            this.shine.add(new SpecialEffect(ImgInfo.SHINE_PATH[ImgInfo.MYMARBLE_INFO[i][5]], (int) this.marbles.get(currentIdx).getCenterX(),
+                    (int) this.marbles.get(currentIdx).getCenterX(), ImgInfo.SHINE_INFO, 25));
+            this.b.add(new BlackHole(ImgInfo.BALCKHOLE, 250 * (i + 1), 250, ImgInfo.BLACKHOLE_INFO));
+            this.b.get(i).setShine(true);
         }
 
         this.arrow = new Arrow(ImgInfo.ARROW, 0, 0, ImgInfo.ARROW_INFO);
@@ -220,7 +225,11 @@ public class Mutiplayer extends Scene {
                 Vector vector = new Vector(this.startX - this.endX, this.startY - this.endY);
                 arrow.setDegree((float) Math.acos(vector.getX() / vector.getValue()));
                 arrow.setResizeMag(vector.getValue() / arrow.getWidth());
+<<<<<<< HEAD
                 marbles.get(currentIdx).setGo(vector.resizeVec(marbles.get(currentIdx).getInfo().getV()));
+=======
+//                marbles.get(currentIdx).setGo(vector.resizeVec(marbles.get(currentIdx).getVelocity()));
+>>>>>>> Dino
                 count++;
                 arrow.setShow(false);
             }

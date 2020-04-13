@@ -106,6 +106,15 @@ public class Ball extends GameObject {
         return this.other;
     }
     
+    public void hit(GameObject gameObject) {
+        this.isCollide = true;
+        Vector vec = new Vector(gameObject.getCenterX()-this.getCenterX(), gameObject.getCenterY()-this.getCenterY());
+        this.norVec = this.goVec.getCosProjectionVec(vec).multiplyScalar(-1);
+        this.tanVec = this.goVec.getSinProjectionVec(vec);
+        this.goVec = this.norVec.plus(this.tanVec);
+        this.offset(this.goVec.getX(), this.goVec.getY());
+    }
+
     private void updateDir(Vector nor) {
         this.norVec = this.goVec.getCosProjectionVec(nor);
         this.tanVec = this.goVec.getSinProjectionVec(nor);
@@ -128,13 +137,7 @@ public class Ball extends GameObject {
         this.other.setGo(this.other.getNorVec().plus(this.other.getTanVec()));
     }
     
-    public void hit(GameObject obj) {
-        this.isCollide = true;
-        Vector vec = new Vector(obj.getCenterX()-this.getCenterX(), obj.getCenterY()-this.getCenterY());
-        this.norVec = this.goVec.getCosProjectionVec(vec).multiplyScalar(-1);
-        this.tanVec = this.goVec.getSinProjectionVec(vec);
-        this.goVec = this.norVec.plus(this.tanVec);
-    }
+    
 
     public float getMass() {
         return this.mass;

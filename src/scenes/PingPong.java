@@ -49,46 +49,50 @@ public class PingPong extends Scene {
 
     @Override
     public void sceneUpdate() {
-        this.ball.update();
-        this.ball.isBound();
-        this.dino.update();
-        if ((racket.right() >= this.ball.getCenterX() - this.ball.getR()
-                && racket.left() <= this.ball.getCenterX() + this.ball.getR())
-                && (this.ball.getCenterY() + this.ball.getR() >= 590)) {
-            this.ball.setCenterY(580 - this.ball.getR());
-            this.ball.getGoVec().setY(-this.ball.getGoVec().getY());
+        if (this.ball.getGoVec().getValue() == 0) {
+            this.dino.update();
         } else {
-            this.ball.move();
-        }
+            this.ball.update();
+            this.ball.isBound();
+            this.dino.update();
+            if ((racket.right() >= this.ball.getCenterX() - this.ball.getR()
+                    && racket.left() <= this.ball.getCenterX() + this.ball.getR())
+                    && (this.ball.getCenterY() + this.ball.getR() >= 590)) {
+                this.ball.setCenterY(580 - this.ball.getR());
+                this.ball.getGoVec().setY(-this.ball.getGoVec().getY());
+            } else {
+                this.ball.move();
+            }
 
-        if (this.ball.isCollision(this.dino)) {
-            this.ball.hit(dino);
-        }
-        for (int i = 0; i < this.post.size(); i++) {
-            if (this.post.get(i).getIsCollide()) {
-                this.post.get(i).update();
+            if (this.ball.isCollision(this.dino)) {
+                this.ball.hit(dino);
             }
-        }
-        for (int i = 0; i < this.post.size(); i++) {
-            if (this.ball.isCollision(this.post.get(i)) && this.ball.getGoVec().getValue() > 0) {
-                this.post.get(i).setGo(this.ball.getGoVec());
-                this.ball.hit(this.post.get(i));
-                this.post.get(i).setIsCollide(true);
+            for (int i = 0; i < this.post.size(); i++) {
+                if (this.post.get(i).getIsCollide()) {
+                    this.post.get(i).update();
+                }
             }
-        }
-        for (int i = 0; i < this.post.size(); i++) {
-            if (this.dino.isCollision(this.post.get(i))) {
-                Vector vec = new Vector(this.post.get(i).getCenterX() - this.dino.getCenterX(),
-                        this.post.get(i).getCenterY() - this.dino.getCenterY());
-                Vector dinoVec = dinoDir();
+            for (int i = 0; i < this.post.size(); i++) {
+                if (this.ball.isCollision(this.post.get(i)) && this.ball.getGoVec().getValue() > 0) {
+                    this.post.get(i).setGo(this.ball.getGoVec());
+                    this.ball.hit(this.post.get(i));
+                    this.post.get(i).setIsCollide(true);
+                }
+            }
+            for (int i = 0; i < this.post.size(); i++) {
+                if (this.dino.isCollision(this.post.get(i))) {
+                    Vector vec = new Vector(this.post.get(i).getCenterX() - this.dino.getCenterX(),
+                            this.post.get(i).getCenterY() - this.dino.getCenterY());
+                    Vector dinoVec = dinoDir();
 //                float dx = dinoVec.getCosProjectionVec(vec).getX();
 //                float dy = dinoVec.getCosProjectionVec(vec).getY();
-//                this.post.get(i).offset(dx, dy);
-                if (!isBound(i)) {
-                    this.post.get(i).offset(dinoVec.getX(), dinoVec.getY());
+                    if (!isBound(i)) {
+                        this.post.get(i).offset(dinoVec.getX(), dinoVec.getY());
+                    }
                 }
             }
         }
+
     }
 
     @Override
@@ -96,11 +100,11 @@ public class PingPong extends Scene {
 
     }
 
-    private boolean isBound(int i) {
+    public boolean isBound(int i) {
         if ((this.post.get(i).getCenterX() - this.post.get(i).getR() <= 0 && this.dino.getDir() == Global.LEFT2)
-            || (this.post.get(i).getCenterX() + this.post.get(i).getR() >= Global.SCREEN_X && this.dino.getDir() == Global.RIGHT2)
-            || (this.post.get(i).getCenterY() - this.post.get(i).getR() <= 0 && this.dino.getDir() == Global.UP2)
-            || (this.post.get(i).getCenterY() + this.post.get(i).getR() >= Global.SCREEN_Y && this.dino.getDir() == Global.DOWN2)) {
+                || (this.post.get(i).getCenterX() + this.post.get(i).getR() >= Global.SCREEN_X && this.dino.getDir() == Global.RIGHT2)
+                || (this.post.get(i).getCenterY() - this.post.get(i).getR() <= 0 && this.dino.getDir() == Global.UP2)
+                || (this.post.get(i).getCenterY() + this.post.get(i).getR() >= Global.SCREEN_Y && this.dino.getDir() == Global.DOWN2)) {
             if (this.post.get(i).getCenterX() - this.post.get(i).getR() <= 0) {
                 this.post.get(i).setCenterX(this.post.get(i).getR());
             }
@@ -194,12 +198,12 @@ public class PingPong extends Scene {
                     break;
                 case Global.LEFT:
                     if (racket.left() > 0) {
-                        racket.offset(-7, 0);
+                        racket.offset(-10, 0);
                     }
                     break;
                 case Global.RIGHT:
                     if (racket.right() < Global.SCREEN_X) {
-                        racket.offset(7, 0);
+                        racket.offset(10, 0);
                     }
                     break;
             }

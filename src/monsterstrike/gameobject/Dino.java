@@ -120,25 +120,25 @@ public class Dino extends GameObject {
         if (!this.isStand) {
             switch (this.dir) {
                 case Global.UP2:
-                    if (this.getCenterY() <= 0) {
+                    if (this.getCenterY()-this.getR()<= 0) {
                         break;
                     }
                     this.offset(0, -velocity);
                     break;
                 case Global.DOWN2:
-                    if (this.getCenterY() >= Global.SCREEN_Y) {
+                    if (this.getCenterY() +this.getR()+5>= Global.SCREEN_Y) {
                         break;
                     }
                     this.offset(0, velocity);
                     break;
                 case Global.LEFT2:
-                    if (this.getCenterX() <= 0) {
+                    if (this.getCenterX()-this.getR()<= 0) {
                         break;
                     }
                     this.offset(-velocity, 0);
                     break;
                 case Global.RIGHT2:
-                    if (this.getCenterX() >= Global.SCREEN_X) {
+                    if (this.getCenterX() +this.getR()>= Global.SCREEN_X) {
                         break;
                     }
                     this.offset(velocity, 0);
@@ -170,7 +170,7 @@ public class Dino extends GameObject {
     public void pause() {
         this.delay.pause();
     }
-
+    
     public void start() {
         this.delay.start();
     }

@@ -66,7 +66,7 @@ public class LevelScene extends Scene {
         }
         this.currentHp = this.myHp;
         this.enemies = new MarbleArray(enemies);
-        this.delay = new Delay(20); //敵人依序攻擊delay
+        this.delay = new Delay(50); //敵人依序攻擊delay
         this.delay.start();
         this.ratio = this.currentHp / this.myHp;
         this.tmpCount = 1;
