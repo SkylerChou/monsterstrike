@@ -10,8 +10,10 @@ public class MarbleInfo {
     private static final String[] ATTRIBUTE = {"冰", "火", "草", "光", "黯"};
     private static final String[] STATE = {"收服", "野生"};
     private static final String[] SPECIES = {"反彈", "貫穿"};
+    private int serial;
     private String name;
     private String imgName;
+    private int showIdx;
     private int imgW;
     private int imgH;
     private float r;
@@ -25,11 +27,13 @@ public class MarbleInfo {
     private int atk;
     private int species;
 
-    public MarbleInfo(String name, String imgName, int imgW, int imgH, float ratio,
+    public MarbleInfo(int serial, String name, String imgName, int showIdx, int imgW, int imgH, float ratio,
             float mass, float v, int attribute, int level, int hp,
             int atk, int skillRound, int state, int species) {
+        this.serial = serial;
         this.name = name;
         this.imgName = imgName;
+        this.showIdx = showIdx;
         this.imgH = imgH;
         this.imgW = imgW;
         this.r = imgH * ratio / 2;
@@ -45,9 +49,13 @@ public class MarbleInfo {
     }
 
     public static MarbleInfo gen(MarbleInfo info) {
-        return new MarbleInfo(info.getName(), info.getImgName(), info.getImgW(), info.getImgH(),
+        return new MarbleInfo(info.getSerial(), info.getName(), info.getImgName(), info.getShowIdx(), info.getImgW(), info.getImgH(),
                 info.getRatio(), info.getMass(), info.getV(), info.getAttribute(), info.getLevel(),
                 info.getHp(), info.getAtk(), info.getSkillRound(), info.getState(), info.getSpecies());
+    }
+
+    public int getSerial() {
+        return this.serial;
     }
 
     public String getName() {
@@ -56,6 +64,10 @@ public class MarbleInfo {
 
     public String getImgName() {
         return this.imgName;
+    }
+
+    public int getShowIdx() {
+        return this.showIdx;
     }
 
     public int getImgH() {
@@ -105,8 +117,8 @@ public class MarbleInfo {
     public int getAtk() {
         return this.atk;
     }
-    
-    public int getSpecies(){
+
+    public int getSpecies() {
         return this.species;
     }
 
@@ -120,9 +132,13 @@ public class MarbleInfo {
     public void setAtk(int atk) {
         this.atk = atk;
     }
-    
-    public void setName(String name){
+
+    public void setName(String name) {
         this.name = name;
+    }
+
+    public void setState(int state) {
+        this.state = state;
     }
 
     @Override

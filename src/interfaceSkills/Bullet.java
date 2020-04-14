@@ -22,7 +22,7 @@ public class Bullet extends Skills {
     private int hitCount;
     private ArrayList<Marble> target;
     private Marble self;
-    
+
     public Bullet() {
         super(NUM);
     }
@@ -36,6 +36,8 @@ public class Bullet extends Skills {
                     this.skill[j].setDx(0f);
                     this.skill[j].setDy(0f);
                     this.skill[j].update();
+                    this.skill[j] = null;
+                }else if(this.skill[j].isOutOfBound()){
                     this.skill[j] = null;
                 }
             } else {
@@ -51,21 +53,23 @@ public class Bullet extends Skills {
         this.self = self;
         System.out.println(self.getInfo().getName() + "子彈!");
         int attr = self.getInfo().getAttribute();
-        for (int i = 0; i < this.skill.length; i++) {
-            float rad = (float) (Math.toRadians(360 / NUM) * i);
-            float r2 = self.getR() + target.get(idx).getR();
-            float dx = (float) (2 * r2 * Math.cos((Math.PI - rad) / 2) * Math.cos(rad / 2));
-            float dy = (float) (2 * r2 * Math.cos((Math.PI - rad) / 2) * Math.sin(rad / 2));
-            this.skill[i] = new SkillComponent(SKILL_IDX, attr, SkillImg.SKILL_NUM[0][attr],
-                    (int) (self.getCenterX() + dx), (int) (self.getCenterY() - r2 + dy),WIDTH, HEIGHT, DELAY);
-            Vector vec = new Vector(this.skill[i].getCenterX() - self.getCenterX(), this.skill[i].getCenterY() - self.getCenterY());
-            this.skill[i].setDx(vec.getUnitX()*3);
-            this.skill[i].setDy(vec.getUnitY()*3);
+        if (!target.isEmpty()) {
+            for (int i = 0; i < this.skill.length; i++) {
+                float rad = (float) (Math.toRadians(360 / NUM) * i);
+                float r2 = self.getR() + target.get(idx).getR();
+                float dx = (float) (2 * r2 * Math.cos((Math.PI - rad) / 2) * Math.cos(rad / 2));
+                float dy = (float) (2 * r2 * Math.cos((Math.PI - rad) / 2) * Math.sin(rad / 2));
+                this.skill[i] = new SkillComponent(SKILL_IDX, attr, SkillImg.SKILL_NUM[0][attr],
+                        (int) (self.getCenterX() + dx), (int) (self.getCenterY() - r2 + dy), WIDTH, HEIGHT, DELAY);
+                Vector vec = new Vector(this.skill[i].getCenterX() - self.getCenterX(), this.skill[i].getCenterY() - self.getCenterY());
+                this.skill[i].setDx(vec.getUnitX() * 3);
+                this.skill[i].setDy(vec.getUnitY() * 3);
+            }
         }
         return this.hitCount;
     }
 
-    private boolean checkStrike(int idx, ArrayList<Marble> target) {        
+    private boolean checkStrike(int idx, ArrayList<Marble> target) {
         for (int j = 0; j < target.size(); j++) {
             if (this.skill[idx].isCollision(target.get(j)) && !this.target.get(j).getIsCollide()) {
                 this.target.get(j).getInfo().setHp(this.target.get(j).getInfo().getHp() - this.self.getInfo().getAtk());

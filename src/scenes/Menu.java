@@ -58,10 +58,9 @@ public class Menu extends Scene {
             }
         }
 
-        if (this.isEnter && this.dino.getCenterY() == Global.SCREEN_Y / 2) {
-            
-            sceneController.changeScene(new Loading(sceneController));
-//            sceneController.changeScene(new LevelMenu(sceneController));
+        if (this.isEnter && this.dino.getCenterY() == Global.SCREEN_Y / 2) {            
+//            sceneController.changeScene(new Loading(sceneController));
+            sceneController.changeScene(new LevelMenu(sceneController));
             this.isEnter = false;
         } else if (this.isEnter && this.dino.getCenterY() == Global.SCREEN_Y / 2 + h) {
             sceneController.changeScene(new PingPong(sceneController));

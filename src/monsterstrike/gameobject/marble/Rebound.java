@@ -75,7 +75,6 @@ public class Rebound implements Strike {
         target.setGo(target.getNorVec().plus(target.getTanVec()));
     }
 
-    @Override
     public boolean die(Marble self) {
         return false;
     }

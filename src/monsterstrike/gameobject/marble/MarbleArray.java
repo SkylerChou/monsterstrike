@@ -6,8 +6,9 @@
 package monsterstrike.gameobject.marble;
 
 import java.util.ArrayList;
+import monsterstrike.util.Global;
 
-public class MarbleArray extends ArrayList<Marble>{
+public class MarbleArray extends ArrayList<Marble> {
 
     private ArrayList<Marble> arr;
 
@@ -54,18 +55,32 @@ public class MarbleArray extends ArrayList<Marble>{
         }
         return newArr;
     }
-    
-    public ArrayList<Marble> sortByLevel(){
-        for(int i=1; i<this.arr.size(); i++){
-            for(int j=0; j<this.arr.size()-i; j++){
-                if(this.arr.get(j).getInfo().getLevel()>this.arr.get(j+1).getInfo().getLevel()){
+
+    public ArrayList<Marble> sortByLevel() {
+        for (int i = 1; i < this.arr.size(); i++) {
+            for (int j = 0; j < this.arr.size() - i; j++) {
+                if (this.arr.get(j).getInfo().getShowIdx() > this.arr.get(j + 1).getInfo().getShowIdx()) {
                     Marble tmp = this.arr.get(j);
-                    this.arr.set(j, this.arr.get(j+1));
-                    this.arr.set(j+1, tmp);
+                    this.arr.set(j, this.arr.get(j + 1));
+                    this.arr.set(j + 1, tmp);
                 }
             }
         }
+        for (int i = 1; i < this.arr.size(); i++) {
+            for (int j = 0; j < this.arr.size() - i; j++) {
+                if (this.arr.get(j).getInfo().getLevel() > this.arr.get(j + 1).getInfo().getLevel()) {
+                    Marble tmp = this.arr.get(j);
+                    this.arr.set(j, this.arr.get(j + 1));
+                    this.arr.set(j + 1, tmp);
+                }
+            }
+        }
+
         return this.arr;
     }
-   
+
+    public Marble luckyDraw() {
+        return this.arr.get(Global.random(0, this.arr.size() - 1));
+    }
+
 }

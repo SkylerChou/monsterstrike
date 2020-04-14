@@ -20,12 +20,15 @@ public class MarbleRenderer {
     private int imgNum;
     private boolean isStop;
     private boolean isCollide;
+    
 
     public MarbleRenderer(String path, int num, int delay) {
         this.img = IRC.getInstance().tryGetImage(path);
         this.imgNum = num;
         this.delay = new Delay(delay);
         this.delay.start();
+        this.collideDelay = new Delay(delay);
+        this.collideDelay.start();
         this.isStop = false;
         this.imgIdx = 0;
         this.isCollide = false;
@@ -36,35 +39,34 @@ public class MarbleRenderer {
             this.imgIdx = (this.imgIdx + 1) % 2;
         }
     }
-
-    public void collideUpdate() {
-        if (!this.isCollide) {
-            this.collideDelay.start();
-            this.isCollide = true;
-        }
-        if (this.collideDelay.isTrig() && this.isCollide) {            
-            this.imgIdx = (this.imgIdx + 1) % this.imgNum;
-            
-            if (this.imgIdx == this.imgNum-1) {
-                System.out.println(imgIdx + "更新完");
-                this.imgIdx = 0;
-                this.delay.start();
-                this.collideDelay.stop();
-                this.isCollide = false;
+    
+    public void updateDie() {
+        if (this.delay.isTrig()) {
+            if (this.imgIdx++ == this.imgNum - 1) {                               
+                this.imgIdx = this.imgNum - 1;
+                this.isStop = true;
+                this.stop();
             }
         }
     }
-
-    public void updateOnce() {
-        this.delay.start();
-        if (this.delay.isTrig()) {
-            this.imgIdx = (this.imgIdx + 1) % this.imgNum;
-            if (this.imgIdx == 0) {
-                this.stop();
-                this.isStop = true;
+    
+    public void updateHit() {
+        if (this.collideDelay.isTrig()) {
+            if (this.imgIdx++ == this.imgNum - 1) {                               
                 this.imgIdx = this.imgNum - 1;
+                this.isStop = true;
+                this.stopHit();
             }
         }
+    }
+    
+    public void startHit() {
+        this.collideDelay.start();
+        this.isStop = false;
+    }
+    
+    public void stopHit() {
+        this.collideDelay.stop();
     }
 
     public void stop() {

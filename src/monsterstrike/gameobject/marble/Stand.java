@@ -8,26 +8,26 @@ package monsterstrike.gameobject.marble;
 import monsterstrike.graph.Vector;
 import monsterstrike.util.Delay;
 
-public class Stand implements Strike{
+public class Stand implements Strike {
 
     private Delay moveDelay;
     private int moveCount;
-    
-    public Stand(){
+
+    public Stand() {
         this.moveDelay = new Delay(5);
         this.moveCount = 0;
     }
-    
+
     @Override
     public void update(Marble self) {
-       if (!self.getIsDie()) {
-            self.renderer.update();
-            if (self.isCollide) {
-                move(self);
-            }
+        self.renderer.update();
+        if (!self.isDie && self.isCollide) {
+            move(self);
+        }else if(self.isDie){
+            self.rendererDie.updateDie();
         }
     }
-    
+
     @Override
     public Marble strike(Marble self, Marble target) {
         self.setGo(new Vector(self.getCenterX() - target.getCenterX(),
@@ -53,9 +53,4 @@ public class Stand implements Strike{
         }
     }
 
-    @Override
-    public boolean die(Marble self) {
-        return false;
-    }
-    
 }

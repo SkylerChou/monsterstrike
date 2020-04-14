@@ -13,5 +13,5 @@ public interface Strike {
     
     public void move(Marble self);
     
-    public boolean die(Marble self);
+//    public boolean die(Marble self);
 }

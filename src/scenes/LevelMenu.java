@@ -8,6 +8,7 @@ package scenes;
 import controllers.SceneController;
 import java.awt.Graphics;
 import java.util.ArrayList;
+import monsterstrike.PlayerInfo;
 import monsterstrike.gameobject.Background;
 import monsterstrike.gameobject.Button;
 import monsterstrike.gameobject.ImgInfo;
@@ -25,6 +26,7 @@ public class LevelMenu extends Scene {
     private ArrayList<MarbleInfo> allMarbleInfo; //所有怪物info
     private ArrayList<Marble> myMarbles; //我方所有怪物
     private ArrayList<Marble> enemies; //敵方所有怪物
+    private PlayerInfo playerInfo;
     private Marble currentMarble;
     private Background background;
     private int backIdx;
@@ -32,11 +34,13 @@ public class LevelMenu extends Scene {
     private int x;
     private int y;
     private Delay delay;
+    private int level;
 
-    public LevelMenu(SceneController sceneController ) {
+    public LevelMenu(SceneController sceneController) {
         super(sceneController);
-//        this.allMarbleInfo = FileIO.read("marbleInfo.csv");
-        this.allMarbleInfo = null;
+        this.allMarbleInfo = FileIO.readMarble("marbleInfo.csv");
+        this.playerInfo = FileIO.readPlayer("playerInfo.csv", 0);
+        this.level = this.playerInfo.getLevel();
         this.myMarbles = new ArrayList<>();
         this.enemies = new ArrayList<>();
         this.fightMarbles = new Marble[3];
@@ -54,11 +58,12 @@ public class LevelMenu extends Scene {
         this.backIdx = 0;
         this.background = new Background(ImgInfo.BACKGROUND_PATH[this.backIdx], 0, 0, this.backIdx);
         for (int i = 0; i < this.allMarbleInfo.size(); i++) {
-            if (this.allMarbleInfo.get(i).getState() == 0) {
+            if (inMySerials(this.allMarbleInfo.get(i))) {
                 this.myMarbles.add(new Marble(this.x, this.y, 150, 150, this.allMarbleInfo.get(i)));
             } else {
                 this.enemies.add(new Marble(0, 0, 150, 150, this.allMarbleInfo.get(i)));
             }
+
         }
         int unitX = Global.SCREEN_X / 5;
         for (int i = 0; i < 3; i++) {
@@ -86,7 +91,8 @@ public class LevelMenu extends Scene {
                 this.enemyFightMarbles.add(this.enemies.get(i));
             }
 
-            sceneController.changeScene(new LevelScene(sceneController, backIdx, fightMarbles, this.enemyFightMarbles));
+            sceneController.changeScene(new LevelScene(sceneController, backIdx, fightMarbles,
+                    this.enemyFightMarbles, this.playerInfo));
         } else {
             this.currentMarble = this.myMarbles.get(idx);
             this.currentMarble.update();
@@ -97,9 +103,6 @@ public class LevelMenu extends Scene {
                 i = 0;
             } else if (i == 8) {
                 i = 6;
-            }
-            if (this.buttons.get(i) == null) {
-                System.out.println(i + " " + this.buttons.get(i));
             }
             this.buttons.get(i).update();
             this.buttons.get(i + 1).update();
@@ -120,7 +123,19 @@ public class LevelMenu extends Scene {
                 this.myMarbles.get(i).setCenterX(this.x);
             }
         }
-        this.count++;
+        if (this.backIdx + 1 <= this.level) {
+            this.count++;
+        }
+    }
+
+    private boolean inMySerials(MarbleInfo info) {
+        int[] serials = this.playerInfo.getMyMarbleSerials();
+        for (int i = 0; i < serials.length; i++) {
+            if (info.getSerial() == serials[i] && info.getState()==0) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

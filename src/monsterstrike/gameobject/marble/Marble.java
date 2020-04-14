@@ -12,32 +12,33 @@ import java.util.ArrayList;
 import monsterstrike.gameobject.*;
 
 public class Marble extends Ball {
-    
+
     private static final Strike[] SPECIES = {new Rebound(), new Penetrate(), new Stand()};
-    protected Marble other;
+    private Marble other;
     private Marble detect;
-    protected MarbleInfo info;
+    private MarbleInfo info;
     protected MarbleRenderer renderer;
+    protected MarbleRenderer rendererDie;
     protected boolean isCollide;
-    
+    protected boolean isDie;
+
     private float moveFic;
     private float strikeFic;
     private float wallFic;
     private SpecialEffect shine;
     private Strike species;
-    private boolean isDie;
-    
+
     private Skills[] skills;
     private int skillIdx;
     private boolean useSkill;
-    
+
     public Marble(int x, int y, int w, int h, MarbleInfo info) {
         super(x, y, w, h, (int) (w * info.getRatio() / 2));
         this.info = info;
-        String path = ImgInfo.MARBLE_ROOT + info.getImgName() + ".png";
+        String path = ImgInfo.MARBLE_ROOT + info.getImgName();
         int num = info.getImgW() / info.getImgH();
-        this.renderer = new MarbleRenderer(path, num, 20);
-        
+        this.renderer = new MarbleRenderer(path + ".png", num, 20);
+        this.rendererDie = new MarbleRenderer(path + "Die.png", 7, 15);
         int[] shineSize = {x, y, w, h};
         if (info.getAttribute() > 2) {
             shineSize[0] = (int) (x - 0.25f * w);
@@ -51,7 +52,7 @@ public class Marble extends Ball {
         this.isCollide = false;
         this.skills = new Skills[]{new Explosion(), new Tornado(), new Laser(),
             new Bullet(), new Missile()};
-        
+
         this.skillIdx = 0;
         this.useSkill = true;
         this.moveFic = 0.05f * info.getMass();
@@ -64,7 +65,7 @@ public class Marble extends Ball {
             this.species = SPECIES[info.getSpecies()];
         }
     }
-    
+
     @Override
     public void update() {
         this.species.update(this);
@@ -73,36 +74,49 @@ public class Marble extends Ball {
         }
         this.skills[this.skillIdx].update();
     }
-    
+
     @Override
     public void move() {
         this.species.move(this);
     }
-    
+
     public Marble strike(Marble target) {
         this.isCollide = true;
         return this.species.strike(this, target);
     }
-    
-    public boolean die() {
+
+    public void die() {
         this.isDie = true;
-        return false;
     }
-    
+
     public boolean getIsDie() {
         return this.isDie;
     }
-    
+
+    @Override
+    public void setIsCollide(boolean isCollide) {
+        this.isCollide = isCollide;
+    }
+
+    @Override
+    public boolean getIsCollide() {
+        return this.isCollide;
+    }
+
     public MarbleRenderer getRenderer() {
         return this.renderer;
     }
-    
+
+    public MarbleRenderer getDieRenderer() {
+        return this.rendererDie;
+    }
+
     public void updateShine() {
         this.shine.setCenterX(this.getCenterX());
         this.shine.setCenterY(this.getCenterY());
         this.shine.update();
     }
-    
+
     @Override
     public boolean isBound() {
         if (this.getCenterX() - this.getR() <= 0
@@ -129,65 +143,71 @@ public class Marble extends Ball {
         }
         return false;
     }
-    
+
     public void setVelocity(float ratio) {
         this.goVec.multiplyScalar(ratio);
     }
-    
+
     public void setShine(boolean isShine) {
         this.shine.setShine(isShine);
     }
-    
+
     public float getStrikeFic() {
         return this.strikeFic;
     }
-    
+
     public float getMoveFic() {
         return this.moveFic;
     }
-    
+
     public Marble duplicate(int x, int y, int w, int h) {
         MarbleInfo copyInfo = MarbleInfo.gen(this.info);
         return new Marble(x, y, w, h, copyInfo);
     }
-    
+
     public MarbleInfo getInfo() {
         return this.info;
     }
-    
+
     public Skills getSkills() {
         return this.skills[this.skillIdx];
     }
-    
+
     public boolean getUseSkill() {
         return this.useSkill;
     }
-    
+
     public void setUseSkill(Boolean useSkill) {
         this.useSkill = useSkill;
     }
-    
+
     public int useSkill(int skillIdx, ArrayList<Marble> target, int targetIdx) {
         this.skillIdx = skillIdx;
         return this.skills[skillIdx].useSkill(this, target, targetIdx);
     }
-    
+
     public void paintSkill(Graphics g) {
         this.skills[this.skillIdx].paintSkill(g);
     }
-    
+
     public void paintAll(Graphics g) {
         this.shine.paintComponent(g);
         paintComponent(g);
         paintSkill(g);
     }
-    
+
     @Override
     public void paintComponent(Graphics g) {
-        this.renderer.paint(g, (int) (this.getX()),
-                (int) (this.getY()),
-                (int) (this.getWidth()), (int) (this.getHeight()));
-        
+        if (!this.isDie) {
+            this.renderer.paint(g, (int) (this.getX()),
+                    (int) (this.getY()),
+                    (int) (this.getWidth()), (int) (this.getHeight()));
+        } else {
+            this.rendererDie.paint(g, (int) (this.getX()),
+                    (int) (this.getY()),
+                    (int) (this.getWidth()), (int) (this.getHeight()));
+        }
+
         if (Global.IS_DEBUG) {
             g.drawOval((int) (this.getCenterX() - this.getR()),
                     (int) (this.getCenterY() - this.getR()),
