@@ -209,9 +209,9 @@ public class LevelScene extends Scene {
         }
         return true; //技能釋放完畢
     }
-    
-    private void setCollide(){
-        for(int i=0; i<this.marbles.size(); i++){
+
+    private void setCollide() {
+        for (int i = 0; i < this.marbles.size(); i++) {
             this.marbles.get(i).setIsCollide(false);
         }
     }
@@ -225,13 +225,13 @@ public class LevelScene extends Scene {
                 if (i != j && this.marbles.get(i).isCollision(this.marbles.get(j))) {
                     this.marbles.set(j, this.marbles.get(i).strike(this.marbles.get(j)));
                     if (i == currentIdx) {
-                        this.marbles.get(j).getGoVec().setValue(this.marbles.get(j).getGoVec().getValue()*0.5f);
+                        this.marbles.get(j).getGoVec().setValue(this.marbles.get(j).getGoVec().getValue() * 0.5f);
                         if (this.marbles.get(j).getUseSkill()) {
                             int r = Global.random(1, 3);
                             this.hitCount += this.marbles.get(j).useSkill(r, this.battleEnemies, 0);
                             this.marbles.get(j).setUseSkill(false);
                         }
-                        
+
                     }
                 }
             }
@@ -244,7 +244,7 @@ public class LevelScene extends Scene {
                 if (this.marbles.get(i).isCollision(this.battleEnemies.get(j)) && this.marbles.get(i).getGoVec().getValue() > 0) {
                     Marble tmp = this.marbles.get(i).strike(this.battleEnemies.get(j));
                     this.battleEnemies.get(j).setGo(tmp.getGoVec());
-                    this.battleEnemies.get(j).setIsCollide(true);                   
+                    this.battleEnemies.get(j).setIsCollide(true);
                     this.hitCount += this.marbles.get(i).useSkill(0, this.battleEnemies, j);
                 }
             }

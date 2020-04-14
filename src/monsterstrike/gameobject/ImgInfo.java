@@ -94,6 +94,7 @@ public class ImgInfo {
     public static final int[][] MYMARBLE_INFO = {FIREBALL_INFO};
 
     public static final String[] POSTS_PATH = {MARBLE_ROOT + "mushroom1.png", MARBLE_ROOT + "mushroom2.png"};
+    public static final String[] POSTS2_PATH = {MARBLE_ROOT + "mushroom2.png", MARBLE_ROOT + "mushroom1.png"};
     public static final int[] POST_INFO = {95, 95, 40, 2};
 
     public static final String PINGPONG = BACKGROUND_ROOT + "battleback6.png";

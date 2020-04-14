@@ -58,9 +58,6 @@ public class Mutiplayer extends Scene {
 //            this.b.add(new SpecialEffect(ImgInfo.BALCKHOLE, 250 * (i + 1), 250, 
 //                    ImgInfo.BLACKHOLE_INFO[0], ImgInfo.BLACKHOLE_INFO[1],ImgInfo.BLACKHOLE_INFO[0]/2 ));
 //            this.b.get(i).setShine(true);
-//            this.marbles.add(new ReboundMarble(ImgInfo.MYMARBLE_PATH[i], ImgInfo.MYMARBLE_NAME[i], POS_X[i], POS_Y[i], ImgInfo.MYMARBLE_INFO[i]));
-//            this.b.add(new SpecialEffect(ImgInfo.BALCKHOLE, 250 * (i + 1), 250, ImgInfo.BLACKHOLE_INFO));
-//            this.b.get(i).setShine(true);
         }
 
         this.arrow = new Arrow(ImgInfo.ARROW, 0, 0, ImgInfo.ARROW_INFO);
@@ -100,8 +97,8 @@ public class Mutiplayer extends Scene {
             }
         }
         
-//        for (int i = 0; i < this.marbles.size(); i++) {//黑洞移動
-//            for (int j = 0; j < this.b.size(); j++) {
+        for (int i = 0; i < this.marbles.size(); i++) {//黑洞移動
+            for (int j = 0; j < this.b.size(); j++) {
 //                if (this.marbles.get(i).isCollision(this.b.get(j))) {
 //                    for (int k = 0; k < 2; k++) {
 //                        this.marbles.get(i).offset(20, 20);
@@ -109,24 +106,24 @@ public class Mutiplayer extends Scene {
 //                        this.marbles.get(i).offset(-20, -20);
 //                        this.marbles.get(i).offset(20, -20);
 //                    }
-//                    int r;
-//                    do {
-//                        r = Global.random(0, 2);
-//                        if (r != j) {
-//                            break;
-//                        }
-//                    } while (true);
-//                    this.marbles.get(i).setCenterX(this.b.get(r).getCenterX());
-//                    if (this.marbles.get(i).getGoVec().getY() > 0) {
-//                        this.marbles.get(i).setCenterY(this.b.get(r).getCenterY());
-//                    } else {
-//                        this.marbles.get(i).setCenterY(this.b.get(r).getCenterY()+100);
-//                    }
-//                    this.marbles.get(i).offset(this.marbles.get(i).getGoVec().getX(), this.marbles.get(i).getGoVec().getY());
-//                    this.marbles.get(i).move();
-//                }
-//            }
-//        }
+                    int r;
+                    do {
+                        r = Global.random(0, 2);
+                        if (r != j) {
+                            break;
+                        }
+                    } while (true);
+                    this.marbles.get(i).setCenterX(this.b.get(r).getCenterX());
+                    if (this.marbles.get(i).getGoVec().getY() > 0) {
+                        this.marbles.get(i).setCenterY(this.b.get(r).getCenterY());
+                    } else {
+                        this.marbles.get(i).setCenterY(this.b.get(r).getCenterY()+100);
+                    }
+                    this.marbles.get(i).offset(this.marbles.get(i).getGoVec().getX(), this.marbles.get(i).getGoVec().getY());
+                    this.marbles.get(i).move();
+                
+            }
+        }
        
         for (int i = 0; i < this.marbles.size(); i++) {
             for (int j = i + 1; j < this.marbles.size(); j++) {
@@ -167,9 +164,9 @@ public class Mutiplayer extends Scene {
         }
         
 //        this.setting.paintOther(g, ImgInfo.SETTING_INFO);
-//        for (int i = 0; i < this.b.size(); i++) {
-//            this.b.get(i).paint(g);
-//        }
+        for (int i = 0; i < this.b.size(); i++) {
+            this.b.get(i).paint(g);
+        }
         if (this.arrow.getShow()) {
             this.arrow.paint(g);
         }

@@ -5,12 +5,14 @@
  */
 package scenes;
 
+import controllers.IRC;
 import controllers.SceneController;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import monsterstrike.gameobject.*;
 import monsterstrike.graph.*;
@@ -31,6 +33,7 @@ public class PingPong extends Scene {
     private SpecialEffect home;
 
     private int dinoGetNum;
+    private BufferedImage scoreBoard;
     private int Score;
 
     public PingPong(SceneController sceneController) {
@@ -40,11 +43,13 @@ public class PingPong extends Scene {
 
     @Override
     public void sceneBegin() {
-        for (int i = 0; i < 5; i++) {
+        this.scoreBoard=IRC.getInstance().tryGetImage("/resources/score.png");
+        for (int i = 0; i < 10; i++) {
             int y = Global.random(50, 200);
-            this.post.add(new Obstacle(ImgInfo.POSTS_PATH, 150 + i * 250, 150 + y,
+            this.post.add(new Obstacle(ImgInfo.POSTS_PATH, 150 + i * 150, 150 + y,
                     ImgInfo.POST_INFO[0], ImgInfo.POST_INFO[1], ImgInfo.POST_INFO[2], ImgInfo.POST_INFO[3]));
         }
+        
         this.home = new SpecialEffect(ImgInfo.BALCKHOLE, 1000, 500,
                 ImgInfo.BLACKHOLE_INFO[0], ImgInfo.BLACKHOLE_INFO[1], 40);
         this.home.setShine(true);
@@ -55,6 +60,7 @@ public class PingPong extends Scene {
         this.arrow = new Arrow(ImgInfo.ARROW, 0, 0, ImgInfo.ARROW_INFO);
         this.background.setX(2 * ImgInfo.BACKGROUND_SIZE[idx][0]);
         this.dinoGetNum = 0;
+        
     }
 
     @Override
@@ -77,7 +83,7 @@ public class PingPong extends Scene {
                     && (this.ball.getCenterY() + this.ball.getR() >= 590)) {
                 this.ball.setCenterY(580 - this.ball.getR());
                 this.ball.getGoVec().setY(-this.ball.getGoVec().getY());
-                this.Score+=10;  
+                this.Score += 10;
             } else {
                 this.ball.move();
             }
@@ -113,9 +119,16 @@ public class PingPong extends Scene {
             }
             for (int i = 0; i < this.post.size(); i++) {
                 if (this.home.isCollision(this.post.get(i))) {
-                    this.Score+=5;
+                    this.Score += 5;
                     this.post.remove(i);
                 }
+            }
+            if(this.post.size()<8){
+               genPost();
+               if(this.post.get(7).getIsGrowUp()){
+                   System.out.println(this.post.get(7).getIsGrowUp());
+                   this.post.get(7).update();
+               }
             }
         }
     }
@@ -171,6 +184,14 @@ public class PingPong extends Scene {
         return true;
     }
 
+    private void genPost(){
+        int i=Global.random(150, 1200);
+        int y = Global.random(0, 500);
+        this.post.add(new Obstacle(ImgInfo.POSTS_PATH,  i ,  y,
+                    ImgInfo.POST_INFO[0], ImgInfo.POST_INFO[1], ImgInfo.POST_INFO[2], ImgInfo.POST_INFO[3]));
+        this.post.get(7).setIsGrowUp(true);
+    }
+    
     public boolean isBound(int i) {
         if ((this.post.get(i).getCenterX() - this.post.get(i).getR() <= 0 && this.dino.getDir() == Global.LEFT2)
                 || (this.post.get(i).getCenterX() + this.post.get(i).getR() >= Global.SCREEN_X && this.dino.getDir() == Global.RIGHT2)
@@ -229,12 +250,14 @@ public class PingPong extends Scene {
         this.paintText(g);
     }
 
-     private void paintText(Graphics g) {
-         g.setColor(Color.BLACK);
-            g.setFont(new Font("VinerHandITC", Font.ITALIC, 44));
-            g.drawString("Score " + Score, Global.SCREEN_X /2-50, 50);
-     }
-    
+    private void paintText(Graphics g) {
+        g.drawImage(scoreBoard,  Global.SCREEN_X / 2 - 70, 0, 270, 70, null);
+        g.setColor(Color.WHITE);
+        g.setFont(new Font("VinerHandITC", Font.TRUETYPE_FONT, 44));
+        g.drawString("Score: " + Score, Global.SCREEN_X / 2 - 50, 50);
+        g.setColor(Color.BLACK);
+    }
+
     @Override
     public CommandSolver.KeyListener getKeyListener() {
         return new MyKeyListener();

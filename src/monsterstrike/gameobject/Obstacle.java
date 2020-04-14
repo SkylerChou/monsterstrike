@@ -19,19 +19,25 @@ public class Obstacle extends GameObject {
     private Vector goVec;
     private float mass;
     private boolean isCollide;
+    private boolean isGrowUp;
 
     public Obstacle(String[] path, int x, int y, int w, int h, int r, float mass) {
         super(x, y, w, h, r);
         this.renderer = new ObjectRenderer(path, 20);
+
         this.goVec = new Vector(0, 0);
         this.isCollide = false;
         this.mass = mass;
         this.moveDelay = new Delay(5);
         this.moveCount = 0;
+        this.isGrowUp=false;
     }
 
     @Override
     public void update() {
+        if(this.isGrowUp){
+            this.renderer.update();
+        }
         if (this.isCollide) {
             shake();
         }
@@ -61,9 +67,15 @@ public class Obstacle extends GameObject {
     public void setIsCollide(boolean isCollide) {
         this.isCollide = isCollide;
     }
+    public void setIsGrowUp(boolean isgrowUp) {
+        this.isGrowUp = isgrowUp;
+    }
 
     public boolean getIsCollide() {
         return this.isCollide;
+    }
+    public boolean getIsGrowUp() {
+        return this.isGrowUp;
     }
 
     @Override
@@ -78,5 +90,4 @@ public class Obstacle extends GameObject {
                     (int) (2 * this.getR()), (int) (2 * this.getR()));
         }
     }
-
 }
