@@ -50,6 +50,7 @@ public class PingPong extends Scene {
                     ImgInfo.POST_INFO[0], ImgInfo.POST_INFO[1], ImgInfo.POST_INFO[2], ImgInfo.POST_INFO[3]));
         }
         
+        
         this.home = new SpecialEffect(ImgInfo.BALCKHOLE, 1000, 500,
                 ImgInfo.BLACKHOLE_INFO[0], ImgInfo.BLACKHOLE_INFO[1], 40);
         this.home.setShine(true);
@@ -65,6 +66,9 @@ public class PingPong extends Scene {
 
     @Override
     public void sceneUpdate() {
+        for (int i = 0; i < this.post.size(); i++) {
+            this.post.get(i).update();
+        }
         this.home.update();
         if (this.ball.getGoVec().getValue() == 0) {//dino一開始不能推香菇
             this.dino.update();
@@ -125,10 +129,7 @@ public class PingPong extends Scene {
             }
             if(this.post.size()<8){
                genPost();
-               if(this.post.get(7).getIsGrowUp()){
-                   System.out.println(this.post.get(7).getIsGrowUp());
-                   this.post.get(7).update();
-               }
+               this.post.get(7).update();
             }
         }
     }
@@ -189,7 +190,6 @@ public class PingPong extends Scene {
         int y = Global.random(0, 500);
         this.post.add(new Obstacle(ImgInfo.POSTS_PATH,  i ,  y,
                     ImgInfo.POST_INFO[0], ImgInfo.POST_INFO[1], ImgInfo.POST_INFO[2], ImgInfo.POST_INFO[3]));
-        this.post.get(7).setIsGrowUp(true);
     }
     
     public boolean isBound(int i) {

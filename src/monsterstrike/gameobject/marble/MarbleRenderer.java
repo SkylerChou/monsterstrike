@@ -97,4 +97,10 @@ public class MarbleRenderer {
                 (imgIdx + 1) * ImgInfo.MARBLE_UNIT_X,
                 ImgInfo.MARBLE_UNIT_Y, null);
     }
+    public void paintM(Graphics g, int x, int y, int w, int h) {
+        g.drawImage(img, x, y, x + w, y + h,
+                imgIdx * 315, 0,
+                (imgIdx + 1) * 315,
+                283, null);
+    }
 }
