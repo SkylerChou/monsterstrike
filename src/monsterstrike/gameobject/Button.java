@@ -6,6 +6,8 @@
 package monsterstrike.gameobject;
 
 import java.awt.Graphics;
+import java.awt.image.BufferedImage;
+import monsterstrike.util.Delay;
 
 public class Button extends SceneObject {
 
@@ -15,19 +17,19 @@ public class Button extends SceneObject {
         super(x, y, width, height);
         this.renderer = new ObjectRenderer(path, 0);
     }
-
+    public Button(String[] path, int x, int y, int width, int height,int frame) {
+        super(x, y, width, height);
+        this.renderer = new ObjectRenderer(path,frame);
+    }
+    
     @Override
     public void update() {
         this.renderer.update();
     }
-//
-//    public void paintOther(Graphics g, int[] size) {
-//        g.drawImage(this.currentImg, (int) this.getCenterX(), (int) this.getCenterY(), size[0], size[1], null);
-//    }
 
     @Override
     public void paint(Graphics g) {
-        this.renderer.paint(g, (int)this.getX(), (int)this.getY(), 
-                (int)this.getWidth(), (int)this.getHeight());
+        this.renderer.paint(g, (int) this.getX(), (int) this.getY(),
+                (int) this.getWidth(), (int) this.getHeight());
     }
 }

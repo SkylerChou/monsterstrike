@@ -40,7 +40,7 @@ public class MarbleRenderer {
         }
     }
     
-    public void updateDie() {
+    public void updateOnce() {
         if (this.delay.isTrig()) {
             if (this.imgIdx++ == this.imgNum - 1) {                               
                 this.imgIdx = this.imgNum - 1;

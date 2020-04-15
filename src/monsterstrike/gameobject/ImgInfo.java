@@ -74,8 +74,8 @@ public class ImgInfo {
     //Menu 按鈕
     public static final String[] EXIT = {MENU_ROOT + "exit1.png", MENU_ROOT + "exit2.png"};
     public static final String[] RANK = {MENU_ROOT + "rank1.png", MENU_ROOT + "rank2.png"};
-    public static final String[] HOWTOPLAY = {MENU_ROOT + "howtoplay1.png", MENU_ROOT + "howtoplay2.png"};
-    public static final String[] MULTIPLAYER = {MENU_ROOT + "multiplayer1.png", MENU_ROOT + "multiplayer2.png"};
+    public static final String[] CONTINUE = {MENU_ROOT + "continue1.png", MENU_ROOT + "continue2.png"};
+    public static final String[] PINBALL = {MENU_ROOT + "pinball1.png", MENU_ROOT + "pinball2.png"};
     public static final String[] SINGLE = {MENU_ROOT + "single1.png", MENU_ROOT + "single2.png"};
     public static final int[] MAINBUTTON_INFO = {200, 50};//img_width, img_height
     //恐龍
@@ -84,12 +84,13 @@ public class ImgInfo {
     //彈珠台恐龍
     public static final String[] GREENDINO = {MARBLE_ROOT + "GreenDinoRight.png", MARBLE_ROOT + "GreenDinoLeft.png"};
     public static final int[] GREENDINO_INFO = {60, 60};//img_width, img_height  
-
+    
+    //動作按鈕
     public static final String[] SETTING = {MENU_ROOT + "setting1.png", MENU_ROOT + "setting2.png"};
     public static final String[] SOUND = {MENU_ROOT + "turnon.png", MENU_ROOT + "turnoff.png"};
     public static final String[] CONTROL = {MENU_ROOT + "start.png", MENU_ROOT + "stop.png"};
-    public static final String RETURN = MENU_ROOT + "return.png";
-    public static final int[] SETTING_INFO = {25, 25};//img_width, img_height   
+    public static final String[] HOME ={ MENU_ROOT + "home1.png",MENU_ROOT +"home2.png"};
+    public static final int[] SETTING_INFO = {50, 50};//img_width, img_height   
 
     //PingPong用
     private static final String[] FIREBALL = {MARBLE_ROOT + "fireBall1.png", MARBLE_ROOT + "fireBall2.png"};

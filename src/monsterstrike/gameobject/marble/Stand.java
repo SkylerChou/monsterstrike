@@ -27,7 +27,7 @@ public class Stand implements Strike {
         if (!self.isDie && self.isCollide) {
             move(self);
         } else if (self.isDie) {
-            self.rendererDie.updateDie();
+            self.rendererDie.updateOnce();
         }
     }
 

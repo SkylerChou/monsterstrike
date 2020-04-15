@@ -53,7 +53,7 @@ public class Mutiplayer extends Scene {
         this.background = new Background(ImgInfo.BACKGROUND_PATH[idx], 2 * ImgInfo.BACKGROUND_SIZE[idx][0], ImgInfo.BACKGROUND_SIZE[idx][1], idx);
         this.marbles = new ArrayList<>();
         this.b = new ArrayList<>();
-        this.allMarbleInfo = FileIO.read("marbleInfo.csv");
+        this.allMarbleInfo = FileIO.readMarble("marbleInfo.csv");
         for (int i = 0; i < 3; i++) {
             this.marbles.add(new Marble(POS_X[i], POS_Y[i], 120, 120, this.allMarbleInfo.get(i)));
 

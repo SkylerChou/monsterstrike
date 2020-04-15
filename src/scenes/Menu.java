@@ -5,12 +5,9 @@
  */
 package scenes;
 
-import controllers.IRC;
 import controllers.SceneController;
 import java.awt.Graphics;
-import java.awt.Image;
 import java.util.ArrayList;
-import javax.swing.ImageIcon;
 import monsterstrike.gameobject.*;
 import monsterstrike.util.*;
 
@@ -40,9 +37,9 @@ public class Menu extends Scene {
         this.h = 50;
         this.dino = new Dino(ImgInfo.DINO, Global.SCREEN_X / 2 - 120, Global.SCREEN_Y / 2, Dino.STEPS_WALK);
         this.buttons.add(new Button(ImgInfo.SINGLE, Global.SCREEN_X / 2, Global.SCREEN_Y / 2, ImgInfo.MAINBUTTON_INFO[0], ImgInfo.MAINBUTTON_INFO[1]));
-        this.buttons.add(new Button(ImgInfo.MULTIPLAYER, Global.SCREEN_X / 2, Global.SCREEN_Y / 2 + h, ImgInfo.MAINBUTTON_INFO[0], ImgInfo.MAINBUTTON_INFO[1]));
+        this.buttons.add(new Button(ImgInfo.PINBALL, Global.SCREEN_X / 2, Global.SCREEN_Y / 2 + h, ImgInfo.MAINBUTTON_INFO[0], ImgInfo.MAINBUTTON_INFO[1]));
         this.buttons.add(new Button(ImgInfo.RANK, Global.SCREEN_X / 2, Global.SCREEN_Y / 2 + 2 * h, ImgInfo.MAINBUTTON_INFO[0], ImgInfo.MAINBUTTON_INFO[1]));
-        this.buttons.add(new Button(ImgInfo.HOWTOPLAY, Global.SCREEN_X / 2, Global.SCREEN_Y / 2 + 3 * h, ImgInfo.MAINBUTTON_INFO[0], ImgInfo.MAINBUTTON_INFO[1]));
+        this.buttons.add(new Button(ImgInfo.CONTINUE, Global.SCREEN_X / 2, Global.SCREEN_Y / 2 + 3 * h, ImgInfo.MAINBUTTON_INFO[0], ImgInfo.MAINBUTTON_INFO[1]));
         this.buttons.add(new Button(ImgInfo.EXIT, Global.SCREEN_X / 2, Global.SCREEN_Y / 2 + 4 * h, ImgInfo.MAINBUTTON_INFO[0], ImgInfo.MAINBUTTON_INFO[1]));
         this.isEnter = false;
         this.delay = new Delay(25);

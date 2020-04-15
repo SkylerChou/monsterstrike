@@ -11,6 +11,7 @@ import java.awt.image.BufferedImage;
 import monsterstrike.util.Delay;
 
 public class ObjectRenderer {
+
     private BufferedImage img1;
     private BufferedImage img2;
     private BufferedImage currentImg;
@@ -37,7 +38,7 @@ public class ObjectRenderer {
             }
         }
     }
-    
+
     public void paint(Graphics g, int x, int y, int w, int h) {
         g.drawImage(currentImg, x, y, w, h, null);
     }
