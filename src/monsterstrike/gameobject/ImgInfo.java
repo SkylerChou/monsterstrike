@@ -101,9 +101,11 @@ public class ImgInfo {
     
     //Props 
     private static final String PROPS_ROOT = "/resources/props/";
-    public static final String[] HEART = {PROPS_ROOT + "heart1.png", PROPS_ROOT + "heart2.png"};
-    public static final String[] SHOE = {PROPS_ROOT + "shoe1.png", PROPS_ROOT + "shoe2.png"};
+    public static final String HEART = PROPS_ROOT + "heart.png";
+    public static final int HEART_NUM = 7;
+    public static final String SHOE = PROPS_ROOT + "shoe.png";
+    public static final int SHOE_NUM = 4;
     public static final String[] BOOSTER = {PROPS_ROOT + "Booster1.png", PROPS_ROOT + "Booster2.png"};
-    public static final int[] PROPS_INFO = {50, 50, 25};
+    public static final int[] PROPS_INFO = {80, 80, 40};
 
 }

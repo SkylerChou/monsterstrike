@@ -11,7 +11,7 @@ package Props;
  */
 public class Booster extends Prop{
 
-    public Booster(String[] path, int x, int y, int width, int height, int r,String name) {
-        super(path,x, y, width, height, r,name);
+    public Booster(String path, int x, int y, int width, int height, int r,int pictureNum,String name) {
+        super(path,x, y, width, height, r,pictureNum,name);
     }
 }

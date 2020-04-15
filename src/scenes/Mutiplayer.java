@@ -34,7 +34,12 @@ public class Mutiplayer extends Scene {
     private Button setting;
     private ArrayList<SpecialEffect> b;//黑洞
 
-    private ArrayList<Prop> props;
+    private Prop heart;
+    private Prop shoe;
+    private Prop booster;
+
+    private boolean isTouchHeart;
+    private boolean isTouchShoe;
 
     public Mutiplayer(SceneController sceneController) {
         super(sceneController);
@@ -42,21 +47,22 @@ public class Mutiplayer extends Scene {
 
     @Override
     public void sceneBegin() {
+        this.isTouchHeart = false;
+        this.isTouchShoe = false;
         this.idx = 1;
         this.background = new Background(ImgInfo.BACKGROUND_PATH[idx], 2 * ImgInfo.BACKGROUND_SIZE[idx][0], ImgInfo.BACKGROUND_SIZE[idx][1], idx);
         this.marbles = new ArrayList<>();
         this.b = new ArrayList<>();
-        this.props = new ArrayList<>();
         this.allMarbleInfo = FileIO.read("marbleInfo.csv");
         for (int i = 0; i < 3; i++) {
             this.marbles.add(new Marble(POS_X[i], POS_Y[i], 120, 120, this.allMarbleInfo.get(i)));
 
-            this.props.add(new Heart(ImgInfo.HEART, 600, 600, ImgInfo.PROPS_INFO[0], ImgInfo.PROPS_INFO[1], ImgInfo.PROPS_INFO[2],"愛心"));
-            this.props.add(new Booster(ImgInfo.SHOE, 300, 600, ImgInfo.PROPS_INFO[0], ImgInfo.PROPS_INFO[1], ImgInfo.PROPS_INFO[2],"加速"));
-            this.props.add(new Booster(ImgInfo.BOOSTER, 500, 600, ImgInfo.PROPS_INFO[0], ImgInfo.PROPS_INFO[1], ImgInfo.PROPS_INFO[2],"加速"));
+            this.heart = new Heart(ImgInfo.HEART, 300, 100, ImgInfo.PROPS_INFO[0], ImgInfo.PROPS_INFO[1], ImgInfo.PROPS_INFO[2], ImgInfo.HEART_NUM, "愛心");
+            this.shoe = new Booster(ImgInfo.SHOE, 600, 100, ImgInfo.PROPS_INFO[0], ImgInfo.PROPS_INFO[1], ImgInfo.PROPS_INFO[2], ImgInfo.SHOE_NUM, "加速");
+//            this.props.add(new Booster(ImgInfo.BOOSTER, 500, 600, ImgInfo.PROPS_INFO[0], ImgInfo.PROPS_INFO[1], ImgInfo.PROPS_INFO[2],"加速"));
 
-            this.b.add(new SpecialEffect(ImgInfo.BALCKHOLE, 250 * (i + 1), 250, 
-                    ImgInfo.BLACKHOLE_INFO[0], ImgInfo.BLACKHOLE_INFO[1],ImgInfo.BLACKHOLE_INFO[0]/5));
+            this.b.add(new SpecialEffect(ImgInfo.BALCKHOLE, 250 * (i + 1), 250,
+                    ImgInfo.BLACKHOLE_INFO[0], ImgInfo.BLACKHOLE_INFO[1], ImgInfo.BLACKHOLE_INFO[0] / 5));
             this.b.get(i).setShine(true);
         }
 
@@ -77,26 +83,39 @@ public class Mutiplayer extends Scene {
         for (int i = 0; i < this.b.size(); i++) {
             this.b.get(i).update();
         }
-        
+
         for (int i = 0; i < this.marbles.size(); i++) {
             this.marbles.get(i).update();
         }
-        
-        for (int i = 0; i < this.marbles.size(); i++) {
-            for (int j = 0; j < this.props.size(); j++) {
-                if (this.marbles.get(i).isCollision(this.props.get(j))) {
-                    this.props.get(j).update();
-                    if(this.props.get(j).getName().equals("愛心")){
-                        for (int k= 0; k < this.marbles.size(); k++) {
-                            this.marbles.get(i).getInfo().setHp(this.allMarbleInfo.get(k).getHp()+100);
-                        }
-                    }else if(this.props.get(j).getName().equals("加速")){
-                        this.marbles.get(i).setVelocity(1.2f);//這個好像設錯了，會直接不動
-                    }
+
+        for (int i = 0; i < this.marbles.size(); i++) {//每一顆彈珠有沒有跟道具有碰撞  
+            if (this.heart != null && isCollisionHeart()) {
+                System.out.println(isCollisionHeart());
+                this.isTouchHeart = true;
+                this.marbles.get(i).getInfo().setHp(this.allMarbleInfo.get(i).getHp() + 50);
+                for (int k = 0; k < this.marbles.size(); k++) {//每一隻怪物HP +50
+                    System.out.println(this.marbles.get(k).getInfo().getName() + " " + this.marbles.get(k).getInfo().getHp());
+                }
+            } else if (this.shoe != null && isCollisionShoe()) {
+                this.isTouchShoe = true;
+                this.marbles.get(i).setVelocity(1.2f);
+            }
+            if (this.heart != null && this.isTouchHeart) {
+                this.heart.updateOnce();
+                if (this.heart.getIsStop()) {
+                    this.heart = null;
+                    this.isTouchHeart = false;
+                }
+            }
+            if (this.shoe != null && this.isTouchShoe) {
+                this.shoe.updateOnce();
+                if (this.shoe.getIsStop()) {
+                    this.shoe = null;
+                    this.isTouchShoe = false;
                 }
             }
         }
-        
+
         for (int i = 0; i < this.marbles.size(); i++) {//黑洞移動
             for (int j = 0; j < this.b.size(); j++) {
                 if (this.marbles.get(i).isCollision(this.b.get(j))) {
@@ -109,20 +128,19 @@ public class Mutiplayer extends Scene {
                     } while (true);
                     this.marbles.get(i).setCenterX(this.b.get(r).getCenterX());
                     if (this.marbles.get(i).getGoVec().getY() > 0) {
-                        this.marbles.get(i).setCenterY(this.b.get(r).getCenterY()+110);
+                        this.marbles.get(i).setCenterY(this.b.get(r).getCenterY() + 110);
                     } else {
-                        this.marbles.get(i).setCenterY(this.b.get(r).getCenterY()-110);
+                        this.marbles.get(i).setCenterY(this.b.get(r).getCenterY() - 110);
                     }
                     this.marbles.get(i).offset(this.marbles.get(i).getGoVec().getX(), this.marbles.get(i).getGoVec().getY());
                     this.marbles.get(i).move();
                 }
             }
         }
-       
+
         for (int i = 0; i < this.marbles.size(); i++) {
             for (int j = i + 1; j < this.marbles.size(); j++) {
                 if (this.marbles.get(i).isCollision(this.marbles.get(j))) {
-                    
 //                    this.marbles.get(i).useSkill(0, this.marbles.get(j));
                     this.marbles.set(j, this.marbles.get(i).strike(this.marbles.get(j)));
                 }
@@ -134,6 +152,24 @@ public class Mutiplayer extends Scene {
                 this.currentIdx = this.count % 3;
             }
         }
+    }
+
+    private boolean isCollisionHeart() {
+        for (int i = 0; i < this.marbles.size(); i++) {
+            if (this.heart != null && this.marbles.get(i).isCollision(this.heart)) {
+                return true;
+            } 
+        }
+        return false;
+    }
+
+    private boolean isCollisionShoe() {
+        for (int i = 0; i < this.marbles.size(); i++) {
+            if (this.shoe != null && this.marbles.get(i).isCollision(this.shoe)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private boolean checkAllStop() {
@@ -153,10 +189,12 @@ public class Mutiplayer extends Scene {
     @Override
     public void paint(Graphics g) {
         this.background.paint(g);
-        for (int i = 0; i < this.props.size(); i++) {
-           this.props.get(i).paint(g); 
+        if (this.heart != null) {
+            this.heart.paintH(g);
         }
-        
+        if (this.shoe != null) {
+            this.shoe.paintS(g);
+        }
 //        this.setting.paintOther(g, ImgInfo.SETTING_INFO);
         for (int i = 0; i < this.b.size(); i++) {
             this.b.get(i).paint(g);
@@ -220,7 +258,6 @@ public class Mutiplayer extends Scene {
                 marbles.get(currentIdx).setGo(vector.resizeVec(marbles.get(currentIdx).getInfo().getV()));
 
 //                marbles.get(currentIdx).setGo(vector.resizeVec(marbles.get(currentIdx).getVelocity()));
-
                 count++;
                 arrow.setShow(false);
             }

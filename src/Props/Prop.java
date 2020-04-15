@@ -8,6 +8,7 @@ package Props;
 import java.awt.Graphics;
 import monsterstrike.gameobject.GameObject;
 import monsterstrike.gameobject.ObjectRenderer;
+import monsterstrike.gameobject.marble.MarbleRenderer;
 import monsterstrike.util.Global;
 
 /**
@@ -16,13 +17,13 @@ import monsterstrike.util.Global;
  */
 public class Prop extends GameObject {
 
-    protected ObjectRenderer renderer;
+    protected MarbleRenderer renderer;
     protected boolean isCollide;
     private String name;
 
-    public Prop(String[] path, int x, int y, int width, int height, int r, String name) {
+    public Prop(String path, int x, int y, int width, int height, int r, int pictureNum,String name) {
         super(x, y, width, height, r);
-        this.renderer = new ObjectRenderer(path, 25);
+        this.renderer = new MarbleRenderer(path,pictureNum, 35);
         this.isCollide = false;
         this.name = name;
     }
@@ -37,12 +38,31 @@ public class Prop extends GameObject {
                     (int) (2 * this.getR()), (int) (2 * this.getR()));
         }
     }
+    
+    public void paintH(Graphics g) {
+        this.renderer.paintH(g, (int) (this.getX()),
+                (int) (this.getY()),
+                (int) (this.getWidth()), (int) (this.getHeight()));
+    }
+    public void paintS(Graphics g) {
+        this.renderer.paintS(g, (int) (this.getX()),
+                (int) (this.getY()),
+                (int) (this.getWidth()), (int) (this.getHeight()));
+    }
+    
+    public boolean getIsStop(){
+        return this.renderer.getIsStop();
+    }
 
     @Override
     public void update() {
         this.renderer.update();
     }
 
+    public void updateOnce(){
+        this.renderer.updateOnce();
+    }
+    
     public String getName() {
         return this.name;
     }
