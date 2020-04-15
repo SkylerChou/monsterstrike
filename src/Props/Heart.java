@@ -10,7 +10,7 @@ package Props;
  * @author kim19
  */
 public class Heart extends Prop {
-    public Heart(String[] path, int x, int y, int width, int height, int r,String name) {
-        super(path,x, y, width, height, r,name);
+    public Heart(String path, int x, int y, int width, int height, int r,int pictureNum,String name) {
+        super(path,x, y, width, height, r,pictureNum,name);
     }
 }

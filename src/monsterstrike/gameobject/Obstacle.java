@@ -6,23 +6,26 @@
 package monsterstrike.gameobject;
 
 import java.awt.Graphics;
+import monsterstrike.gameobject.marble.MarbleRenderer;
 import monsterstrike.graph.Vector;
 import monsterstrike.util.Delay;
 import monsterstrike.util.Global;
 
 public class Obstacle extends GameObject {
 
-    private ObjectRenderer renderer;
+    private MarbleRenderer renderer;
 
     private Delay moveDelay;
     private int moveCount;
     private Vector goVec;
     private float mass;
     private boolean isCollide;
+    private boolean isGrowUp;
 
-    public Obstacle(String[] path, int x, int y, int w, int h, int r, float mass) {
+    public Obstacle(String path, int x, int y, int w, int h, int r, float mass) {
         super(x, y, w, h, r);
-        this.renderer = new ObjectRenderer(path, 20);
+        this.renderer = new MarbleRenderer(path,4, 20);
+
         this.goVec = new Vector(0, 0);
         this.isCollide = false;
         this.mass = mass;
@@ -32,6 +35,7 @@ public class Obstacle extends GameObject {
 
     @Override
     public void update() {
+        this.renderer.updateOnce();
         if (this.isCollide) {
             shake();
         }
@@ -61,14 +65,20 @@ public class Obstacle extends GameObject {
     public void setIsCollide(boolean isCollide) {
         this.isCollide = isCollide;
     }
+    public void setIsGrowUp(boolean isgrowUp) {
+        this.isGrowUp = isgrowUp;
+    }
 
     public boolean getIsCollide() {
         return this.isCollide;
     }
+    public boolean getIsGrowUp() {
+        return this.isGrowUp;
+    }
 
     @Override
     public void paintComponent(Graphics g) {
-        this.renderer.paint(g, (int) (this.getX()),
+        this.renderer.paintM(g, (int) (this.getX()),
                 (int) (this.getY()),
                 (int) (this.getWidth()), (int) (this.getHeight()));
 
@@ -78,5 +88,4 @@ public class Obstacle extends GameObject {
                     (int) (2 * this.getR()), (int) (2 * this.getR()));
         }
     }
-
 }

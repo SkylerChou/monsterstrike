@@ -20,7 +20,7 @@ public class Dino extends GameObject {
     public static final int[] STEPS_WALK = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
     public static final int[] STEPS_RUN = {16, 17, 18, 19, 20, 21, 22, 23};
     public static final int[] STEPS_WALKRIGHT = {1, 2, 3, 4, 5, 6, 7, 8, 9};
-    public static final int[] STEPS_WALKLEFT = {22, 21, 20, 19, 18, 17, 16, 15, 14};
+    public static final int[] STEPS_WALKLEFT = { 21, 20, 19, 18, 17, 16, 15, 14};
     //恐龍行走圖
     private BufferedImage img1;
     private BufferedImage img2;
@@ -60,7 +60,7 @@ public class Dino extends GameObject {
         this.delay = new Delay(5);
         this.delay.start();
         this.isStand = true;
-        this.velocity = 8f;
+        this.velocity = 6f;
     }
 
     public BufferedImage getImg1() {
@@ -126,7 +126,7 @@ public class Dino extends GameObject {
                     this.offset(0, -velocity);
                     break;
                 case Global.DOWN2:
-                    if (this.getCenterY() +this.getR()+5>= Global.SCREEN_Y) {
+                    if (this.getCenterY() +this.getR()+5>= Global.SCREEN_Y-100) {
                         break;
                     }
                     this.offset(0, velocity);

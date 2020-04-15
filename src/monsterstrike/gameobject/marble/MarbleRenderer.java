@@ -99,4 +99,22 @@ public class MarbleRenderer {
                 (imgIdx + 1) * ImgInfo.MARBLE_UNIT_X,
                 ImgInfo.MARBLE_UNIT_Y, null);
     }
+    public void paintM(Graphics g, int x, int y, int w, int h) {
+        g.drawImage(img, x, y, x + w, y + h,
+                imgIdx * 315, 0,
+                (imgIdx + 1) * 315,
+                283, null);
+    }
+    public void paintH(Graphics g, int x, int y, int w, int h) {
+        g.drawImage(img, x, y, x + w, y + h,
+                imgIdx * 268, 0,
+                (imgIdx + 1) * 268,
+                242, null);
+    }
+    public void paintS(Graphics g, int x, int y, int w, int h) {
+        g.drawImage(img, x, y, x + w, y + h,
+                imgIdx * 351, 0,
+                (imgIdx + 1) * 351,
+                205, null);
+    }
 }
