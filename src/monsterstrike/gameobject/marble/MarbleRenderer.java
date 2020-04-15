@@ -40,7 +40,7 @@ public class MarbleRenderer {
         }
     }
     
-    public void updateDie() {
+    public void updateOnce() {
         if (this.delay.isTrig()) {
             if (this.imgIdx++ == this.imgNum - 1) {                               
                 this.imgIdx = this.imgNum - 1;
@@ -93,28 +93,28 @@ public class MarbleRenderer {
         this.isStop = isStop;
     }
 
-    public void paint(Graphics g, int x, int y, int w, int h) {
+    public void paint(Graphics g, int x, int y, int w, int h, int unitX, int unitY) {
         g.drawImage(img, x, y, x + w, y + h,
-                imgIdx * ImgInfo.MARBLE_UNIT_X, 0,
-                (imgIdx + 1) * ImgInfo.MARBLE_UNIT_X,
-                ImgInfo.MARBLE_UNIT_Y, null);
+                imgIdx * unitX, 0,
+                (imgIdx + 1) * unitX,
+                unitY, null);
     }
-    public void paintM(Graphics g, int x, int y, int w, int h) {
-        g.drawImage(img, x, y, x + w, y + h,
-                imgIdx * 315, 0,
-                (imgIdx + 1) * 315,
-                283, null);
-    }
-    public void paintH(Graphics g, int x, int y, int w, int h) {
-        g.drawImage(img, x, y, x + w, y + h,
-                imgIdx * 268, 0,
-                (imgIdx + 1) * 268,
-                242, null);
-    }
-    public void paintS(Graphics g, int x, int y, int w, int h) {
-        g.drawImage(img, x, y, x + w, y + h,
-                imgIdx * 351, 0,
-                (imgIdx + 1) * 351,
-                205, null);
-    }
+//    public void paintM(Graphics g, int x, int y, int w, int h) {
+//        g.drawImage(img, x, y, x + w, y + h,
+//                imgIdx * 315, 0,
+//                (imgIdx + 1) * 315,
+//                283, null);
+//    }
+//    public void paintH(Graphics g, int x, int y, int w, int h) {
+//        g.drawImage(img, x, y, x + w, y + h,
+//                imgIdx * 268, 0,
+//                (imgIdx + 1) * 268,
+//                242, null);
+//    }
+//    public void paintS(Graphics g, int x, int y, int w, int h) {
+//        g.drawImage(img, x, y, x + w, y + h,
+//                imgIdx * 351, 0,
+//                (imgIdx + 1) * 351,
+//                205, null);
+//    }
 }

@@ -5,6 +5,9 @@
  */
 package scenes;
 
+import Props.Booster;
+import Props.Heart;
+import Props.Prop;
 import monsterstrike.graph.Vector;
 import controllers.SceneController;
 import interfaceskills.SkillComponent;
@@ -28,6 +31,7 @@ public class LevelScene extends Scene {
     private MarbleArray allEnemies; //敵方所有怪物
     private Arrow arrow;
     private ArrayList<Marble> battleEnemies; //小關出戰怪物
+    private Prop[] props;
 
     private int currentIdx;
     private int count;
@@ -74,6 +78,7 @@ public class LevelScene extends Scene {
         this.ratio = this.currentHp / this.myHp;
         this.tmpCount = 1;
         this.tmpCount2 = 0;
+        this.props = new Prop[2];
     }
 
     @Override
@@ -97,9 +102,15 @@ public class LevelScene extends Scene {
     @Override
     public void sceneUpdate() {
 //        if (this.delay.isTrig()) { //慢動作delay，Debug再開
-        if (this.state == 0) { //設定背景起始位置， 敵人怪物降落
+        if (this.state == 0) { //設定背景起始位置， 敵人怪物降落           
             this.background.setX((3 - this.sceneCount) * ImgInfo.BACKGROUND_SIZE[idx][0]);
-            dropEnemies();
+            if (dropEnemies()) {
+                if (this.sceneCount == 1) {
+                    this.props[0] = new Heart(ImgInfo.HEART, Global.random(50, Global.SCREEN_X - 50), 50, 80, 80, 40, ImgInfo.HEART_NUM, 10);
+                } else if (this.sceneCount == 2) {
+                    this.props[1] = new Booster(ImgInfo.SHOE, Global.SCREEN_X - 50, Global.random(50, Global.SCREEN_Y - Global.INFO_H - 50), 80, 80, 40, ImgInfo.SHOE_NUM, 35);
+                }
+            }
         } else if (this.state == 1) { //遊戲開始
 
             for (int i = 0; i < this.battleEnemies.size(); i++) {
@@ -112,8 +123,18 @@ public class LevelScene extends Scene {
                 this.marbles.get(i).update();      //怪物、技能更新
             }
 
+            for (int i = 0; i < this.props.length; i++) {
+                if (this.props[i] != null) {
+                    this.props[i].update();
+                    if (this.props[i].getIsStop()) {
+                        this.props[i] = null;
+                    }
+                }
+            }
+
             strikeEnemies();
             teamHelp();
+            hitProp();
 
             for (int i = 0; i < this.battleEnemies.size(); i++) { //判斷敵人是否死亡
                 if (this.battleEnemies.get(i).getInfo().getHp() <= 0) {
@@ -129,7 +150,7 @@ public class LevelScene extends Scene {
             if (isLose()) {
                 this.state = 2;
             }
-
+            calculateHP();
             if (checkAllStop()) { //當所有我方怪物靜止
                 for (int i = 0; i < this.marbles.size(); i++) {
                     this.marbles.get(i).setUseSkill(true);
@@ -145,7 +166,7 @@ public class LevelScene extends Scene {
                 if (this.enemyRound != 0) {
                     if (enemyRound % 3 == 0) {
                         enemyAttack();
-                        calculateHP();
+
                         this.hitCount = 0;
                         tmpCount = 0;
                     } else {
@@ -197,6 +218,17 @@ public class LevelScene extends Scene {
 //        this.state = 0;
     }
 
+    private void hitProp() {
+        for (int i = 0; i < this.marbles.size(); i++) {
+            for (int j = 0; j < this.props.length; j++) {
+                if (this.props[j] != null && this.marbles.get(i).isCollision(this.props[j])) {
+                    this.props[j].setIsCollide(true);
+                    this.props[j].useProp(marbles, i);
+                }
+            }
+        }
+    }
+
     private boolean isLose() {
         if (this.currentHp <= 0) {
             return true;
@@ -212,6 +244,9 @@ public class LevelScene extends Scene {
         int tmp = 0;
         for (int i = 0; i < this.marbles.size(); i++) {
             tmp += this.marbles.get(i).getInfo().getHp();
+        }
+        if (tmp > this.myHp) {
+            tmp = (int) this.myHp;
         }
         this.currentHp = tmp;
         this.ratio = this.currentHp / this.myHp;
@@ -322,7 +357,7 @@ public class LevelScene extends Scene {
         }
     }
 
-    private void dropEnemies() {
+    private boolean dropEnemies() {
         for (int i = 0; i < this.battleEnemies.size(); i++) {
             if (this.battleEnemies.get(i).getCenterY() < Global.ENEMYPOS_Y[i]) {
                 this.battleEnemies.get(i).offset(0, Global.ENEMYPOS_Y[i] / 40);
@@ -332,8 +367,10 @@ public class LevelScene extends Scene {
             if (this.battleEnemies.get(i).getCenterY() >= Global.ENEMYPOS_Y[i]) {
                 this.marbles.get(currentIdx).setShine(true);
                 this.state = 1;
+                return true;
             }
         }
+        return false;
     }
 
     private boolean checkAllStop() {
@@ -359,6 +396,11 @@ public class LevelScene extends Scene {
         }
         for (int i = 0; i < this.marbles.size(); i++) {
             this.marbles.get(i).paintAll(g);
+        }
+        for (int i = 0; i < this.props.length; i++) {
+            if (this.props[i] != null) {
+                this.props[i].paintComponent(g);
+            }
         }
         paintText(g);
     }
@@ -412,7 +454,17 @@ public class LevelScene extends Scene {
         g.drawString("Battle  ", 800 - 2, Global.SCREEN_Y - 40 - 2);
         g.setFont(new Font("Showcard Gothic", Font.PLAIN, 36));
         g.drawString("" + (sceneCount + 1), 930 - 2, Global.SCREEN_Y - 40 - 2);
-
+        
+        g.setColor(Color.GRAY);
+        g.setFont(new Font("VinerHandITC", Font.PLAIN, 20));
+        g.drawString("Player: " + this.playerinfo.getName(), 530, Global.SCREEN_Y - 60);
+        g.setColor(Color.BLACK);
+        g.drawString("Player: " + this.playerinfo.getName(), 530 - 2, Global.SCREEN_Y - 60 - 2);
+        g.setColor(Color.GRAY);
+        g.drawString("Level: " + this.playerinfo.getLevel(), 530, Global.SCREEN_Y - 30);
+        g.setColor(Color.BLACK);
+        g.drawString("Level: " + this.playerinfo.getLevel(), 530 - 2, Global.SCREEN_Y - 30 - 2);       
+        
         g.setFont(new Font("Showcard Gothic", Font.PLAIN, 24));
         g.setColor(Color.GRAY);
         g.drawString("HP ", 525, Global.SCREEN_Y - 105);

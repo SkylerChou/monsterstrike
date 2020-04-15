@@ -78,9 +78,9 @@ public class Obstacle extends GameObject {
 
     @Override
     public void paintComponent(Graphics g) {
-        this.renderer.paintM(g, (int) (this.getX()),
-                (int) (this.getY()),
-                (int) (this.getWidth()), (int) (this.getHeight()));
+        this.renderer.paint(g, (int) (this.getX()),(int) (this.getY()),
+                (int) (this.getWidth()), (int) (this.getHeight()),
+                ImgInfo.POST_ORIGIN_INFO[0], ImgInfo.POST_ORIGIN_INFO[1]);
 
         if (Global.IS_DEBUG) {
             g.drawOval((int) (this.getCenterX() - this.getR()),

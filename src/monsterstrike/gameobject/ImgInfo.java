@@ -99,8 +99,8 @@ public class ImgInfo {
     public static final int[][] MYMARBLE_INFO = {FIREBALL_INFO};
 
     public static final String POSTS_PATH = MARBLE_ROOT + "mushroom.png";
-    public static final String[] POSTS2_PATH = {MARBLE_ROOT + "mushroom1.png", MARBLE_ROOT + "mushroom2.png"};
     public static final int[] POST_INFO = {95, 95, 40, 2};
+    public static final int[] POST_ORIGIN_INFO = {315,283};
 
     public static final String PINGPONG = BACKGROUND_ROOT + "battleback6.png";
 
@@ -108,8 +108,10 @@ public class ImgInfo {
     private static final String PROPS_ROOT = "/resources/props/";
     public static final String HEART = PROPS_ROOT + "heart.png";
     public static final int HEART_NUM = 7;
+    public static final int[] HEART_INFO = {268, 242};
     public static final String SHOE = PROPS_ROOT + "shoe.png";
     public static final int SHOE_NUM = 4;
+    public static final int[] SHOE_INFO = {351, 206};
     public static final String[] BOOSTER = {PROPS_ROOT + "Booster1.png", PROPS_ROOT + "Booster2.png"};
     public static final int[] PROPS_INFO = {80, 80, 40};
 

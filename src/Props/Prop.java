@@ -6,63 +6,54 @@
 package Props;
 
 import java.awt.Graphics;
+import java.util.ArrayList;
 import monsterstrike.gameobject.GameObject;
-import monsterstrike.gameobject.ObjectRenderer;
+import monsterstrike.gameobject.marble.Marble;
 import monsterstrike.gameobject.marble.MarbleRenderer;
-import monsterstrike.util.Global;
 
 /**
  *
  * @author kim19
  */
-public class Prop extends GameObject {
+public abstract class Prop extends GameObject {
 
     protected MarbleRenderer renderer;
     protected boolean isCollide;
+    protected boolean isUsed;
     private String name;
 
-    public Prop(String path, int x, int y, int width, int height, int r, int pictureNum,String name) {
+    public Prop(String path, int x, int y, int width, int height, int r, int pictureNum, int delay) {
         super(x, y, width, height, r);
-        this.renderer = new MarbleRenderer(path,pictureNum, 35);
+        this.renderer = new MarbleRenderer(path, pictureNum, delay);
         this.isCollide = false;
         this.name = name;
-    }
-
-    @Override
-    public void paintComponent(Graphics g) {
-        this.renderer.paint(g, (int) (this.getX()), (int) (this.getY()),
-                (int) (this.getWidth()), (int) (this.getHeight()));
-        if (Global.IS_DEBUG) {
-            g.drawOval((int) (this.getCenterX() - this.getR()),
-                    (int) (this.getCenterY() - this.getR()),
-                    (int) (2 * this.getR()), (int) (2 * this.getR()));
-        }
-    }
-    
-    public void paintH(Graphics g) {
-        this.renderer.paintH(g, (int) (this.getX()),
-                (int) (this.getY()),
-                (int) (this.getWidth()), (int) (this.getHeight()));
-    }
-    public void paintS(Graphics g) {
-        this.renderer.paintS(g, (int) (this.getX()),
-                (int) (this.getY()),
-                (int) (this.getWidth()), (int) (this.getHeight()));
-    }
-    
-    public boolean getIsStop(){
-        return this.renderer.getIsStop();
+        this.isUsed = false;
     }
 
     @Override
     public void update() {
-        this.renderer.update();
-    }
-
-    public void updateOnce(){
-        this.renderer.updateOnce();
+        if (this.isCollide) {
+            this.renderer.updateOnce();
+        }
     }
     
+    public abstract void useProp(ArrayList<Marble> marble, int idx);
+
+    @Override
+    public abstract void paintComponent(Graphics g);
+
+    public boolean getIsStop() {
+        return this.renderer.getIsStop();
+    }
+
+    public void setIsCollide(boolean isCollide) {
+        this.isCollide = isCollide;
+    }
+
+    public boolean getIsCollide() {
+        return this.isCollide;
+    }
+
     public String getName() {
         return this.name;
     }

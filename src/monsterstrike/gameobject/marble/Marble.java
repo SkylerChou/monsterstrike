@@ -28,7 +28,7 @@ public class Marble extends Ball {
     private SpecialEffect shine;
     private Strike species;
     private float fullBlood;
-    private Item[] bloodImg;
+    private Item[] bloodItem;
     private float bloodRatio;
 
     private Skills[] skills;
@@ -41,9 +41,9 @@ public class Marble extends Ball {
         String path = ImgInfo.MARBLE_ROOT + info.getImgName();
         int num = info.getImgW() / info.getImgH();
         this.fullBlood = this.info.getHp();
-        this.bloodImg = new Item[2];
-        this.bloodImg[0] = new Item(ImgInfo.BLOODS_PATH[0], x, (int)(y-info.getR()), ImgInfo.BLOODS_INFO[0], ImgInfo.BLOODS_INFO[1]);
-        this.bloodImg[1] = new Item(ImgInfo.BLOODS_PATH[1], x, (int)(y-info.getR()), ImgInfo.BLOODS_INFO[0], ImgInfo.BLOODS_INFO[1]);
+        this.bloodItem = new Item[2];
+        this.bloodItem[0] = new Item(ImgInfo.BLOODS_PATH[0], x, (int) (y - info.getR()), ImgInfo.BLOODS_INFO[0], ImgInfo.BLOODS_INFO[1]);
+        this.bloodItem[1] = new Item(ImgInfo.BLOODS_PATH[1], x, (int) (y - info.getR()), ImgInfo.BLOODS_INFO[0], ImgInfo.BLOODS_INFO[1]);
         this.renderer = new MarbleRenderer(path + ".png", num, 20);
         this.rendererDie = new MarbleRenderer(path + "Die.png", 7, 10);
         int[] shineSize = {x, y, w - 10, h - 10};
@@ -80,7 +80,12 @@ public class Marble extends Ball {
             this.goVec.setValue(this.goVec.getValue() - this.wallFic);
         }
         this.skills[this.skillIdx].update();
+        for (int i = 0; i < 2; i++) {
+            this.bloodItem[i].setCenterX(this.getCenterX());
+            this.bloodItem[i].setCenterY(this.getCenterY() - this.getR() - 10);
+        }
         this.bloodRatio = this.info.getHp() / this.fullBlood;
+
     }
 
     @Override
@@ -211,18 +216,18 @@ public class Marble extends Ball {
     @Override
     public void paintComponent(Graphics g) {
         if (!this.isDie) {
-            this.renderer.paint(g, (int) (this.getX()),
-                    (int) (this.getY()),
-                    (int) (this.getWidth()), (int) (this.getHeight()));
+            this.renderer.paint(g, (int) (this.getX()), (int) (this.getY()),
+                    (int) (this.getWidth()), (int) (this.getHeight()),
+                    ImgInfo.MARBLE_UNIT_X, ImgInfo.MARBLE_UNIT_Y);
             if (info.getState() == 1) {
-                this.bloodImg[0].paint(g);
-                this.bloodImg[1].paintResize(g, bloodRatio);
-                System.out.println(bloodRatio);
+                this.bloodItem[0].paint(g);
+                this.bloodItem[1].paintResize(g, bloodRatio);
+
             }
         } else {
-            this.rendererDie.paint(g, (int) (this.getX()),
-                    (int) (this.getY()),
-                    (int) (this.getWidth()), (int) (this.getHeight()));
+            this.rendererDie.paint(g, (int) (this.getX()), (int) (this.getY()),
+                    (int) (this.getWidth()), (int) (this.getHeight()),
+                    ImgInfo.MARBLE_UNIT_X, ImgInfo.MARBLE_UNIT_Y);
         }
 
         if (Global.IS_DEBUG) {

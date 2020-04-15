@@ -139,52 +139,6 @@ public class PingPong extends Scene {
 
     }
 
-    private boolean canMove(int idx) {
-        switch (this.dino.getDir()) {
-            case Global.LEFT2:
-                for (int i = 0; i < this.post.size(); i++) {
-                    if (idx == i) {
-                        continue;
-                    }
-                    if (this.post.get(idx).left() <= this.post.get(i).right()) {
-                        return false;
-                    }
-                }
-                break;
-            case Global.UP2:
-                for (int i = 0; i < this.post.size(); i++) {
-                    if (idx == i) {
-                        continue;
-                    }
-                    if (this.post.get(idx).top() <= this.post.get(i).bottom()) {
-                        return false;
-                    }
-                }
-                break;
-            case Global.RIGHT2:
-                for (int i = 0; i < this.post.size(); i++) {
-                    if (idx == i) {
-                        continue;
-                    }
-                    if (this.post.get(idx).right() <= this.post.get(i).left()) {
-                        return false;
-                    }
-                }
-                break;
-            case Global.DOWN2:
-                for (int i = 0; i < this.post.size(); i++) {
-                    if (idx == i) {
-                        continue;
-                    }
-                    if (this.post.get(idx).bottom() <= this.post.get(i).top()) {
-                        return false;
-                    }
-                }
-                break;
-        }
-        return true;
-    }
-
     private void genPost(){
         int i=Global.random(150, 1200);
         int y = Global.random(0, 500);

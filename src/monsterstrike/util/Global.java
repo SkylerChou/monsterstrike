@@ -7,7 +7,7 @@ package monsterstrike.util;
 
 public class Global {
 
-    public static final boolean IS_DEBUG =true;
+    public static final boolean IS_DEBUG =false;
 
     //視窗大小
     public static final int FRAME_X =1280;
@@ -37,10 +37,10 @@ public class Global {
     public static final int GENIE_MASS = 1;
 
     public static final int[] POSITION_X = {random(60,250), random(60,250), random(60,250)};
-    public static final int[] POSITION_Y = {135, 270, 405};
+    public static final int[] POSITION_Y = {180, 270, 405};
 
     public static final int[] ENEMYPOS_X = {850, 1000, 850, 700};
-    public static final int[] ENEMYPOS_Y = {135, 270, 405, 350, 200};
+    public static final int[] ENEMYPOS_Y = {180, 270, 405, 350, 200};
     
     public static final int INFO_H = 135;
     
