@@ -256,7 +256,6 @@ public class Mutiplayer extends Scene {
                 arrow.setDegree((float) Math.acos(vector.getX() / vector.getValue()));
                 arrow.setResizeMag(vector.getValue() / arrow.getWidth());
                 marbles.get(currentIdx).setGo(vector.resizeVec(marbles.get(currentIdx).getInfo().getV()));
-
 //                marbles.get(currentIdx).setGo(vector.resizeVec(marbles.get(currentIdx).getVelocity()));
                 count++;
                 arrow.setShow(false);

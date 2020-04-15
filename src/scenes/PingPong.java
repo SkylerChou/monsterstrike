@@ -36,21 +36,25 @@ public class PingPong extends Scene {
     private BufferedImage scoreBoard;
     private int Score;
 
+    private ArrayList<Button> buttons;
+    private boolean isEnter;
+    private boolean isOnButton;
+
     public PingPong(SceneController sceneController) {
         super(sceneController);
+        this.scoreBoard = IRC.getInstance().tryGetImage("/resources/score.png");
         this.post = new ArrayList<>();
+        this.buttons = new ArrayList<>();
     }
 
     @Override
     public void sceneBegin() {
-        this.scoreBoard=IRC.getInstance().tryGetImage("/resources/score.png");
         for (int i = 0; i < 10; i++) {
             int y = Global.random(50, 200);
             this.post.add(new Obstacle(ImgInfo.POSTS_PATH, 150 + i * 150, 150 + y,
                     ImgInfo.POST_INFO[0], ImgInfo.POST_INFO[1], ImgInfo.POST_INFO[2], ImgInfo.POST_INFO[3]));
         }
-        
-        
+        this.buttons.add(new Button(ImgInfo.HOME, Global.SCREEN_X - 30, 30, ImgInfo.SETTING_INFO[0], ImgInfo.SETTING_INFO[1], 20));
         this.home = new SpecialEffect(ImgInfo.BALCKHOLE, 1000, 500,
                 ImgInfo.BLACKHOLE_INFO[0], ImgInfo.BLACKHOLE_INFO[1], 40);
         this.home.setShine(true);
@@ -61,7 +65,8 @@ public class PingPong extends Scene {
         this.arrow = new Arrow(ImgInfo.ARROW, 0, 0, ImgInfo.ARROW_INFO);
         this.background.setX(2 * ImgInfo.BACKGROUND_SIZE[idx][0]);
         this.dinoGetNum = 0;
-        
+        this.isEnter = false;
+        this.isOnButton = false;
     }
 
     @Override
@@ -127,10 +132,16 @@ public class PingPong extends Scene {
                     this.post.remove(i);
                 }
             }
-            if(this.post.size()<8){
-               genPost();
-               this.post.get(7).update();
+            if (this.post.size() < 8) {
+                genPost();
+                this.post.get(7).update();
             }
+        }
+        if (this.isEnter) {
+            sceneController.changeScene(new Menu(sceneController));
+        }
+        if (this.isOnButton) {
+            this.buttons.get(0).update();
         }
     }
 
@@ -139,13 +150,14 @@ public class PingPong extends Scene {
 
     }
 
-    private void genPost(){
-        int i=Global.random(150, 1200);
+
+    private void genPost() {
+        int i = Global.random(150, 1200);
         int y = Global.random(0, 500);
-        this.post.add(new Obstacle(ImgInfo.POSTS_PATH,  i ,  y,
-                    ImgInfo.POST_INFO[0], ImgInfo.POST_INFO[1], ImgInfo.POST_INFO[2], ImgInfo.POST_INFO[3]));
+        this.post.add(new Obstacle(ImgInfo.POSTS_PATH, i, y,
+                ImgInfo.POST_INFO[0], ImgInfo.POST_INFO[1], ImgInfo.POST_INFO[2], ImgInfo.POST_INFO[3]));
     }
-    
+
     public boolean isBound(int i) {
         if ((this.post.get(i).getCenterX() - this.post.get(i).getR() <= 0 && this.dino.getDir() == Global.LEFT2)
                 || (this.post.get(i).getCenterX() + this.post.get(i).getR() >= Global.SCREEN_X && this.dino.getDir() == Global.RIGHT2)
@@ -192,6 +204,7 @@ public class PingPong extends Scene {
     @Override
     public void paint(Graphics g) {
         this.background.paintMenu(g);
+        this.buttons.get(0).paint(g);
         this.arrow.paint(g);
         this.home.paint(g);
         this.dino.paint(g);
@@ -205,8 +218,8 @@ public class PingPong extends Scene {
     }
 
     private void paintText(Graphics g) {
-        g.drawImage(scoreBoard,  Global.SCREEN_X / 2 - 70, 0, 270, 70, null);
-        g.setColor(Color.WHITE);
+        g.drawImage(scoreBoard, Global.SCREEN_X / 2 - 70, 0, 270, 70, null);
+        g.setColor(Color.DARK_GRAY);
         g.setFont(new Font("VinerHandITC", Font.TRUETYPE_FONT, 44));
         g.drawString("Score: " + Score, Global.SCREEN_X / 2 - 50, 50);
         g.setColor(Color.BLACK);
@@ -285,11 +298,21 @@ public class PingPong extends Scene {
 
         @Override
         public void mouseTrig(MouseEvent e, CommandSolver.MouseState state, long trigTime) {
-
+            if (state == CommandSolver.MouseState.PRESSED && e.getX() > Global.SCREEN_X - 30 - ImgInfo.SETTING_INFO[1] / 2 && e.getX() < Global.SCREEN_X - 30 + ImgInfo.SETTING_INFO[1] / 2
+                    && e.getY() > 30 - ImgInfo.SETTING_INFO[1] / 2 && e.getY() < 30 + ImgInfo.SETTING_INFO[1] / 2) {
+                isEnter = true;
+            }
+            if (state == CommandSolver.MouseState.MOVED && e.getX() > Global.SCREEN_X - 30 - ImgInfo.SETTING_INFO[1] / 2 && e.getX() < Global.SCREEN_X - 30 + ImgInfo.SETTING_INFO[1] / 2
+                    && e.getY() > 30 - ImgInfo.SETTING_INFO[1] / 2 && e.getY() < 30 + ImgInfo.SETTING_INFO[1] / 2) {
+                isOnButton = true;
+            } else {
+                isOnButton = false;
+            }
             if (checkStop()) {
                 if (state == CommandSolver.MouseState.PRESSED) {
                     this.startX = e.getX();
                     this.startY = e.getY();
+
                 }
 
                 if (state == CommandSolver.MouseState.DRAGGED) {

@@ -9,6 +9,7 @@ import controllers.SceneController;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import monsterstrike.PlayerInfo;
 import monsterstrike.gameobject.Background;
@@ -39,6 +40,10 @@ public class LevelMenu extends Scene {
     private Delay delay;
     private int level;
 
+    private ArrayList<Button> button;
+    private boolean isEnter;
+    private boolean isOnButton;
+
     public LevelMenu(SceneController sceneController) {
         super(sceneController);
         this.allMarbleInfo = FileIO.readMarble("marbleInfo.csv");
@@ -49,6 +54,7 @@ public class LevelMenu extends Scene {
         this.fightMarbles = new Marble[3];
         this.buttons = new ArrayList<>();
         this.enemyFightMarbles = new ArrayList<>();
+        this.button = new ArrayList<>();
     }
 
     @Override
@@ -59,6 +65,7 @@ public class LevelMenu extends Scene {
         this.x = 350;
         this.y = 200;
         this.backIdx = 0;
+        this.button.add(new Button(ImgInfo.HOME, Global.SCREEN_X - 30, 30, ImgInfo.SETTING_INFO[0], ImgInfo.SETTING_INFO[1], 20));
         this.background = new Background(ImgInfo.BACKGROUND_PATH[this.backIdx], 0, 0, this.backIdx);
         for (int i = 0; i < this.allMarbleInfo.size(); i++) {
             if (inMySerials(this.allMarbleInfo.get(i))) {
@@ -110,6 +117,12 @@ public class LevelMenu extends Scene {
             }
             this.buttons.get(i).update();
             this.buttons.get(i + 1).update();
+        }
+        if (this.isEnter) {
+            sceneController.changeScene(new Menu(sceneController));
+        }
+        if (this.isOnButton) {
+            this.button.get(0).update();
         }
     }
 
@@ -174,6 +187,7 @@ public class LevelMenu extends Scene {
         for (int i = 0; i < this.buttons.size(); i++) {
             this.buttons.get(i).paint(g);
         }
+        this.button.get(0).paint(g);
     }
 
     public void paintText(Graphics g, Marble m, int x, int y) {
@@ -205,7 +219,8 @@ public class LevelMenu extends Scene {
 
     @Override
     public CommandSolver.MouseCommandListener getMouseListener() {
-        return null;
+        return new MyMouseListener();
+
     }
 
     public class MyKeyListener implements CommandSolver.KeyListener {
@@ -255,6 +270,23 @@ public class LevelMenu extends Scene {
 
         @Override
         public void keyTyped(char c, long trigTime) {
+        }
+    }
+
+    public class MyMouseListener implements CommandSolver.MouseCommandListener {
+
+        @Override
+        public void mouseTrig(MouseEvent e, CommandSolver.MouseState state, long trigTime) {
+            if (state == CommandSolver.MouseState.PRESSED && e.getX() > Global.SCREEN_X - 30 - ImgInfo.SETTING_INFO[1] / 2 && e.getX() < Global.SCREEN_X - 30 + ImgInfo.SETTING_INFO[1] / 2
+                    && e.getY() > 30 - ImgInfo.SETTING_INFO[1] / 2 && e.getY() < 30 + ImgInfo.SETTING_INFO[1] / 2) {
+                isEnter = true;
+            }
+            if (state == CommandSolver.MouseState.MOVED && e.getX() > Global.SCREEN_X - 30 - ImgInfo.SETTING_INFO[1] / 2 && e.getX() < Global.SCREEN_X - 30 + ImgInfo.SETTING_INFO[1] / 2
+                    && e.getY() > 30 - ImgInfo.SETTING_INFO[1] / 2 && e.getY() < 30 + ImgInfo.SETTING_INFO[1] / 2) {
+                isOnButton = true;
+            } else {
+                isOnButton = false;
+            }
         }
     }
 }
