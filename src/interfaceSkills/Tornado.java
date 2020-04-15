@@ -5,6 +5,7 @@
  */
 package interfaceskills;
 
+import java.awt.Graphics;
 import java.util.ArrayList;
 import monsterstrike.gameobject.marble.Marble;
 import monsterstrike.util.Global;

@@ -27,6 +27,9 @@ public class Marble extends Ball {
     private float wallFic;
     private SpecialEffect shine;
     private Strike species;
+    private float fullBlood;
+    private Item[] bloodImg;
+    private float bloodRatio;
 
     private Skills[] skills;
     private int skillIdx;
@@ -37,9 +40,13 @@ public class Marble extends Ball {
         this.info = info;
         String path = ImgInfo.MARBLE_ROOT + info.getImgName();
         int num = info.getImgW() / info.getImgH();
+        this.fullBlood = this.info.getHp();
+        this.bloodImg = new Item[2];
+        this.bloodImg[0] = new Item(ImgInfo.BLOODS_PATH[0], x, (int)(y-info.getR()), ImgInfo.BLOODS_INFO[0], ImgInfo.BLOODS_INFO[1]);
+        this.bloodImg[1] = new Item(ImgInfo.BLOODS_PATH[1], x, (int)(y-info.getR()), ImgInfo.BLOODS_INFO[0], ImgInfo.BLOODS_INFO[1]);
         this.renderer = new MarbleRenderer(path + ".png", num, 20);
-        this.rendererDie = new MarbleRenderer(path + "Die.png", 7, 15);
-        int[] shineSize = {x, y, w, h};
+        this.rendererDie = new MarbleRenderer(path + "Die.png", 7, 10);
+        int[] shineSize = {x, y, w - 10, h - 10};
         if (info.getAttribute() > 2) {
             shineSize[0] = (int) (x - 0.25f * w);
             shineSize[1] = (int) (y - 0.25f * h);
@@ -73,6 +80,7 @@ public class Marble extends Ball {
             this.goVec.setValue(this.goVec.getValue() - this.wallFic);
         }
         this.skills[this.skillIdx].update();
+        this.bloodRatio = this.info.getHp() / this.fullBlood;
     }
 
     @Override
@@ -190,6 +198,10 @@ public class Marble extends Ball {
         this.skills[this.skillIdx].paintSkill(g);
     }
 
+    public void paintShine(Graphics g) {
+        this.shine.paintComponent(g);
+    }
+
     public void paintAll(Graphics g) {
         this.shine.paintComponent(g);
         paintComponent(g);
@@ -202,6 +214,11 @@ public class Marble extends Ball {
             this.renderer.paint(g, (int) (this.getX()),
                     (int) (this.getY()),
                     (int) (this.getWidth()), (int) (this.getHeight()));
+            if (info.getState() == 1) {
+                this.bloodImg[0].paint(g);
+                this.bloodImg[1].paintResize(g, bloodRatio);
+                System.out.println(bloodRatio);
+            }
         } else {
             this.rendererDie.paint(g, (int) (this.getX()),
                     (int) (this.getY()),

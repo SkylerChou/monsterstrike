@@ -9,13 +9,9 @@ import controllers.SceneController;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import monsterstrike.PlayerInfo;
-import monsterstrike.gameobject.Background;
-import monsterstrike.gameobject.Dino;
-import monsterstrike.gameobject.ImgInfo;
+import monsterstrike.gameobject.*;
 import monsterstrike.gameobject.marble.MarbleInfo;
-import monsterstrike.util.CommandSolver;
-import monsterstrike.util.Delay;
-import monsterstrike.util.Global;
+import monsterstrike.util.*;
 
 /**
  *
@@ -26,7 +22,7 @@ public class Loading extends Scene {
     private Background loading;
     private Dino dino;
     private ArrayList<MarbleInfo> allMarbleInfo;
-    private ArrayList<PlayerInfo> playerInfo;
+    private PlayerInfo playerInfo;
     private Delay delay;
 
     public Loading(SceneController sceneController) {
@@ -38,7 +34,7 @@ public class Loading extends Scene {
         this.loading = new Background(ImgInfo.MENU, 0, 0, 1);
         this.dino = new Dino(ImgInfo.DINO, Global.SCREEN_X / 2, Global.SCREEN_Y / 2, Dino.STEPS_WALK);
         this.allMarbleInfo = FileIO.readMarble("marbleInfo.csv");
-        this.playerInfo = FileIO.readPlayer("playerInfo.csv");
+//        this.playerInfo = FileIO.readPlayer("playerInfo.csv");
         this.delay = new Delay(180, false);
         this.delay.start();
     }

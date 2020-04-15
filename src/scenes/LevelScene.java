@@ -37,8 +37,8 @@ public class LevelScene extends Scene {
     private int hitCount;
     private int round;
     private int enemyRound;
-    private float myHp;
-    private float currentHp;
+    private float myHp;     //總血量
+    private float currentHp; //當前血量
     private float ratio;
     private int tmpCount;
     private int tmpCount2;
@@ -78,7 +78,7 @@ public class LevelScene extends Scene {
 
     @Override
     public void sceneBegin() {
-        this.background = new Background(ImgInfo.BACKGROUND_PATH[idx], 2 * ImgInfo.BACKGROUND_SIZE[idx][0], ImgInfo.BACKGROUND_SIZE[idx][1], idx);
+        this.background = new Background(ImgInfo.BACKGROUND_PATH[idx], 3 * ImgInfo.BACKGROUND_SIZE[idx][0], ImgInfo.BACKGROUND_SIZE[idx][1], idx);
         for (int i = 0; i < 3; i++) {
             this.marbles.get(i).setCenterX(Global.POSITION_X[i]);
             this.marbles.get(i).setCenterY(Global.POSITION_Y[i]);
@@ -87,7 +87,7 @@ public class LevelScene extends Scene {
         this.currentIdx = 0;
         this.count = 0;
         this.state = 0;
-        this.sceneCount = 0;
+        this.sceneCount = 0; //用於小關場景移動
         this.hitCount = 0;
         this.round = 0;
         this.enemyRound = 0;
@@ -98,7 +98,7 @@ public class LevelScene extends Scene {
     public void sceneUpdate() {
 //        if (this.delay.isTrig()) { //慢動作delay，Debug再開
         if (this.state == 0) { //設定背景起始位置， 敵人怪物降落
-            this.background.setX(2 * ImgInfo.BACKGROUND_SIZE[idx][0]);
+            this.background.setX((3 - this.sceneCount) * ImgInfo.BACKGROUND_SIZE[idx][0]);
             dropEnemies();
         } else if (this.state == 1) { //遊戲開始
 
@@ -123,7 +123,6 @@ public class LevelScene extends Scene {
                     if (this.battleEnemies.get(i).getIsDie() && this.battleEnemies.get(i).getDieRenderer().getIsStop()) {
                         this.battleEnemies.remove(i);
                     }
-
                 }
             }
 
@@ -167,19 +166,22 @@ public class LevelScene extends Scene {
 
         } else if (state == 2) { //若跑完3個小關回到選單，否則移動背景進入下一小關
             if (this.sceneCount == 2) {
-                Marble m = this.allEnemies.luckyDraw();
-                m.getInfo().setState(0);
-                this.playerinfo.addMyMarbleSerial(m.getInfo().getSerial());
-                if (this.playerinfo.getLevel() - 1 == this.idx) {
-                    this.playerinfo.setLevel(this.playerinfo.getLevel() + 1);
+                if (!isLose()) {
+                    Marble m = this.allEnemies.luckyDraw();
+                    m.getInfo().setState(0);
+                    this.playerinfo.addMyMarbleSerial(m.getInfo().getSerial());
+                    if (this.playerinfo.getLevel() - 1 == this.idx && this.playerinfo.getLevel() != 5) {
+                        this.playerinfo.setLevel(this.playerinfo.getLevel() + 1);
+                    }
+                    FileIO.writePlayer("playerInfo.csv", this.playerinfo);
+                    FileIO.writeMarble("marbleInfo.csv", m.getInfo());
+                    System.out.println("抽中怪物:" + m.getInfo().getName());
+                    System.out.println(this.playerinfo);
                 }
-                FileIO.writePlayer("playerInfo.csv", this.playerinfo);
-                FileIO.writeMarble("marbleInfo.csv", m.getInfo());
-                System.out.println("抽中怪物:" + m.getInfo().getName());
-                System.out.println(this.playerinfo);
                 sceneController.changeScene(new LevelMenu(sceneController));
+            } else {
+                scrollScene();
             }
-            scrollScene();
         }
 //        }
     }
@@ -285,10 +287,10 @@ public class LevelScene extends Scene {
     }
 
     private void scrollScene() {
-        if (this.background.getX() > ImgInfo.BACKGROUND_SIZE[idx][0]) {
+        if (this.background.getX() > (2 - this.sceneCount) * ImgInfo.BACKGROUND_SIZE[idx][0]) {
             this.background.offset(-10);
         }
-        if (this.background.getX() <= ImgInfo.BACKGROUND_SIZE[idx][0]) {
+        if (this.background.getX() <= (2 - this.sceneCount) * ImgInfo.BACKGROUND_SIZE[idx][0]) {
             this.sceneCount++;
             genBattleEnemies();
             this.state = 0;
@@ -368,32 +370,54 @@ public class LevelScene extends Scene {
                 tmpCount2 = hitCount;
             }
             g.setColor(Color.BLACK);
-            g.setFont(new Font("VinerHandITC", Font.ITALIC, 44));
-            g.drawString("Hits " + tmpCount2, Global.SCREEN_X - 200, 100);
+            g.setFont(new Font("Showcard Gothic", Font.PLAIN, 36));
+            g.drawString("Hits ", Global.SCREEN_X - 200, 100);
+            g.setFont(new Font("Showcard Gothic", Font.PLAIN, 42));
+            g.drawString("" + tmpCount2, Global.SCREEN_X - 105, 100);
             g.setColor(new Color(255, 153, 0));
-            g.drawString("Hits " + tmpCount2, Global.SCREEN_X - 200 - 3, 100 - 3);
+            g.setFont(new Font("Showcard Gothic", Font.PLAIN, 36));
+            g.drawString("Hits ", Global.SCREEN_X - 200 - 2, 100 - 2);
+            g.setFont(new Font("Showcard Gothic", Font.PLAIN, 42));
+            g.drawString("" + tmpCount2, Global.SCREEN_X - 105 - 2, 100 - 2);
             tmpCount2 = tmpCount++ / 10 + 1;
         }
         if (round > 0) {
             g.setColor(Color.BLACK);
-            g.setFont(new Font("VinerHandITC", Font.ITALIC, 36));
-            g.drawString("Round " + round, 30, 495);
+            g.setFont(new Font("Showcard Gothic", Font.PLAIN, 28));
+            g.drawString("Round ", 30, 495);
+            g.setFont(new Font("Showcard Gothic", Font.PLAIN, 36));
+            g.drawString("" + round, 140, 495);
             g.setColor(new Color(255, 153, 0));
-            g.drawString("Round " + round, 30 - 3, 495 - 3);
+            g.setFont(new Font("Showcard Gothic", Font.PLAIN, 28));
+            g.drawString("Round ", 30 - 2, 495 - 2);
+            g.setFont(new Font("Showcard Gothic", Font.PLAIN, 36));
+            g.drawString("" + round, 140 - 2, 495 - 2);
         }
 
         this.item.paint(g);
         this.blood.paintResize(g, this.ratio);
         g.setFont(new Font("VinerHandITC", Font.ITALIC, 20));
+//        g.setFont(new Font("Showcard Gothic", Font.ITALIC, 20));
         g.setColor(Color.BLACK);
-        g.drawString(this.currentHp + " / " + this.myHp, 1100, Global.SCREEN_Y - 100);
+        g.drawString((int) this.currentHp + " / " + (int) this.myHp, 1100, Global.SCREEN_Y - 100);
         g.setColor(Color.YELLOW);
-        g.drawString(this.currentHp + " / " + this.myHp, 1100 - 2, Global.SCREEN_Y - 100 - 2);
-        g.setFont(new Font("VinerHandITC", Font.ITALIC, 36));
+        g.drawString((int) this.currentHp + " / " + (int) this.myHp, 1100 - 2, Global.SCREEN_Y - 100 - 2);
         g.setColor(Color.GRAY);
-        g.drawString("Battle " + (sceneCount + 1), 800, Global.SCREEN_Y - 40);
+        g.setFont(new Font("Showcard Gothic", Font.PLAIN, 30));
+        g.drawString("Battle  ", 800, Global.SCREEN_Y - 40);
+        g.setFont(new Font("Showcard Gothic", Font.PLAIN, 36));
+        g.drawString("" + (sceneCount + 1), 930, Global.SCREEN_Y - 40);
         g.setColor(Color.BLACK);
-        g.drawString("Battle " + (sceneCount + 1), 800 - 3, Global.SCREEN_Y - 40 - 3);
+        g.setFont(new Font("Showcard Gothic", Font.PLAIN, 30));
+        g.drawString("Battle  ", 800 - 2, Global.SCREEN_Y - 40 - 2);
+        g.setFont(new Font("Showcard Gothic", Font.PLAIN, 36));
+        g.drawString("" + (sceneCount + 1), 930 - 2, Global.SCREEN_Y - 40 - 2);
+
+        g.setFont(new Font("Showcard Gothic", Font.PLAIN, 24));
+        g.setColor(Color.GRAY);
+        g.drawString("HP ", 525, Global.SCREEN_Y - 105);
+        g.setColor(Color.BLACK);
+        g.drawString("HP ", 525 - 2, Global.SCREEN_Y - 105 - 2);
         for (int i = 0; i < this.myMarbles.length; i++) {
             this.myMarbles[i].paintComponent(g);
         }
@@ -419,7 +443,7 @@ public class LevelScene extends Scene {
 
         @Override
         public void mouseTrig(MouseEvent e, CommandSolver.MouseState mouseState, long trigTime) {
-            if (state == 1 && checkAllStop()) {
+            if (state == 1 && checkAllStop() && allSkillStop(battleEnemies)) {
                 arrow.setResizeMag(0);
                 if (mouseState == CommandSolver.MouseState.PRESSED) {
                     this.startX = e.getX();

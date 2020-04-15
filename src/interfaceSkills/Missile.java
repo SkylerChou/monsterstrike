@@ -58,8 +58,8 @@ public class Missile extends Skills{
             float dy = vec.getUnitY();
             this.skill[i] = new SkillComponent(SKILL_IDX, attr, SkillImg.SKILL_NUM[0][attr],
                     (int) (self.getCenterX() + dx), (int) (self.getCenterY() + dy),WIDTH, HEIGHT, DELAY);
-            this.skill[i].setDx(dx*3);
-            this.skill[i].setDy(dy*3);
+            this.skill[i].setDx(dx*5);
+            this.skill[i].setDy(dy*5);
         }
 
         return this.hitCount;
@@ -67,10 +67,10 @@ public class Missile extends Skills{
 
     private boolean checkStrike(int idx, ArrayList<Marble> target) {        
         for (int j = 0; j < target.size(); j++) {
-            if (this.skill[idx].isCollision(target.get(j)) && !this.target.get(j).getIsCollide()) {
+            if (this.skill[idx].isCollision(target.get(j)) && !this.skill[idx].getIsBoom()) {
                 this.target.get(j).getInfo().setHp(this.target.get(j).getInfo().getHp() - this.self.getInfo().getAtk());
                 System.out.println(this.target.get(j).getInfo().getName() + "血量:" + this.target.get(j).getInfo().getHp());
-                this.target.get(j).setIsCollide(true);
+                this.skill[idx].setIsBoom(true);
                 return true;
             }
         }
@@ -84,7 +84,10 @@ public class Missile extends Skills{
         for (int i = 0; i < this.target.size(); i++) {
             Vector vec = new Vector(this.target.get(i).getCenterX()-this.self.getCenterX(),
                                     this.target.get(i).getCenterY()-this.self.getCenterY());
-            float rad = vec.getRadTheta(new Vector(0,1));
+            float rad = vec.getRadTheta(new Vector(0,-1));
+            if(this.target.get(i).getCenterX()<this.self.getCenterX()){
+                rad *= -1;
+            }
             if (this.skill[i] != null) {
                 g2d.rotate(rad, (int) (this.skill[i].getCenterX()), (int) (this.skill[i].getCenterY()));
                 this.skill[i].paint(g2d);

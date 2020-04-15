@@ -13,6 +13,7 @@ public class SkillComponent extends GameObject {
     private SkillRenderer renderer;
     private float dx;
     private float dy;
+    private boolean isBoom;
 
     public SkillComponent(int skillIdx, int attribute, int imgNum, 
             int x, int y, int w, int h, int delay) {
@@ -20,6 +21,15 @@ public class SkillComponent extends GameObject {
         this.renderer = new SkillRenderer(skillIdx, attribute, imgNum, delay);
         this.dx = 0f;
         this.dy = 0f;
+        this.isBoom = false;
+    }
+    
+    public void setIsBoom(boolean isBoom){
+        this.isBoom = isBoom;
+    }
+    
+    public boolean getIsBoom(){
+        return this.isBoom;
     }
 
     public void setStop(boolean isStop) {

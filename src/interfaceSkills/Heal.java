@@ -26,7 +26,5 @@ public class Heal extends Skills {
         System.out.println(self.getInfo().getName() + " 剩下血量" + self.getInfo().getHp() + "點");
         return 0;
     }
-    
-    
 
 }

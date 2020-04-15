@@ -24,7 +24,7 @@ public class ImgInfo {
     private static final String[] SHINE_DARK = {MARBLE_ROOT + "dark1.png", MARBLE_ROOT + "dark2.png"};
     private static final String[] SHINE_LIGHT = {MARBLE_ROOT + "light1.png", MARBLE_ROOT + "light2.png"};
 
-    public static final String[][] SHINE_PATH = {SHINE_ICE, SHINE_FIRE, SHINE_GRASS, SHINE_DARK, SHINE_LIGHT};
+    public static final String[][] SHINE_PATH = {SHINE_ICE, SHINE_FIRE, SHINE_GRASS, SHINE_LIGHT, SHINE_DARK};
 
     //黑洞
     public static final String[] BALCKHOLE = {"/resources/blackhole1.png", "/resources/blackhole2.png"};
@@ -36,24 +36,29 @@ public class ImgInfo {
     private static final String GRASS_PATH = BACKGROUND_ROOT + "grass.png";
     private static final int[] GRASS_SIZE = {1000, 1000}; //圖片寬高
     private static final String ICE_PATH = BACKGROUND_ROOT + "snow.png";
-    private static final int[] ICE_SIZE = {1280, 680};
+    private static final int[] ICE_SIZE = {2000, 1063};
     private static final String FIRE_PATH = BACKGROUND_ROOT + "fire.png";
-    private static final int[] FIRE_SIZE = {950, 940};
+    private static final int[] FIRE_SIZE = {949, 949};
     private static final String DARK_PATH = BACKGROUND_ROOT + "dark.png";
-    private static final int[] DARK_SIZE = {1920, 700};
+    private static final int[] DARK_SIZE = {3001, 1093};
     private static final String LIGHT_PATH = BACKGROUND_ROOT + "light.png";
     private static final int[] LIGHT_SIZE = {1920, 800};
 
-    public static final String[] BACKGROUND_PATH = {ICE_PATH, FIRE_PATH, GRASS_PATH, DARK_PATH, LIGHT_PATH};
-    public static final int[][] BACKGROUND_SIZE = {ICE_SIZE, FIRE_SIZE, GRASS_SIZE, DARK_SIZE, LIGHT_SIZE};
+    public static final String[] BACKGROUND_PATH = {ICE_PATH, FIRE_PATH, GRASS_PATH, LIGHT_PATH, DARK_PATH};
+    public static final int[][] BACKGROUND_SIZE = {ICE_SIZE, FIRE_SIZE, GRASS_SIZE, LIGHT_SIZE, DARK_SIZE};
 
     //ITEM
     private static final String ITEM_ROOT = "/resources/items/";
     public static final String INFOFORM_PATH = ITEM_ROOT + "infoForm.png";
 
+    //資訊欄血條
     public static final String BLOOD_PATH = ITEM_ROOT + "blood.png";
-    public static final int[] BLOOD_INFO = {Global.SCREEN_X - 361, Global.SCREEN_Y - 113, 665, 25}; //centerX, centerY, w, h
-
+    public static final int[] BLOOD_INFO = {Global.SCREEN_X - 361, Global.SCREEN_Y - 113, 665, 23}; //centerX, centerY, w, h
+    
+    //怪物血條
+    public static final String[] BLOODS_PATH = {ITEM_ROOT + "bloodRed.png", ITEM_ROOT + "blood.png"};
+    public static final int[] BLOODS_INFO = {100, 10}; //w, h
+   
     public static final String ARROW = "/resources/arrow.png";
     public static final int[] ARROW_INFO = {230, 230, 100};
 
@@ -97,7 +102,7 @@ public class ImgInfo {
     public static final int[] POST_INFO = {95, 95, 40, 2};
 
     public static final String PINGPONG = BACKGROUND_ROOT + "battleback6.png";
-    
+
     //Props 
     private static final String PROPS_ROOT = "/resources/props/";
     public static final String[] HEART = {PROPS_ROOT + "heart1.png", PROPS_ROOT + "heart2.png"};

@@ -5,9 +5,12 @@
  */
 package scenes;
 
+import controllers.IRC;
 import controllers.SceneController;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.util.ArrayList;
+import javax.swing.ImageIcon;
 import monsterstrike.gameobject.*;
 import monsterstrike.util.*;
 
@@ -21,7 +24,6 @@ public class Menu extends Scene {
     private Dino dino;
     private ArrayList<Button> buttons;
     private Delay delay;
-    private Delay delay2;
     private int h;
 
     private boolean isEnter;
@@ -58,7 +60,7 @@ public class Menu extends Scene {
             }
         }
 
-        if (this.isEnter && this.dino.getCenterY() == Global.SCREEN_Y / 2) {            
+        if (this.isEnter && this.dino.getCenterY() == Global.SCREEN_Y / 2) {
 //            sceneController.changeScene(new Loading(sceneController));
             sceneController.changeScene(new LevelMenu(sceneController));
             this.isEnter = false;
@@ -78,7 +80,7 @@ public class Menu extends Scene {
 
     @Override
     public void sceneEnd() {
-        
+
     }
 
     @Override

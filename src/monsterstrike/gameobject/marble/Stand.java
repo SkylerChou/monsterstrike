@@ -5,6 +5,8 @@
  */
 package monsterstrike.gameobject.marble;
 
+import monsterstrike.gameobject.ImgInfo;
+import monsterstrike.gameobject.Item;
 import monsterstrike.graph.Vector;
 import monsterstrike.util.Delay;
 
@@ -16,6 +18,7 @@ public class Stand implements Strike {
     public Stand() {
         this.moveDelay = new Delay(5);
         this.moveCount = 0;
+        
     }
 
     @Override
@@ -23,7 +26,7 @@ public class Stand implements Strike {
         self.renderer.update();
         if (!self.isDie && self.isCollide) {
             move(self);
-        }else if(self.isDie){
+        } else if (self.isDie) {
             self.rendererDie.updateDie();
         }
     }

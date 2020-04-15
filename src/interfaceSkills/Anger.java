@@ -60,4 +60,5 @@ public class Anger extends Skills {
         }
         return false;
     }    
+
 }

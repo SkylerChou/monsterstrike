@@ -6,11 +6,14 @@
 package scenes;
 
 import controllers.SceneController;
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import monsterstrike.PlayerInfo;
 import monsterstrike.gameobject.Background;
 import monsterstrike.gameobject.Button;
+import monsterstrike.gameobject.Dino;
 import monsterstrike.gameobject.ImgInfo;
 import monsterstrike.gameobject.marble.*;
 import monsterstrike.util.*;
@@ -90,12 +93,13 @@ public class LevelMenu extends Scene {
                 }
                 this.enemyFightMarbles.add(this.enemies.get(i));
             }
-
             sceneController.changeScene(new LevelScene(sceneController, backIdx, fightMarbles,
                     this.enemyFightMarbles, this.playerInfo));
         } else {
             this.currentMarble = this.myMarbles.get(idx);
+            this.currentMarble.setShine(true);
             this.currentMarble.update();
+            this.currentMarble.updateShine();
         }
         if (this.delay.isTrig()) {
             int i = 2 * (count - 1);
@@ -131,7 +135,7 @@ public class LevelMenu extends Scene {
     private boolean inMySerials(MarbleInfo info) {
         int[] serials = this.playerInfo.getMyMarbleSerials();
         for (int i = 0; i < serials.length; i++) {
-            if (info.getSerial() == serials[i] && info.getState()==0) {
+            if (info.getSerial() == serials[i] && info.getState() == 0) {
                 return true;
             }
         }
@@ -146,13 +150,20 @@ public class LevelMenu extends Scene {
     @Override
     public void paint(Graphics g) {
         this.menu.paintMenu(g);
+        int c = count;
+        if (c == 0) {
+            c = 1;
+        }
         if (this.currentMarble != null && count < 4) {
-            this.currentMarble.paintComponent(g);
+            this.currentMarble.paintAll(g);
+            paintText(g, this.currentMarble, Global.SCREEN_X / 4 + 290 * (c - 1), 140);
         }
 
         for (int i = 0; i < this.fightMarbles.length; i++) {
             if (this.fightMarbles[i] != null) {
-                this.fightMarbles[i].paintComponent(g);
+//                this.fightMarbles[i].paintComponent(g);
+                this.fightMarbles[i].paintAll(g);
+                paintText(g, this.fightMarbles[i], Global.SCREEN_X / 4 + 290 * i, 140);
             }
         }
 
@@ -163,6 +174,28 @@ public class LevelMenu extends Scene {
         for (int i = 0; i < this.buttons.size(); i++) {
             this.buttons.get(i).paint(g);
         }
+    }
+
+    public void paintText(Graphics g, Marble m, int x, int y) {
+        g.setFont(new Font("Arial Unicode MS", Font.BOLD, 32));
+        g.setColor(Color.GRAY);
+        g.drawString(m.getInfo().getName(), x, y);
+        g.setColor(Color.BLACK);
+        g.drawString(m.getInfo().getName(), x - 3, y - 3);
+        g.setFont(new Font("VinerHandITC", Font.ITALIC, 24));
+        g.setColor(Color.GRAY);
+        g.drawString("HP: " + m.getInfo().getHp(), x - 10, y + 150);
+        g.setColor(Color.BLACK);
+        g.drawString("HP: " + m.getInfo().getHp(), x - 10 - 3, y + 150 - 3);
+        g.setColor(Color.GRAY);
+        g.drawString("ATK: " + m.getInfo().getAtk(), x - 10, y + 180);
+        g.setColor(Color.BLACK);
+        g.drawString("ATK: " + m.getInfo().getAtk(), x - 10 - 3, y + 180 - 3);
+        g.setFont(new Font("Arial Unicode MS", Font.ITALIC, 24));
+        g.setColor(Color.GRAY);
+        g.drawString("速度: " + (int) m.getInfo().getV() + " m/s", x - 15, y + 212);
+        g.setColor(Color.BLACK);
+        g.drawString("速度: " + (int) m.getInfo().getV() + " m/s", x - 15 - 3, y + 212 - 3);
     }
 
     @Override
