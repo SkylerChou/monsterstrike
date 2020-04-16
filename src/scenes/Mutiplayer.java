@@ -57,8 +57,8 @@ public class Mutiplayer extends Scene {
         for (int i = 0; i < 3; i++) {
             this.marbles.add(new Marble(POS_X[i], POS_Y[i], 120, 120, this.allMarbleInfo.get(i)));
 
-            this.heart = new Heart(ImgInfo.HEART, 300, 100, ImgInfo.PROPS_INFO[0], ImgInfo.PROPS_INFO[1], ImgInfo.PROPS_INFO[2], ImgInfo.HEART_NUM, "愛心");
-            this.shoe = new Booster(ImgInfo.SHOE, 600, 100, ImgInfo.PROPS_INFO[0], ImgInfo.PROPS_INFO[1], ImgInfo.PROPS_INFO[2], ImgInfo.SHOE_NUM, "加速");
+//            this.heart = new Heart(ImgInfo.HEART, 300, 100, ImgInfo.PROPS_INFO[0], ImgInfo.PROPS_INFO[1], ImgInfo.PROPS_INFO[2], ImgInfo.HEART_NUM, "愛心");
+//            this.shoe = new Booster(ImgInfo.SHOE, 600, 100, ImgInfo.PROPS_INFO[0], ImgInfo.PROPS_INFO[1], ImgInfo.PROPS_INFO[2], ImgInfo.SHOE_NUM, "加速");
 //            this.props.add(new Booster(ImgInfo.BOOSTER, 500, 600, ImgInfo.PROPS_INFO[0], ImgInfo.PROPS_INFO[1], ImgInfo.PROPS_INFO[2],"加速"));
 
             this.b.add(new SpecialEffect(ImgInfo.BALCKHOLE, 250 * (i + 1), 250,
@@ -101,14 +101,14 @@ public class Mutiplayer extends Scene {
                 this.marbles.get(i).setVelocity(1.2f);
             }
             if (this.heart != null && this.isTouchHeart) {
-                this.heart.updateOnce();
+//                this.heart.updateOnce();
                 if (this.heart.getIsStop()) {
                     this.heart = null;
                     this.isTouchHeart = false;
                 }
             }
             if (this.shoe != null && this.isTouchShoe) {
-                this.shoe.updateOnce();
+//                this.shoe.updateOnce();
                 if (this.shoe.getIsStop()) {
                     this.shoe = null;
                     this.isTouchShoe = false;
@@ -190,10 +190,10 @@ public class Mutiplayer extends Scene {
     public void paint(Graphics g) {
         this.background.paint(g);
         if (this.heart != null) {
-            this.heart.paintH(g);
+//            this.heart.paintH(g);
         }
         if (this.shoe != null) {
-            this.shoe.paintS(g);
+//            this.shoe.paintS(g);
         }
 //        this.setting.paintOther(g, ImgInfo.SETTING_INFO);
         for (int i = 0; i < this.b.size(); i++) {
