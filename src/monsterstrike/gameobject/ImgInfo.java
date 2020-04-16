@@ -50,6 +50,9 @@ public class ImgInfo {
     //ITEM
     private static final String ITEM_ROOT = "/resources/items/";
     public static final String INFOFORM_PATH = ITEM_ROOT + "infoForm.png";
+    public static final String LIFE = ITEM_ROOT + "life.png";
+    public static final int LIFE_NUM = 4;
+    public static final int[] LIFE_INFO = {500, 160};
 
     //資訊欄血條
     public static final String BLOOD_PATH = ITEM_ROOT + "blood.png";
