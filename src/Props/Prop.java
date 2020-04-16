@@ -20,13 +20,11 @@ public abstract class Prop extends GameObject {
     protected MarbleRenderer renderer;
     protected boolean isCollide;
     protected boolean isUsed;
-    private String name;
 
     public Prop(String path, int x, int y, int width, int height, int r, int pictureNum, int delay) {
         super(x, y, width, height, r);
         this.renderer = new MarbleRenderer(path, pictureNum, delay);
         this.isCollide = false;
-        this.name = name;
         this.isUsed = false;
     }
 
@@ -54,7 +52,11 @@ public abstract class Prop extends GameObject {
         return this.isCollide;
     }
 
-    public String getName() {
-        return this.name;
+    public void setIsUsed(boolean isUsed){
+        this.isUsed=isUsed;
+    }
+    
+    public boolean getIsUsed(){
+        return this.isUsed;
     }
 }

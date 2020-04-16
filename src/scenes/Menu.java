@@ -50,10 +50,18 @@ public class Menu extends Scene {
     public void sceneUpdate() {
         this.dino.update();
         if (this.delay.isTrig()) {
+            int tmp = 0;
             for (int i = 0; i < this.buttons.size(); i++) {
                 if (this.dino.getCenterY() == this.buttons.get(i).getCenterY()) {
+                    tmp = i;
                     this.buttons.get(i).update();
                 }
+            }
+            for (int k = 0; k < this.buttons.size(); k++) {
+                if (k == tmp) {
+                    continue;
+                }
+                this.buttons.get(k).resetImg();
             }
         }
 

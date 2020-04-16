@@ -8,6 +8,7 @@ package scenes;
 import Props.Booster;
 import Props.Heart;
 import Props.Prop;
+import Props.Shield;
 import monsterstrike.graph.Vector;
 import controllers.SceneController;
 import interfaceskills.SkillComponent;
@@ -82,7 +83,7 @@ public class LevelScene extends Scene {
         this.ratio = this.currentHp / this.myHp;
         this.tmpCount = 1;
         this.tmpCount2 = 0;
-        this.props = new Prop[2];
+        this.props = new Prop[3];
         this.buttons = new ArrayList<>();
         this.isEnter = false;
         this.isOnButton = false;
@@ -95,7 +96,7 @@ public class LevelScene extends Scene {
             this.marbles.get(i).setCenterX(Global.POSITION_X[i]);
             this.marbles.get(i).setCenterY(Global.POSITION_Y[i]);
         }
-        this.buttons.add(new Button(ImgInfo.HOME, Global.SCREEN_X - 50, Global.SCREEN_Y-50, ImgInfo.SETTING_INFO[0], ImgInfo.SETTING_INFO[1], 20));
+        this.buttons.add(new Button(ImgInfo.HOME, Global.SCREEN_X - 50, Global.SCREEN_Y - 50, ImgInfo.SETTING_INFO[0], ImgInfo.SETTING_INFO[1], 20));
         this.arrow = new Arrow(ImgInfo.ARROW, 0, 0, ImgInfo.ARROW_INFO);
         this.currentIdx = 0;
         this.count = 0;
@@ -117,6 +118,16 @@ public class LevelScene extends Scene {
                     this.props[0] = new Heart(ImgInfo.HEART, Global.random(50, Global.SCREEN_X - 50), 50, 80, 80, 40, ImgInfo.HEART_NUM, 10);
                 } else if (this.sceneCount == 2) {
                     this.props[1] = new Booster(ImgInfo.SHOE, Global.SCREEN_X - 50, Global.random(50, Global.SCREEN_Y - Global.INFO_H - 50), 80, 80, 40, ImgInfo.SHOE_NUM, 35);
+                } else if (this.sceneCount == 3) {
+                    Marble tmp=null;
+                    for (int i = 0; i < this.battleEnemies.size(); i++) {
+                        if(this.battleEnemies.get(i).getInfo().getLevel()==5){
+                            tmp=this.battleEnemies.get(i);
+                        }
+                    }
+                    if(tmp!=null){
+                         this.props[2] = new Shield(ImgInfo.SHIELD,(int) tmp.getCenterX(), (int)tmp.getCenterY(), (int)tmp.getInfo().getR()*2, (int)tmp.getInfo().getR()*2, (int)tmp.getInfo().getR(), ImgInfo.SHIELD_NUM, 20);
+                    } 
                 }
             }
         } else if (this.state == 1) { //遊戲開始
@@ -470,7 +481,7 @@ public class LevelScene extends Scene {
         g.drawString("Battle  ", 800 - 2, Global.SCREEN_Y - 40 - 2);
         g.setFont(new Font("Showcard Gothic", Font.PLAIN, 36));
         g.drawString("" + (sceneCount + 1), 930 - 2, Global.SCREEN_Y - 40 - 2);
-        
+
         g.setColor(Color.GRAY);
         g.setFont(new Font("VinerHandITC", Font.PLAIN, 20));
         g.drawString("Player: " + this.playerinfo.getName(), 530, Global.SCREEN_Y - 60);
@@ -479,8 +490,8 @@ public class LevelScene extends Scene {
         g.setColor(Color.GRAY);
         g.drawString("Level: " + this.playerinfo.getLevel(), 530, Global.SCREEN_Y - 30);
         g.setColor(Color.BLACK);
-        g.drawString("Level: " + this.playerinfo.getLevel(), 530 - 2, Global.SCREEN_Y - 30 - 2);       
-        
+        g.drawString("Level: " + this.playerinfo.getLevel(), 530 - 2, Global.SCREEN_Y - 30 - 2);
+
         g.setFont(new Font("Showcard Gothic", Font.PLAIN, 24));
         g.setColor(Color.GRAY);
         g.drawString("HP ", 525, Global.SCREEN_Y - 105);
@@ -509,14 +520,15 @@ public class LevelScene extends Scene {
         private float endX;
         private float endY;
 //Global.SCREEN_X - 50, Global.SCREEN_Y-50
+
         @Override
         public void mouseTrig(MouseEvent e, CommandSolver.MouseState mouseState, long trigTime) {
             if (mouseState == CommandSolver.MouseState.PRESSED && e.getX() > Global.SCREEN_X - 50 - ImgInfo.SETTING_INFO[1] / 2 && e.getX() < Global.SCREEN_X - 50 + ImgInfo.SETTING_INFO[1] / 2
-                    && e.getY() > Global.SCREEN_Y-50 - ImgInfo.SETTING_INFO[1] / 2 && e.getY() < Global.SCREEN_Y-50 + ImgInfo.SETTING_INFO[1] / 2) {
+                    && e.getY() > Global.SCREEN_Y - 50 - ImgInfo.SETTING_INFO[1] / 2 && e.getY() < Global.SCREEN_Y - 50 + ImgInfo.SETTING_INFO[1] / 2) {
                 isEnter = true;
             }
             if (mouseState == CommandSolver.MouseState.MOVED && e.getX() > Global.SCREEN_X - 50 - ImgInfo.SETTING_INFO[1] / 2 && e.getX() < Global.SCREEN_X - 50 + ImgInfo.SETTING_INFO[1] / 2
-                    && e.getY() > Global.SCREEN_Y-50 - ImgInfo.SETTING_INFO[1] / 2 && e.getY() < Global.SCREEN_Y-50 + ImgInfo.SETTING_INFO[1] / 2) {
+                    && e.getY() > Global.SCREEN_Y - 50 - ImgInfo.SETTING_INFO[1] / 2 && e.getY() < Global.SCREEN_Y - 50 + ImgInfo.SETTING_INFO[1] / 2) {
                 isOnButton = true;
             } else {
                 isOnButton = false;

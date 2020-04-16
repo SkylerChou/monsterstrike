@@ -150,7 +150,6 @@ public class PingPong extends Scene {
 
     }
 
-
     private void genPost() {
         int i = Global.random(150, 1200);
         int y = Global.random(0, 500);
