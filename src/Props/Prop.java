@@ -35,6 +35,12 @@ public abstract class Prop extends GameObject {
         }
     }
     
+    public void updateShield(){
+          if (this.isCollide) {
+            this.renderer.update();
+        }
+    }
+    
     public abstract void useProp(ArrayList<Marble> marble, int idx);
 
     @Override

@@ -25,9 +25,10 @@ public class Shield extends Prop{
     public void useProp(ArrayList<Marble> marble, int idx) {
         if(!this.isUsed){
             for(int i=0;i<marble.size();i++){
-                marble.get(i).getInfo().setHp(marble.get(i).getInfo().getHp()-10);
+                marble.get(i).getInfo().setHp(marble.get(i).getInfo().getHp()-90);
                 System.out.println(marble.get(i).getInfo().getName()+"撞到防護罩");
             }
+            this.isUsed=true;
         }
     }
 

@@ -114,11 +114,10 @@ public class LevelScene extends Scene {
         if (this.state == 0) { //設定背景起始位置， 敵人怪物降落           
             this.background.setX((3 - this.sceneCount) * ImgInfo.BACKGROUND_SIZE[idx][0]);
             if (dropEnemies()) {
-                if (this.sceneCount == 1) {
+                if (this.sceneCount == 1) {//第二小關
                     this.props[0] = new Heart(ImgInfo.HEART, Global.random(50, Global.SCREEN_X - 50), 50, 80, 80, 40, ImgInfo.HEART_NUM, 10);
-                } else if (this.sceneCount == 2) {
+                } else if (this.sceneCount == 2) {//第三小關
                     this.props[1] = new Booster(ImgInfo.SHOE, Global.SCREEN_X - 50, Global.random(50, Global.SCREEN_Y - Global.INFO_H - 50), 80, 80, 40, ImgInfo.SHOE_NUM, 35);
-                } else if (this.sceneCount == 3) {
                     Marble tmp=null;
                     for (int i = 0; i < this.battleEnemies.size(); i++) {
                         if(this.battleEnemies.get(i).getInfo().getLevel()==5){
@@ -126,7 +125,8 @@ public class LevelScene extends Scene {
                         }
                     }
                     if(tmp!=null){
-                         this.props[2] = new Shield(ImgInfo.SHIELD,(int) tmp.getCenterX(), (int)tmp.getCenterY(), (int)tmp.getInfo().getR()*2, (int)tmp.getInfo().getR()*2, (int)tmp.getInfo().getR(), ImgInfo.SHIELD_NUM, 20);
+                         this.props[2] = new Shield(ImgInfo.SHIELD,(int) tmp.getCenterX(), (int)tmp.getCenterY(), (int)(tmp.getInfo().getR()*1.5f), (int)(tmp.getInfo().getR()*1.5f), (int)(tmp.getInfo().getR()*1.5f)/2, ImgInfo.SHIELD_NUM, 20);
+                         this.props[2].setIsUsed(false);
                     } 
                 }
             }
