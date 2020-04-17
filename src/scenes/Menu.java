@@ -39,10 +39,9 @@ public class Menu extends Scene {
         this.h = 50;
         this.dino = new Dino(ImgInfo.DINO, Global.SCREEN_X / 2 - 120, Global.SCREEN_Y / 2, Dino.STEPS_WALK);
         this.buttons.add(new Button(ImgInfo.SINGLE, Global.SCREEN_X / 2, Global.SCREEN_Y / 2, ImgInfo.MAINBUTTON_INFO[0], ImgInfo.MAINBUTTON_INFO[1]));
-        this.buttons.add(new Button(ImgInfo.PINBALL, Global.SCREEN_X / 2, Global.SCREEN_Y / 2 + h, ImgInfo.MAINBUTTON_INFO[0], ImgInfo.MAINBUTTON_INFO[1]));
-        this.buttons.add(new Button(ImgInfo.RANK, Global.SCREEN_X / 2, Global.SCREEN_Y / 2 + 2 * h, ImgInfo.MAINBUTTON_INFO[0], ImgInfo.MAINBUTTON_INFO[1]));
-        this.buttons.add(new Button(ImgInfo.CONTINUE, Global.SCREEN_X / 2, Global.SCREEN_Y / 2 + 3 * h, ImgInfo.MAINBUTTON_INFO[0], ImgInfo.MAINBUTTON_INFO[1]));
-        this.buttons.add(new Button(ImgInfo.EXIT, Global.SCREEN_X / 2, Global.SCREEN_Y / 2 + 4 * h, ImgInfo.MAINBUTTON_INFO[0], ImgInfo.MAINBUTTON_INFO[1]));
+        this.buttons.add(new Button(ImgInfo.CONTINUE, Global.SCREEN_X / 2, Global.SCREEN_Y / 2 + h, ImgInfo.MAINBUTTON_INFO[0], ImgInfo.MAINBUTTON_INFO[1]));
+        this.buttons.add(new Button(ImgInfo.PINBALL, Global.SCREEN_X / 2, Global.SCREEN_Y / 2 + 2 * h, ImgInfo.MAINBUTTON_INFO[0], ImgInfo.MAINBUTTON_INFO[1]));
+        this.buttons.add(new Button(ImgInfo.EXIT, Global.SCREEN_X / 2, Global.SCREEN_Y / 2 + 3 * h, ImgInfo.MAINBUTTON_INFO[0], ImgInfo.MAINBUTTON_INFO[1]));
         this.isEnter = false;
         this.delay = new Delay(25);
         this.delay.start();
@@ -72,14 +71,12 @@ public class Menu extends Scene {
             sceneController.changeScene(new PlayerScene(sceneController));
             this.isEnter = false;
         } else if (this.isEnter && this.dino.getCenterY() == Global.SCREEN_Y / 2 + h) {
-            sceneController.changeScene(new PingPong(sceneController));
-            this.isEnter = false;
-        } else if (this.isEnter && this.dino.getCenterY() == Global.SCREEN_Y / 2 + 2 * h) {
             sceneController.changeScene(new LevelMenu(sceneController, "playerInfo.csv", "marbleInfo.csv"));
             this.isEnter = false;
-        } else if (this.isEnter && this.dino.getCenterY() == Global.SCREEN_Y / 2 + 3 * h) {
+        } else if (this.isEnter && this.dino.getCenterY() == Global.SCREEN_Y / 2 + 2 * h) {
+            sceneController.changeScene(new PingPong(sceneController));
             this.isEnter = false;
-        } else if (this.isEnter && this.dino.getCenterY() == Global.SCREEN_Y / 2 + 4 * h) {
+        } else if (this.isEnter && this.dino.getCenterY() == Global.SCREEN_Y / 2 + 3 * h) {
             System.exit(0);
             this.isEnter = false;
         }

@@ -336,7 +336,7 @@ public class LevelScene extends Scene {
                     if (i == currentIdx) {
                         this.marbles.get(j).getGoVec().setValue(this.marbles.get(j).getGoVec().getValue() * 0.5f);
                         if (this.marbles.get(j).getUseSkill()) {
-                            int r = Global.random(1, 3);
+                            int r = Global.random(1, 4);
                             if (r == 4) {
                                 this.marbles.get(j).useSkill(r, this.marbles, 0);
                             } else {
@@ -630,10 +630,7 @@ public class LevelScene extends Scene {
 
         @Override
         public void keyPressed(int commandCode, long trigTime) {
-//            if (isReleased && isLose()) {
-//                isReleased = false;
-//                
-//            }
+
             if ((isLose() || isWin) && commandCode == Global.ENTER) {
                 System.out.println("!");
                 isEnter = true;
@@ -642,7 +639,6 @@ public class LevelScene extends Scene {
 
         @Override
         public void keyReleased(int commandCode, long trigTime) {
-//            isReleased = true;
         }
 
         @Override

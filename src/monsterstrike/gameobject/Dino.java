@@ -107,7 +107,7 @@ public class Dino extends GameObject {
                     this.offset(0, -50);
                     break;
                 case Global.DOWN:
-                    if (this.getY() + this.getHeight() > Global.SCREEN_Y / 2 + 200) {
+                    if (this.getY() + this.getHeight() > Global.SCREEN_Y / 2 + 150) {
                         break;
                     }
                     this.offset(0, 50);
