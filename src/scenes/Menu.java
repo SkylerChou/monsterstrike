@@ -5,8 +5,11 @@
  */
 package scenes;
 
+import controllers.IRC;
 import controllers.SceneController;
+import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import monsterstrike.gameobject.*;
 import monsterstrike.util.*;
@@ -27,7 +30,6 @@ public class Menu extends Scene {
 
     public Menu(SceneController sceneController) {
         super(sceneController);
-
     }
 
     @Override
@@ -44,6 +46,7 @@ public class Menu extends Scene {
         this.isEnter = false;
         this.delay = new Delay(25);
         this.delay.start();
+        
     }
 
     @Override
@@ -58,8 +61,7 @@ public class Menu extends Scene {
         }
 
         if (this.isEnter && this.dino.getCenterY() == Global.SCREEN_Y / 2) {
-//            sceneController.changeScene(new Loading(sceneController));
-            sceneController.changeScene(new LevelMenu(sceneController));
+            sceneController.changeScene(new PlayerScene(sceneController));
             this.isEnter = false;
         } else if (this.isEnter && this.dino.getCenterY() == Global.SCREEN_Y / 2 + h) {
             sceneController.changeScene(new PingPong(sceneController));

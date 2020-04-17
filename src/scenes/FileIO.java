@@ -11,7 +11,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import monsterstrike.PlayerInfo;
+import player.PlayerInfo;
 import monsterstrike.gameobject.marble.MarbleInfo;
 
 public class FileIO {
@@ -33,7 +33,7 @@ public class FileIO {
     public static ArrayList<MarbleInfo> readMarble(String fileName) {
         BufferedReader br;
         try {
-            br = new BufferedReader(new FileReader(fileName));            
+            br = new BufferedReader(new FileReader(fileName));
             ArrayList<MarbleInfo> arr = new ArrayList<>();
             br.readLine();
             while (br.ready()) {
@@ -53,7 +53,7 @@ public class FileIO {
         }
         return null;
     }
-    
+
     public static PlayerInfo readPlayer(String fileName, int idx) {
         BufferedReader br;
         try {
@@ -63,12 +63,13 @@ public class FileIO {
             while (br.ready()) {
                 String str = br.readLine();
                 String[] tmp = str.split(",");
-                String[] tmp2 = tmp[2].split("\"")[1].split(";");
+                String[] tmp2 = tmp[3].split("\"")[1].split(";");
                 int[] marbleSerials = new int[tmp2.length];
-                for(int i=0; i<tmp2.length; i++){
+                for (int i = 0; i < tmp2.length; i++) {
                     marbleSerials[i] = Integer.parseInt(tmp2[i]);
                 }
-                PlayerInfo m = new PlayerInfo(tmp[0], Integer.parseInt(tmp[1]), marbleSerials);
+                PlayerInfo m = new PlayerInfo(Integer.parseInt(tmp[0]), tmp[1],
+                        Integer.parseInt(tmp[2]), marbleSerials);
                 arr.add(m);
             }
             br.close();
@@ -83,40 +84,41 @@ public class FileIO {
         try {
             BufferedWriter bw = new BufferedWriter((new FileWriter(fileName, true)));
 //            for (int i = 0; i < marbles.size(); i++) {
+            if (marble != null) {
                 MarbleInfo m = marble;
                 String tmp = m.getSerial() + "," + m.getName() + "," + m.getImgName() + "," + m.getShowIdx() + ","
                         + m.getImgW() + "," + m.getImgH() + "," + m.getRatio() + "," + m.getMass() + ","
-                        + m.getV() + "," + m.getAttribute() + ","+ m.getLevel()+"," + m.getHp() + ","
+                        + m.getV() + "," + m.getAttribute() + "," + m.getLevel() + "," + m.getHp() + ","
                         + m.getAtk() + "," + m.getSkillRound() + "," + m.getState() + ","
                         + m.getSpecies();
                 bw.append(tmp);
                 bw.newLine();
-//            }
+            }
             bw.flush();
             bw.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    
+
     public static void writePlayer(String fileName, PlayerInfo players) {
         try {
             BufferedWriter bw = new BufferedWriter((new FileWriter(fileName)));
-            bw.append("姓名,等級,怪物編號");
+            bw.append("角色編號,姓名,等級,怪物編號");
             bw.newLine();
 //            for (int i = 0; i < players.size(); i++) {
 //                PlayerInfo m = players.get(i);
-                int[] marbleSerials = players.getMyMarbleSerials();
-                String serial = "\"";
-                for(int j=0; j<marbleSerials.length; j++){
-                    serial += marbleSerials[j];
-                    if(j!=marbleSerials.length-1){
-                        serial += ";";
-                    }
+            int[] marbleSerials = players.getMyMarbleSerials();
+            String serial = "\"";
+            for (int j = 0; j < marbleSerials.length; j++) {
+                serial += marbleSerials[j];
+                if (j != marbleSerials.length - 1) {
+                    serial += ";";
                 }
-                String tmp = players.getName() + "," + players.getLevel() + "," + serial + "\"";
-                bw.append(tmp);
-                bw.newLine();
+            }
+            String tmp = players.getSerial() + "," + players.getName() + "," + players.getLevel() + "," + serial + "\"";
+            bw.append(tmp);
+            bw.newLine();
 //            }
             bw.flush();
             bw.close();

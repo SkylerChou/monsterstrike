@@ -5,9 +5,6 @@
  */
 package interfaceskills;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics;
 import java.util.ArrayList;
 import monsterstrike.gameobject.marble.Marble;
 import monsterstrike.graph.Vector;
@@ -56,9 +53,19 @@ public class Explosion extends Skills {
             this.skill[i].setDx(vec.getUnitX());
             this.skill[i].setDy(vec.getUnitY());
         }
+        int selfA = self.getInfo().getAttribute();
+        int atk = self.getInfo().getAtk();
         for (int i = 0; i < target.size(); i++) {
+            int targetA = target.get(i).getInfo().getAttribute();
             if (checkStrike(target.get(i))) {
-                target.get(i).getInfo().setHp(target.get(i).getInfo().getHp() - self.getInfo().getAtk());
+                if ((selfA != 2 && selfA - targetA == -1) || (selfA == 2 && targetA == 0)
+                        || (selfA == 4 && targetA == 3)) {
+                    atk = 2 * self.getInfo().getAtk();
+                } else if ((selfA != 3 && selfA - targetA == 1) || (selfA == 0 && targetA == 2)
+                        || (selfA == 3 && targetA == 4)) {
+                    atk = self.getInfo().getAtk()/2;    
+                }
+                target.get(i).getInfo().setHp(target.get(i).getInfo().getHp() - atk);
                 this.hitCount++;
                 System.out.println(target.get(i).getInfo().getName() + "血量:" + target.get(i).getInfo().getHp());
             }

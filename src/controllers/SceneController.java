@@ -5,39 +5,67 @@
  */
 package controllers;
 
+import java.awt.Color;
 import monsterstrike.util.CommandSolver.KeyListener;
 import monsterstrike.util.CommandSolver.MouseCommandListener;
 import java.awt.Graphics;
+import java.awt.image.BufferedImage;
+import monsterstrike.LoadingThread;
+import monsterstrike.LoadingThread.*;
 import scenes.Scene;
 
 public class SceneController {
+
+    private class Loading implements CallbackInterface {
+
+        @Override
+        public void run() {
+            kl = currentScene.getKeyListener();
+            ml = currentScene.getMouseListener();
+            currentScene.sceneBegin();
+            isLoading = false;
+        }
+    }
+
     private Scene currentScene;
     private KeyListener kl;
     private MouseCommandListener ml;
-    
-    public void changeScene(Scene scene){
-        if(this.currentScene!=null){
+    private boolean isLoading;
+    private BufferedImage img;
+
+    public void changeScene(Scene scene) {
+        if (this.currentScene != null) {
             this.currentScene.sceneEnd();
         }
-        this.currentScene = scene;
-        kl = currentScene.getKeyListener();
-        ml = currentScene.getMouseListener();
-        this.currentScene.sceneBegin();
+
+        isLoading = true;
+        currentScene = scene;
+        new LoadingThread(new Loading()).start();
     }
-    
-    public void sceneUpdate(){
-        this.currentScene.sceneUpdate();
+
+    public void sceneUpdate() {
+        if (!isLoading) {
+            this.currentScene.sceneUpdate();
+        }
     }
-    
-    public KeyListener getKL(){
+
+    public KeyListener getKL() {
         return this.kl;
     }
-    
-    public MouseCommandListener getML(){
+
+    public MouseCommandListener getML() {
         return this.ml;
     }
-    
-    public void paint(Graphics g){
+
+    private int test = 0;
+
+    public void paint(Graphics g) {
+        if (this.isLoading) {
+            g.setColor(Color.white);
+            g.drawString((test++) + "", 600, 340);
+//            g.drawImage(img, 0, 0, Global.SCREEN_X, Global.SCREEN_Y, null);
+            return;
+        }
         this.currentScene.paint(g);
     }
 }

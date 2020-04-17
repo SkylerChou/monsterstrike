@@ -24,6 +24,7 @@ public class MarbleInfo {
     private int state;
     private int level;
     private int hp;
+    private int originHp;
     private int atk;
     private int species;
 
@@ -45,6 +46,7 @@ public class MarbleInfo {
         this.level = level;
         this.atk = atk;
         this.hp = hp;
+        this.originHp = hp;
         this.species = species;
     }
 
@@ -124,9 +126,12 @@ public class MarbleInfo {
 
     public void setHp(int hp) {
         if (hp < 0) {
-            hp = 0;
+            this.hp = 0;
+        } else if (hp >= originHp) {
+            this.hp = this.originHp;
+        } else {
+            this.hp = hp;
         }
-        this.hp = hp;
     }
 
     public void setAtk(int atk) {

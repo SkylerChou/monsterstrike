@@ -11,10 +11,9 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import monsterstrike.PlayerInfo;
+import player.PlayerInfo;
 import monsterstrike.gameobject.Background;
 import monsterstrike.gameobject.Button;
-import monsterstrike.gameobject.Dino;
 import monsterstrike.gameobject.ImgInfo;
 import monsterstrike.gameobject.marble.*;
 import monsterstrike.util.*;
@@ -44,11 +43,11 @@ public class LevelMenu extends Scene {
     private boolean isEnter;
     private boolean isOnButton;
 
-    public LevelMenu(SceneController sceneController) {
+    public LevelMenu(SceneController sceneController, PlayerInfo playerInfo, String file) {
         super(sceneController);
-        this.allMarbleInfo = FileIO.readMarble("marbleInfo.csv");
-        this.playerInfo = FileIO.readPlayer("playerInfo.csv", 0);
-        this.level = this.playerInfo.getLevel();
+        this.playerInfo = playerInfo;
+        this.allMarbleInfo = FileIO.readMarble(file);
+        this.level = playerInfo.getLevel();
         this.myMarbles = new ArrayList<>();
         this.enemies = new ArrayList<>();
         this.fightMarbles = new Marble[3];
@@ -58,7 +57,8 @@ public class LevelMenu extends Scene {
     }
 
     @Override
-    public void sceneBegin() {
+    public void sceneBegin() {       
+//        this.playerInfo = FileIO.readPlayer("playerInfo.csv", 0);
         this.menu = new Background(ImgInfo.LEVELBACK_PATH, 0, 0, 1);
         this.count = 0;
         this.idx = 0;

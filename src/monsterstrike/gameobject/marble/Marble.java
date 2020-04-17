@@ -58,7 +58,7 @@ public class Marble extends Ball {
                 (int) (shineSize[3] * info.getRatio() / 2));
         this.isCollide = false;
         this.skills = new Skills[]{new Explosion(), new Tornado(), new Laser(),
-            new Bullet(), new Missile()};
+            new Bullet(), new Heal(), new Missile()};
 
         this.skillIdx = 0;
         this.useSkill = true;
@@ -209,8 +209,13 @@ public class Marble extends Ball {
 
     public void paintAll(Graphics g) {
         this.shine.paintComponent(g);
-        paintComponent(g);
-        paintSkill(g);
+        if(this.skillIdx==4){
+            paintSkill(g);
+            paintComponent(g);
+        }else{
+            paintComponent(g);
+            paintSkill(g);
+        }
     }
 
     @Override
@@ -222,7 +227,6 @@ public class Marble extends Ball {
             if (info.getState() == 1) {
                 this.bloodItem[0].paint(g);
                 this.bloodItem[1].paintResize(g, bloodRatio);
-
             }
         } else {
             this.rendererDie.paint(g, (int) (this.getX()), (int) (this.getY()),

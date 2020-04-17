@@ -54,11 +54,15 @@ public class ImgInfo {
     //資訊欄血條
     public static final String BLOOD_PATH = ITEM_ROOT + "blood.png";
     public static final int[] BLOOD_INFO = {Global.SCREEN_X - 361, Global.SCREEN_Y - 113, 665, 23}; //centerX, centerY, w, h
-    
+
+    //資訊欄怪物亮框
+    public static final String[] SHINEFRAME_PATH = {ITEM_ROOT + "lightFrame1.png", ITEM_ROOT + "lightFrame2.png"};
+    public static final int[] SHINEFRAME_INFO = {150, 130};
+
     //怪物血條
     public static final String[] BLOODS_PATH = {ITEM_ROOT + "bloodRed.png", ITEM_ROOT + "blood.png"};
     public static final int[] BLOODS_INFO = {100, 10}; //w, h
-   
+
     public static final String ARROW = "/resources/arrow.png";
     public static final int[] ARROW_INFO = {230, 230, 100};
 
@@ -84,12 +88,12 @@ public class ImgInfo {
     //彈珠台恐龍
     public static final String[] GREENDINO = {MARBLE_ROOT + "GreenDinoRight.png", MARBLE_ROOT + "GreenDinoLeft.png"};
     public static final int[] GREENDINO_INFO = {60, 60};//img_width, img_height  
-    
+
     //動作按鈕
     public static final String[] SETTING = {MENU_ROOT + "setting1.png", MENU_ROOT + "setting2.png"};
     public static final String[] SOUND = {MENU_ROOT + "turnon.png", MENU_ROOT + "turnoff.png"};
     public static final String[] CONTROL = {MENU_ROOT + "start.png", MENU_ROOT + "stop.png"};
-    public static final String[] HOME ={ MENU_ROOT + "home1.png",MENU_ROOT +"home2.png"};
+    public static final String[] HOME = {MENU_ROOT + "home1.png", MENU_ROOT + "home2.png"};
     public static final int[] SETTING_INFO = {50, 50};//img_width, img_height   
 
     //PingPong用
@@ -101,7 +105,7 @@ public class ImgInfo {
 
     public static final String POSTS_PATH = MARBLE_ROOT + "mushroom.png";
     public static final int[] POST_INFO = {95, 95, 40, 2};
-    public static final int[] POST_ORIGIN_INFO = {315,283};
+    public static final int[] POST_ORIGIN_INFO = {315, 283};
 
     public static final String PINGPONG = BACKGROUND_ROOT + "battleback6.png";
 
@@ -116,4 +120,13 @@ public class ImgInfo {
     public static final String[] BOOSTER = {PROPS_ROOT + "Booster1.png", PROPS_ROOT + "Booster2.png"};
     public static final int[] PROPS_INFO = {80, 80, 40};
 
+    //Player
+    private static final String PLAYER_ROOT = "/resources/player/";
+    public static final String[] PLAYERRUN_PATH = {PLAYER_ROOT + "running1.png", PLAYER_ROOT + "running2.png"};
+    public static final String[] PLAYERSTAND_PATH = {PLAYER_ROOT + "stand1.png", PLAYER_ROOT + "stand2.png"};
+
+    public static final int[] PLAYERRUN_NUM = {5, 4};
+    public static final int[] PLAYERSTAND_NUM = {2, 2};
+    public static final int[][] PLAYERRUN_INFO = {{480, 695}, {480, 640}};
+    public static final int[][] PLAYERSTAND_INFO = {{475, 674}, {475, 640}};
 }

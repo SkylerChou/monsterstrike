@@ -39,10 +39,19 @@ public class Laser extends Skills {
                 (int) (self.getCenterX()), (int) (self.getCenterY() + self.getR() + halfLength), WIDTH, HEIGHT, DELAY);
         this.skill[3] = new SkillComponent(SKILL_IDX, attr, SkillImg.SKILL_NUM[SKILL_IDX][attr],
                 (int) (self.getCenterX() - self.getR() - halfLength), (int) (self.getCenterY()), WIDTH, HEIGHT, DELAY);
-
+        int selfA = self.getInfo().getAttribute();
         for (int i = 0; i < target.size(); i++) {
+            int targetA = target.get(i).getInfo().getAttribute();
             if (inSkillRange(self, target.get(i))) {
                 int atk = (int) (self.getInfo().getAtk() * Math.random() * 2 + 1);
+                if ((selfA != 2 && selfA - targetA == -1) || (selfA == 2 && targetA == 0)
+                        || (selfA == 4 && targetA == 3)) {
+                    atk = 2 * self.getInfo().getAtk();
+                } else if ((selfA != 3 && selfA - targetA == 1) || (selfA == 0 && targetA == 2)
+                        || (selfA == 3 && targetA == 4)) {
+                    atk = self.getInfo().getAtk()/2;    
+                }
+                
                 target.get(i).getInfo().setHp(target.get(i).getInfo().getHp() - atk);
                 this.hitCount++;
                 System.out.println(target.get(i).getInfo().getName() + "血量:" + target.get(i).getInfo().getHp());

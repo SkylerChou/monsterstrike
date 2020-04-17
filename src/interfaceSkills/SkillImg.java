@@ -39,8 +39,14 @@ public class SkillImg {
     private static final int[] MISSILE_UNIT_Y = {800, 800, 800, 800, 800};
     private static final int[] MISSILE_NUM = {3, 3, 3, 3, 3};
 
-    public static final String[][] SKILL_PATH = {EXPLODE_PATH, TORNADO_PATH, LASER_PATH, BULLET_PATH, MISSILE_PATH};
-    public static final int[][] SKILL_UNIT_X = {EXPLODE_UNIT_X, TORNADO_UNIT_X, LASER_UNIT_X, BULLET_UNIT_X, MISSILE_UNIT_X};
-    public static final int[][] SKILL_UNIT_Y = {EXPLODE_UNIT_Y, TORNADO_UNIT_Y, LASER_UNIT_Y, BULLET_UNIT_Y, MISSILE_UNIT_Y};
-    public static final int[][] SKILL_NUM = {EXPLODE_NUM, TORNADO_NUM, LASER_NUM, BULLET_NUM, MISSILE_NUM};
+    private static final String[] HEAL_PATH = {SKILL_ROOT + "stars.png", SKILL_ROOT + "stars.png", SKILL_ROOT + "stars.png",
+        SKILL_ROOT + "stars.png", SKILL_ROOT + "stars.png"};
+    private static final int[] HEAL_UNIT_X = {354, 354, 354, 354, 354};
+    private static final int[] HEAL_UNIT_Y = {354, 354, 354, 354, 354};
+    private static final int[] HEAL_NUM = {17, 17, 17, 17, 17};
+
+    public static final String[][] SKILL_PATH = {EXPLODE_PATH, TORNADO_PATH, LASER_PATH, BULLET_PATH, HEAL_PATH, MISSILE_PATH};
+    public static final int[][] SKILL_UNIT_X = {EXPLODE_UNIT_X, TORNADO_UNIT_X, LASER_UNIT_X, BULLET_UNIT_X, HEAL_UNIT_X, MISSILE_UNIT_X};
+    public static final int[][] SKILL_UNIT_Y = {EXPLODE_UNIT_Y, TORNADO_UNIT_Y, LASER_UNIT_Y, BULLET_UNIT_Y, HEAL_UNIT_Y, MISSILE_UNIT_Y};
+    public static final int[][] SKILL_NUM = {EXPLODE_NUM, TORNADO_NUM, LASER_NUM, BULLET_NUM, HEAL_NUM, MISSILE_NUM};
 }

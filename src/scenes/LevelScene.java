@@ -16,7 +16,7 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import monsterstrike.PlayerInfo;
+import player.PlayerInfo;
 import monsterstrike.gameobject.*;
 import monsterstrike.gameobject.marble.*;
 import monsterstrike.util.*;
@@ -26,6 +26,7 @@ public class LevelScene extends Scene {
     private Background background;
     private Item item;
     private Item blood;
+    private Button[] shineFrame;
     private Marble[] myMarbles; //資訊欄顯示怪物
     private ArrayList<Marble> marbles; //我方出戰怪物
     private MarbleArray allEnemies; //敵方所有怪物
@@ -38,9 +39,10 @@ public class LevelScene extends Scene {
     private int state;
     private int idx;
     private int sceneCount;
-    private int hitCount;
-    private int round;
-    private int enemyRound;
+    private int hitCount;  //strike次數
+    private int round;      //小關回合計數
+    private int enemyRound; //敵人攻擊回合計數
+    private int myRound; //我方攻擊回合計數
     private float myHp;     //總血量
     private float currentHp; //當前血量
     private float ratio;
@@ -52,6 +54,7 @@ public class LevelScene extends Scene {
     private ArrayList<Button> buttons;
     private boolean isEnter;
     private boolean isOnButton;
+    private boolean isCount;
 
     public LevelScene(SceneController sceneController, int backIdx,
             Marble[] myMarbles, ArrayList<Marble> enemies, PlayerInfo playerinfo) {
@@ -62,6 +65,7 @@ public class LevelScene extends Scene {
                 Global.SCREEN_X, Global.INFO_H);
         this.blood = new Item(ImgInfo.BLOOD_PATH, ImgInfo.BLOOD_INFO[0], ImgInfo.BLOOD_INFO[1],
                 ImgInfo.BLOOD_INFO[2], ImgInfo.BLOOD_INFO[3]);
+        this.shineFrame = new Button[3];
         this.marbles = new ArrayList<>();
         this.battleEnemies = new ArrayList<>();
         this.myMarbles = myMarbles;
@@ -70,7 +74,7 @@ public class LevelScene extends Scene {
         for (int i = 0; i < myMarbles.length; i++) {
             this.marbles.add(myMarbles[i].duplicate(Global.POSITION_X[i],
                     Global.POSITION_Y[i], 100, 100));
-            this.myMarbles[i].setCenterX(w);
+            this.myMarbles[i].setCenterX(w + 30);
             this.myMarbles[i].setCenterY(Global.SCREEN_Y - 70);
             w += 150;
             this.myHp += this.myMarbles[i].getInfo().getHp();
@@ -86,6 +90,7 @@ public class LevelScene extends Scene {
         this.buttons = new ArrayList<>();
         this.isEnter = false;
         this.isOnButton = false;
+        this.isCount = false;
     }
 
     @Override
@@ -95,7 +100,12 @@ public class LevelScene extends Scene {
             this.marbles.get(i).setCenterX(Global.POSITION_X[i]);
             this.marbles.get(i).setCenterY(Global.POSITION_Y[i]);
         }
-        this.buttons.add(new Button(ImgInfo.HOME, Global.SCREEN_X - 50, Global.SCREEN_Y-50, ImgInfo.SETTING_INFO[0], ImgInfo.SETTING_INFO[1], 20));
+        for (int i = 0; i < this.shineFrame.length; i++) {
+            this.shineFrame[i] = new Button(ImgInfo.SHINEFRAME_PATH, (int) this.myMarbles[i].getCenterX(), (int) this.myMarbles[i].getCenterY(),
+                    ImgInfo.SHINEFRAME_INFO[0], ImgInfo.SHINEFRAME_INFO[1], 20);
+            this.shineFrame[i].setIsShow(false);
+        }
+        this.buttons.add(new Button(ImgInfo.HOME, Global.SCREEN_X - 50, Global.SCREEN_Y - 50, ImgInfo.SETTING_INFO[0], ImgInfo.SETTING_INFO[1], 20));
         this.arrow = new Arrow(ImgInfo.ARROW, 0, 0, ImgInfo.ARROW_INFO);
         this.currentIdx = 0;
         this.count = 0;
@@ -104,6 +114,7 @@ public class LevelScene extends Scene {
         this.hitCount = 0;
         this.round = 0;
         this.enemyRound = 0;
+        this.myRound = 0;
         genBattleEnemies();
     }
 
@@ -129,6 +140,7 @@ public class LevelScene extends Scene {
             for (int i = 0; i < this.marbles.size(); i++) {
                 this.marbles.get(i).updateShine(); //光圈更新
                 this.marbles.get(i).update();      //怪物、技能更新
+                this.shineFrame[i].update();
             }
 
             for (int i = 0; i < this.props.length; i++) {
@@ -155,8 +167,11 @@ public class LevelScene extends Scene {
                 }
             }
 
-            if (isLose()) {
-                this.state = 2;
+            if (isLose() && allSkillStop(battleEnemies)) {
+                FileIO.writePlayer("playerInfo.csv", this.playerinfo);
+                FileIO.writeMarble("marbleInfo.csv", null);
+                sceneController.changeScene(new LevelMenu(sceneController, this.playerinfo, "marbleInfo.csv"));
+                return;
             }
             calculateHP();
             if (checkAllStop()) { //當所有我方怪物靜止
@@ -164,26 +179,17 @@ public class LevelScene extends Scene {
                     this.marbles.get(i).setUseSkill(true);
                 }
 
-                if (this.count != 0) { //除了第一回合，更新要發動攻擊的我方怪物
+                if (this.count != 0 && !this.isCount) { //除了第一回合，更新要發動攻擊的我方怪物
                     this.marbles.get(currentIdx).setShine(false);
                     this.currentIdx = this.count % 3;
                     this.hitCount = 0;
                     this.tmpCount = 0;
                     this.marbles.get(currentIdx).setShine(true);
+                    this.enemyRound++;
+                    this.myRound++;
+                    this.isCount = true;
                 }
-                if (this.enemyRound != 0) {
-                    if (enemyRound % 3 == 0) {
-                        enemyAttack();
-
-                        this.hitCount = 0;
-                        tmpCount = 0;
-                    } else {
-                        setCollide();
-                        for (int i = 0; i < this.battleEnemies.size(); i++) {
-                            this.battleEnemies.get(i).setUseSkill(true);
-                        }
-                    }
-                }
+                enemyAttack();
 
                 if (this.battleEnemies.isEmpty() && allSkillStop(this.marbles)) { //所有怪物死亡且技能都施放完畢
                     this.marbles.get(currentIdx).setShine(false);
@@ -195,19 +201,19 @@ public class LevelScene extends Scene {
 
         } else if (state == 2) { //若跑完3個小關回到選單，否則移動背景進入下一小關
             if (this.sceneCount == 2) {
-                if (!isLose()) {
-                    Marble m = this.allEnemies.luckyDraw();
-                    m.getInfo().setState(0);
-                    this.playerinfo.addMyMarbleSerial(m.getInfo().getSerial());
-                    if (this.playerinfo.getLevel() - 1 == this.idx && this.playerinfo.getLevel() != 5) {
-                        this.playerinfo.setLevel(this.playerinfo.getLevel() + 1);
-                    }
-                    FileIO.writePlayer("playerInfo.csv", this.playerinfo);
-                    FileIO.writeMarble("marbleInfo.csv", m.getInfo());
-                    System.out.println("抽中怪物:" + m.getInfo().getName());
-                    System.out.println(this.playerinfo);
+
+                Marble m = this.allEnemies.luckyDraw();
+                m.getInfo().setState(0);
+                this.playerinfo.addMyMarbleSerial(m.getInfo().getSerial());
+                if (this.playerinfo.getLevel() - 1 == this.idx && this.playerinfo.getLevel() != 5) {
+                    this.playerinfo.setLevel(this.playerinfo.getLevel() + 1);
                 }
-                sceneController.changeScene(new LevelMenu(sceneController));
+                FileIO.writePlayer("playerInfo.csv", this.playerinfo);
+                FileIO.writeMarble("marbleInfo.csv", m.getInfo());
+                System.out.println("抽中怪物:" + m.getInfo().getName());
+                System.out.println(this.playerinfo);
+
+                sceneController.changeScene(new LevelMenu(sceneController, this.playerinfo, "marbleInfo.csv"));
             } else {
                 scrollScene();
             }
@@ -303,7 +309,11 @@ public class LevelScene extends Scene {
                         this.marbles.get(j).getGoVec().setValue(this.marbles.get(j).getGoVec().getValue() * 0.5f);
                         if (this.marbles.get(j).getUseSkill()) {
                             int r = Global.random(1, 3);
-                            this.hitCount += this.marbles.get(j).useSkill(r, this.battleEnemies, 0);
+                            if (r == 4) {
+                                this.marbles.get(j).useSkill(r, this.marbles, 0);
+                            } else {
+                                this.hitCount += this.marbles.get(j).useSkill(r, this.battleEnemies, 0);
+                            }
                             this.marbles.get(j).setUseSkill(false);
                         }
 
@@ -328,9 +338,16 @@ public class LevelScene extends Scene {
 
     private void enemyAttack() {
         for (int i = 0; i < this.battleEnemies.size(); i++) {
-            if (this.battleEnemies.get(i).getUseSkill() && this.delay.isTrig()) {
-                this.battleEnemies.get(i).useSkill(4, this.marbles, 0);
-                this.battleEnemies.get(i).setUseSkill(false);
+            if (enemyRound != 0 && enemyRound % this.battleEnemies.get(i).getInfo().getSkillRound() == 0) {
+                if (this.battleEnemies.get(i).getUseSkill() && this.delay.isTrig()) {
+                    this.battleEnemies.get(i).useSkill(5, this.marbles, 0);
+                    this.battleEnemies.get(i).setUseSkill(false);
+                }
+                this.hitCount = 0;
+                tmpCount = 0;
+            } else {
+                setCollide();
+                this.battleEnemies.get(i).setUseSkill(true);
             }
         }
     }
@@ -341,6 +358,7 @@ public class LevelScene extends Scene {
         }
         if (this.background.getX() <= (2 - this.sceneCount) * ImgInfo.BACKGROUND_SIZE[idx][0]) {
             this.sceneCount++;
+            this.hitCount = 0;
             genBattleEnemies();
             this.state = 0;
         }
@@ -417,7 +435,11 @@ public class LevelScene extends Scene {
                 this.props[i].paintComponent(g);
             }
         }
+
         paintText(g);
+        for (int i = 0; i < this.shineFrame.length; i++) {
+            this.shineFrame[i].paint(g);
+        }
         this.buttons.get(0).paint(g);
     }
 
@@ -470,7 +492,7 @@ public class LevelScene extends Scene {
         g.drawString("Battle  ", 800 - 2, Global.SCREEN_Y - 40 - 2);
         g.setFont(new Font("Showcard Gothic", Font.PLAIN, 36));
         g.drawString("" + (sceneCount + 1), 930 - 2, Global.SCREEN_Y - 40 - 2);
-        
+
         g.setColor(Color.GRAY);
         g.setFont(new Font("VinerHandITC", Font.PLAIN, 20));
         g.drawString("Player: " + this.playerinfo.getName(), 530, Global.SCREEN_Y - 60);
@@ -479,15 +501,37 @@ public class LevelScene extends Scene {
         g.setColor(Color.GRAY);
         g.drawString("Level: " + this.playerinfo.getLevel(), 530, Global.SCREEN_Y - 30);
         g.setColor(Color.BLACK);
-        g.drawString("Level: " + this.playerinfo.getLevel(), 530 - 2, Global.SCREEN_Y - 30 - 2);       
-        
+        g.drawString("Level: " + this.playerinfo.getLevel(), 530 - 2, Global.SCREEN_Y - 30 - 2);
+
         g.setFont(new Font("Showcard Gothic", Font.PLAIN, 24));
         g.setColor(Color.GRAY);
         g.drawString("HP ", 525, Global.SCREEN_Y - 105);
         g.setColor(Color.BLACK);
         g.drawString("HP ", 525 - 2, Global.SCREEN_Y - 105 - 2);
+
         for (int i = 0; i < this.myMarbles.length; i++) {
             this.myMarbles[i].paintComponent(g);
+            int atkRound = this.myMarbles[i].getInfo().getSkillRound()
+                    - this.myRound % this.myMarbles[i].getInfo().getSkillRound();
+            int x = (int) (this.myMarbles[i].getCenterX() + this.myMarbles[i].getR());
+            int y = (int) (this.myMarbles[i].getCenterY() + this.myMarbles[i].getR());
+            g.setColor(Color.BLACK);
+            g.drawString("" + atkRound, x, y);
+            g.setColor(new Color(255, 153, 0));
+            g.drawString("" + atkRound, x - 2, y - 2);
+            if (atkRound == this.myMarbles[i].getInfo().getSkillRound() && this.myRound != 0) {
+                this.shineFrame[i].setIsShow(true);
+            }
+        }
+        for (int i = 0; i < this.battleEnemies.size(); i++) {
+            int atkRound = this.battleEnemies.get(i).getInfo().getSkillRound()
+                    - this.enemyRound % this.battleEnemies.get(i).getInfo().getSkillRound();
+            int x = (int) (this.battleEnemies.get(i).getCenterX() + this.battleEnemies.get(i).getR());
+            int y = (int) (this.battleEnemies.get(i).getCenterY() + this.battleEnemies.get(i).getR());
+            g.setColor(Color.BLACK);
+            g.drawString("" + atkRound, x, y);
+            g.setColor(new Color(255, 153, 0));
+            g.drawString("" + atkRound, x - 2, y - 2);
         }
     }
 
@@ -508,15 +552,15 @@ public class LevelScene extends Scene {
         private float startY;
         private float endX;
         private float endY;
-//Global.SCREEN_X - 50, Global.SCREEN_Y-50
+        
         @Override
         public void mouseTrig(MouseEvent e, CommandSolver.MouseState mouseState, long trigTime) {
             if (mouseState == CommandSolver.MouseState.PRESSED && e.getX() > Global.SCREEN_X - 50 - ImgInfo.SETTING_INFO[1] / 2 && e.getX() < Global.SCREEN_X - 50 + ImgInfo.SETTING_INFO[1] / 2
-                    && e.getY() > Global.SCREEN_Y-50 - ImgInfo.SETTING_INFO[1] / 2 && e.getY() < Global.SCREEN_Y-50 + ImgInfo.SETTING_INFO[1] / 2) {
+                    && e.getY() > Global.SCREEN_Y - 50 - ImgInfo.SETTING_INFO[1] / 2 && e.getY() < Global.SCREEN_Y - 50 + ImgInfo.SETTING_INFO[1] / 2) {
                 isEnter = true;
             }
             if (mouseState == CommandSolver.MouseState.MOVED && e.getX() > Global.SCREEN_X - 50 - ImgInfo.SETTING_INFO[1] / 2 && e.getX() < Global.SCREEN_X - 50 + ImgInfo.SETTING_INFO[1] / 2
-                    && e.getY() > Global.SCREEN_Y-50 - ImgInfo.SETTING_INFO[1] / 2 && e.getY() < Global.SCREEN_Y-50 + ImgInfo.SETTING_INFO[1] / 2) {
+                    && e.getY() > Global.SCREEN_Y - 50 - ImgInfo.SETTING_INFO[1] / 2 && e.getY() < Global.SCREEN_Y - 50 + ImgInfo.SETTING_INFO[1] / 2) {
                 isOnButton = true;
             } else {
                 isOnButton = false;
@@ -554,7 +598,7 @@ public class LevelScene extends Scene {
                     marbles.get(currentIdx).setGo(vector.resizeVec(marbles.get(currentIdx).getInfo().getV()));
                     count++;
                     round++;
-                    enemyRound++;
+                    isCount = false;
                     arrow.setShow(false);
                 }
             }

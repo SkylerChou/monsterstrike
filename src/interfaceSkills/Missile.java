@@ -12,8 +12,9 @@ import java.util.ArrayList;
 import monsterstrike.gameobject.marble.Marble;
 import monsterstrike.graph.Vector;
 
-public class Missile extends Skills{
-    private static final int SKILL_IDX = 4;
+public class Missile extends Skills {
+
+    private static final int SKILL_IDX = 5;
     private static final int DELAY = 15; //技能變化動畫
     private static final int NUM = 5;
     private static final int WIDTH = 60;
@@ -21,7 +22,7 @@ public class Missile extends Skills{
     private int hitCount;
     private ArrayList<Marble> target;
     private Marble self;
-    
+
     public Missile() {
         super(NUM);
     }
@@ -50,25 +51,35 @@ public class Missile extends Skills{
         this.self = self;
         System.out.println(self.getInfo().getName() + "導彈!");
         int attr = self.getInfo().getAttribute();
-        
-        for(int i=0; i<target.size(); i++){
-            Vector vec = new Vector(this.target.get(i).getCenterX()-self.getCenterX(),
-                                    this.target.get(i).getCenterY()-self.getCenterY());           
+
+        for (int i = 0; i < target.size(); i++) {
+            Vector vec = new Vector(this.target.get(i).getCenterX() - self.getCenterX(),
+                    this.target.get(i).getCenterY() - self.getCenterY());
             float dx = vec.getUnitX();
             float dy = vec.getUnitY();
             this.skill[i] = new SkillComponent(SKILL_IDX, attr, SkillImg.SKILL_NUM[0][attr],
-                    (int) (self.getCenterX() + dx), (int) (self.getCenterY() + dy),WIDTH, HEIGHT, DELAY);
-            this.skill[i].setDx(dx*5);
-            this.skill[i].setDy(dy*5);
+                    (int) (self.getCenterX() + dx), (int) (self.getCenterY() + dy), WIDTH, HEIGHT, DELAY);
+            this.skill[i].setDx(dx * 5);
+            this.skill[i].setDy(dy * 5);
         }
 
         return this.hitCount;
     }
 
-    private boolean checkStrike(int idx, ArrayList<Marble> target) {        
+    private boolean checkStrike(int idx, ArrayList<Marble> target) {
+        int selfA = self.getInfo().getAttribute();
+        int atk = self.getInfo().getAtk();
         for (int j = 0; j < target.size(); j++) {
+            int targetA = target.get(j).getInfo().getAttribute();
             if (this.skill[idx].isCollision(target.get(j)) && !this.skill[idx].getIsBoom()) {
-                this.target.get(j).getInfo().setHp(this.target.get(j).getInfo().getHp() - this.self.getInfo().getAtk());
+                if ((selfA != 2 && selfA - targetA == -1) || (selfA == 2 && targetA == 0)
+                        || (selfA == 4 && targetA == 3)) {
+                    atk = 2 * self.getInfo().getAtk();
+                } else if ((selfA != 3 && selfA - targetA == 1) || (selfA == 0 && targetA == 2)
+                        || (selfA == 3 && targetA == 4)) {
+                    atk = self.getInfo().getAtk() / 2;
+                }
+                this.target.get(j).getInfo().setHp(this.target.get(j).getInfo().getHp() - atk);
                 System.out.println(this.target.get(j).getInfo().getName() + "血量:" + this.target.get(j).getInfo().getHp());
                 this.skill[idx].setIsBoom(true);
                 return true;
@@ -82,10 +93,10 @@ public class Missile extends Skills{
         Graphics2D g2d = (Graphics2D) g;
         AffineTransform oldForm = g2d.getTransform();
         for (int i = 0; i < this.target.size(); i++) {
-            Vector vec = new Vector(this.target.get(i).getCenterX()-this.self.getCenterX(),
-                                    this.target.get(i).getCenterY()-this.self.getCenterY());
-            float rad = vec.getRadTheta(new Vector(0,-1));
-            if(this.target.get(i).getCenterX()<this.self.getCenterX()){
+            Vector vec = new Vector(this.target.get(i).getCenterX() - this.self.getCenterX(),
+                    this.target.get(i).getCenterY() - this.self.getCenterY());
+            float rad = vec.getRadTheta(new Vector(0, -1));
+            if (this.target.get(i).getCenterX() < this.self.getCenterX()) {
                 rad *= -1;
             }
             if (this.skill[i] != null) {

@@ -70,8 +70,20 @@ public class Bullet extends Skills {
     }
 
     private boolean checkStrike(int idx, ArrayList<Marble> target) {
+        int selfA = self.getInfo().getAttribute();
+        int atk = self.getInfo().getAtk();
+        
         for (int j = 0; j < target.size(); j++) {
+            int targetA = target.get(j).getInfo().getAttribute();
             if (this.skill[idx].isCollision(target.get(j)) && !this.target.get(j).getIsCollide()) {
+                if ((selfA != 2 && selfA - targetA == -1) || (selfA == 2 && targetA == 0)
+                        || (selfA == 4 && targetA == 3)) {
+                    atk = 2 * self.getInfo().getAtk();
+                } else if ((selfA != 3 && selfA - targetA == 1) || (selfA == 0 && targetA == 2)
+                        || (selfA == 3 && targetA == 4)) {
+                    atk = self.getInfo().getAtk()/2;    
+                }
+                target.get(j).getInfo().setHp(target.get(j).getInfo().getHp() - atk);       
                 this.target.get(j).getInfo().setHp(this.target.get(j).getInfo().getHp() - this.self.getInfo().getAtk());
                 System.out.println(this.target.get(j).getInfo().getName() + "血量:" + this.target.get(j).getInfo().getHp());
                 this.target.get(j).setIsCollide(true);

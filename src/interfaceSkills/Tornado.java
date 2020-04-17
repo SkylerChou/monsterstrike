@@ -36,10 +36,19 @@ public class Tornado extends Skills {
             this.skill[i] = new SkillComponent(SKILL_IDX, attr, SkillImg.SKILL_NUM[SKILL_IDX][attr],
                     (int) (Global.random(50, Global.SCREEN_X - 50)), (int) (Global.random(50, Global.SCREEN_Y - 50)), WIDTH, HEIGHT, DELAY);
         }
-
+        int selfA = self.getInfo().getAttribute();
+        int atk = self.getInfo().getAtk();
         for (int i = 0; i < target.size(); i++) {
+            int targetA = target.get(i).getInfo().getAttribute();
             if (checkStrike(target.get(i))) {
-                target.get(i).getInfo().setHp(target.get(i).getInfo().getHp() - self.getInfo().getAtk());
+                if ((selfA != 2 && selfA - targetA == -1) || (selfA == 2 && targetA == 0)
+                        || (selfA == 4 && targetA == 3)) {
+                    atk = 2 * self.getInfo().getAtk();
+                } else if ((selfA != 3 && selfA - targetA == 1) || (selfA == 0 && targetA == 2)
+                        || (selfA == 3 && targetA == 4)) {
+                    atk = self.getInfo().getAtk() / 2;
+                }
+                target.get(i).getInfo().setHp(target.get(i).getInfo().getHp() - atk);
                 this.hitCount++;
                 System.out.println(target.get(i).getInfo().getName() + "血量:" + target.get(i).getInfo().getHp());
             }

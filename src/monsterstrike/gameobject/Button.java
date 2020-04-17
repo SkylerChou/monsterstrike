@@ -6,30 +6,42 @@
 package monsterstrike.gameobject;
 
 import java.awt.Graphics;
-import java.awt.image.BufferedImage;
-import monsterstrike.util.Delay;
 
 public class Button extends SceneObject {
 
     private ObjectRenderer renderer;
+    private boolean isShow;
 
     public Button(String[] path, int x, int y, int width, int height) {
         super(x, y, width, height);
         this.renderer = new ObjectRenderer(path, 0);
+        this.isShow = true;
     }
-    public Button(String[] path, int x, int y, int width, int height,int frame) {
+
+    public Button(String[] path, int x, int y, int width, int height, int frame) {
         super(x, y, width, height);
-        this.renderer = new ObjectRenderer(path,frame);
+        this.renderer = new ObjectRenderer(path, frame);
+        this.isShow = true;
     }
-    
+
     @Override
     public void update() {
         this.renderer.update();
     }
 
+    public void setIsShow(boolean isShow) {
+        this.isShow = isShow;
+    }
+
+    public boolean getIsShow() {
+        return this.isShow;
+    }
+
     @Override
     public void paint(Graphics g) {
-        this.renderer.paint(g, (int) this.getX(), (int) this.getY(),
-                (int) this.getWidth(), (int) this.getHeight());
+        if (this.isShow) {
+            this.renderer.paint(g, (int) this.getX(), (int) this.getY(),
+                    (int) this.getWidth(), (int) this.getHeight());
+        }
     }
 }
