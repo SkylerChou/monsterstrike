@@ -12,6 +12,9 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import monsterstrike.LoadingThread;
 import monsterstrike.LoadingThread.*;
+import monsterstrike.gameobject.Dino;
+import monsterstrike.gameobject.ImgInfo;
+import monsterstrike.util.Global;
 import scenes.Scene;
 
 public class SceneController {
@@ -32,6 +35,7 @@ public class SceneController {
     private MouseCommandListener ml;
     private boolean isLoading;
     private BufferedImage img;
+    private Dino dino;
 
     public void changeScene(Scene scene) {
         if (this.currentScene != null) {
@@ -40,12 +44,16 @@ public class SceneController {
 
         isLoading = true;
         currentScene = scene;
+        this.dino = new Dino(ImgInfo.DINO, 650, 300, Dino.STEPS_RUN);
+        this.img = IRC.getInstance().tryGetImage(ImgInfo.LOADING_PATH);
         new LoadingThread(new Loading()).start();
     }
 
     public void sceneUpdate() {
         if (!isLoading) {
             this.currentScene.sceneUpdate();
+        }else{
+            this.dino.update();
         }
     }
 
@@ -67,9 +75,10 @@ public class SceneController {
 
     public void paint(Graphics g) {
         if (this.isLoading) {
-            g.setColor(Color.white);
-            g.drawString((test++) + "", 600, 340);
-//            g.drawImage(img, 0, 0, Global.SCREEN_X, Global.SCREEN_Y, null);
+//            g.setColor(Color.white);
+//            g.drawString((test++) + "", 600, 340);
+            g.drawImage(img, 0, 0, Global.SCREEN_X, Global.SCREEN_Y, null);
+            this.dino.paint(g);
             return;
         }
         this.currentScene.paint(g);
