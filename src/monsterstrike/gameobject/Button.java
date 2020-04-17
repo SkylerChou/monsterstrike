@@ -23,6 +23,10 @@ public class Button extends SceneObject {
         this.renderer = new ObjectRenderer(path, frame);
         this.isShow = true;
     }
+    
+    public void resetImg(){
+        this.renderer.restImg();
+    }
 
     @Override
     public void update() {

@@ -5,8 +5,6 @@
  */
 package player;
 
-import monsterstrike.gameobject.marble.Marble;
-
 public class PlayerInfo {
 
     private String name;
