@@ -31,6 +31,7 @@ public class LevelScene extends Scene {
     private Arrow arrow;
     private ArrayList<Marble> battleEnemies; //小關出戰怪物
     private Prop[] props;
+    private Marble m;
 
     private int currentIdx;
     private int count;
@@ -48,11 +49,15 @@ public class LevelScene extends Scene {
     private int tmpCount2;
     private Delay delay;
     private PlayerInfo playerinfo;
+    private int overCount;
 
     private ArrayList<Button> buttons;
     private boolean isEnter;
     private boolean isOnButton;
     private boolean isCount;
+    private boolean isClick;
+    private boolean isWin;
+    private boolean isDraw;
 
     public LevelScene(SceneController sceneController, int backIdx,
             Marble[] myMarbles, ArrayList<Marble> enemies, PlayerInfo playerinfo) {
@@ -89,6 +94,10 @@ public class LevelScene extends Scene {
         this.isEnter = false;
         this.isOnButton = false;
         this.isCount = false;
+        this.isClick = false;
+        this.overCount = 0;
+        this.isWin = false;
+        this.isDraw = false;
     }
 
     @Override
@@ -126,29 +135,30 @@ public class LevelScene extends Scene {
                     this.props[0] = new Heart(ImgInfo.HEART, Global.random(50, Global.SCREEN_X - 50), 50, 80, 80, 40, ImgInfo.HEART_NUM, 10);
                 } else if (this.sceneCount == 2) {//第三小關
                     this.props[1] = new Booster(ImgInfo.SHOE, Global.SCREEN_X - 50, Global.random(50, Global.SCREEN_Y - Global.INFO_H - 50), 80, 80, 40, ImgInfo.SHOE_NUM, 35);
-                    Marble tmp=null;
+                    Marble tmp = null;
                     for (int i = 0; i < this.battleEnemies.size(); i++) {
-                        if(this.battleEnemies.get(i).getInfo().getLevel()==5){
-                            tmp=this.battleEnemies.get(i);
+                        if (this.battleEnemies.get(i).getInfo().getLevel() == 5) {
+                            tmp = this.battleEnemies.get(i);
                         }
                     }
-                    if(tmp!=null){
-                         this.props[2] = new Shield(ImgInfo.SHIELD,(int) tmp.getCenterX(), (int)tmp.getCenterY(), (int)(tmp.getInfo().getR()*1.5f), (int)(tmp.getInfo().getR()*1.5f), (int)(tmp.getInfo().getR()*1.5f)/2, ImgInfo.SHIELD_NUM, 20);
-                         this.props[2].setIsUsed(false);
-                    } 
+                    if (tmp != null) {
+                        this.props[2] = new Shield(ImgInfo.SHIELD, (int) tmp.getCenterX(), (int) tmp.getCenterY(), (int) (tmp.getInfo().getR() * 1.5f), (int) (tmp.getInfo().getR() * 1.5f), (int) (tmp.getInfo().getR() * 1.5f) / 2, ImgInfo.SHIELD_NUM, 20);
+                        this.props[2].setIsUsed(false);
+                    }
                 }
             }
         } else if (this.state == 1) { //遊戲開始
+            if (!isLose() && !isWin) {
+                for (int i = 0; i < this.battleEnemies.size(); i++) {
+                    this.battleEnemies.get(i).update();
+                }
 
-            for (int i = 0; i < this.battleEnemies.size(); i++) {
-                this.battleEnemies.get(i).update();
-            }
-
-            //我方怪物動畫更新
-            for (int i = 0; i < this.marbles.size(); i++) {
-                this.marbles.get(i).updateShine(); //光圈更新
-                this.marbles.get(i).update();      //怪物、技能更新
-                this.shineFrame[i].update();
+                //我方怪物動畫更新
+                for (int i = 0; i < this.marbles.size(); i++) {
+                    this.marbles.get(i).updateShine(); //光圈更新
+                    this.marbles.get(i).update();      //怪物、技能更新
+                    this.shineFrame[i].update();
+                }
             }
 
             for (int i = 0; i < this.props.length; i++) {
@@ -175,11 +185,13 @@ public class LevelScene extends Scene {
                 }
             }
 
-            if (isLose() && allSkillStop(battleEnemies)) {
+            if (isLose()) {
                 FileIO.writePlayer("playerInfo.csv", this.playerinfo);
                 FileIO.writeMarble("marbleInfo.csv", null);
-                sceneController.changeScene(new LevelMenu(sceneController, this.playerinfo, "marbleInfo.csv"));
-                return;
+                if (isEnter) {
+                    sceneController.changeScene(new LevelMenu(sceneController, this.playerinfo, "marbleInfo.csv"));
+                    return;
+                }
             }
             calculateHP();
             if (checkAllStop()) { //當所有我方怪物靜止
@@ -208,10 +220,12 @@ public class LevelScene extends Scene {
             }
 
         } else if (state == 2) { //若跑完3個小關回到選單，否則移動背景進入下一小關
-            if (this.sceneCount == 2) {
-
-                Marble m = this.allEnemies.luckyDraw();
+            if (this.sceneCount == 2 && !isDraw) {
+                m = this.allEnemies.luckyDraw();
                 m.getInfo().setState(0);
+                m.setCenterX(780);
+                m.setCenterY(350);
+                isWin = true;
                 this.playerinfo.addMyMarbleSerial(m.getInfo().getSerial());
                 if (this.playerinfo.getLevel() - 1 == this.idx && this.playerinfo.getLevel() != 5) {
                     this.playerinfo.setLevel(this.playerinfo.getLevel() + 1);
@@ -220,13 +234,19 @@ public class LevelScene extends Scene {
                 FileIO.writeMarble("marbleInfo.csv", m.getInfo());
                 System.out.println("抽中怪物:" + m.getInfo().getName());
                 System.out.println(this.playerinfo);
-
-                sceneController.changeScene(new LevelMenu(sceneController, this.playerinfo, "marbleInfo.csv"));
-            } else {
+                this.isDraw = true;
+            } else if (!isWin) {
                 scrollScene();
             }
+            if (isWin) {
+                m.update();
+                m.updateShine();
+            }
+            if (isEnter) {
+                sceneController.changeScene(new LevelMenu(sceneController, this.playerinfo, "marbleInfo.csv"));
+            }
         }
-        if (this.isEnter) {
+        if (this.isClick) {
             sceneController.changeScene(new Menu(sceneController));
         }
         if (this.isOnButton) {
@@ -449,6 +469,58 @@ public class LevelScene extends Scene {
             this.shineFrame[i].paint(g);
         }
         this.buttons.get(0).paint(g);
+        if (isLose()) {
+            if (overCount++ % 30 < 15) {
+                g.setColor(Color.BLACK);
+                g.setFont(new Font("Showcard Gothic", Font.PLAIN, 48));
+                g.drawString(this.playerinfo.getName() + " Lose!", Global.SCREEN_X / 2 - 120, 270);
+                g.setColor(Color.gray);
+                g.setFont(new Font("Showcard Gothic", Font.PLAIN, 48));
+                g.drawString(this.playerinfo.getName() + " Lose!", Global.SCREEN_X / 2 - 120 - 2, 270 - 2);
+            } else {
+                g.setColor(Color.BLACK);
+                g.setFont(new Font("Showcard Gothic", Font.PLAIN, 54));
+                g.drawString(this.playerinfo.getName() + " Lose!", Global.SCREEN_X / 2 - 150, 270);
+                g.setColor(Color.gray);
+                g.setFont(new Font("Showcard Gothic", Font.PLAIN, 54));
+                g.drawString(this.playerinfo.getName() + " Lose!", Global.SCREEN_X / 2 - 150 - 2, 270 - 2);
+            }
+            if (overCount == 100) {
+                overCount = 0;
+            }
+        } else if (isWin) {
+            if (overCount++ % 30 < 15) {
+                g.setColor(Color.BLACK);
+                g.setFont(new Font("Showcard Gothic", Font.PLAIN, 48));
+                g.drawString(this.playerinfo.getName() + " Win!", Global.SCREEN_X / 2 - 120, 270);
+                g.setColor(Color.YELLOW);
+                g.setFont(new Font("Showcard Gothic", Font.PLAIN, 48));
+                g.drawString(this.playerinfo.getName() + " Win!", Global.SCREEN_X / 2 - 120 - 2, 270 - 2);
+                g.setColor(Color.BLACK);
+                g.setFont(new Font("Showcard Gothic", Font.PLAIN, 36));
+                g.drawString("You Gain", Global.SCREEN_X / 2 - 100, 350);
+                g.setColor(Color.YELLOW);
+                g.setFont(new Font("Showcard Gothic", Font.PLAIN, 36));
+                g.drawString("You Gain", Global.SCREEN_X / 2 - 100 - 2, 350 - 2);
+            } else {
+                g.setColor(Color.BLACK);
+                g.setFont(new Font("Showcard Gothic", Font.PLAIN, 54));
+                g.drawString(this.playerinfo.getName() + " Win!", Global.SCREEN_X / 2 - 150, 270);
+                g.setColor(Color.YELLOW);
+                g.setFont(new Font("Showcard Gothic", Font.PLAIN, 54));
+                g.drawString(this.playerinfo.getName() + " Win!", Global.SCREEN_X / 2 - 150 - 2, 270 - 2);
+                g.setColor(Color.BLACK);
+                g.setFont(new Font("Showcard Gothic", Font.PLAIN, 42));
+                g.drawString("You Gain", Global.SCREEN_X / 2 - 120, 350);
+                g.setColor(Color.YELLOW);
+                g.setFont(new Font("Showcard Gothic", Font.PLAIN, 42));
+                g.drawString("You Gain", Global.SCREEN_X / 2 - 120 - 2, 350 - 2);
+            }
+            m.paintAll(g);
+            if (overCount == 1000) {
+                overCount = 0;
+            }
+        }
     }
 
     private void paintText(Graphics g) {
@@ -545,7 +617,7 @@ public class LevelScene extends Scene {
 
     @Override
     public CommandSolver.KeyListener getKeyListener() {
-        return null;
+        return new MyKeyListener();
     }
 
     @Override
@@ -554,18 +626,42 @@ public class LevelScene extends Scene {
 
     }
 
+    public class MyKeyListener implements CommandSolver.KeyListener {
+
+        @Override
+        public void keyPressed(int commandCode, long trigTime) {
+//            if (isReleased && isLose()) {
+//                isReleased = false;
+//                
+//            }
+            if ((isLose() || isWin) && commandCode == Global.ENTER) {
+                System.out.println("!");
+                isEnter = true;
+            }
+        }
+
+        @Override
+        public void keyReleased(int commandCode, long trigTime) {
+//            isReleased = true;
+        }
+
+        @Override
+        public void keyTyped(char c, long trigTime) {
+        }
+    }
+
     public class MyMouseListener implements CommandSolver.MouseCommandListener {
 
         private float startX;
         private float startY;
         private float endX;
         private float endY;
-        
+
         @Override
         public void mouseTrig(MouseEvent e, CommandSolver.MouseState mouseState, long trigTime) {
             if (mouseState == CommandSolver.MouseState.PRESSED && e.getX() > Global.SCREEN_X - 50 - ImgInfo.SETTING_INFO[1] / 2 && e.getX() < Global.SCREEN_X - 50 + ImgInfo.SETTING_INFO[1] / 2
                     && e.getY() > Global.SCREEN_Y - 50 - ImgInfo.SETTING_INFO[1] / 2 && e.getY() < Global.SCREEN_Y - 50 + ImgInfo.SETTING_INFO[1] / 2) {
-                isEnter = true;
+                isClick = true;
             }
             if (mouseState == CommandSolver.MouseState.MOVED && e.getX() > Global.SCREEN_X - 50 - ImgInfo.SETTING_INFO[1] / 2 && e.getX() < Global.SCREEN_X - 50 + ImgInfo.SETTING_INFO[1] / 2
                     && e.getY() > Global.SCREEN_Y - 50 - ImgInfo.SETTING_INFO[1] / 2 && e.getY() < Global.SCREEN_Y - 50 + ImgInfo.SETTING_INFO[1] / 2) {

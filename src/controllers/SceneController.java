@@ -50,11 +50,17 @@ public class SceneController {
     }
 
     public KeyListener getKL() {
-        return this.kl;
+        if (!isLoading) {
+            return this.kl;
+        }
+        return null;
     }
 
     public MouseCommandListener getML() {
-        return this.ml;
+        if (!isLoading) {
+            return this.ml;
+        }
+        return null;
     }
 
     private int test = 0;

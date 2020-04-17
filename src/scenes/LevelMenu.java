@@ -55,6 +55,19 @@ public class LevelMenu extends Scene {
         this.enemyFightMarbles = new ArrayList<>();
         this.button = new ArrayList<>();
     }
+    
+    public LevelMenu(SceneController sceneController, String playerFile, String file) {
+        super(sceneController);
+        this.playerInfo = FileIO.readPlayer(playerFile, 0);
+        this.allMarbleInfo = FileIO.readMarble(file);
+        this.level = playerInfo.getLevel();
+        this.myMarbles = new ArrayList<>();
+        this.enemies = new ArrayList<>();
+        this.fightMarbles = new Marble[3];
+        this.buttons = new ArrayList<>();
+        this.enemyFightMarbles = new ArrayList<>();
+        this.button = new ArrayList<>();
+    }
 
     @Override
     public void sceneBegin() {       
@@ -102,6 +115,7 @@ public class LevelMenu extends Scene {
             }
             sceneController.changeScene(new LevelScene(sceneController, backIdx, fightMarbles,
                     this.enemyFightMarbles, this.playerInfo));
+            return;
         } else {
             this.currentMarble = this.myMarbles.get(idx);
             this.currentMarble.setShine(true);
