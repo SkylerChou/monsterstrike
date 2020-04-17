@@ -50,6 +50,9 @@ public class ImgInfo {
     //ITEM
     private static final String ITEM_ROOT = "/resources/items/";
     public static final String INFOFORM_PATH = ITEM_ROOT + "infoForm.png";
+    public static final String LIFE = ITEM_ROOT + "life.png";
+    public static final int LIFE_NUM = 4;
+    public static final int[] LIFE_INFO = {500, 160};
 
     //資訊欄血條
     public static final String BLOOD_PATH = ITEM_ROOT + "blood.png";
@@ -117,8 +120,11 @@ public class ImgInfo {
     public static final String SHOE = PROPS_ROOT + "shoe.png";
     public static final int SHOE_NUM = 4;
     public static final int[] SHOE_INFO = {351, 206};
-    public static final String[] BOOSTER = {PROPS_ROOT + "Booster1.png", PROPS_ROOT + "Booster2.png"};
-    public static final int[] PROPS_INFO = {80, 80, 40};
+    public static final String SHIELD = PROPS_ROOT + "shield.png";
+    public static final int SHIELD_NUM = 2;
+    public static final int[] SHIELD_INFO = {500, 462};
+    
+    
 
     //Player
     private static final String PLAYER_ROOT = "/resources/player/";

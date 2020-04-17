@@ -5,6 +5,8 @@
  */
 package scenes;
 
+import Props.Heart;
+import Props.Prop;
 import controllers.IRC;
 import controllers.SceneController;
 import java.awt.Color;
@@ -36,6 +38,10 @@ public class PingPong extends Scene {
     private BufferedImage scoreBoard;
     private int Score;
 
+    private Prop[] hearts;
+    private boolean isOut;
+    private int countHeart;
+
     private ArrayList<Button> buttons;
     private boolean isEnter;
     private boolean isOnButton;
@@ -49,6 +55,7 @@ public class PingPong extends Scene {
 
     @Override
     public void sceneBegin() {
+        this.hearts = new Prop[3];
         for (int i = 0; i < 10; i++) {
             int y = Global.random(50, 200);
             this.post.add(new Obstacle(ImgInfo.POSTS_PATH, 150 + i * 150, 150 + y,
@@ -67,6 +74,11 @@ public class PingPong extends Scene {
         this.dinoGetNum = 0;
         this.isEnter = false;
         this.isOnButton = false;
+        this.countHeart = 2;
+        this.isOut = false;
+        for (int i = 0; i < this.hearts.length; i++) {
+            this.hearts[i] = new Heart(ImgInfo.HEART, 880 + i * 60, 30, 80, 80, 40, ImgInfo.HEART_NUM, 10);
+        }
     }
 
     @Override
@@ -143,13 +155,31 @@ public class PingPong extends Scene {
         if (this.isOnButton) {
             this.buttons.get(0).update();
         }
+        if (this.ball.getCenterY() + this.ball.getR() > this.racket.centerY()) {
+            this.isOut = true;
+            if (this.isOut) {
+                if (this.countHeart == 0) {
+                    sceneController.changeScene(new Menu(sceneController));
+                }
+                for (int i = 0; i < this.hearts.length; i++) {
+                    if (this.countHeart > 0 && this.countHeart == i) {
+                        this.hearts[i] = null;
+                        this.countHeart--;
+                    }
+                }
+                this.ball.setCenterX(POS_X);
+                this.ball.setCenterY(POS_Y);
+                this.ball.setGo(new Vector(5, -5));
+                this.isOut = false;
+            }
+
+        }
     }
 
     @Override
     public void sceneEnd() {
 
     }
-
 
     private void genPost() {
         int i = Global.random(150, 1200);
@@ -215,6 +245,11 @@ public class PingPong extends Scene {
         Graphics2D g2d = (Graphics2D) g;
         this.racket.paint(g2d);
         this.paintText(g);
+        for (int i = 0; i < this.hearts.length; i++) {
+            if (this.hearts[i] != null) {
+                this.hearts[i].paintComponent(g);
+            }
+        }
     }
 
     private void paintText(Graphics g) {

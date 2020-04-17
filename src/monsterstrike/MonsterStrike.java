@@ -39,9 +39,7 @@ public class MonsterStrike {
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         f.add(gk);
         f.setVisible(true);
-
         gk.run(Global.IS_DEBUG);
-
     }
 
 }

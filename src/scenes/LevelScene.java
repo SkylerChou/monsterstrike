@@ -5,9 +5,7 @@
  */
 package scenes;
 
-import Props.Booster;
-import Props.Heart;
-import Props.Prop;
+import Props.*;
 import monsterstrike.graph.Vector;
 import controllers.SceneController;
 import interfaceskills.SkillComponent;
@@ -86,7 +84,7 @@ public class LevelScene extends Scene {
         this.ratio = this.currentHp / this.myHp;
         this.tmpCount = 1;
         this.tmpCount2 = 0;
-        this.props = new Prop[2];
+        this.props = new Prop[3];
         this.buttons = new ArrayList<>();
         this.isEnter = false;
         this.isOnButton = false;
@@ -124,10 +122,20 @@ public class LevelScene extends Scene {
         if (this.state == 0) { //設定背景起始位置， 敵人怪物降落           
             this.background.setX((3 - this.sceneCount) * ImgInfo.BACKGROUND_SIZE[idx][0]);
             if (dropEnemies()) {
-                if (this.sceneCount == 1) {
+                if (this.sceneCount == 1) {//第二小關
                     this.props[0] = new Heart(ImgInfo.HEART, Global.random(50, Global.SCREEN_X - 50), 50, 80, 80, 40, ImgInfo.HEART_NUM, 10);
-                } else if (this.sceneCount == 2) {
+                } else if (this.sceneCount == 2) {//第三小關
                     this.props[1] = new Booster(ImgInfo.SHOE, Global.SCREEN_X - 50, Global.random(50, Global.SCREEN_Y - Global.INFO_H - 50), 80, 80, 40, ImgInfo.SHOE_NUM, 35);
+                    Marble tmp=null;
+                    for (int i = 0; i < this.battleEnemies.size(); i++) {
+                        if(this.battleEnemies.get(i).getInfo().getLevel()==5){
+                            tmp=this.battleEnemies.get(i);
+                        }
+                    }
+                    if(tmp!=null){
+                         this.props[2] = new Shield(ImgInfo.SHIELD,(int) tmp.getCenterX(), (int)tmp.getCenterY(), (int)(tmp.getInfo().getR()*1.5f), (int)(tmp.getInfo().getR()*1.5f), (int)(tmp.getInfo().getR()*1.5f)/2, ImgInfo.SHIELD_NUM, 20);
+                         this.props[2].setIsUsed(false);
+                    } 
                 }
             }
         } else if (this.state == 1) { //遊戲開始
