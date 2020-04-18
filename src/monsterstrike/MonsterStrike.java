@@ -32,6 +32,7 @@ public class MonsterStrike {
                 .initListener(commands)
                 .enableMouseTrack(gi)
                 .enableKeyboardTrack(gi)
+                .trackChar()
                 .keyCleanMode()
                 .gen();
         f.setTitle("Monster Strike");

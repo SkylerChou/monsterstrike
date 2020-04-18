@@ -29,7 +29,10 @@ public class ImgInfo {
     //黑洞
     public static final String[] BALCKHOLE = {"/resources/blackhole1.png", "/resources/blackhole2.png"};
     public static final int[] BLACKHOLE_INFO = {200, 200};//img_width, img_height 
-
+    
+    public static final String STONE_PATH = "/resources/items/rock.png";
+    public static final int[] STONE_INFO = {617, 625};
+    
     //背景
     private static final String BACKGROUND_ROOT = "/resources/backgrounds/";
     public static final String LEVELBACK_PATH = BACKGROUND_ROOT + "levelBackground.png";

@@ -17,6 +17,7 @@ import monsterstrike.gameobject.Button;
 import monsterstrike.gameobject.ImgInfo;
 import monsterstrike.gameobject.marble.*;
 import monsterstrike.util.*;
+import player.Player;
 
 public class LevelMenu extends Scene {
 
@@ -38,6 +39,7 @@ public class LevelMenu extends Scene {
     private int y;
     private Delay delay;
     private int level;
+    private Player p1;
 
     private ArrayList<Button> button;
     private boolean isEnter;
@@ -55,7 +57,7 @@ public class LevelMenu extends Scene {
         this.enemyFightMarbles = new ArrayList<>();
         this.button = new ArrayList<>();
     }
-    
+
     public LevelMenu(SceneController sceneController, String playerFile, String file) {
         super(sceneController);
         this.playerInfo = FileIO.readPlayer(playerFile, 0);
@@ -67,11 +69,12 @@ public class LevelMenu extends Scene {
         this.buttons = new ArrayList<>();
         this.enemyFightMarbles = new ArrayList<>();
         this.button = new ArrayList<>();
+
     }
 
     @Override
-    public void sceneBegin() {       
-//        this.playerInfo = FileIO.readPlayer("playerInfo.csv", 0);
+    public void sceneBegin() {
+        this.p1 = new Player(this.playerInfo.getSerial() - 1, 100, 120, 100, 150);
         this.menu = new Background(ImgInfo.LEVELBACK_PATH, 0, 0, 1);
         this.count = 0;
         this.idx = 0;
@@ -104,6 +107,7 @@ public class LevelMenu extends Scene {
 
     @Override
     public void sceneUpdate() {
+        this.p1.update();
         if (count == 4) {
             this.background = new Background(ImgInfo.BACKGROUND_PATH[backIdx], 0, 0, this.backIdx);
         } else if (this.count == 5) {
@@ -177,6 +181,12 @@ public class LevelMenu extends Scene {
     @Override
     public void paint(Graphics g) {
         this.menu.paintMenu(g);
+        this.p1.paint(g);
+        g.setFont(new Font("Arial Unicode MS", Font.BOLD, 24));
+        g.setColor(Color.BLACK);
+        g.drawString(this.playerInfo.getName(), 130, 300);
+        g.setFont(new Font("Arial Unicode MS", Font.BOLD, 20));
+        g.drawString("Lv." + this.playerInfo.getLevel(), 130, 110);
         int c = count;
         if (c == 0) {
             c = 1;
@@ -206,24 +216,16 @@ public class LevelMenu extends Scene {
 
     public void paintText(Graphics g, Marble m, int x, int y) {
         g.setFont(new Font("Arial Unicode MS", Font.BOLD, 32));
-        g.setColor(Color.GRAY);
+        g.setColor(Color.BLACK);
         g.drawString(m.getInfo().getName(), x, y);
+        g.setFont(new Font("VinerHandITC", Font.BOLD, 24));
         g.setColor(Color.BLACK);
-        g.drawString(m.getInfo().getName(), x - 3, y - 3);
-        g.setFont(new Font("VinerHandITC", Font.ITALIC, 24));
-        g.setColor(Color.GRAY);
-        g.drawString("HP: " + m.getInfo().getHp(), x - 10, y + 150);
+        g.drawString("HP: " + m.getInfo().getHp(), x - 8, y + 150);
         g.setColor(Color.BLACK);
-        g.drawString("HP: " + m.getInfo().getHp(), x - 10 - 3, y + 150 - 3);
-        g.setColor(Color.GRAY);
-        g.drawString("ATK: " + m.getInfo().getAtk(), x - 10, y + 180);
+        g.drawString("ATK: " + m.getInfo().getAtk(), x - 8, y + 180);
+        g.setFont(new Font("VinerHandITC", Font.BOLD, 24));
         g.setColor(Color.BLACK);
-        g.drawString("ATK: " + m.getInfo().getAtk(), x - 10 - 3, y + 180 - 3);
-        g.setFont(new Font("Arial Unicode MS", Font.ITALIC, 24));
-        g.setColor(Color.GRAY);
-        g.drawString("速度: " + (int) m.getInfo().getV() + " m/s", x - 15, y + 212);
-        g.setColor(Color.BLACK);
-        g.drawString("速度: " + (int) m.getInfo().getV() + " m/s", x - 15 - 3, y + 212 - 3);
+        g.drawString("Velocity: " + (int) m.getInfo().getV() + " m/s", x - 8, y + 212);
     }
 
     @Override

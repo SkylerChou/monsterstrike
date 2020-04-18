@@ -58,6 +58,6 @@ public class PlayerInfo {
 
     @Override
     public String toString() {
-        return "姓名:" + this.name + "等級:" + this.level;
+        return "編號:" +this.serial + "姓名:" + this.name + "等級:" + this.level;
     }
 }

@@ -398,7 +398,7 @@ public class LevelScene extends Scene {
         }
         ArrayList<Marble> m = this.allEnemies.sortByLevel();
         if (this.sceneCount == 0) {
-            for (int i = 0; i < 4; i++) {
+            for (int i = 0; i < 3; i++) {
                 battleEnemies.add(m.get(0).duplicate(Global.ENEMYPOS_X[i], -100, 120, 120));
                 battleEnemies.get(i).getInfo().setName(battleEnemies.get(i).getInfo().getName() + (i + 1));
             }
