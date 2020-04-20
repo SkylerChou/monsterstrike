@@ -7,6 +7,7 @@ package interfaceskills;
 
 import java.awt.Graphics;
 import java.util.ArrayList;
+import monsterstrike.gameobject.GameObject;
 import monsterstrike.gameobject.marble.Marble;
 
 public abstract class Skills {
@@ -27,6 +28,8 @@ public abstract class Skills {
     }
 
     public abstract int useSkill(Marble self, ArrayList<Marble> target, int idx);
+    
+    public abstract int explode(Marble self, GameObject target);
 
     public SkillComponent[] getSkillComponent() {
         return this.skill;

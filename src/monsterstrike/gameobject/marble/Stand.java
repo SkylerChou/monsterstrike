@@ -5,7 +5,6 @@
  */
 package monsterstrike.gameobject.marble;
 
-import monsterstrike.graph.Vector;
 import monsterstrike.util.Delay;
 
 public class Stand implements Strike {
@@ -25,15 +24,12 @@ public class Stand implements Strike {
         if (!self.isDie && self.isCollide) {
             move(self);
         } else if (self.isDie) {
-            self.rendererDie.updateOnce();
+            self.rendererDie.updateHit();
         }
     }
 
     @Override
-    public Marble strike(Marble self, Marble target) {
-        self.setGo(new Vector(self.getCenterX() - target.getCenterX(),
-                self.getCenterY() - target.getCenterY()));
-        return null;
+    public void strike(Marble self, Marble target) {
     }
 
     @Override
@@ -41,9 +37,9 @@ public class Stand implements Strike {
         this.moveDelay.start();
         if (this.moveDelay.isTrig()) {
             if (this.moveCount % 2 == 0) {
-                self.offset(self.getGoVec().getX(), self.getGoVec().getY());
+                self.offset(self.goVec.getX(), self.goVec.getY());
             } else {
-                self.offset(-self.getGoVec().getX(), -self.getGoVec().getY());
+                self.offset(-self.goVec.getX(), -self.goVec.getY());
             }
             this.moveCount++;
             if (this.moveCount == 2) {

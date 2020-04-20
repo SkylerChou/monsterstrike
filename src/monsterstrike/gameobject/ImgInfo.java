@@ -29,32 +29,39 @@ public class ImgInfo {
     //黑洞
     public static final String[] BALCKHOLE = {"/resources/blackhole1.png", "/resources/blackhole2.png"};
     public static final int[] BLACKHOLE_INFO = {200, 200};//img_width, img_height 
-    
+
+    //石頭
     public static final String STONE_PATH = "/resources/items/rock.png";
-    public static final int[] STONE_INFO = {617, 625};
-    
+    public static final int[] STONE_INFO = {590, 590};
+    public static final String ROCK_PATH = "/resources/items/treeRock.png";
+    public static final String ICESTONE_PATH = "/resources/items/iceRock.png";
+
+    //村民
+    private static final String PEOPLE_ROOT = "/resources/player/";
+    public static final String PEOPLE_PATH[] = {PEOPLE_ROOT + "jumpBoy.png", PEOPLE_ROOT + "redHair.png", PEOPLE_ROOT + "girl.png"};
+    public static final int[] PEOPLE_INFO = {165, 240};
+
     //背景
     private static final String BACKGROUND_ROOT = "/resources/backgrounds/";
     public static final String LEVELBACK_PATH = BACKGROUND_ROOT + "levelBackground.png";
     private static final String GRASS_PATH = BACKGROUND_ROOT + "grass.png";
-    private static final int[] GRASS_SIZE = {1000, 1000}; //圖片寬高
+    private static final int[] GRASS_SIZE = {1280, 680}; //圖片寬高
     private static final String ICE_PATH = BACKGROUND_ROOT + "snow.png";
-    private static final int[] ICE_SIZE = {2000, 1063};
+    private static final int[] ICE_SIZE = {1280, 680};
     private static final String FIRE_PATH = BACKGROUND_ROOT + "fire.png";
-    private static final int[] FIRE_SIZE = {949, 949};
+    private static final int[] FIRE_SIZE = {1280, 680};
     private static final String DARK_PATH = BACKGROUND_ROOT + "dark.png";
     private static final int[] DARK_SIZE = {3001, 1093};
     private static final String LIGHT_PATH = BACKGROUND_ROOT + "light.png";
     private static final int[] LIGHT_SIZE = {1920, 800};
-    
+
     public static final String[] BACKGROUND_PATH = {ICE_PATH, FIRE_PATH, GRASS_PATH, LIGHT_PATH, DARK_PATH};
     public static final int[][] BACKGROUND_SIZE = {ICE_SIZE, FIRE_SIZE, GRASS_SIZE, LIGHT_SIZE, DARK_SIZE};
 
     //loading 
     public static final String LOADING_PATH = BACKGROUND_ROOT + "loading.png";
     public static final int[] LOADING_SIZE = {1920, 800};
-    
-    
+
     //ITEM
     private static final String ITEM_ROOT = "/resources/items/";
     public static final String INFOFORM_PATH = ITEM_ROOT + "infoForm.png";
@@ -131,7 +138,7 @@ public class ImgInfo {
     public static final String SHIELD = PROPS_ROOT + "shield.png";
     public static final int SHIELD_NUM = 2;
     public static final int[] SHIELD_INFO = {500, 462};
-    
+
     //Player
     private static final String PLAYER_ROOT = "/resources/player/";
     public static final String[] PLAYERRUN_PATH = {PLAYER_ROOT + "running1.png", PLAYER_ROOT + "running2.png"};

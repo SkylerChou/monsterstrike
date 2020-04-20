@@ -6,16 +6,18 @@
 package monsterstrike.gameobject;
 
 import java.awt.Graphics;
-import monsterstrike.gameobject.marble.MarbleRenderer;
+import monsterstrike.gameobject.GameObject;
+import monsterstrike.gameobject.ImgInfo;
+import monsterstrike.gameobject.marble.Renderer;
 
 public class Stone extends GameObject {
 
-    private MarbleRenderer renderer;
+    private Renderer renderer;
     private boolean isCollide;
 
-    public Stone(String path, int x, int y, int width, int height, int r) {
-        super(x, y, width, height, r);
-        this.renderer = new MarbleRenderer(path, 3, 15);
+    public Stone(String path, int x, int y, int width, int height) {
+        super(x, y, width, height, height / 2);
+        this.renderer = new Renderer(path, 3, 15);
         this.isCollide = false;
     }
 
@@ -26,10 +28,22 @@ public class Stone extends GameObject {
         }
     }
 
+    public void setCollide(boolean isCollide) {
+        this.isCollide = isCollide;
+    }
+
+    public boolean getCollide() {
+        return this.isCollide;
+    }
+
+    public boolean getStop() {
+        return this.renderer.getIsStop();
+    }
+
     @Override
     public void paintComponent(Graphics g) {
-        this.renderer.paint(g, (int)this.getX(), (int)this.getY(), 
-                (int)this.getWidth(), (int)this.getHeight(), 
+        this.renderer.paint(g, (int) this.getX(), (int) this.getY(),
+                (int) this.getWidth(), (int) this.getHeight(),
                 ImgInfo.STONE_INFO[0], ImgInfo.STONE_INFO[1]);
     }
 

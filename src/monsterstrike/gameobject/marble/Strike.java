@@ -9,7 +9,7 @@ public interface Strike {
     
     public void update(Marble self);
     
-    public Marble strike(Marble self, Marble target);
+    public void strike(Marble self, Marble target);
     
     public void move(Marble self);
     

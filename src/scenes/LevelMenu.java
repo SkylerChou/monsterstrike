@@ -69,7 +69,6 @@ public class LevelMenu extends Scene {
         this.buttons = new ArrayList<>();
         this.enemyFightMarbles = new ArrayList<>();
         this.button = new ArrayList<>();
-
     }
 
     @Override
@@ -117,8 +116,7 @@ public class LevelMenu extends Scene {
                 }
                 this.enemyFightMarbles.add(this.enemies.get(i));
             }
-            sceneController.changeScene(new LevelScene(sceneController, backIdx, fightMarbles,
-                    this.enemyFightMarbles, this.playerInfo));
+            sceneController.changeScene(chooseLevel());
             return;
         } else {
             this.currentMarble = this.myMarbles.get(idx);
@@ -142,6 +140,20 @@ public class LevelMenu extends Scene {
         if (this.isOnButton) {
             this.button.get(0).update();
         }
+    }
+    
+    private LevelScene chooseLevel(){
+        switch(backIdx){
+            case 0:
+                return new Level1(sceneController, fightMarbles, this.enemyFightMarbles, this.playerInfo);
+
+            case 1:
+                return new Level2(sceneController, fightMarbles, this.enemyFightMarbles, this.playerInfo);
+
+            case 2:
+                return new Level3(sceneController, fightMarbles, this.enemyFightMarbles, this.playerInfo);
+        }
+        return null;
     }
 
     private void enter() {
@@ -182,25 +194,23 @@ public class LevelMenu extends Scene {
     public void paint(Graphics g) {
         this.menu.paintMenu(g);
         this.p1.paint(g);
-        g.setFont(new Font("Arial Unicode MS", Font.BOLD, 24));
-        g.setColor(Color.BLACK);
-        g.drawString(this.playerInfo.getName(), 130, 300);
-        g.setFont(new Font("Arial Unicode MS", Font.BOLD, 20));
-        g.drawString("Lv." + this.playerInfo.getLevel(), 130, 110);
+        PaintText.paint(g, new Font("Arial Unicode MS", Font.BOLD, 24), 
+                Color.BLACK, this.playerInfo.getName(), 100, 300, 100); 
+        PaintText.paint(g, new Font("Arial Unicode MS", Font.BOLD, 20), 
+                Color.BLACK, "Lv." + this.playerInfo.getLevel(), 105, 110, 100); 
         int c = count;
         if (c == 0) {
             c = 1;
         }
         if (this.currentMarble != null && count < 4) {
             this.currentMarble.paintAll(g);
-            paintText(g, this.currentMarble, Global.SCREEN_X / 4 + 290 * (c - 1), 140);
+            paintText(g, this.currentMarble, 280 + 290 * (c - 1), 140);
         }
 
         for (int i = 0; i < this.fightMarbles.length; i++) {
             if (this.fightMarbles[i] != null) {
-//                this.fightMarbles[i].paintComponent(g);
                 this.fightMarbles[i].paintAll(g);
-                paintText(g, this.fightMarbles[i], Global.SCREEN_X / 4 + 290 * i, 140);
+                paintText(g, this.fightMarbles[i], 280 + 290 * i, 140);
             }
         }
 
@@ -215,17 +225,15 @@ public class LevelMenu extends Scene {
     }
 
     public void paintText(Graphics g, Marble m, int x, int y) {
-        g.setFont(new Font("Arial Unicode MS", Font.BOLD, 32));
-        g.setColor(Color.BLACK);
-        g.drawString(m.getInfo().getName(), x, y);
-        g.setFont(new Font("VinerHandITC", Font.BOLD, 24));
-        g.setColor(Color.BLACK);
-        g.drawString("HP: " + m.getInfo().getHp(), x - 8, y + 150);
-        g.setColor(Color.BLACK);
-        g.drawString("ATK: " + m.getInfo().getAtk(), x - 8, y + 180);
-        g.setFont(new Font("VinerHandITC", Font.BOLD, 24));
-        g.setColor(Color.BLACK);
-        g.drawString("Velocity: " + (int) m.getInfo().getV() + " m/s", x - 8, y + 212);
+        PaintText.paint(g, new Font("Arial Unicode MS", Font.BOLD, 32), 
+                Color.BLACK, m.getInfo().getName(), x, y, (int)m.getWidth());     
+        PaintText.paint(g, new Font("VinerHandITC", Font.BOLD, 24), 
+                Color.BLACK, "HP: " + m.getInfo().getHp(), x-8, y+150, (int)m.getWidth());
+        PaintText.paint(g, new Font("VinerHandITC", Font.BOLD, 24), 
+                Color.BLACK, "ATK: " + m.getInfo().getAtk(), x-8, y+180, (int)m.getWidth());
+        PaintText.paint(g, new Font("VinerHandITC", Font.BOLD, 24), 
+                Color.BLACK, "Velocity: " + (int) m.getInfo().getV() + " m/s", 
+                x-8, y+210, (int)m.getWidth());
     }
 
     @Override

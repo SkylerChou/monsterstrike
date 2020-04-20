@@ -167,11 +167,9 @@ public class PingPong extends Scene {
                         this.countHeart--;
                     }
                 }
-//                if (this.ball.getCenterY() + this.ball.getR() > Global.SCREEN_Y) {
-                    this.ball.setCenterX(POS_X);
-                    this.ball.setCenterY(POS_Y);
-                    this.ball.setGo(new Vector(5, -5));
-//                }
+                this.ball.setCenterX(POS_X);
+                this.ball.setCenterY(POS_Y);
+                this.ball.setGo(new Vector(5, -5));
                 this.isOut = false;
             }
 
@@ -303,12 +301,12 @@ public class PingPong extends Scene {
                     break;
                 case Global.LEFT:
                     if (racket.left() > 0) {
-                        racket.offset(-15, 0);
+                        racket.offset(-12, 0);
                     }
                     break;
                 case Global.RIGHT:
                     if (racket.right() < Global.SCREEN_X) {
-                        racket.offset(15, 0);
+                        racket.offset(12, 0);
                     }
                     break;
             }

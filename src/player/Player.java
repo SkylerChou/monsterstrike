@@ -7,13 +7,13 @@ package player;
 
 import java.awt.Graphics;
 import monsterstrike.gameobject.ImgInfo;
-import monsterstrike.gameobject.marble.MarbleRenderer;
+import monsterstrike.gameobject.marble.Renderer;
 
 public class Player {
 
     private PlayerInfo info;
-    private MarbleRenderer rendererRun;
-    private MarbleRenderer rendererStand;
+    private Renderer rendererRun;
+    private Renderer rendererStand;
     private int state;
     private int idx;
     private int x;
@@ -24,9 +24,9 @@ public class Player {
     public Player(int idx, int x, int y, int w, int h) {
         
         this.idx = idx;
-        this.rendererRun = new MarbleRenderer(ImgInfo.PLAYERRUN_PATH[idx],
+        this.rendererRun = new Renderer(ImgInfo.PLAYERRUN_PATH[idx],
                 ImgInfo.PLAYERRUN_NUM[idx], 10);
-        this.rendererStand = new MarbleRenderer(ImgInfo.PLAYERSTAND_PATH[idx],
+        this.rendererStand = new Renderer(ImgInfo.PLAYERSTAND_PATH[idx],
                 ImgInfo.PLAYERSTAND_NUM[idx], 10);
         this.state = 0;
         this.x = x;

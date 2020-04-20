@@ -18,33 +18,35 @@ import player.PlayerInfo;
 import monsterstrike.gameobject.*;
 import monsterstrike.gameobject.marble.*;
 import monsterstrike.util.*;
+import player.Player;
 
-public class LevelScene extends Scene {
+public abstract class LevelScene extends Scene {
 
     private Background background;
-    private Item item;
-    private Item blood;
-    private Button[] shineFrame;
+    private Item item; //資訊欄
+    private Item blood; //血條
+    private Button[] shineFrame; //資訊欄怪物亮框
     private Marble[] myMarbles; //資訊欄顯示怪物
-    private ArrayList<Marble> marbles; //我方出戰怪物
+    protected ArrayList<Marble> marbles; //我方出戰怪物
     private MarbleArray allEnemies; //敵方所有怪物
     private Arrow arrow;
-    private ArrayList<Marble> battleEnemies; //小關出戰怪物
-    private Prop[] props;
-    private Marble m;
+    protected ArrayList<Marble> battleEnemies; //小關出戰怪物
+    protected Prop[] props;
+    private Marble m; //抽中怪物    
+    private Player player;
+    private int[] atkRound;
 
-    private int currentIdx;
+    protected int currentIdx;
     private int count;
-    private int state;
+    protected int state;
     private int idx;
-    private int sceneCount;
-    private int hitCount;  //strike次數
-    private int round;      //小關回合計數
-    private int enemyRound; //敵人攻擊回合計數
-    private int myRound; //我方攻擊回合計數
+    protected int sceneCount;
+    protected int hitCount;  //strike次數
+    protected int round;      //小關回合計數
+    protected int enemyRound; //敵人攻擊回合計數
     private float myHp;     //總血量
     private float currentHp; //當前血量
-    private float ratio;
+    private float ratio; //計算current HP/ 原始HP
     private int tmpCount;
     private int tmpCount2;
     private Delay delay;
@@ -64,11 +66,14 @@ public class LevelScene extends Scene {
         super(sceneController);
         this.idx = backIdx;
         this.playerinfo = playerinfo;
+        this.player = new Player(this.playerinfo.getSerial() - 1, Global.SCREEN_X / 2 + 100,
+                Global.SCREEN_Y - 85, 50, 75);
         this.item = new Item(ImgInfo.INFOFORM_PATH, Global.SCREEN_X / 2, Global.SCREEN_Y - Global.INFO_H / 2,
                 Global.SCREEN_X, Global.INFO_H);
         this.blood = new Item(ImgInfo.BLOOD_PATH, ImgInfo.BLOOD_INFO[0], ImgInfo.BLOOD_INFO[1],
                 ImgInfo.BLOOD_INFO[2], ImgInfo.BLOOD_INFO[3]);
         this.shineFrame = new Button[3];
+        this.atkRound = new int[3];
         this.marbles = new ArrayList<>();
         this.battleEnemies = new ArrayList<>();
         this.myMarbles = myMarbles;
@@ -81,6 +86,7 @@ public class LevelScene extends Scene {
             this.myMarbles[i].setCenterY(Global.SCREEN_Y - 70);
             w += 150;
             this.myHp += this.myMarbles[i].getInfo().getHp();
+            this.atkRound[i] = myMarbles[i].getInfo().getSkillRound();
         }
         this.currentHp = this.myHp;
         this.allEnemies = new MarbleArray(enemies);
@@ -106,6 +112,7 @@ public class LevelScene extends Scene {
         for (int i = 0; i < 3; i++) {
             this.marbles.get(i).setCenterX(Global.POSITION_X[i]);
             this.marbles.get(i).setCenterY(Global.POSITION_Y[i]);
+            this.marbles.get(i).setDetect(this.marbles.get(i).duplicate());
         }
         for (int i = 0; i < this.shineFrame.length; i++) {
             this.shineFrame[i] = new Button(ImgInfo.SHINEFRAME_PATH, (int) this.myMarbles[i].getCenterX(), (int) this.myMarbles[i].getCenterY(),
@@ -121,71 +128,33 @@ public class LevelScene extends Scene {
         this.hitCount = 0;
         this.round = 0;
         this.enemyRound = 0;
-        this.myRound = 0;
-        genBattleEnemies();
+        genGameObject();
     }
 
     @Override
     public void sceneUpdate() {
 //        if (this.delay.isTrig()) { //慢動作delay，Debug再開
         if (this.state == 0) { //設定背景起始位置， 敵人怪物降落           
-            this.background.setX((3 - this.sceneCount) * ImgInfo.BACKGROUND_SIZE[idx][0]);
+            this.background.setX((this.sceneCount + 1) * ImgInfo.BACKGROUND_SIZE[idx][0]);
             if (dropEnemies()) {
-                if (this.sceneCount == 1) {//第二小關
-                    this.props[0] = new Heart(ImgInfo.HEART, Global.random(50, Global.SCREEN_X - 50), 50, 80, 80, 40, ImgInfo.HEART_NUM, 10);
-                } else if (this.sceneCount == 2) {//第三小關
-                    this.props[1] = new Booster(ImgInfo.SHOE, Global.SCREEN_X - 50, Global.random(50, Global.SCREEN_Y - Global.INFO_H - 50), 80, 80, 40, ImgInfo.SHOE_NUM, 35);
-                    Marble tmp = null;
-                    for (int i = 0; i < this.battleEnemies.size(); i++) {
-                        if (this.battleEnemies.get(i).getInfo().getLevel() == 5) {
-                            tmp = this.battleEnemies.get(i);
-                        }
-                    }
-                    if (tmp != null) {
-                        this.props[2] = new Shield(ImgInfo.SHIELD, (int) tmp.getCenterX(), (int) tmp.getCenterY(), (int) (tmp.getInfo().getR() * 1.5f), (int) (tmp.getInfo().getR() * 1.5f), (int) (tmp.getInfo().getR() * 1.5f) / 2, ImgInfo.SHIELD_NUM, 20);
-                        this.props[2].setIsUsed(false);
-                    }
-                }
+
             }
         } else if (this.state == 1) { //遊戲開始
             if (!isLose() && !isWin) {
-                for (int i = 0; i < this.battleEnemies.size(); i++) {
-                    this.battleEnemies.get(i).update();
-                }
-
-                //我方怪物動畫更新
-                for (int i = 0; i < this.marbles.size(); i++) {
-                    this.marbles.get(i).updateShine(); //光圈更新
-                    this.marbles.get(i).update();      //怪物、技能更新
-                    this.shineFrame[i].update();
-                }
+                updateMarbles();
             }
+            updateGameObject();
+            strikeEnemies(); //攻擊敵人
+            teamHelp(); //撞到隊友，隊友使出技能
+            hitGameObject(); //撞到其他物品
 
-            for (int i = 0; i < this.props.length; i++) {
-                if (this.props[i] != null) {
-                    this.props[i].update();
-                    if (this.props[i].getIsStop()) {
-                        this.props[i] = null;
-                    }
-                }
-            }
+            calculateHP();//計算我方HP
 
-            strikeEnemies();
-            teamHelp();
-            hitProp();
+            enemyDie(); //判斷敵人死亡
 
-            for (int i = 0; i < this.battleEnemies.size(); i++) { //判斷敵人是否死亡
-                if (this.battleEnemies.get(i).getInfo().getHp() <= 0) {
-                    this.battleEnemies.get(i).setIsCollide(false);
-                    this.battleEnemies.get(i).die();
-//                        this.battleEnemies.get(i).setCenterY(Global.FRAME_Y + 200);
-                    if (this.battleEnemies.get(i).getIsDie() && this.battleEnemies.get(i).getDieRenderer().getIsStop()) {
-                        this.battleEnemies.remove(i);
-                    }
-                }
-            }
+            updateShineFrame();
 
-            if (isLose()) {
+            if (isLose()) { //我方輸了
                 FileIO.writePlayer("playerInfo.csv", this.playerinfo);
                 FileIO.writeMarble("marbleInfo.csv", null);
                 if (isEnter) {
@@ -193,63 +162,30 @@ public class LevelScene extends Scene {
                     return;
                 }
             }
-            calculateHP();
+
             if (checkAllStop()) { //當所有我方怪物靜止
-                for (int i = 0; i < this.marbles.size(); i++) {
-                    this.marbles.get(i).setUseSkill(true);
-                }
-
-                if (this.count != 0 && !this.isCount) { //除了第一回合，更新要發動攻擊的我方怪物
-                    this.marbles.get(currentIdx).setShine(false);
-                    this.currentIdx = this.count % 3;
-                    this.hitCount = 0;
-                    this.tmpCount = 0;
-                    this.marbles.get(currentIdx).setShine(true);
-                    this.enemyRound++;
-                    this.myRound++;
-                    this.isCount = true;
-                }
+                resetBattle();
                 enemyAttack();
-
-                if (this.battleEnemies.isEmpty() && allSkillStop(this.marbles)) { //所有怪物死亡且技能都施放完畢
-                    this.marbles.get(currentIdx).setShine(false);
-                    this.round = 0;
-                    this.enemyRound = 0;
-                    this.state = 2;
-                }
+                endBattle();
             }
 
         } else if (state == 2) { //若跑完3個小關回到選單，否則移動背景進入下一小關
             if (this.sceneCount == 2 && !isDraw) {
-                m = this.allEnemies.luckyDraw();
-                m.getInfo().setState(0);
-                m.setCenterX(780);
-                m.setCenterY(350);
-                isWin = true;
-                this.playerinfo.addMyMarbleSerial(m.getInfo().getSerial());
-                if (this.playerinfo.getLevel() - 1 == this.idx && this.playerinfo.getLevel() != 5) {
-                    this.playerinfo.setLevel(this.playerinfo.getLevel() + 1);
-                }
-                FileIO.writePlayer("playerInfo.csv", this.playerinfo);
-                FileIO.writeMarble("marbleInfo.csv", m.getInfo());
-                System.out.println("抽中怪物:" + m.getInfo().getName());
-                System.out.println(this.playerinfo);
-                this.isDraw = true;
+                win();
             } else if (!isWin) {
                 scrollScene();
             }
             if (isWin) {
-                m.update();
-                m.updateShine();
+                m.update(); //抽中角色動畫
             }
-            if (isEnter) {
+            if (isEnter) {  //Win之後按Enter回LevelMenu
                 sceneController.changeScene(new LevelMenu(sceneController, this.playerinfo, "marbleInfo.csv"));
             }
         }
-        if (this.isClick) {
+        if (this.isClick) { //滑鼠按下Home回主畫面
             sceneController.changeScene(new Menu(sceneController));
         }
-        if (this.isOnButton) {
+        if (this.isOnButton) { //游標在Home
             this.buttons.get(0).update();
         }
 //        }
@@ -266,26 +202,33 @@ public class LevelScene extends Scene {
 //        this.state = 0;
     }
 
-    private void hitProp() {
-        for (int i = 0; i < this.marbles.size(); i++) {
-            for (int j = 0; j < this.props.length; j++) {
-                if (this.props[j] != null && this.marbles.get(i).isCollision(this.props[j])) {
-                    this.props[j].setIsCollide(true);
-                    this.props[j].useProp(marbles, i);
-                }
-            }
+    private void win() {
+        m = this.allEnemies.luckyDraw();
+        m.getInfo().setState(0);
+        m.setCenterX(850);
+        m.setCenterY(300);
+        isWin = true;
+        this.playerinfo.addMyMarbleSerial(m.getInfo().getSerial());
+        if (this.playerinfo.getLevel() - 1 == this.idx && this.playerinfo.getLevel() != 5) {
+            this.playerinfo.setLevel(this.playerinfo.getLevel() + 1);
         }
+        FileIO.writePlayer("playerInfo.csv", this.playerinfo);
+        FileIO.writeMarble("marbleInfo.csv", m.getInfo());
+        System.out.println("抽中怪物:" + m.getInfo().getName());
+        System.out.println(this.playerinfo);
+        this.isDraw = true;
     }
 
-    private boolean isLose() {
-        if (this.currentHp <= 0) {
-            return true;
+    private void scrollScene() {
+        if (this.background.getX() < (this.sceneCount + 2) * ImgInfo.BACKGROUND_SIZE[idx][0]) {
+            this.background.offset(15);
         }
-        return false;
-    }
-
-    public ArrayList<Marble> getMarbles() {
-        return marbles;
+        if (this.background.getX() >= (this.sceneCount + 2) * ImgInfo.BACKGROUND_SIZE[idx][0]) {
+            this.sceneCount++;
+            this.hitCount = 0;
+            genGameObject();
+            this.state = 0;
+        }
     }
 
     private void calculateHP() {
@@ -300,121 +243,50 @@ public class LevelScene extends Scene {
         this.ratio = this.currentHp / this.myHp;
     }
 
-    private boolean allSkillStop(ArrayList<Marble> marbles) {
-        for (int i = 0; i < marbles.size(); i++) {
-            if (!skillStop(marbles.get(i))) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private boolean skillStop(Marble marble) {
-        SkillComponent[] skills = marble.getSkills().getSkillComponent();
-        for (int j = 0; j < skills.length; j++) {
-            if (skills[j] != null && !skills[j].getIsStop()) {
-                return false; //技能尚未釋放完畢
-            }
-        }
-        return true; //技能釋放完畢
-    }
-
-    private void setCollide() {
+    private void resetBattle() {
         for (int i = 0; i < this.marbles.size(); i++) {
-            this.marbles.get(i).setIsCollide(false);
+            this.marbles.get(i).setUseSkill(true);
         }
-    }
 
-    private void teamHelp() {
-        for (int j = 0; j < this.marbles.size(); j++) {
-            if (j == currentIdx) {
-                continue;
-            }
-            for (int i = 0; i < this.marbles.size(); i++) {
-                if (i != j && this.marbles.get(i).isCollision(this.marbles.get(j))) {
-                    this.marbles.set(j, this.marbles.get(i).strike(this.marbles.get(j)));
-                    if (i == currentIdx) {
-                        this.marbles.get(j).getGoVec().setValue(this.marbles.get(j).getGoVec().getValue() * 0.5f);
-                        if (this.marbles.get(j).getUseSkill()) {
-                            int r = Global.random(1, 4);
-                            if (r == 4) {
-                                this.marbles.get(j).useSkill(r, this.marbles, 0);
-                            } else {
-                                this.hitCount += this.marbles.get(j).useSkill(r, this.battleEnemies, 0);
-                            }
-                            this.marbles.get(j).setUseSkill(false);
-                        }
-
-                    }
-                }
-            }
-        }
-    }
-
-    private void strikeEnemies() {
-        for (int i = 0; i < this.marbles.size(); i++) {
-            for (int j = 0; j < this.battleEnemies.size(); j++) {
-                if (this.marbles.get(i).isCollision(this.battleEnemies.get(j)) && this.marbles.get(i).getGoVec().getValue() > 0) {
-                    Marble tmp = this.marbles.get(i).strike(this.battleEnemies.get(j));
-                    this.battleEnemies.get(j).setGo(tmp.getGoVec());
-                    this.battleEnemies.get(j).setIsCollide(true);
-                    this.hitCount += this.marbles.get(i).useSkill(0, this.battleEnemies, j);
-                }
-            }
-        }
-    }
-
-    private void enemyAttack() {
-        for (int i = 0; i < this.battleEnemies.size(); i++) {
-            if (enemyRound != 0 && enemyRound % this.battleEnemies.get(i).getInfo().getSkillRound() == 0) {
-                if (this.battleEnemies.get(i).getUseSkill() && this.delay.isTrig()) {
-                    this.battleEnemies.get(i).useSkill(5, this.marbles, 0);
-                    this.battleEnemies.get(i).setUseSkill(false);
-                }
-                this.hitCount = 0;
-                tmpCount = 0;
-            } else {
-                setCollide();
-                this.battleEnemies.get(i).setUseSkill(true);
-            }
-        }
-    }
-
-    private void scrollScene() {
-        if (this.background.getX() > (2 - this.sceneCount) * ImgInfo.BACKGROUND_SIZE[idx][0]) {
-            this.background.offset(-10);
-        }
-        if (this.background.getX() <= (2 - this.sceneCount) * ImgInfo.BACKGROUND_SIZE[idx][0]) {
-            this.sceneCount++;
+        if (this.count != 0 && !this.isCount) { //除了第一回合，更新要發動攻擊的我方怪物
+            this.marbles.get(currentIdx).setShine(false);
+            this.currentIdx = this.count % 3;
             this.hitCount = 0;
-            genBattleEnemies();
-            this.state = 0;
+            this.tmpCount = 0;
+            this.marbles.get(currentIdx).setShine(true);
+            this.enemyRound++;
+            for (int i = 0; i < this.atkRound.length; i++) {
+                this.atkRound[i]--;
+                if (this.atkRound[i] < 0) {
+                    this.atkRound[i] = 0;
+                }
+            }
+            this.isCount = true;
         }
     }
 
-    private void genBattleEnemies() {
-        if (this.sceneCount == 3) {
-            sceneEnd();
+    protected void endBattle() {
+        if (this.battleEnemies.isEmpty() && allSkillStop(this.marbles)) { //所有怪物死亡且技能都施放完畢
+
+            if (removeEnemies() && removeStones()) {
+                this.marbles.get(currentIdx).setShine(false);
+                this.round = 0;
+                this.enemyRound = 0;
+                this.state = 2;
+            }
         }
-        ArrayList<Marble> m = this.allEnemies.sortByLevel();
-        if (this.sceneCount == 0) {
-            for (int i = 0; i < 3; i++) {
-                battleEnemies.add(m.get(0).duplicate(Global.ENEMYPOS_X[i], -100, 120, 120));
-                battleEnemies.get(i).getInfo().setName(battleEnemies.get(i).getInfo().getName() + (i + 1));
-            }
-        } else if (this.sceneCount == 1) {
-            for (int i = 0; i < 2; i++) {
-                battleEnemies.add(m.get(1).duplicate(Global.random(100, Global.SCREEN_X - 100), -100, 120, 120));
-                battleEnemies.add(m.get(2).duplicate(Global.random(100, Global.SCREEN_X - 100), -100, 120, 120));
-                battleEnemies.get(2 * i).getInfo().setName(battleEnemies.get(2 * i).getInfo().getName() + (i + 1));
-                battleEnemies.get(2 * i + 1).getInfo().setName(battleEnemies.get(2 * i + 1).getInfo().getName() + (i + 1));
-            }
-        } else {
-            for (int i = 0; i < 3; i++) {
-                battleEnemies.add(m.get(i).duplicate(Global.random(100, Global.SCREEN_X - 100), -100, 120, 120));
-            }
-            battleEnemies.add(m.get(3).duplicate(Global.random(100, Global.SCREEN_X - 100), -100, 180, 180));
+    }
+
+    protected abstract boolean removeStones();
+
+    protected boolean removeEnemies() {
+        for (int i = 0; i < this.battleEnemies.size(); i++) {
+            this.battleEnemies.remove(i);
         }
+        if(this.battleEnemies.isEmpty()){
+            return true;
+        }
+        return false;
     }
 
     private boolean dropEnemies() {
@@ -433,13 +305,240 @@ public class LevelScene extends Scene {
         return false;
     }
 
-    private boolean checkAllStop() {
-        for (int i = 0; i < this.marbles.size(); i++) {
-            if (this.marbles.get(i).getGoVec().getValue() != 0) {
+    //condition
+    private void enemyDie() {
+        for (int i = 0; i < this.battleEnemies.size(); i++) { //判斷敵人是否死亡
+            if (this.battleEnemies.get(i).getInfo().getHp() <= 0) {
+                this.battleEnemies.get(i).setIsCollide(false);
+                this.battleEnemies.get(i).die();
+//                        this.battleEnemies.get(i).setCenterY(Global.FRAME_Y + 200);
+                if (this.battleEnemies.get(i).getIsDie() && this.battleEnemies.get(i).getDieRenderer().getIsStop()) {
+                    this.battleEnemies.remove(i);
+                }
+            }
+        }
+    }
+
+    private boolean isLose() {
+        if (this.currentHp <= 0) {
+            return true;
+        }
+        return false;
+    }
+
+    protected boolean allSkillStop(ArrayList<Marble> marbles) {
+        for (int i = 0; i < marbles.size(); i++) {
+            if (!skillStop(marbles.get(i))) {
                 return false;
             }
         }
         return true;
+    } //技能釋放完畢
+
+    private boolean skillStop(Marble marble) {
+        SkillComponent[] skills = marble.getSkills().getSkillComponent();
+        for (int j = 0; j < skills.length; j++) {
+            if (skills[j] != null && !skills[j].getIsStop()) {
+                return false; //技能尚未釋放完畢
+            }
+        }
+        return true; //技能釋放完畢
+    }
+
+    private boolean checkAllStop() {
+        for (int i = 0; i < this.marbles.size(); i++) {
+            if (this.marbles.get(i).goVec().getValue() != 0) {
+                return false;
+            }
+        }
+        return true;
+    }  //Marble停止移動
+
+    //Getter, Setter
+    public ArrayList<Marble> getMarbles() {
+        return marbles;
+    }
+
+    private void setCollide() {
+        for (int i = 0; i < this.marbles.size(); i++) {
+            this.marbles.get(i).setIsCollide(false);
+        }
+    }
+
+    //Strike   
+    private void teamHelp() {
+        for (int i = 0; i < this.marbles.size(); i++) {
+            for (int j = i + 1; j < this.marbles.size(); j++) {
+                if (this.marbles.get(i).getDetect().isCollision(this.marbles.get(j).getDetect())) {
+                    this.marbles.get(i).detect(this.marbles.get(j));
+                    this.marbles.get(i).strike(this.marbles.get(j));
+                    if (i == currentIdx && this.marbles.get(j).getUseSkill()) {
+                        int r = Global.random(1, 3);
+                        if (r == 4) {
+                            this.marbles.get(j).useSkill(r, this.marbles, 0);
+                        } else {
+                            this.hitCount += this.marbles.get(j).useSkill(r, this.battleEnemies, 0);
+                        }
+                        this.marbles.get(j).setUseSkill(false);
+                    } else if (j == currentIdx) {
+                        int r = Global.random(1, 3);
+                        if (r == 4) {
+                            this.marbles.get(i).useSkill(r, this.marbles, 0);
+                        } else {
+                            this.hitCount += this.marbles.get(i).useSkill(r, this.battleEnemies, 0);
+                        }
+                        this.marbles.get(j).setUseSkill(false);
+                    }
+                }
+            }
+        }
+    }
+
+    private void strikeEnemies() {
+        for (int i = 0; i < this.marbles.size(); i++) {
+            for (int j = 0; j < this.battleEnemies.size(); j++) {
+                if (this.marbles.get(i).getDetect().isCollision(this.battleEnemies.get(j))
+                        && this.marbles.get(i).goVec().getValue() > 0) {
+                    this.marbles.get(i).detectStill(this.battleEnemies.get(j));
+                    this.battleEnemies.get(j).setIsCollide(true);
+                    this.battleEnemies.get(j).setGo(this.marbles.get(i).goVec());
+                    this.marbles.get(i).hit(this.battleEnemies.get(j));
+                    this.hitCount += this.marbles.get(i).useSkill(0, this.battleEnemies, j);
+                }
+            }
+        }
+    }
+
+    protected void hitGameObject() {
+        hitProp();
+    }
+
+    protected abstract void strikeStones();
+
+    protected void hitProp() {
+        for (int i = 0; i < this.marbles.size(); i++) {
+            for (int j = 0; j < this.props.length; j++) {
+                if (this.props[j] != null && this.marbles.get(i).isCollision(this.props[j])) {
+                    this.props[j].setIsCollide(true);
+                    this.props[j].useProp(marbles, i);
+                }
+            }
+        }
+    }
+
+    private void enemyAttack() {
+        for (int i = 0; i < this.battleEnemies.size(); i++) {
+            if (enemyRound != 0 && enemyRound % this.battleEnemies.get(i).getInfo().getSkillRound() == 0) {
+                if (this.battleEnemies.get(i).getUseSkill() && this.delay.isTrig()) {
+                    this.battleEnemies.get(i).useSkill(5, this.marbles, 0);
+                    this.battleEnemies.get(i).setUseSkill(false);
+                }
+                this.hitCount = 0;
+                tmpCount = 0;
+            } else {
+                setCollide();
+                this.battleEnemies.get(i).setUseSkill(true);
+            }
+
+        }
+    }
+
+    //Generate
+    protected void genBattleEnemies() {
+        if (this.sceneCount == 3) {
+            sceneEnd();
+        }
+        ArrayList<Marble> m = this.allEnemies.sortByLevel();
+        if (this.sceneCount == 0) {
+            for (int i = 0; i < 3; i++) {
+                battleEnemies.add(m.get(0).duplicate(Global.ENEMYPOS_X[i], -100, 120, 120));
+                battleEnemies.get(i).getInfo().setName(battleEnemies.get(i).getInfo().getName() + (i + 1));
+            }
+        } else if (this.sceneCount == 1) {
+            for (int i = 0; i < 2; i++) {
+                battleEnemies.add(m.get(1).duplicate(Global.ENEMYPOS_X[2 * i], -100, 120, 120));
+                battleEnemies.add(m.get(2).duplicate(Global.ENEMYPOS_X[2 * i + 1], -100, 120, 120));
+                battleEnemies.get(2 * i).getInfo().setName(battleEnemies.get(2 * i).getInfo().getName() + (i + 1));
+                battleEnemies.get(2 * i + 1).getInfo().setName(battleEnemies.get(2 * i + 1).getInfo().getName() + (i + 1));
+            }
+        } else {
+            for (int i = 0; i < 3; i++) {
+                battleEnemies.add(m.get(i).duplicate(Global.ENEMYPOS_X[i], -100, 120, 120));
+            }
+            battleEnemies.add(m.get(3).duplicate(Global.SCREEN_X / 2, -100, 180, 180));
+        }
+        for (int i = 0; i < this.battleEnemies.size(); i++) {
+            this.battleEnemies.get(i).setDetect(this.battleEnemies.get(i).duplicate());
+        }
+    }
+
+    protected abstract void genGameObject();
+
+    protected void genProps() {
+        if (this.sceneCount == 1) {//第二小關
+            this.props[0] = new Heart(ImgInfo.HEART, Global.random(50, Global.SCREEN_X - 50), 50, 80, 80, 40, ImgInfo.HEART_NUM, 10);
+        } else if (this.sceneCount == 2) {//第三小關
+            this.props[1] = new Booster(ImgInfo.SHOE, Global.SCREEN_X - 50, Global.random(50, Global.SCREEN_Y - Global.INFO_H - 50), 80, 80, 40, ImgInfo.SHOE_NUM, 35);
+            Marble tmp = null;
+            for (int i = 0; i < this.battleEnemies.size(); i++) {
+                if (this.battleEnemies.get(i).getInfo().getLevel() == 5) {
+                    tmp = this.battleEnemies.get(i);
+                }
+            }
+            if (tmp != null) {
+                this.props[2] = new Shield(ImgInfo.SHIELD, (int) tmp.getCenterX(), (int) tmp.getCenterY(), (int) (tmp.getInfo().getR() * 1.5f), (int) (tmp.getInfo().getR() * 1.5f), (int) (tmp.getInfo().getR() * 1.5f) / 2, ImgInfo.SHIELD_NUM, 20);
+                this.props[2].setIsUsed(false);
+            }
+        }
+    }
+
+    //Update
+    private void updateMarbles() {
+        for (int i = 0; i < this.battleEnemies.size(); i++) {
+            this.battleEnemies.get(i).update();
+        }
+
+        //我方怪物動畫更新
+        for (int i = 0; i < this.marbles.size(); i++) {
+            this.marbles.get(i).updateShine(); //光圈更新
+            this.marbles.get(i).update();      //怪物、技能更新
+            this.marbles.get(i).getDetect().setCenterX(this.marbles.get(i).getCenterX() + this.marbles.get(i).goVec().getX());
+            this.marbles.get(i).getDetect().setCenterY(this.marbles.get(i).getCenterY() + this.marbles.get(i).goVec().getY());
+            this.shineFrame[i].update();
+        }
+    }
+
+    private void updateShineFrame() {
+        for (int i = 0; i < this.myMarbles.length; i++) {
+            if (atkRound[i] == 0) {
+                this.shineFrame[i].setIsShow(true);
+                atkRound[i] = 0;
+            }
+        }
+    }
+
+    protected abstract void updateGameObject();
+
+    protected void updateProps() {
+        for (int i = 0; i < this.props.length; i++) {
+            if (this.props[i] != null) {
+                this.props[i].update();
+                if (this.props[i].getIsStop()) {
+                    this.props[i] = null;
+                }
+            }
+        }
+    }
+
+    //Paint
+    protected abstract void paintGameObject(Graphics g);
+
+    protected void paintProps(Graphics g) {
+        for (int i = 0; i < this.props.length; i++) {
+            if (this.props[i] != null) {
+                this.props[i].paintComponent(g);
+            }
+        }
     }
 
     @Override
@@ -458,64 +557,26 @@ public class LevelScene extends Scene {
         for (int i = 0; i < this.marbles.size(); i++) {
             this.marbles.get(i).paintAll(g);
         }
-        for (int i = 0; i < this.props.length; i++) {
-            if (this.props[i] != null) {
-                this.props[i].paintComponent(g);
-            }
-        }
 
         paintText(g);
+        this.player.paint(g);
+        paintGameObject(g);
+
         for (int i = 0; i < this.shineFrame.length; i++) {
             this.shineFrame[i].paint(g);
         }
         this.buttons.get(0).paint(g);
         if (isLose()) {
-            if (overCount++ % 30 < 15) {
-                g.setColor(Color.BLACK);
-                g.setFont(new Font("Showcard Gothic", Font.PLAIN, 48));
-                g.drawString(this.playerinfo.getName() + " Lose!", Global.SCREEN_X / 2 - 120, 270);
-                g.setColor(Color.gray);
-                g.setFont(new Font("Showcard Gothic", Font.PLAIN, 48));
-                g.drawString(this.playerinfo.getName() + " Lose!", Global.SCREEN_X / 2 - 120 - 2, 270 - 2);
-            } else {
-                g.setColor(Color.BLACK);
-                g.setFont(new Font("Showcard Gothic", Font.PLAIN, 54));
-                g.drawString(this.playerinfo.getName() + " Lose!", Global.SCREEN_X / 2 - 150, 270);
-                g.setColor(Color.gray);
-                g.setFont(new Font("Showcard Gothic", Font.PLAIN, 54));
-                g.drawString(this.playerinfo.getName() + " Lose!", Global.SCREEN_X / 2 - 150 - 2, 270 - 2);
-            }
+            PaintText.paintTwinkle(g, new Font("Showcard Gothic", Font.PLAIN, 48),
+                    new Font("Showcard Gothic", Font.PLAIN, 54), Color.gray, Color.BLACK,
+                    this.playerinfo.getName() + " Lose!", "", 0, 270, 2, Global.SCREEN_X, 30);
             if (overCount == 100) {
                 overCount = 0;
             }
         } else if (isWin) {
-            if (overCount++ % 30 < 15) {
-                g.setColor(Color.BLACK);
-                g.setFont(new Font("Showcard Gothic", Font.PLAIN, 48));
-                g.drawString(this.playerinfo.getName() + " Win!", Global.SCREEN_X / 2 - 120, 270);
-                g.setColor(Color.YELLOW);
-                g.setFont(new Font("Showcard Gothic", Font.PLAIN, 48));
-                g.drawString(this.playerinfo.getName() + " Win!", Global.SCREEN_X / 2 - 120 - 2, 270 - 2);
-                g.setColor(Color.BLACK);
-                g.setFont(new Font("Showcard Gothic", Font.PLAIN, 36));
-                g.drawString("You Gain", Global.SCREEN_X / 2 - 100, 350);
-                g.setColor(Color.YELLOW);
-                g.setFont(new Font("Showcard Gothic", Font.PLAIN, 36));
-                g.drawString("You Gain", Global.SCREEN_X / 2 - 100 - 2, 350 - 2);
-            } else {
-                g.setColor(Color.BLACK);
-                g.setFont(new Font("Showcard Gothic", Font.PLAIN, 54));
-                g.drawString(this.playerinfo.getName() + " Win!", Global.SCREEN_X / 2 - 150, 270);
-                g.setColor(Color.YELLOW);
-                g.setFont(new Font("Showcard Gothic", Font.PLAIN, 54));
-                g.drawString(this.playerinfo.getName() + " Win!", Global.SCREEN_X / 2 - 150 - 2, 270 - 2);
-                g.setColor(Color.BLACK);
-                g.setFont(new Font("Showcard Gothic", Font.PLAIN, 42));
-                g.drawString("You Gain", Global.SCREEN_X / 2 - 120, 350);
-                g.setColor(Color.YELLOW);
-                g.setFont(new Font("Showcard Gothic", Font.PLAIN, 42));
-                g.drawString("You Gain", Global.SCREEN_X / 2 - 120 - 2, 350 - 2);
-            }
+            PaintText.paintTwinkle(g, new Font("Showcard Gothic", Font.PLAIN, 48),
+                    new Font("Showcard Gothic", Font.PLAIN, 54), Color.YELLOW, Color.BLACK,
+                    this.playerinfo.getName() + " Win!", "You Gain", 0, 270, 2, Global.SCREEN_X, 30);
             m.paintAll(g);
             if (overCount == 1000) {
                 overCount = 0;
@@ -524,7 +585,6 @@ public class LevelScene extends Scene {
     }
 
     private void paintText(Graphics g) {
-
         if (hitCount > 0) {
             if (tmpCount2 >= hitCount) {
                 tmpCount2 = hitCount;
@@ -556,62 +616,34 @@ public class LevelScene extends Scene {
 
         this.item.paint(g);
         this.blood.paintResize(g, this.ratio);
-        g.setFont(new Font("VinerHandITC", Font.ITALIC, 20));
-//        g.setFont(new Font("Showcard Gothic", Font.ITALIC, 20));
-        g.setColor(Color.BLACK);
-        g.drawString((int) this.currentHp + " / " + (int) this.myHp, 1100, Global.SCREEN_Y - 100);
-        g.setColor(Color.YELLOW);
-        g.drawString((int) this.currentHp + " / " + (int) this.myHp, 1100 - 2, Global.SCREEN_Y - 100 - 2);
-        g.setColor(Color.GRAY);
-        g.setFont(new Font("Showcard Gothic", Font.PLAIN, 30));
-        g.drawString("Battle  ", 800, Global.SCREEN_Y - 40);
-        g.setFont(new Font("Showcard Gothic", Font.PLAIN, 36));
-        g.drawString("" + (sceneCount + 1), 930, Global.SCREEN_Y - 40);
-        g.setColor(Color.BLACK);
-        g.setFont(new Font("Showcard Gothic", Font.PLAIN, 30));
-        g.drawString("Battle  ", 800 - 2, Global.SCREEN_Y - 40 - 2);
-        g.setFont(new Font("Showcard Gothic", Font.PLAIN, 36));
-        g.drawString("" + (sceneCount + 1), 930 - 2, Global.SCREEN_Y - 40 - 2);
-
-        g.setColor(Color.GRAY);
-        g.setFont(new Font("VinerHandITC", Font.PLAIN, 20));
-        g.drawString("Player: " + this.playerinfo.getName(), 530, Global.SCREEN_Y - 60);
-        g.setColor(Color.BLACK);
-        g.drawString("Player: " + this.playerinfo.getName(), 530 - 2, Global.SCREEN_Y - 60 - 2);
-        g.setColor(Color.GRAY);
-        g.drawString("Level: " + this.playerinfo.getLevel(), 530, Global.SCREEN_Y - 30);
-        g.setColor(Color.BLACK);
-        g.drawString("Level: " + this.playerinfo.getLevel(), 530 - 2, Global.SCREEN_Y - 30 - 2);
-
-        g.setFont(new Font("Showcard Gothic", Font.PLAIN, 24));
-        g.setColor(Color.GRAY);
-        g.drawString("HP ", 525, Global.SCREEN_Y - 105);
-        g.setColor(Color.BLACK);
-        g.drawString("HP ", 525 - 2, Global.SCREEN_Y - 105 - 2);
+        PaintText.paintWithShadow(g, new Font("VinerHandITC", Font.ITALIC, 20), Color.YELLOW,
+                Color.BLACK, (int) this.currentHp + " / " + (int) this.myHp, 1120, Global.SCREEN_Y - 100, 2, 30);
+        PaintText.paintWithNumber(g, new Font("Showcard Gothic", Font.PLAIN, 30),
+                new Font("Showcard Gothic", Font.PLAIN, 36), Color.BLACK, Color.GRAY,
+                "Battle", "" + (sceneCount + 1), 565, Global.SCREEN_Y - 40, 2, 20);
+        PaintText.paintWithShadow(g, new Font("VinerHandITC", Font.PLAIN, 18), Color.BLACK,
+                Color.GRAY, this.playerinfo.getName(), 740, Global.SCREEN_Y - 85, 1, 30);
+        PaintText.paintWithShadow(g, new Font("VinerHandITC", Font.BOLD, 16), Color.BLACK,
+                Color.GRAY, "Lv. " + this.playerinfo.getLevel(), 700, Global.SCREEN_Y - 40, 2, 30);
+        PaintText.paintWithShadow(g, new Font("Showcard Gothic", Font.PLAIN, 24), Color.BLACK,
+                Color.GRAY, "HP ", 525, Global.SCREEN_Y - 105, 2, 30);
 
         for (int i = 0; i < this.myMarbles.length; i++) {
             this.myMarbles[i].paintComponent(g);
-            int atkRound = this.myMarbles[i].getInfo().getSkillRound()
-                    - this.myRound % this.myMarbles[i].getInfo().getSkillRound();
             int x = (int) (this.myMarbles[i].getCenterX() + this.myMarbles[i].getR());
             int y = (int) (this.myMarbles[i].getCenterY() + this.myMarbles[i].getR());
-            g.setColor(Color.BLACK);
-            g.drawString("" + atkRound, x, y);
-            g.setColor(new Color(255, 153, 0));
-            g.drawString("" + atkRound, x - 2, y - 2);
-            if (atkRound == this.myMarbles[i].getInfo().getSkillRound() && this.myRound != 0) {
-                this.shineFrame[i].setIsShow(true);
+            if (!this.shineFrame[i].getIsShow()) {
+                PaintText.paintWithShadow(g, new Font("Showcard Gothic", Font.PLAIN, 24), new Color(255, 153, 0),
+                        Color.BLACK, "" + atkRound[i], x, y, 2, 5);
             }
         }
         for (int i = 0; i < this.battleEnemies.size(); i++) {
-            int atkRound = this.battleEnemies.get(i).getInfo().getSkillRound()
+            int enemyAtkRound = this.battleEnemies.get(i).getInfo().getSkillRound()
                     - this.enemyRound % this.battleEnemies.get(i).getInfo().getSkillRound();
             int x = (int) (this.battleEnemies.get(i).getCenterX() + this.battleEnemies.get(i).getR());
             int y = (int) (this.battleEnemies.get(i).getCenterY() + this.battleEnemies.get(i).getR());
-            g.setColor(Color.BLACK);
-            g.drawString("" + atkRound, x, y);
-            g.setColor(new Color(255, 153, 0));
-            g.drawString("" + atkRound, x - 2, y - 2);
+            PaintText.paintWithShadow(g, new Font("Showcard Gothic", Font.PLAIN, 24), new Color(255, 153, 0),
+                    Color.BLACK, "" + enemyAtkRound, x, y, 2, 5);
         }
     }
 
@@ -630,7 +662,6 @@ public class LevelScene extends Scene {
 
         @Override
         public void keyPressed(int commandCode, long trigTime) {
-
             if ((isLose() || isWin) && commandCode == Global.ENTER) {
                 System.out.println("!");
                 isEnter = true;
@@ -652,6 +683,7 @@ public class LevelScene extends Scene {
         private float startY;
         private float endX;
         private float endY;
+        private boolean isPressed = false;
 
         @Override
         public void mouseTrig(MouseEvent e, CommandSolver.MouseState mouseState, long trigTime) {
@@ -668,10 +700,13 @@ public class LevelScene extends Scene {
 
             if (state == 1 && checkAllStop() && allSkillStop(battleEnemies)) {
                 arrow.setResizeMag(0);
-                if (mouseState == CommandSolver.MouseState.PRESSED) {
-                    this.startX = e.getX();
-                    this.startY = e.getY();
-                } else if (mouseState == CommandSolver.MouseState.DRAGGED) {
+
+                if (mouseState == CommandSolver.MouseState.DRAGGED) {
+                    if (!this.isPressed) {
+                        this.startX = e.getX();
+                        this.startY = e.getY();
+                        this.isPressed = true;
+                    }
                     arrow.setCenterX(marbles.get(currentIdx).getCenterX());
                     arrow.setCenterY(marbles.get(currentIdx).getCenterY());
                     Vector vector = new Vector(this.startX - e.getX(), this.startY - e.getY());
@@ -699,9 +734,30 @@ public class LevelScene extends Scene {
                     count++;
                     round++;
                     isCount = false;
+                    this.isPressed = false;
                     arrow.setShow(false);
                 }
             }
+
+            if (state == 1 && checkAllStop() && allSkillStop(battleEnemies) && mouseState == CommandSolver.MouseState.PRESSED
+                    && mouseInRange(e) && shineFrame[currentIdx].getIsShow()) {
+                marbles.get(currentIdx).useSkill(4, marbles, 0);
+                atkRound[currentIdx] = marbles.get(currentIdx).getInfo().getSkillRound() + 1;
+                shineFrame[currentIdx].setIsShow(false);
+                count++;
+                round++;
+                isCount = false;
+                resetBattle();
+            }
+        }
+
+        private boolean mouseInRange(MouseEvent e) {
+            Marble m = myMarbles[currentIdx];
+            if (e.getX() > m.getX() && e.getX() < m.getX() + m.getWidth()
+                    && e.getY() > m.getY() && e.getY() < m.getY() + m.getHeight()) {
+                return true;
+            }
+            return false;
         }
     }
 }

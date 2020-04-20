@@ -9,6 +9,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
+import monsterstrike.gameobject.GameObject;
 import monsterstrike.gameobject.marble.Marble;
 import monsterstrike.graph.Vector;
 
@@ -105,6 +106,11 @@ public class Bullet extends Skills {
                 g2d.setTransform(oldForm);
             }
         }
+    }
+    
+    @Override
+    public int explode(Marble self, GameObject target) {
+        return 0;
     }
 
 }

@@ -6,6 +6,7 @@
 package interfaceskills;
 
 import java.util.ArrayList;
+import monsterstrike.gameobject.GameObject;
 import monsterstrike.gameobject.marble.Marble;
 
 public class Heal extends Skills {
@@ -51,5 +52,10 @@ public class Heal extends Skills {
             System.out.println(selfMarbles.get(i).getInfo().getName() + "血量:" + selfMarbles.get(i).getInfo().getHp());
         }
         return this.hitCount;
+    }
+    
+    @Override
+    public int explode(Marble self, GameObject target) {
+        return 0;
     }
 }

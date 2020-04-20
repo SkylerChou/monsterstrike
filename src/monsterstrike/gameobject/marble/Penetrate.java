@@ -5,11 +5,10 @@
  */
 package monsterstrike.gameobject.marble;
 
-public class Penetrate implements Strike{
+public class Penetrate implements Strike {
 
     @Override
-    public Marble strike(Marble self, Marble target) {
-        return target;
+    public void strike(Marble self, Marble target) {
     }
 
     @Override
@@ -17,10 +16,9 @@ public class Penetrate implements Strike{
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-
     @Override
     public void update(Marble self) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
 }

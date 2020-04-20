@@ -7,6 +7,7 @@ package interfaceskills;
 
 import java.awt.Graphics;
 import java.util.ArrayList;
+import monsterstrike.gameobject.GameObject;
 import monsterstrike.gameobject.marble.Marble;
 import monsterstrike.util.Global;
 
@@ -64,5 +65,9 @@ public class Tornado extends Skills {
         }
         return false;
     }
-
+    
+    @Override
+    public int explode(Marble self, GameObject target) {
+        return 0;
+    }
 }

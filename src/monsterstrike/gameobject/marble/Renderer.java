@@ -8,10 +8,9 @@ package monsterstrike.gameobject.marble;
 import controllers.IRC;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
-import monsterstrike.gameobject.ImgInfo;
 import monsterstrike.util.Delay;
 
-public class MarbleRenderer {
+public class Renderer {
 
     private BufferedImage img;
     private Delay delay;
@@ -22,7 +21,7 @@ public class MarbleRenderer {
     private boolean isCollide;
     
 
-    public MarbleRenderer(String path, int num, int delay) {
+    public Renderer(String path, int num, int delay) {
         this.img = IRC.getInstance().tryGetImage(path);
         this.imgNum = num;
         this.delay = new Delay(delay);

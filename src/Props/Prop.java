@@ -9,7 +9,7 @@ import java.awt.Graphics;
 import java.util.ArrayList;
 import monsterstrike.gameobject.GameObject;
 import monsterstrike.gameobject.marble.Marble;
-import monsterstrike.gameobject.marble.MarbleRenderer;
+import monsterstrike.gameobject.marble.Renderer;
 
 /**
  *
@@ -17,13 +17,13 @@ import monsterstrike.gameobject.marble.MarbleRenderer;
  */
 public abstract class Prop extends GameObject {
 
-    protected MarbleRenderer renderer;
+    protected Renderer renderer;
     protected boolean isCollide;
     protected boolean isUsed;
 
     public Prop(String path, int x, int y, int width, int height, int r, int pictureNum, int delay) {
         super(x, y, width, height, r);
-        this.renderer = new MarbleRenderer(path, pictureNum, delay);
+        this.renderer = new Renderer(path, pictureNum, delay);
         this.isCollide = false;
         this.isUsed = false;
     }

@@ -6,6 +6,7 @@
 package interfaceskills;
 
 import java.util.ArrayList;
+import monsterstrike.gameobject.GameObject;
 import monsterstrike.gameobject.marble.Marble;
 
 public class Anger extends Skills {
@@ -59,5 +60,10 @@ public class Anger extends Skills {
         }
         return false;
     }    
+
+    @Override
+    public int explode(Marble self, GameObject target) {
+        return 0;
+    }
 
 }

@@ -6,6 +6,7 @@
 package interfaceskills;
 
 import java.util.ArrayList;
+import monsterstrike.gameobject.GameObject;
 import monsterstrike.gameobject.marble.Marble;
 import monsterstrike.graph.Vector;
 
@@ -72,8 +73,28 @@ public class Explosion extends Skills {
         }
         return this.hitCount;
     }
+    
+    @Override
+    public int explode(Marble self, GameObject target) {
+        this.hitCount = 0;
+        this.self = self;
+        int attr = self.getInfo().getAttribute();
+        for (int i = 0; i < this.skill.length; i++) {
+            float rad = (float) (Math.toRadians(360 / NUM) * i);
+            float r2 = self.getR() + target.getR();
+            float dx = (float) (2 * r2 * Math.cos((Math.PI - rad) / 2) * Math.cos(rad / 2));
+            float dy = (float) (2 * r2 * Math.cos((Math.PI - rad) / 2) * Math.sin(rad / 2));
+            this.skill[i] = new SkillComponent(SKILL_IDX, attr, SkillImg.SKILL_NUM[0][attr],
+                    (int) (self.getCenterX() + dx), (int) (self.getCenterY() - r2 + dy), WIDTH, HEIGHT, DELAY);
+            Vector vec = new Vector(this.skill[i].getCenterX() - self.getCenterX(), this.skill[i].getCenterY() - self.getCenterY());
+            this.skill[i].setDx(vec.getUnitX());
+            this.skill[i].setDy(vec.getUnitY());
+        }
+        return this.hitCount++;
+    }
 
-    private boolean checkStrike(Marble target) {
+
+    private boolean checkStrike(GameObject target) {
         for (int j = 0; j < this.skill.length; j++) {
             if (this.skill[j].isCollision(target)) {
                 return true;

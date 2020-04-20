@@ -60,6 +60,16 @@ public abstract class GameObject {
         this.rect.setTop(y);
     }
 
+    public void setWidth(float width) {
+        float ratio = width / this.getWidth();
+        float h = ratio * this.getHeight();
+        this.rect.setLeft(this.rect.centerX() - width / 2);
+        this.rect.setRight(this.rect.left() + width);
+        this.rect.setTop(this.rect.centerY() - h / 2);
+        this.rect.setBottom(this.rect.top() + h);
+//        this.collider.setR(this.getR() * ratio);
+    }
+
     public float getR() {
         return this.collider.getR();
     }
