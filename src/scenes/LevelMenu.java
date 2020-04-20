@@ -82,7 +82,7 @@ public class LevelMenu extends Scene {
         this.backIdx = 0;
         this.button.add(new Button(ImgInfo.HOME, Global.SCREEN_X - 30, 30, ImgInfo.SETTING_INFO[0], ImgInfo.SETTING_INFO[1], 20));
         this.background = new Background(ImgInfo.BACKGROUND_PATH[this.backIdx], 0, 0, this.backIdx);
-        for (int i = 0; i < this.allMarbleInfo.size(); i++) {
+        for (int  i = 0; i < this.allMarbleInfo.size(); i++) {
             if (inMySerials(this.allMarbleInfo.get(i))) {
                 this.myMarbles.add(new Marble(this.x, this.y, 150, 150, this.allMarbleInfo.get(i)));
             } else {
