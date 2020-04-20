@@ -62,6 +62,10 @@ public class ImgInfo {
     public static final String LOADING_PATH = BACKGROUND_ROOT + "loading.png";
     public static final int[] LOADING_SIZE = {1920, 800};
 
+    //howtoplay
+    public static final String HOWTOPLAY_PATH = "/resources/howtoplay.png";
+    public static final int[] HOWTOPLAY_SIZE = {1600, 1099};
+
     //ITEM
     private static final String ITEM_ROOT = "/resources/items/";
     public static final String INFOFORM_PATH = ITEM_ROOT + "infoForm.png";

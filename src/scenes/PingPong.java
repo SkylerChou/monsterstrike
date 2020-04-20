@@ -155,7 +155,7 @@ public class PingPong extends Scene {
         if (this.isOnButton) {
             this.buttons.get(0).update();
         }
-        if (this.ball.getCenterY() + this.ball.getR() > this.racket.centerY()) {
+        if (this.ball.getCenterY() > this.racket.centerY()) {
             this.isOut = true;
             if (this.isOut) {
                 if (this.countHeart == 0) {
@@ -170,6 +170,7 @@ public class PingPong extends Scene {
                 this.ball.setCenterX(POS_X);
                 this.ball.setCenterY(POS_Y);
                 this.ball.setGo(new Vector(5, -5));
+
                 this.isOut = false;
             }
 

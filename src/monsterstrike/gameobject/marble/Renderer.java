@@ -19,7 +19,6 @@ public class Renderer {
     private int imgNum;
     private boolean isStop;
     private boolean isCollide;
-    
 
     public Renderer(String path, int num, int delay) {
         this.img = IRC.getInstance().tryGetImage(path);
@@ -38,32 +37,36 @@ public class Renderer {
             this.imgIdx = (this.imgIdx + 1) % 2;
         }
     }
-    
+
     public void updateOnce() {
         if (this.delay.isTrig()) {
-            if (this.imgIdx++ == this.imgNum - 1) {                               
+            if (this.imgIdx++ == this.imgNum - 1) {
                 this.imgIdx = this.imgNum - 1;
                 this.isStop = true;
                 this.stop();
             }
         }
     }
-    
+
+    public void updateOneByOne(int count) {
+        this.imgIdx = count % 5;
+    }
+
     public void updateHit() {
         if (this.collideDelay.isTrig()) {
-            if (this.imgIdx++ == this.imgNum - 1) {                               
+            if (this.imgIdx++ == this.imgNum - 1) {
                 this.imgIdx = this.imgNum - 1;
                 this.isStop = true;
                 this.stopHit();
             }
         }
     }
-    
+
     public void startHit() {
         this.collideDelay.start();
         this.isStop = false;
     }
-    
+
     public void stopHit() {
         this.collideDelay.stop();
     }
@@ -79,7 +82,7 @@ public class Renderer {
     public boolean getIsCollide() {
         return this.isCollide;
     }
-    
+
     public void setIsCollide(boolean isCollide) {
         this.isCollide = isCollide;
     }
