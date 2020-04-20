@@ -6,16 +6,16 @@
 package monsterstrike.gameobject;
 
 import java.awt.Graphics;
-import monsterstrike.gameobject.marble.MarbleRenderer;
+import monsterstrike.gameobject.marble.Renderer;
 
 public class Stone extends GameObject {
 
-    private MarbleRenderer renderer;
+    private Renderer renderer;
     private boolean isCollide;
 
     public Stone(String path, int x, int y, int width, int height, int r) {
         super(x, y, width, height, r);
-        this.renderer = new MarbleRenderer(path, 3, 15);
+        this.renderer = new Renderer(path, 3, 15);
         this.isCollide = false;
     }
 

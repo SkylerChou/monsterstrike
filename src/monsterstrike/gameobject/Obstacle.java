@@ -6,14 +6,14 @@
 package monsterstrike.gameobject;
 
 import java.awt.Graphics;
-import monsterstrike.gameobject.marble.MarbleRenderer;
+import monsterstrike.gameobject.marble.Renderer;
 import monsterstrike.graph.Vector;
 import monsterstrike.util.Delay;
 import monsterstrike.util.Global;
 
 public class Obstacle extends GameObject {
 
-    private MarbleRenderer renderer;
+    private Renderer renderer;
 
     private Delay moveDelay;
     private int moveCount;
@@ -24,7 +24,7 @@ public class Obstacle extends GameObject {
 
     public Obstacle(String path, int x, int y, int w, int h, int r, float mass) {
         super(x, y, w, h, r);
-        this.renderer = new MarbleRenderer(path,4, 20);
+        this.renderer = new Renderer(path,4, 20);
 
         this.goVec = new Vector(0, 0);
         this.isCollide = false;

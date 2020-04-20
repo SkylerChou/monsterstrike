@@ -7,46 +7,88 @@ package scenes;
 
 import controllers.SceneController;
 import java.awt.Graphics;
+import monsterstrike.gameobject.ImgInfo;
+import monsterstrike.gameobject.marble.Renderer;
 import monsterstrike.util.CommandSolver;
+import monsterstrike.util.Global;
 
 /**
  *
  * @author kim19
  */
-public class TutorialPinball extends Scene{
+public class TutorialPinball extends Scene {
+
+    private Renderer howToPlay;
+    private int count;
+    private boolean isEnter;
 
     public TutorialPinball(SceneController sceneController) {
         super(sceneController);
+        this.howToPlay = new Renderer("/resources/howtoplay.png", 5, 0);
+        this.count = 0;
+        this.isEnter = false;
     }
 
     @Override
     public void sceneBegin() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
     }
 
     @Override
     public void sceneUpdate() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(this.count<=4){
+            this.howToPlay.updateOneByOne(count);
+        }else{
+            this.sceneController.changeScene(new PingPong(sceneController));
+        }  
     }
 
     @Override
     public void sceneEnd() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
     }
 
     @Override
     public void paint(Graphics g) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.howToPlay.paint(g, 0, 0, Global.SCREEN_X, Global.SCREEN_Y, ImgInfo.HOWTOPLAY_SIZE[0], ImgInfo.HOWTOPLAY_SIZE[1]);
     }
 
     @Override
     public CommandSolver.KeyListener getKeyListener() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return new MyKeyListener();
     }
 
     @Override
     public CommandSolver.MouseCommandListener getMouseListener() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return null;
     }
-    
+
+    public class MyKeyListener implements CommandSolver.KeyListener {
+
+        @Override
+        public void keyPressed(int commandCode, long trigTime) {
+            if (!isEnter) {
+                switch (commandCode) {
+                    case Global.ENTER:
+                        count++;
+                        isEnter = true;
+                        break;
+                }
+            }
+
+        }
+
+        @Override
+        public void keyReleased(int commandCode, long trigTime
+        ) {
+            isEnter = false;
+        }
+
+        @Override
+        public void keyTyped(char c, long trigTime
+        ) {
+
+        }
+
+    }
 }

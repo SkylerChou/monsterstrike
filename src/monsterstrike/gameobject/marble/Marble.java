@@ -17,8 +17,8 @@ public class Marble extends Ball {
     private Marble other;
     private Marble detect;
     private MarbleInfo info;
-    protected MarbleRenderer renderer;
-    protected MarbleRenderer rendererDie;
+    protected Renderer renderer;
+    protected Renderer rendererDie;
     protected boolean isCollide;
     protected boolean isDie;
 
@@ -44,8 +44,8 @@ public class Marble extends Ball {
         this.bloodItem = new Item[2];
         this.bloodItem[0] = new Item(ImgInfo.BLOODS_PATH[0], x, (int) (y - info.getR()), ImgInfo.BLOODS_INFO[0], ImgInfo.BLOODS_INFO[1]);
         this.bloodItem[1] = new Item(ImgInfo.BLOODS_PATH[1], x, (int) (y - info.getR()), ImgInfo.BLOODS_INFO[0], ImgInfo.BLOODS_INFO[1]);
-        this.renderer = new MarbleRenderer(path + ".png", num, 20);
-        this.rendererDie = new MarbleRenderer(path + "Die.png", 7, 10);
+        this.renderer = new Renderer(path + ".png", num, 20);
+        this.rendererDie = new Renderer(path + "Die.png", 7, 10);
         int[] shineSize = {x, y, w - 10, h - 10};
         if (info.getAttribute() > 2) {
             shineSize[0] = (int) (x - 0.25f * w);
@@ -116,11 +116,11 @@ public class Marble extends Ball {
         return this.isCollide;
     }
 
-    public MarbleRenderer getRenderer() {
+    public Renderer getRenderer() {
         return this.renderer;
     }
 
-    public MarbleRenderer getDieRenderer() {
+    public Renderer getDieRenderer() {
         return this.rendererDie;
     }
 
