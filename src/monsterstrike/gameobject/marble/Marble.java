@@ -387,6 +387,10 @@ public class Marble extends GameObject {
         this.shine.paintComponent(g);
     }
 
+    public void paint(Graphics g, int x, int y, int w, int h, int unitX, int unitY) {
+        this.renderer.paint(g, x, y, w, h, unitX, unitY);
+    }
+
     public void paintAll(Graphics g) {
         this.shine.paintComponent(g);
         if (this.skillIdx == 4) {

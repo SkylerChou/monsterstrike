@@ -18,8 +18,11 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import monsterstrike.gameobject.*;
 import monsterstrike.gameobject.marble.Marble;
+import monsterstrike.gameobject.marble.MarbleArray;
+import monsterstrike.gameobject.marble.MarbleInfo;
 import monsterstrike.graph.*;
 import monsterstrike.util.*;
+import player.PlayerInfo;
 
 public class PingPong extends Scene {
 
@@ -47,14 +50,27 @@ public class PingPong extends Scene {
     private boolean isEnter;
     private boolean isOnButton;
     private boolean isEnd;
-    
-    private Marble m; //抽中怪物  
+    private boolean isReplay;
+    private boolean isPaint;
+
+    private ArrayList<MarbleInfo> allMarbleInfo; //所有平面怪物info
+    private ArrayList<Marble> Allteeth; //所有平面怪物
+    private Marble specialMarble; //抽中怪物  
+    private PlayerInfo playerinfo;
 
     public PingPong(SceneController sceneController) {
         super(sceneController);
+//        this.playerinfo = playerinfo;
         this.scoreBoard = IRC.getInstance().tryGetImage("/resources/score.png");
         this.post = new ArrayList<>();
         this.buttons = new ArrayList<>();
+        this.allMarbleInfo = new ArrayList<>();
+        this.Allteeth = new ArrayList<>();
+
+        this.allMarbleInfo = FileIO.readMarble("specialmarbleInfo.csv");
+        for (int i = 0; i < this.allMarbleInfo.size(); i++) {
+            this.Allteeth.add(new Marble(0, 0, 150, 150, this.allMarbleInfo.get(i)));
+        }
     }
 
     @Override
@@ -79,11 +95,13 @@ public class PingPong extends Scene {
         this.isEnter = false;
         this.isOnButton = false;
         this.isEnd = false;
+        this.isReplay = false;
+        this.isPaint = true;
 
         this.countHeart = 2;
         this.isOut = false;
         for (int i = 0; i < this.hearts.length; i++) {
-            this.hearts[i] = new Heart(ImgInfo.HEART, 880 + i * 60, 30, 80, 80, 40, ImgInfo.HEART_NUM, 10);
+            this.hearts[i] = new Heart(ImgInfo.HEART, 850 + i * 60, 30, 80, 80, 40, ImgInfo.HEART_NUM, 10);
         }
     }
 
@@ -172,12 +190,14 @@ public class PingPong extends Scene {
                     if (!this.isEnd) {
                         this.ball.setCenterX(POS_X);
                         this.ball.setCenterY(POS_Y);
-                        this.ball.setGo(new Vector(5, -5));
+                        this.ball.setGo(new Vector(1, -3));
 
                         this.isOut = false;
                     }
                 }
             }
+        } else {
+
         }
         if (this.isEnter) {
             sceneController.changeScene(new Menu(sceneController));
@@ -185,6 +205,29 @@ public class PingPong extends Scene {
         if (this.isOnButton) {
             this.buttons.get(0).update();
         }
+        if (this.isReplay) {
+            System.out.println(this.isReplay);
+            sceneController.changeScene(new PingPong(sceneController));
+        }
+        if (this.score >= 50 && this.isEnd && this.isPaint) {
+            lottery();
+        }
+        if (this.score >= 50 && this.isEnd) {
+            this.specialMarble.update();
+        }
+
+    }
+
+    public void lottery() {
+        this.specialMarble = this.Allteeth.get(Global.random(0, this.Allteeth.size() - 1));
+        this.specialMarble.setCenterX(550);
+        this.specialMarble.setCenterY(400);
+        this.isPaint = false;
+//         this.playerinfo.addMyMarbleSerial(specialMarble.getInfo().getSerial());
+//        FileIO.writePlayer("playerInfo.csv", this.playerinfo);
+//        FileIO.writeMarble("marbleInfo.csv", specialMarble.getInfo());
+        System.out.println("抽中怪物:" + specialMarble.getInfo().getName());
+//        System.out.println(this.playerinfo);
     }
 
     @Override
@@ -261,20 +304,25 @@ public class PingPong extends Scene {
                 this.hearts[i].paintComponent(g);
             }
         }
-        if (this.isEnd) {
-            g.setFont(new Font("VinerHandITC", Font.TRUETYPE_FONT, 44));
-            g.drawString("TotalScore: " + score, Global.SCREEN_X / 2 - 48, Global.SCREEN_Y / 2 + 2);
-            g.setColor(Color.GREEN);
-            g.drawString("TotalScore: " + score, Global.SCREEN_X / 2 - 50, Global.SCREEN_Y / 2);
-            g.setColor(Color.BLACK);
+        if (this.score >= 50&&this.isEnd) {
+            PaintText.paintTwinkle(g, new Font("Showcard Gothic", Font.PLAIN, 48),
+                    new Font("Showcard Gothic", Font.PLAIN, 54), Color.YELLOW, Color.BLACK,
+                    "Press   \" SPACE \"  to Restart ", "You Gain", 0, 300, 2, Global.SCREEN_X, 30);
+            PaintText.paintWithShadow(g, new Font("Showcard Gothic", Font.TRUETYPE_FONT, 44), Color.ORANGE, Color.BLACK, "Total Score: " + score, 0, Global.SCREEN_Y / 2 - 98, 2, Global.SCREEN_X);
+                this.specialMarble.paint(g, (int) this.specialMarble.getCenterX(), (int) this.specialMarble.getCenterY(), (int) this.specialMarble.getWidth(), (int) this.specialMarble.getHeight(), 228, 227);
+        }else if(this.isEnd){
+              PaintText.paintTwinkle(g, new Font("Showcard Gothic", Font.PLAIN, 48),
+                    new Font("Showcard Gothic", Font.PLAIN, 54), Color.YELLOW, Color.BLACK,
+                    "Press   \" SPACE \"  to Restart ", "", 0, 300, 2, Global.SCREEN_X, 30);
+            PaintText.paintWithShadow(g, new Font("Showcard Gothic", Font.TRUETYPE_FONT, 44), Color.ORANGE, Color.BLACK, "Total Score: " + score, 0, Global.SCREEN_Y / 2 - 98, 2, Global.SCREEN_X);
         }
     }
 
     private void paintText(Graphics g) {
-        g.drawImage(scoreBoard, Global.SCREEN_X / 2 - 70, 0, 270, 70, null);
+        g.drawImage(scoreBoard, Global.SCREEN_X / 2 - 130, 0, 270, 70, null);
         g.setColor(Color.DARK_GRAY);
         g.setFont(new Font("VinerHandITC", Font.TRUETYPE_FONT, 44));
-        g.drawString("Score: " + score, Global.SCREEN_X / 2 - 50, 50);
+        g.drawString("Score: " + score, Global.SCREEN_X / 2 - 90, 50);
         g.setColor(Color.BLACK);
     }
 
@@ -328,8 +376,17 @@ public class PingPong extends Scene {
                             racket.offset(12, 0);
                         }
                         break;
+
                 }
             }
+            if (isEnd) {
+                switch (commandCode) {
+                    case Global.SPACE:
+                        isReplay = true;
+                        break;
+                }
+            }
+
         }
 
         @Override
