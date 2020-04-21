@@ -18,8 +18,6 @@ public class Explosion extends Skills {
     private static final int WIDTH = 60;
     private static final int HEIGHT = 60;
     private int hitCount;
-    private ArrayList<Marble> target;
-    private Marble self;
 
     public Explosion() {
         super(NUM);
@@ -39,8 +37,6 @@ public class Explosion extends Skills {
     @Override
     public int useSkill(Marble self, ArrayList<Marble> target, int idx) {
         this.hitCount = 0;
-        this.target = target;
-        this.self = self;
 //        System.out.println(self.getInfo().getName() + "普通攻擊!");
         int attr = self.getInfo().getAttribute();
         for (int i = 0; i < this.skill.length; i++) {
@@ -77,7 +73,6 @@ public class Explosion extends Skills {
     @Override
     public int explode(Marble self, GameObject target) {
         this.hitCount = 0;
-        this.self = self;
         int attr = self.getInfo().getAttribute();
         for (int i = 0; i < this.skill.length; i++) {
             float rad = (float) (Math.toRadians(360 / NUM) * i);

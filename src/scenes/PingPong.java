@@ -66,7 +66,7 @@ public class PingPong extends Scene {
                     ImgInfo.POST_INFO[0], ImgInfo.POST_INFO[1], ImgInfo.POST_INFO[2], ImgInfo.POST_INFO[3]));
         }
         this.buttons.add(new Button(ImgInfo.HOME, Global.SCREEN_X - 30, 30, ImgInfo.SETTING_INFO[0], ImgInfo.SETTING_INFO[1], 20));
-        this.home = new SpecialEffect(ImgInfo.BALCKHOLE, 1000, 500,
+        this.home = new SpecialEffect(ImgInfo.BLACKHOLE, 1000, 500,
                 ImgInfo.BLACKHOLE_INFO[0], ImgInfo.BLACKHOLE_INFO[1], 40);
         this.home.setShine(true);
         this.background = new Background(ImgInfo.PINGPONG, 0, 0);

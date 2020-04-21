@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import monsterstrike.gameobject.ImgInfo;
 import monsterstrike.gameobject.Stone;
 import monsterstrike.gameobject.marble.Marble;
-import monsterstrike.graph.Vector;
 import monsterstrike.util.Global;
 import player.PlayerInfo;
 
@@ -53,15 +52,14 @@ public class Level2 extends LevelScene {
             }
         }
     }
-    
+
     @Override
-    protected boolean removeGameObject(){
-        if(removeStones()){
+    protected boolean removeGameObject() {
+        if (removeStones()) {
             return true;
         }
         return false;
     }
-
 
     private boolean removeStones() {
         for (int i = 0; i < this.stones.size(); i++) {
@@ -130,19 +128,11 @@ public class Level2 extends LevelScene {
 
     private void strikeStones() {
         for (int i = 0; i < this.marbles.size(); i++) {
-            for (int j = 0; j < this.stones.size(); j++) {
-                int dir = this.marbles.get(i).getDetect().isCollideRect(this.stones.get(j));
-                if (dir > 0 && this.marbles.get(i).goVec().getValue() > 0) {
-                    this.marbles.get(i).detectRect(this.stones.get(j), dir);
+            for (int j = 0; j < this.stones.size(); j++) {                
+                if (this.marbles.get(i).getDetect().isCollision(this.stones.get(j)) && this.marbles.get(i).goVec().getValue() > 0 ) {
+                    this.marbles.get(i).detectStill(this.stones.get(j));
+                    this.marbles.get(i).hit(this.stones.get(j));
                     this.stones.get(j).setCollide(true);
-                    Vector go = this.marbles.get(i).goVec();
-                    if (dir == 1) {
-                        this.marbles.get(i).setGo(new Vector(go.getX(), -go.getY()));
-                    } else if (dir == 2) {
-                        this.marbles.get(i).setGo(new Vector(-go.getX(), go.getY()));
-                    } else {
-                        this.marbles.get(i).setGo(new Vector(-go.getX(), -go.getY()));
-                    }
                     this.hitCount += this.marbles.get(i).explode(this.stones.get(j));
                 }
             }

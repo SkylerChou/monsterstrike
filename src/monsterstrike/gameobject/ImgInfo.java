@@ -27,7 +27,8 @@ public class ImgInfo {
     public static final String[][] SHINE_PATH = {SHINE_ICE, SHINE_FIRE, SHINE_GRASS, SHINE_LIGHT, SHINE_DARK};
 
     //黑洞
-    public static final String[] BALCKHOLE = {"/resources/blackhole1.png", "/resources/blackhole2.png"};
+    public static final String[] BLACKHOLE = {"/resources/blackhole1.png", "/resources/blackhole2.png"};
+    public static final String[] HOLE = {"/resources/items/hole1.png", "/resources/items/hole2.png"};
     public static final int[] BLACKHOLE_INFO = {200, 200};//img_width, img_height 
 
     //石頭
@@ -63,8 +64,7 @@ public class ImgInfo {
 
     public static final String MASK_PATH = BACKGROUND_ROOT + "mask.png";
     public static final String LOCK_PATH = BACKGROUND_ROOT + "lock.png";
-    
-            
+
     
     //loading 
     public static final String LOADING_PATH = BACKGROUND_ROOT + "loading.png";

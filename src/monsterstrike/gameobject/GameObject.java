@@ -14,17 +14,10 @@ public abstract class GameObject {
 
     private Circle collider;
     protected Rect rect;
-    protected Rect rectCollider;
 
     public GameObject(int x, int y, int width, int height, int r) {
         this.rect = Rect.genWithCenter(x, y, width, height);
         this.collider = new Circle(x, y, r);
-    }
-
-    public GameObject(int x, int y, int width, int height, int collideW, int collideH) {
-        this.rect = Rect.genWithCenter(x, y, width, height);
-        this.rectCollider = Rect.genWithCenter(x, y, collideW, collideH);
-        this.collider = new Circle(x, y, height / 2);
     }
 
     public float top() {
@@ -94,47 +87,6 @@ public abstract class GameObject {
             return false;
         }
         return Circle.intersects(this.collider, obj.collider);
-    }
-
-    public int isCollideRect(GameObject obj) {
-        if (this.collider == null || obj.rectCollider == null) {
-            return 0;
-        }
-        return intersects(this.collider, obj.rectCollider);
-    }
-
-    public int intersects(Circle collide, Rect rect) {
-        if (collide.centerX() >= rect.left() && collide.centerX() <= rect.right()
-                && collide.centerY() + collide.getR() >= rect.top()
-                && collide.centerY() - collide.getR() <= rect.bottom()) {
-            return 1;
-        }
-        if (collide.centerY() >= rect.top() && collide.centerY() <= rect.bottom()
-                && collide.centerX() + collide.getR() >= rect.left()
-                && collide.centerX() - collide.getR() <= rect.right()) {
-            return 2;
-        }
-        if (collide.centerX() < rect.left() && collide.centerY() < rect.top()
-                && dist(collide.centerX(), collide.centerY(), rect.left(), rect.top()) <= collide.getR()) {
-            return 3;
-        }
-        if (collide.centerX() < rect.left() && collide.centerY() > rect.bottom()
-                && dist(collide.centerX(), collide.centerY(), rect.left(), rect.bottom()) <= collide.getR()) {
-            return 3;
-        }
-        if (collide.centerX() > rect.right() && collide.centerY() < rect.top()
-                && dist(collide.centerX(), collide.centerY(), rect.right(), rect.top()) <= collide.getR()) {
-            return 3;
-        }
-        if (collide.centerX() > rect.right() && collide.centerY() > rect.bottom()
-                && dist(collide.centerX(), collide.centerY(), rect.right(), rect.bottom()) <= collide.getR()) {
-            return 3;
-        }
-        return 0;
-    }
-
-    private float dist(float x1, float y1, float x2, float y2) {
-        return (float) (Math.sqrt(Math.pow((x1 - x2), 2) + Math.pow((y1 - y2), 2)));
     }
 
     public void offset(float dx, float dy) {

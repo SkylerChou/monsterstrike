@@ -5,14 +5,12 @@
  */
 package scenes.level;
 
-import Props.Shield;
 import controllers.SceneController;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import monsterstrike.gameobject.Cloud;
 import monsterstrike.gameobject.ImgInfo;
 import monsterstrike.gameobject.marble.Marble;
-import monsterstrike.graph.Vector;
 import monsterstrike.util.Global;
 import player.PlayerInfo;
 

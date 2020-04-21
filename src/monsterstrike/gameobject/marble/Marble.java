@@ -11,6 +11,7 @@ import java.awt.Graphics;
 import java.util.ArrayList;
 import monsterstrike.gameobject.*;
 import monsterstrike.graph.Vector;
+import monsterstrike.util.Delay;
 
 public class Marble extends GameObject {
 
@@ -38,6 +39,12 @@ public class Marble extends GameObject {
     private Skills[] skills;
     private int skillIdx;
     private boolean useSkill;
+    private boolean isSpin;
+    private float centerX;
+    private float centerY;
+    private Delay spinDelay;
+    private int spinCount;
+    private boolean spinOver;
 
     public Marble(int x, int y, int w, int h, MarbleInfo info) {
         super(x, y, w, h, (int) (w * info.getRatio() / 2));
@@ -73,6 +80,11 @@ public class Marble extends GameObject {
         this.strikeFic = 3;
         this.wallFic = 2;
         this.isDie = false;
+        this.isSpin = false;
+        this.spinCount = 0;
+        this.spinDelay = new Delay(0);
+        this.spinDelay.start();
+        this.spinOver = false;
         if (info.getState() == 1) {
             this.species = SPECIES[2];
         } else {
@@ -82,7 +94,9 @@ public class Marble extends GameObject {
 
     @Override
     public void update() {
-        this.species.update(this);
+        if (!this.isSpin()) {
+            this.species.update(this);
+        }
         if (this.detect != null && this.isBound()) {
             this.goVec.setValue(this.goVec.getValue() - this.wallFic);
         }
@@ -92,7 +106,9 @@ public class Marble extends GameObject {
             this.bloodItem[i].setCenterY(this.getCenterY() - this.getR() - 10);
         }
         this.bloodRatio = this.info.getHp() / this.fullBlood;
-
+        if (this.isSpin) {
+            spin(centerX, centerY);
+        }
     }
 
     public void move() {
@@ -111,13 +127,15 @@ public class Marble extends GameObject {
         this.other = other;
         Vector nor = new Vector(other.getCenterX() - this.getCenterX(),
                 other.getCenterY() - this.getCenterY());
-        updateDir(nor);
+        if (nor.getValue() != 0) {
+            updateDir(nor);
+        }
     }
 
     private void updateDir(Vector nor) {
         this.norVec = this.goVec.getCosProjectionVec(nor);
         this.tanVec = this.goVec.getSinProjectionVec(nor);
-
+        System.out.println(this.norVec + " " + this.tanVec);
         this.other.setNorVec(this.other.goVec().getCosProjectionVec(nor.multiplyScalar(-1)));
         this.other.setTanVec(this.other.goVec().getSinProjectionVec(nor.multiplyScalar(-1)));
 
@@ -164,6 +182,42 @@ public class Marble extends GameObject {
         this.shine.setCenterX(this.getCenterX());
         this.shine.setCenterY(this.getCenterY());
         this.shine.update();
+    }
+
+    public void spin(float x, float y) {
+        this.centerX = x;
+        this.centerY = y;
+        if (this.isSpin && this.spinDelay.isTrig()) {
+            float rad = (float) (Math.toRadians(360 / 60) * spinCount);
+            float r2 = 0.5f*this.getR();
+            float dx = (float) (2 * r2 * Math.cos((Math.PI - rad) / 2) * Math.cos(rad / 2));
+            float dy = (float) (2 * r2 * Math.cos((Math.PI - rad) / 2) * Math.sin(rad / 2));
+            this.setCenterX(x + dx);
+            this.setCenterY(y - r2 + dy);
+            this.spinCount++;
+            if (spinCount >= 60) {
+                spinCount = 0;
+                this.isSpin = false;
+                this.spinOver = true;
+//                System.out.println("!!!");
+            }
+        }
+    }
+
+    public boolean spinOver() {
+        return this.spinOver;
+    }
+
+    public void setSpinOver(boolean spinOver) {
+        this.spinOver = spinOver;
+    }
+
+    public void setSpin(boolean isSpin) {
+        this.isSpin = isSpin;
+    }
+
+    public boolean isSpin() {
+        return this.isSpin;
     }
 
     public boolean isBound() {
@@ -241,28 +295,6 @@ public class Marble extends GameObject {
                 }
             }
         }
-    }
-
-    public void detectRect(GameObject target, int dir) {
-        float d = 1;
-        if (dir == 1 && this.goVec.getY() > 0) {
-            d = (this.detect.getCenterY() - target.top() + this.getR()) / this.goVec.getY();
-        } else if (dir == 1 && this.goVec.getY() < 0) {
-            d = (target.bottom() - this.detect.getCenterY() + this.getR()) / -this.goVec.getY();
-        } else if (dir == 2 && this.goVec.getX() > 0) {
-            d = (this.detect.getCenterX() - target.left() + this.getR()) / this.goVec.getX();
-        } else if (dir == 2 && this.goVec.getX() < 0) {
-            d = (target.right() - this.detect.getCenterX() + this.getR()) / -this.goVec.getX();
-        } else if (dir == 3 && this.goVec.getX() > 0 && this.getY() > 0) {
-
-        } else if (dir == 3 && this.goVec.getX() > 0 && this.getY() < 0) {
-
-        } else if (dir == 3 && this.goVec.getX() < 0 && this.getY() > 0) {
-
-        } else if (dir == 3 && this.goVec.getX() < 0 && this.getY() < 0) {
-
-        }
-        this.offset(this.goVec.getX() * d, this.goVec.getY() * d);
     }
 
     public float dist(GameObject target) {

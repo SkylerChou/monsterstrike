@@ -17,8 +17,8 @@ public class Stone extends GameObject {
     private boolean isCollide;
 
     public Stone(String path, int x, int y, int width, int height) {
-        super(x, y, width, height, width, height);
-        this.renderer = new Renderer(path, 3, 15);
+        super(x, y, width, height, height/2);
+        this.renderer = new Renderer(path, 3, 5);
         this.isCollide = false;
     }
 

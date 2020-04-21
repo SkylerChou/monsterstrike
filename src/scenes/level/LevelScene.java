@@ -281,7 +281,7 @@ public abstract class LevelScene extends Scene {
         }
     }
 
-    protected boolean removeGameObject(){
+    protected boolean removeGameObject() {
         return true;
     }
 
@@ -379,8 +379,8 @@ public abstract class LevelScene extends Scene {
                     this.marbles.get(i).detect(this.marbles.get(j));
                     this.marbles.get(i).strike(this.marbles.get(j));
                     if (this.marbles.get(i).isOutOfBound()) {
-                        System.out.println(this.marbles.get(i).goVec());
-                        System.out.println(this.marbles.get(j).goVec());
+                        System.out.println(this.marbles.get(i).getInfo().getName() + " " + this.marbles.get(i).getCenterX() + " " + this.marbles.get(i).getCenterY());
+                        System.out.println(this.marbles.get(j).getInfo().getName() + " " + this.marbles.get(j).getCenterX() + " " + this.marbles.get(i).getCenterY());
                     }
                     if (i == currentIdx && this.marbles.get(j).getUseSkill()) {
                         int r = Global.random(1, 3);
@@ -573,9 +573,9 @@ public abstract class LevelScene extends Scene {
 
         for (int i = 0; i < this.shineFrame.length; i++) {
             this.shineFrame[i].paint(g);
-        }         
+        }
         paintText(g);
-        
+
         if (isLose()) {
             PaintText.paintTwinkle(g, new Font("Showcard Gothic", Font.PLAIN, 48),
                     new Font("Showcard Gothic", Font.PLAIN, 54), Color.gray, Color.BLACK,
@@ -592,7 +592,7 @@ public abstract class LevelScene extends Scene {
                 overCount = 0;
             }
         }
-        
+
     }
 
     private void paintText(Graphics g) {
@@ -624,7 +624,7 @@ public abstract class LevelScene extends Scene {
             g.setFont(new Font("Showcard Gothic", Font.PLAIN, 36));
             g.drawString("" + round, 140 - 2, 495 - 2);
         }
-        
+
         PaintText.paintWithShadow(g, new Font("VinerHandITC", Font.ITALIC, 20), Color.YELLOW,
                 Color.BLACK, (int) this.currentHp + " / " + (int) this.myHp, 1120, Global.SCREEN_Y - 100, 2, 30);
         PaintText.paintWithNumber(g, new Font("Showcard Gothic", Font.PLAIN, 30),

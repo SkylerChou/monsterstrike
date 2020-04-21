@@ -48,6 +48,7 @@ public class LevelMenu extends Scene {
     private boolean isSkip;
     private boolean[] isMask;
 
+    //首次玩
     public LevelMenu(SceneController sceneController, PlayerInfo playerInfo, String file, boolean isSkip) {
         super(sceneController);
         this.playerInfo = playerInfo;
