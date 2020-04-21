@@ -137,7 +137,7 @@ public class Ball extends GameObject {
         this.other.setGo(this.other.getNorVec().plus(this.other.getTanVec()));
     }
     
-    
+
 
     public float getMass() {
         return this.mass;

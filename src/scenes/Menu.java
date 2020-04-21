@@ -6,6 +6,9 @@
 package scenes;
 
 import controllers.SceneController;
+import java.applet.Applet;
+import java.applet.AudioClip;
+import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import monsterstrike.gameobject.*;
@@ -24,7 +27,7 @@ public class Menu extends Scene {
     private int h;
 
     private boolean isEnter;
-
+    
     public Menu(SceneController sceneController) {
         super(sceneController);
     }

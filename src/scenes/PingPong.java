@@ -17,6 +17,7 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import monsterstrike.gameobject.*;
+import monsterstrike.gameobject.marble.Marble;
 import monsterstrike.graph.*;
 import monsterstrike.util.*;
 
@@ -36,7 +37,7 @@ public class PingPong extends Scene {
 
     private int dinoGetNum;
     private BufferedImage scoreBoard;
-    private int Score;
+    private int score;
 
     private Prop[] hearts;
     private boolean isOut;
@@ -45,6 +46,9 @@ public class PingPong extends Scene {
     private ArrayList<Button> buttons;
     private boolean isEnter;
     private boolean isOnButton;
+    private boolean isEnd;
+    
+    private Marble m; //抽中怪物  
 
     public PingPong(SceneController sceneController) {
         super(sceneController);
@@ -74,6 +78,8 @@ public class PingPong extends Scene {
         this.dinoGetNum = 0;
         this.isEnter = false;
         this.isOnButton = false;
+        this.isEnd = false;
+
         this.countHeart = 2;
         this.isOut = false;
         for (int i = 0; i < this.hearts.length; i++) {
@@ -83,70 +89,94 @@ public class PingPong extends Scene {
 
     @Override
     public void sceneUpdate() {
-        for (int i = 0; i < this.post.size(); i++) {
-            this.post.get(i).update();
-        }
-        this.home.update();
-        if (this.ball.getGoVec().getValue() == 0) {//dino一開始不能推香菇
-            this.dino.update();
-            for (int i = 0; i < this.post.size(); i++) {//dino不會進到香菇裡面
-                if (this.dino.isCollision(this.post.get(i))) {
-                    Vector dinoVec = dinoDir();
-                    this.dino.offset(-dinoVec.getX(), -dinoVec.getY());
-                }
-            }
-        } else {
-            this.ball.update();
-            this.dino.update();
-            this.ball.isBound();
-            if ((racket.right() >= this.ball.getCenterX() - this.ball.getR()
-                    && racket.left() <= this.ball.getCenterX() + this.ball.getR())
-                    && (this.ball.getCenterY() + this.ball.getR() >= 590)) {
-                this.ball.setCenterY(580 - this.ball.getR());
-                this.ball.getGoVec().setY(-this.ball.getGoVec().getY());
-                this.Score += 10;
-            } else {
-                this.ball.move();
-            }
-
-            if (this.ball.isCollision(this.dino)) {
-                this.ball.hit(dino);
-            }
+        if (!this.isEnd) {
             for (int i = 0; i < this.post.size(); i++) {
-                if (this.post.get(i).getIsCollide()) {
-                    this.post.get(i).update();
-                }
+                this.post.get(i).update();
             }
-            for (int i = 0; i < this.post.size(); i++) {
-                if (this.ball.isCollision(this.post.get(i)) && this.ball.getGoVec().getValue() > 0) {
-                    this.post.get(i).setGo(this.ball.getGoVec());
-                    this.ball.hit(this.post.get(i));
-                    this.post.get(i).setIsCollide(true);
-                }
-            }
-            for (int i = 0; i < this.post.size(); i++) {
-                if (this.dino.isCollision(this.post.get(i))) {
-                    this.dinoGetNum++;
-                    Vector dinoVec = dinoDir();
-                    if (!isBound(i) && this.dinoGetNum == 1) {
-                        this.post.get(i).offset(dinoVec.getX(), dinoVec.getY());
+            this.home.update();
+            if (this.ball.getGoVec().getValue() == 0) {//dino一開始不能推香菇
+                this.dino.update();
+                for (int i = 0; i < this.post.size(); i++) {//dino不會進到香菇裡面
+                    if (this.dino.isCollision(this.post.get(i))) {
+                        Vector dinoVec = dinoDir();
+                        this.dino.offset(-dinoVec.getX(), -dinoVec.getY());
                     }
                 }
-            }
-            for (int i = 0; i < this.post.size(); i++) {
-                if (!this.dino.isCollision(this.post.get(i))) {
-                    this.dinoGetNum = 0;
+            } else {
+                this.ball.update();
+                this.dino.update();
+                this.ball.isBound();
+                if ((racket.right() >= this.ball.getCenterX() - this.ball.getR()
+                        && racket.left() <= this.ball.getCenterX() + this.ball.getR())
+                        && (this.ball.getCenterY() + this.ball.getR() >= 590)) {
+                    this.ball.setCenterY(580 - this.ball.getR());
+                    this.ball.getGoVec().setY(-this.ball.getGoVec().getY());
+                    this.score += 10;
+                } else {
+                    this.ball.move();
+                }
+
+                if (this.ball.isCollision(this.dino)) {
+                    this.ball.hit(dino);
+                }
+                for (int i = 0; i < this.post.size(); i++) {
+                    if (this.post.get(i).getIsCollide()) {
+                        this.post.get(i).update();
+                    }
+                }
+                for (int i = 0; i < this.post.size(); i++) {
+                    if (this.ball.isCollision(this.post.get(i)) && this.ball.getGoVec().getValue() > 0) {
+                        this.post.get(i).setGo(this.ball.getGoVec());
+                        this.ball.hit(this.post.get(i));
+                        this.post.get(i).setIsCollide(true);
+                    }
+                }
+                for (int i = 0; i < this.post.size(); i++) {
+                    if (this.dino.isCollision(this.post.get(i))) {
+                        this.dinoGetNum++;
+                        Vector dinoVec = dinoDir();
+                        if (!isBound(i) && this.dinoGetNum == 1) {
+                            this.post.get(i).offset(dinoVec.getX(), dinoVec.getY());
+                        }
+                    }
+                }
+                for (int i = 0; i < this.post.size(); i++) {
+                    if (!this.dino.isCollision(this.post.get(i))) {
+                        this.dinoGetNum = 0;
+                    }
+                }
+                for (int i = 0; i < this.post.size(); i++) {
+                    if (this.home.isCollision(this.post.get(i))) {
+                        this.score += 5;
+                        this.post.remove(i);
+                    }
+                }
+                if (this.post.size() < 8) {
+                    genPost();
+                    this.post.get(7).update();
                 }
             }
-            for (int i = 0; i < this.post.size(); i++) {
-                if (this.home.isCollision(this.post.get(i))) {
-                    this.Score += 5;
-                    this.post.remove(i);
+            if (this.ball.getCenterY() > this.racket.centerY()) {
+                this.isOut = true;
+                if (this.isOut) {
+                    if (this.countHeart == 0) {
+                        this.isEnd = true;
+//                    sceneController.changeScene(new Menu(sceneController));
+                    }
+                    for (int i = 0; i < this.hearts.length; i++) {
+                        if (this.countHeart > 0 && this.countHeart == i) {
+                            this.hearts[i] = null;
+                            this.countHeart--;
+                        }
+                    }
+                    if (!this.isEnd) {
+                        this.ball.setCenterX(POS_X);
+                        this.ball.setCenterY(POS_Y);
+                        this.ball.setGo(new Vector(5, -5));
+
+                        this.isOut = false;
+                    }
                 }
-            }
-            if (this.post.size() < 8) {
-                genPost();
-                this.post.get(7).update();
             }
         }
         if (this.isEnter) {
@@ -154,26 +184,6 @@ public class PingPong extends Scene {
         }
         if (this.isOnButton) {
             this.buttons.get(0).update();
-        }
-        if (this.ball.getCenterY() > this.racket.centerY()) {
-            this.isOut = true;
-            if (this.isOut) {
-                if (this.countHeart == 0) {
-                    sceneController.changeScene(new Menu(sceneController));
-                }
-                for (int i = 0; i < this.hearts.length; i++) {
-                    if (this.countHeart > 0 && this.countHeart == i) {
-                        this.hearts[i] = null;
-                        this.countHeart--;
-                    }
-                }
-                this.ball.setCenterX(POS_X);
-                this.ball.setCenterY(POS_Y);
-                this.ball.setGo(new Vector(5, -5));
-
-                this.isOut = false;
-            }
-
         }
     }
 
@@ -251,13 +261,20 @@ public class PingPong extends Scene {
                 this.hearts[i].paintComponent(g);
             }
         }
+        if (this.isEnd) {
+            g.setFont(new Font("VinerHandITC", Font.TRUETYPE_FONT, 44));
+            g.drawString("TotalScore: " + score, Global.SCREEN_X / 2 - 48, Global.SCREEN_Y / 2 + 2);
+            g.setColor(Color.GREEN);
+            g.drawString("TotalScore: " + score, Global.SCREEN_X / 2 - 50, Global.SCREEN_Y / 2);
+            g.setColor(Color.BLACK);
+        }
     }
 
     private void paintText(Graphics g) {
         g.drawImage(scoreBoard, Global.SCREEN_X / 2 - 70, 0, 270, 70, null);
         g.setColor(Color.DARK_GRAY);
         g.setFont(new Font("VinerHandITC", Font.TRUETYPE_FONT, 44));
-        g.drawString("Score: " + Score, Global.SCREEN_X / 2 - 50, 50);
+        g.drawString("Score: " + score, Global.SCREEN_X / 2 - 50, 50);
         g.setColor(Color.BLACK);
     }
 
@@ -275,41 +292,43 @@ public class PingPong extends Scene {
 
         @Override
         public void keyPressed(int commandCode, long trigTime) {
-            switch (commandCode) {
-                case Global.UP2:
-                    dino.setStand(false);
-                    dino.setDir(Global.UP2);
-                    dino.moveArround();
-                    break;
-                case Global.DOWN2:
-                    dino.setStand(false);
-                    dino.setDir(Global.DOWN2);
-                    dino.moveArround();
-                    break;
-                case Global.LEFT2:
-                    dino.setStand(false);
-                    dino.setDir(Global.LEFT2);
-                    dino.setCurrentImg(dino.getImg2());
-                    dino.setSteps(Dino.STEPS_WALKLEFT);
-                    dino.moveArround();
-                    break;
-                case Global.RIGHT2:
-                    dino.setStand(false);
-                    dino.setDir(Global.RIGHT2);
-                    dino.setCurrentImg(dino.getImg1());
-                    dino.setSteps(Dino.STEPS_WALKRIGHT);
-                    dino.moveArround();
-                    break;
-                case Global.LEFT:
-                    if (racket.left() > 0) {
-                        racket.offset(-12, 0);
-                    }
-                    break;
-                case Global.RIGHT:
-                    if (racket.right() < Global.SCREEN_X) {
-                        racket.offset(12, 0);
-                    }
-                    break;
+            if (!isEnd) {
+                switch (commandCode) {
+                    case Global.UP2:
+                        dino.setStand(false);
+                        dino.setDir(Global.UP2);
+                        dino.moveArround();
+                        break;
+                    case Global.DOWN2:
+                        dino.setStand(false);
+                        dino.setDir(Global.DOWN2);
+                        dino.moveArround();
+                        break;
+                    case Global.LEFT2:
+                        dino.setStand(false);
+                        dino.setDir(Global.LEFT2);
+                        dino.setCurrentImg(dino.getImg2());
+                        dino.setSteps(Dino.STEPS_WALKLEFT);
+                        dino.moveArround();
+                        break;
+                    case Global.RIGHT2:
+                        dino.setStand(false);
+                        dino.setDir(Global.RIGHT2);
+                        dino.setCurrentImg(dino.getImg1());
+                        dino.setSteps(Dino.STEPS_WALKRIGHT);
+                        dino.moveArround();
+                        break;
+                    case Global.LEFT:
+                        if (racket.left() > 0) {
+                            racket.offset(-12, 0);
+                        }
+                        break;
+                    case Global.RIGHT:
+                        if (racket.right() < Global.SCREEN_X) {
+                            racket.offset(12, 0);
+                        }
+                        break;
+                }
             }
         }
 
