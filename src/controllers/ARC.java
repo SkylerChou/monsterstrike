@@ -17,17 +17,17 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
 
-public class AudioResourceController {
+public class ARC {
     // 單例
 
-    private static AudioResourceController irc;
+    private static ARC irc;
 
-    private AudioResourceController() {
+    private ARC() {
     }
 
-    public static AudioResourceController getInstance() {
+    public static ARC getInstance() {
         if (irc == null) {
-            irc = new AudioResourceController();
+            irc = new ARC();
         }
         return irc;
     }
@@ -47,7 +47,7 @@ public class AudioResourceController {
                     gainControl.setValue(5f);
                     clip.start();
                 } catch (UnsupportedAudioFileException | IOException | LineUnavailableException ex) {
-                    Logger.getLogger(AudioResourceController.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(ARC.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }).start();

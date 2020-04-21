@@ -51,9 +51,9 @@ public class ImgInfo {
     private static final String FIRE_PATH = BACKGROUND_ROOT + "fire.png";
     private static final int[] FIRE_SIZE = {1280, 680};
     private static final String DARK_PATH = BACKGROUND_ROOT + "dark.png";
-    private static final int[] DARK_SIZE = {3001, 1093};
+    private static final int[] DARK_SIZE = {1280, 680};
     private static final String LIGHT_PATH = BACKGROUND_ROOT + "light.png";
-    private static final int[] LIGHT_SIZE = {1920, 800};
+    private static final int[] LIGHT_SIZE = {1280, 680};
 
     public static final String[] BACKGROUND_PATH = {ICE_PATH, FIRE_PATH, GRASS_PATH, LIGHT_PATH, DARK_PATH};
     public static final int[][] BACKGROUND_SIZE = {ICE_SIZE, FIRE_SIZE, GRASS_SIZE, LIGHT_SIZE, DARK_SIZE};
