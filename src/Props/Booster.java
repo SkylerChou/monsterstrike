@@ -25,7 +25,7 @@ public class Booster extends Prop {
     public void useProp(ArrayList<Marble> marble, int idx) {
         if (!isUsed) {
             marble.get(idx).setVelocity(1.2f);
-            System.out.println(marble.get(idx).getInfo().getName() + "加速");
+//            System.out.println(marble.get(idx).getInfo().getName() + "加速");
             this.isUsed = true;
         }
     }

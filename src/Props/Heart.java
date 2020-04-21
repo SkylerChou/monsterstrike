@@ -26,7 +26,7 @@ public class Heart extends Prop {
         if (!isUsed) {
             for (int i = 0; i < marble.size(); i++) {
                 marble.get(i).getInfo().setHp(marble.get(i).getInfo().getHp() + 50);
-                System.out.println(marble.get(i).getInfo().getName() + "補血");
+//                System.out.println(marble.get(i).getInfo().getName() + "補血");
             }
             this.isUsed = true;
         }

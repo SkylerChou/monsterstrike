@@ -33,6 +33,7 @@ public class MonsterStrike {
                 .initListener(commands)
                 .enableMouseTrack(gi)
                 .enableKeyboardTrack(gi)
+                .mouseForcedRelease()
                 .trackChar()
                 .keyCleanMode()
                 .gen();

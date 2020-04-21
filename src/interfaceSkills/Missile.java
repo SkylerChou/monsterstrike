@@ -50,7 +50,7 @@ public class Missile extends Skills {
         this.hitCount = 0;
         this.target = target;
         this.self = self;
-        System.out.println(self.getInfo().getName() + "導彈!");
+//        System.out.println(self.getInfo().getName() + "導彈!");
         int attr = self.getInfo().getAttribute();
 
         for (int i = 0; i < target.size(); i++) {

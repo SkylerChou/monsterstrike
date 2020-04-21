@@ -52,7 +52,7 @@ public class Bullet extends Skills {
         this.hitCount = 0;
         this.target = target;
         this.self = self;
-        System.out.println(self.getInfo().getName() + "子彈!");
+//        System.out.println(self.getInfo().getName() + "子彈!");
         int attr = self.getInfo().getAttribute();
         if (!target.isEmpty()) {
             for (int i = 0; i < this.skill.length; i++) {

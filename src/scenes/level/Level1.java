@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package scenes;
+package scenes.level;
 
 import controllers.SceneController;
 import java.awt.Graphics;
@@ -15,11 +15,11 @@ import player.PlayerInfo;
  *
  * @author yuin8
  */
-public class Level5 extends LevelScene {
+public class Level1 extends LevelScene {
 
-    private static final int IDX = 4;
+    private static final int IDX = 0;
 
-    public Level5(SceneController sceneController, Marble[] myMarbles, ArrayList<Marble> enemies, PlayerInfo playerinfo) {
+    public Level1(SceneController sceneController, Marble[] myMarbles, ArrayList<Marble> enemies, PlayerInfo playerinfo) {
         super(sceneController, IDX, myMarbles, enemies, playerinfo);
     }
 
@@ -33,26 +33,10 @@ public class Level5 extends LevelScene {
         genBattleEnemies();
         genProps();
     }
-    
-    @Override
-    protected boolean removeStones(){
-        return true;
-    }
-
-    @Override
-    protected void hitGameObject() {
-        hitProp();
-    }
-
 
     @Override
     protected void paintGameObject(Graphics g) {
         paintProps(g);
-    }
-
-    @Override
-    protected void strikeStones() {
-        
     }
 
 }

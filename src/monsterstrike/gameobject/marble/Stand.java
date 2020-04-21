@@ -13,9 +13,8 @@ public class Stand implements Strike {
     private int moveCount;
 
     public Stand() {
-        this.moveDelay = new Delay(5);
-        this.moveCount = 0;
-        
+        this.moveDelay = new Delay(2);
+        this.moveCount = 0;       
     }
 
     @Override

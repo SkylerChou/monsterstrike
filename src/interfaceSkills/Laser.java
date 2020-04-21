@@ -29,7 +29,7 @@ public class Laser extends Skills {
 
     @Override
     public int useSkill(Marble self, ArrayList<Marble> target, int targetIdx) {
-        System.out.print(self.getInfo().getName() + " 爆擊 !");
+//        System.out.print(self.getInfo().getName() + " 爆擊 !");
         int attr = self.getInfo().getAttribute();
         int halfLength = SkillImg.SKILL_UNIT_Y[SKILL_IDX][attr] / 2;
         this.skill[0] = new SkillComponent(SKILL_IDX, attr, SkillImg.SKILL_NUM[SKILL_IDX][attr],

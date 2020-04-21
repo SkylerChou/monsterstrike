@@ -5,6 +5,7 @@
  */
 package scenes;
 
+import scenes.level.*;
 import controllers.SceneController;
 import java.awt.Color;
 import java.awt.Font;
@@ -12,10 +13,7 @@ import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import player.PlayerInfo;
-import monsterstrike.gameobject.Background;
-import monsterstrike.gameobject.Button;
-import monsterstrike.gameobject.ImgInfo;
-import monsterstrike.gameobject.Item;
+import monsterstrike.gameobject.*;
 import monsterstrike.gameobject.marble.*;
 import monsterstrike.util.*;
 import player.Player;
@@ -170,9 +168,12 @@ public class LevelMenu extends Scene {
                 }
             case 1:
                 return new Level2(sceneController, fightMarbles, this.enemyFightMarbles, this.playerInfo);
-
             case 2:
                 return new Level3(sceneController, fightMarbles, this.enemyFightMarbles, this.playerInfo);
+            case 3:
+                return new Level4(sceneController, fightMarbles, this.enemyFightMarbles, this.playerInfo);
+            case 4:
+                return new Level5(sceneController, fightMarbles, this.enemyFightMarbles, this.playerInfo);
         }
         return null;
     }

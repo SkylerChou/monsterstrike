@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package scenes;
+package scenes.level;
 
 import Props.*;
 import monsterstrike.graph.Vector;
@@ -19,6 +19,11 @@ import monsterstrike.gameobject.*;
 import monsterstrike.gameobject.marble.*;
 import monsterstrike.util.*;
 import player.Player;
+import scenes.FileIO;
+import scenes.LevelMenu;
+import scenes.Menu;
+import scenes.PaintText;
+import scenes.Scene;
 
 public abstract class LevelScene extends Scene {
 
@@ -31,7 +36,7 @@ public abstract class LevelScene extends Scene {
     private MarbleArray allEnemies; //敵方所有怪物
     private Arrow arrow;
     protected ArrayList<Marble> battleEnemies; //小關出戰怪物
-    protected Prop[] props;
+    protected ArrayList<Prop> props;
     private Marble m; //抽中怪物    
     private Player player;
     private int[] atkRound;
@@ -58,7 +63,7 @@ public abstract class LevelScene extends Scene {
     private boolean isOnButton;
     private boolean isCount;
     private boolean isClick;
-    private boolean isWin;
+    protected boolean isWin;
     private boolean isDraw;
 
     public LevelScene(SceneController sceneController, int backIdx,
@@ -95,7 +100,7 @@ public abstract class LevelScene extends Scene {
         this.ratio = this.currentHp / this.myHp;
         this.tmpCount = 1;
         this.tmpCount2 = 0;
-        this.props = new Prop[3];
+        this.props = new ArrayList<>();
         this.buttons = new ArrayList<>();
         this.isEnter = false;
         this.isOnButton = false;
@@ -136,7 +141,9 @@ public abstract class LevelScene extends Scene {
 //        if (this.delay.isTrig()) { //慢動作delay，Debug再開
         if (this.state == 0) { //設定背景起始位置， 敵人怪物降落           
             this.background.setX((this.sceneCount + 1) * ImgInfo.BACKGROUND_SIZE[idx][0]);
-            dropEnemies();
+            if (dropEnemies()) {
+                genProps();
+            }
         } else if (this.state == 1) { //遊戲開始
             if (!isLose() && !isWin) {
                 updateMarbles();
@@ -265,8 +272,7 @@ public abstract class LevelScene extends Scene {
 
     protected void endBattle() {
         if (this.battleEnemies.isEmpty() && allSkillStop(this.marbles)) { //所有怪物死亡且技能都施放完畢
-
-            if (removeEnemies() && removeStones()) {
+            if (removeEnemies() && removeGameObject()) {
                 this.marbles.get(currentIdx).setShine(false);
                 this.round = 0;
                 this.enemyRound = 0;
@@ -275,7 +281,9 @@ public abstract class LevelScene extends Scene {
         }
     }
 
-    protected abstract boolean removeStones();
+    protected boolean removeGameObject(){
+        return true;
+    }
 
     protected boolean removeEnemies() {
         for (int i = 0; i < this.battleEnemies.size(); i++) {
@@ -317,7 +325,7 @@ public abstract class LevelScene extends Scene {
         }
     }
 
-    private boolean isLose() {
+    protected boolean isLose() {
         if (this.currentHp <= 0) {
             return true;
         }
@@ -370,6 +378,10 @@ public abstract class LevelScene extends Scene {
                 if (this.marbles.get(i).getDetect().isCollision(this.marbles.get(j).getDetect())) {
                     this.marbles.get(i).detect(this.marbles.get(j));
                     this.marbles.get(i).strike(this.marbles.get(j));
+                    if (this.marbles.get(i).isOutOfBound()) {
+                        System.out.println(this.marbles.get(i).goVec());
+                        System.out.println(this.marbles.get(j).goVec());
+                    }
                     if (i == currentIdx && this.marbles.get(j).getUseSkill()) {
                         int r = Global.random(1, 3);
                         if (r == 4) {
@@ -411,14 +423,12 @@ public abstract class LevelScene extends Scene {
         hitProp();
     }
 
-    protected abstract void strikeStones();
-
     protected void hitProp() {
         for (int i = 0; i < this.marbles.size(); i++) {
-            for (int j = 0; j < this.props.length; j++) {
-                if (this.props[j] != null && this.marbles.get(i).isCollision(this.props[j])) {
-                    this.props[j].setIsCollide(true);
-                    this.props[j].useProp(marbles, i);
+            for (int j = 0; j < this.props.size(); j++) {
+                if (this.props.get(j) != null && this.marbles.get(i).isCollision(this.props.get(j))) {
+                    this.props.get(j).setIsCollide(true);
+                    this.props.get(j).useProp(marbles, i);
                 }
             }
         }
@@ -437,7 +447,6 @@ public abstract class LevelScene extends Scene {
                 setCollide();
                 this.battleEnemies.get(i).setUseSkill(true);
             }
-
         }
     }
 
@@ -466,7 +475,7 @@ public abstract class LevelScene extends Scene {
             battleEnemies.add(m.get(3).duplicate(Global.SCREEN_X / 2, -100, 180, 180));
         }
         for (int i = 0; i < this.battleEnemies.size(); i++) {
-            this.battleEnemies.get(i).setDetect(this.battleEnemies.get(i).duplicate());
+//            this.battleEnemies.get(i).setDetect(this.battleEnemies.get(i).duplicate());
         }
     }
 
@@ -474,18 +483,20 @@ public abstract class LevelScene extends Scene {
 
     protected void genProps() {
         if (this.sceneCount == 1) {//第二小關
-            this.props[0] = new Heart(ImgInfo.HEART, Global.random(50, Global.SCREEN_X - 50), 50, 80, 80, 40, ImgInfo.HEART_NUM, 10);
+            this.props.add(new Heart(ImgInfo.HEART, Global.random(50, Global.SCREEN_X - 50), 50, 80, 80, 40, ImgInfo.HEART_NUM, 10));
         } else if (this.sceneCount == 2) {//第三小關
-            this.props[1] = new Booster(ImgInfo.SHOE, Global.SCREEN_X - 50, Global.random(50, Global.SCREEN_Y - Global.INFO_H - 50), 80, 80, 40, ImgInfo.SHOE_NUM, 35);
+            this.props.add(new Booster(ImgInfo.SHOE, Global.SCREEN_X - 50, Global.random(50, Global.SCREEN_Y - Global.INFO_H - 50), 80, 80, 40, ImgInfo.SHOE_NUM, 35));
             Marble tmp = null;
             for (int i = 0; i < this.battleEnemies.size(); i++) {
-                if (this.battleEnemies.get(i).getInfo().getLevel() == 5) {
+                if (this.battleEnemies.get(i).getInfo().getLevel() >= 4) {
                     tmp = this.battleEnemies.get(i);
                 }
             }
             if (tmp != null) {
-                this.props[2] = new Shield(ImgInfo.SHIELD, (int) tmp.getCenterX(), (int) tmp.getCenterY(), (int) (tmp.getInfo().getR() * 1.5f), (int) (tmp.getInfo().getR() * 1.5f), (int) (tmp.getInfo().getR() * 1.5f) / 2, ImgInfo.SHIELD_NUM, 20);
-                this.props[2].setIsUsed(false);
+                this.props.add(new Shield(ImgInfo.SHIELD, (int) tmp.getCenterX(),
+                        (int) tmp.getCenterY(), (int) (tmp.getInfo().getR() * 1.5f),
+                        (int) (tmp.getInfo().getR() * 1.5f), (int) (tmp.getInfo().getR() * 1.5f) / 2, ImgInfo.SHIELD_NUM, 20));
+                this.props.get(2).setIsUsed(false);
             }
         }
     }
@@ -518,11 +529,11 @@ public abstract class LevelScene extends Scene {
     protected abstract void updateGameObject();
 
     protected void updateProps() {
-        for (int i = 0; i < this.props.length; i++) {
-            if (this.props[i] != null) {
-                this.props[i].update();
-                if (this.props[i].getIsStop()) {
-                    this.props[i] = null;
+        for (int i = 0; i < this.props.size(); i++) {
+            if (this.props.get(i) != null) {
+                this.props.get(i).update();
+                if (this.props.get(i).getIsStop()) {
+                    this.props.set(i, null);
                 }
             }
         }
@@ -532,9 +543,9 @@ public abstract class LevelScene extends Scene {
     protected abstract void paintGameObject(Graphics g);
 
     protected void paintProps(Graphics g) {
-        for (int i = 0; i < this.props.length; i++) {
-            if (this.props[i] != null) {
-                this.props[i].paintComponent(g);
+        for (int i = 0; i < this.props.size(); i++) {
+            if (this.props.get(i) != null) {
+                this.props.get(i).paintComponent(g);
             }
         }
     }
@@ -544,7 +555,11 @@ public abstract class LevelScene extends Scene {
         if (this.background != null) {
             this.background.paint(g);
         }
-
+        this.item.paint(g);
+        paintGameObject(g);
+        this.blood.paintResize(g, this.ratio);
+        this.buttons.get(0).paint(g);
+        this.player.paint(g);
         if (this.arrow != null && this.arrow.getShow()) {
             this.arrow.paint(g);
         }
@@ -556,14 +571,11 @@ public abstract class LevelScene extends Scene {
             this.marbles.get(i).paintAll(g);
         }
 
-        paintText(g);
-        this.player.paint(g);
-        paintGameObject(g);
-
         for (int i = 0; i < this.shineFrame.length; i++) {
             this.shineFrame[i].paint(g);
-        }
-        this.buttons.get(0).paint(g);
+        }         
+        paintText(g);
+        
         if (isLose()) {
             PaintText.paintTwinkle(g, new Font("Showcard Gothic", Font.PLAIN, 48),
                     new Font("Showcard Gothic", Font.PLAIN, 54), Color.gray, Color.BLACK,
@@ -580,6 +592,7 @@ public abstract class LevelScene extends Scene {
                 overCount = 0;
             }
         }
+        
     }
 
     private void paintText(Graphics g) {
@@ -611,9 +624,7 @@ public abstract class LevelScene extends Scene {
             g.setFont(new Font("Showcard Gothic", Font.PLAIN, 36));
             g.drawString("" + round, 140 - 2, 495 - 2);
         }
-
-        this.item.paint(g);
-        this.blood.paintResize(g, this.ratio);
+        
         PaintText.paintWithShadow(g, new Font("VinerHandITC", Font.ITALIC, 20), Color.YELLOW,
                 Color.BLACK, (int) this.currentHp + " / " + (int) this.myHp, 1120, Global.SCREEN_Y - 100, 2, 30);
         PaintText.paintWithNumber(g, new Font("Showcard Gothic", Font.PLAIN, 30),

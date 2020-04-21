@@ -76,6 +76,7 @@ public class Renderer {
     }
 
     public void start() {
+        this.isStop = false;
         this.delay.start();
     }
 

@@ -40,7 +40,7 @@ public class Heal extends Skills {
     public int useSkill(Marble self, ArrayList<Marble> selfMarbles, int idx) {
         this.hitCount = 0;
         this.selfMarbles = selfMarbles;
-        System.out.println(self.getInfo().getName() + "使出治癒");
+//        System.out.println(self.getInfo().getName() + "使出治癒");
         int attr = self.getInfo().getAttribute();
         for (int i = 0; i < selfMarbles.size(); i++) {
             this.skill[i] = new SkillComponent(SKILL_IDX, attr, SkillImg.SKILL_NUM[SKILL_IDX][attr],
@@ -49,7 +49,7 @@ public class Heal extends Skills {
 
         for (int i = 0; i < selfMarbles.size(); i++) {
             selfMarbles.get(i).getInfo().setHp(selfMarbles.get(i).getInfo().getHp() + self.getInfo().getAtk());
-            System.out.println(selfMarbles.get(i).getInfo().getName() + "血量:" + selfMarbles.get(i).getInfo().getHp());
+//            System.out.println(selfMarbles.get(i).getInfo().getName() + "血量:" + selfMarbles.get(i).getInfo().getHp());
         }
         return this.hitCount;
     }

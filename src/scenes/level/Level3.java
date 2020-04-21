@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package scenes;
+package scenes.level;
 
 import controllers.SceneController;
 import java.awt.Graphics;
@@ -107,8 +107,7 @@ public class Level3 extends LevelScene {
         hitPeople();
     }
 
-    @Override
-    protected void strikeStones() {
+    private void strikeStones() {
         for (int i = 0; i < this.marbles.size(); i++) {
             for (int j = 0; j < this.stones.size(); j++) {
                 int dir = this.marbles.get(i).getDetect().isCollideRect(this.stones.get(j));
@@ -155,9 +154,17 @@ public class Level3 extends LevelScene {
             }
         }
     }
-
+    
     @Override
-    protected boolean removeStones() {
+    protected boolean removeGameObject(){
+        if(removeStones()){
+            return true;
+        }
+        return false;
+    }
+
+    
+    private boolean removeStones() {
         for (int i = 0; i < this.stones.size(); i++) {
             this.stones.remove(i);
         }

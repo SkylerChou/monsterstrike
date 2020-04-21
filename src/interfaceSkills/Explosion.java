@@ -41,7 +41,7 @@ public class Explosion extends Skills {
         this.hitCount = 0;
         this.target = target;
         this.self = self;
-        System.out.println(self.getInfo().getName() + "普通攻擊!");
+//        System.out.println(self.getInfo().getName() + "普通攻擊!");
         int attr = self.getInfo().getAttribute();
         for (int i = 0; i < this.skill.length; i++) {
             float rad = (float) (Math.toRadians(360 / NUM) * i);
@@ -68,7 +68,7 @@ public class Explosion extends Skills {
                 }
                 target.get(i).getInfo().setHp(target.get(i).getInfo().getHp() - atk);
                 this.hitCount++;
-                System.out.println(target.get(i).getInfo().getName() + "血量:" + target.get(i).getInfo().getHp());
+//                System.out.println(target.get(i).getInfo().getName() + "血量:" + target.get(i).getInfo().getHp());
             }
         }
         return this.hitCount;

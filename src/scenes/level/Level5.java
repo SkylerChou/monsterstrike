@@ -3,26 +3,23 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package scenes;
+package scenes.level;
 
 import controllers.SceneController;
 import java.awt.Graphics;
 import java.util.ArrayList;
-import monsterstrike.gameobject.ImgInfo;
-import monsterstrike.gameobject.Stone;
 import monsterstrike.gameobject.marble.Marble;
-import monsterstrike.util.Global;
 import player.PlayerInfo;
 
 /**
  *
  * @author yuin8
  */
-public class Level1 extends LevelScene {
+public class Level5 extends LevelScene {
 
-    private static final int IDX = 0;
+    private static final int IDX = 4;
 
-    public Level1(SceneController sceneController, Marble[] myMarbles, ArrayList<Marble> enemies, PlayerInfo playerinfo) {
+    public Level5(SceneController sceneController, Marble[] myMarbles, ArrayList<Marble> enemies, PlayerInfo playerinfo) {
         super(sceneController, IDX, myMarbles, enemies, playerinfo);
     }
 
@@ -36,11 +33,6 @@ public class Level1 extends LevelScene {
         genBattleEnemies();
         genProps();
     }
-    
-    @Override
-    protected boolean removeStones(){
-        return true;
-    }
 
     @Override
     protected void hitGameObject() {
@@ -51,11 +43,6 @@ public class Level1 extends LevelScene {
     @Override
     protected void paintGameObject(Graphics g) {
         paintProps(g);
-    }
-
-    @Override
-    protected void strikeStones() {
-        
     }
 
 }

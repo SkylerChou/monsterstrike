@@ -83,7 +83,7 @@ public class Marble extends GameObject {
     @Override
     public void update() {
         this.species.update(this);
-        if (this.isBound()) {
+        if (this.detect != null && this.isBound()) {
             this.goVec.setValue(this.goVec.getValue() - this.wallFic);
         }
         this.skills[this.skillIdx].update();
@@ -167,23 +167,23 @@ public class Marble extends GameObject {
     }
 
     public boolean isBound() {
-        if (this.getCenterX() - this.getR() <= 0
-                || this.getCenterX() + this.getR() >= Global.SCREEN_X
-                || this.getCenterY() - this.getR() <= 0
-                || this.getCenterY() + this.getR() >= Global.SCREEN_Y - Global.INFO_H) {
-            if (this.getCenterX() - this.getR() <= 0) {
+        if (this.detect.getCenterX() - this.getR() <= 0
+                || this.detect.getCenterX() + this.getR() >= Global.SCREEN_X
+                || this.detect.getCenterY() - this.getR() <= 0
+                || this.detect.getCenterY() + this.getR() >= Global.SCREEN_Y - Global.INFO_H) {
+            if (this.detect.getCenterX() - this.getR() <= 0) {
                 this.setCenterX(this.getR());
                 this.goVec.setX(-this.goVec.getX());
             }
-            if (this.getCenterX() + this.getR() >= Global.SCREEN_X) {
+            if (this.detect.getCenterX() + this.getR() >= Global.SCREEN_X) {
                 this.setCenterX(Global.SCREEN_X - this.getR());
                 this.goVec.setX(-this.goVec.getX());
             }
-            if (this.getCenterY() - this.getR() <= 0) {
+            if (this.detect.getCenterY() - this.getR() <= 0) {
                 this.setCenterY(this.getR());
                 this.goVec.setY(-this.goVec.getY());
             }
-            if (this.getCenterY() + this.getR() >= Global.SCREEN_Y - Global.INFO_H) {
+            if (this.detect.getCenterY() + this.getR() >= Global.SCREEN_Y - Global.INFO_H) {
                 this.setCenterY(Global.SCREEN_Y - Global.INFO_H - this.getR());
                 this.goVec.setY(-this.goVec.getY());
             }
@@ -219,24 +219,26 @@ public class Marble extends GameObject {
     }
 
     public void detectStill(GameObject target) {
-        float dist = this.getDetect().dist(target);
-        Vector v1 = this.goVec;
-        float x1 = this.getCenterX();
-        float y1 = this.getCenterY();
-        float x2 = target.getCenterX();
-        float y2 = target.getCenterY();
-        Vector vec = new Vector(target.getCenterX() - this.getCenterX(),
-                target.getCenterY() - this.getCenterY());
-        float x = this.getCenterX() + vec.getCosProjectionVec(this.goVec).getX();
-        float y = this.getCenterY() + vec.getCosProjectionVec(this.goVec).getY();
-        if (dist < this.getR() + target.getR() || inMiddle(this, x, y)) {
-            float a = (float) (Math.pow(v1.getValue(), 2));
-            float b = 2 * ((x1 - x2) * (v1.getX()) + (y1 - y2) * (v1.getY()));
-            float c = (float) (Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2)
-                    - Math.pow(this.getR() + target.getR(), 2));
-            float d = (float) ((-b - Math.sqrt(Math.pow(b, 2) - 4 * a * c)) / (2 * a));
-            if (Math.pow(b, 2) - 4 * a * c >= 0) {
-                this.offset(this.goVec.getX() * d, this.goVec.getY() * d);
+        if (this.goVec.getValue() > 0) {
+            float dist = this.getDetect().dist(target);
+            Vector v1 = this.goVec;
+            float x1 = this.getCenterX();
+            float y1 = this.getCenterY();
+            float x2 = target.getCenterX();
+            float y2 = target.getCenterY();
+            Vector vec = new Vector(target.getCenterX() - this.getCenterX(),
+                    target.getCenterY() - this.getCenterY());
+            float x = this.getCenterX() + vec.getCosProjectionVec(this.goVec).getX();
+            float y = this.getCenterY() + vec.getCosProjectionVec(this.goVec).getY();
+            if (dist < this.getR() + target.getR() || inMiddle(this, x, y)) {
+                float a = (float) (Math.pow(v1.getValue(), 2));
+                float b = 2 * ((x1 - x2) * (v1.getX()) + (y1 - y2) * (v1.getY()));
+                float c = (float) (Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2)
+                        - Math.pow(this.getR() + target.getR(), 2));
+                float d = (float) ((-b - Math.sqrt(Math.pow(b, 2) - 4 * a * c)) / (2 * a));
+                if (Math.pow(b, 2) - 4 * a * c >= 0) {
+                    this.offset(this.goVec.getX() * d, this.goVec.getY() * d);
+                }
             }
         }
     }
@@ -291,9 +293,11 @@ public class Marble extends GameObject {
     public void hit(GameObject target) {
         this.isCollide = true;
         Vector vec = new Vector(target.getCenterX() - this.getCenterX(), target.getCenterY() - this.getCenterY());
-        this.norVec = this.goVec.getCosProjectionVec(vec).multiplyScalar(-1);
-        this.tanVec = this.goVec.getSinProjectionVec(vec);
-        this.goVec = this.norVec.plus(this.tanVec);
+        if (this.goVec.getValue() > 0) {
+            this.norVec = this.goVec.getCosProjectionVec(vec).multiplyScalar(-1);
+            this.tanVec = this.goVec.getSinProjectionVec(vec);
+            this.goVec = this.norVec.plus(this.tanVec);
+        }
     }
 
     public Marble getDetect() {

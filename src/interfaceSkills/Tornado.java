@@ -27,7 +27,7 @@ public class Tornado extends Skills {
     @Override
     public int useSkill(Marble self, ArrayList<Marble> target, int idx) {
         this.hitCount = 0;
-        System.out.println(self.getInfo().getName() + " 爆擊 !");
+//        System.out.println(self.getInfo().getName() + " 爆擊 !");
         int attr = self.getInfo().getAttribute();
         for (int i = 0; i < target.size(); i++) {
             this.skill[i] = new SkillComponent(SKILL_IDX, attr, SkillImg.SKILL_NUM[SKILL_IDX][attr],
