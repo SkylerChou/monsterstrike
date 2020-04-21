@@ -12,6 +12,7 @@ import controllers.SceneController;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import monsterstrike.GameKernel.GameInterface;
+import monsterstrike.gameobject.ImgInfo;
 import scenes.*;
 
 public class GI implements KeyListener, MouseCommandListener, GameInterface{
@@ -20,7 +21,8 @@ public class GI implements KeyListener, MouseCommandListener, GameInterface{
     
     public GI() {
         sceneController = new SceneController();
-        sceneController.changeScene(new Menu(sceneController));
+        sceneController.changeScene(new Tutorial(sceneController, ImgInfo.STORY_PATH, 4,
+                new Menu(sceneController)));
     }
 
     @Override

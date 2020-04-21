@@ -15,6 +15,7 @@ import player.PlayerInfo;
 import monsterstrike.gameobject.Background;
 import monsterstrike.gameobject.Button;
 import monsterstrike.gameobject.ImgInfo;
+import monsterstrike.gameobject.Item;
 import monsterstrike.gameobject.marble.*;
 import monsterstrike.util.*;
 import player.Player;
@@ -33,6 +34,8 @@ public class LevelMenu extends Scene {
     private PlayerInfo playerInfo;
     private Marble currentMarble;
     private Background background;
+    private Background mask;
+    private Item lock;
     private int backIdx;
     private boolean isReleased;
     private int x;
@@ -44,8 +47,10 @@ public class LevelMenu extends Scene {
     private ArrayList<Button> button;
     private boolean isEnter;
     private boolean isOnButton;
+    private boolean isSkip;
+    private boolean[] isMask;
 
-    public LevelMenu(SceneController sceneController, PlayerInfo playerInfo, String file) {
+    public LevelMenu(SceneController sceneController, PlayerInfo playerInfo, String file, boolean isSkip) {
         super(sceneController);
         this.playerInfo = playerInfo;
         this.allMarbleInfo = FileIO.readMarble(file);
@@ -56,9 +61,11 @@ public class LevelMenu extends Scene {
         this.buttons = new ArrayList<>();
         this.enemyFightMarbles = new ArrayList<>();
         this.button = new ArrayList<>();
+        this.isSkip = isSkip;
+        this.isMask = new boolean[5];
     }
 
-    public LevelMenu(SceneController sceneController, String playerFile, String file) {
+    public LevelMenu(SceneController sceneController, String playerFile, String file, boolean isSkip) {
         super(sceneController);
         this.playerInfo = FileIO.readPlayer(playerFile, 0);
         this.allMarbleInfo = FileIO.readMarble(file);
@@ -69,6 +76,8 @@ public class LevelMenu extends Scene {
         this.buttons = new ArrayList<>();
         this.enemyFightMarbles = new ArrayList<>();
         this.button = new ArrayList<>();
+        this.isSkip = isSkip;
+        this.isMask = new boolean[5];
     }
 
     @Override
@@ -82,13 +91,14 @@ public class LevelMenu extends Scene {
         this.backIdx = 0;
         this.button.add(new Button(ImgInfo.HOME, Global.SCREEN_X - 30, 30, ImgInfo.SETTING_INFO[0], ImgInfo.SETTING_INFO[1], 20));
         this.background = new Background(ImgInfo.BACKGROUND_PATH[this.backIdx], 0, 0, this.backIdx);
+        this.mask = new Background(ImgInfo.MASK_PATH, 0, 0, 0);
+        this.lock = new Item(ImgInfo.LOCK_PATH, 900, 410, 50, 50);
         for (int i = 0; i < this.allMarbleInfo.size(); i++) {
             if (inMySerials(this.allMarbleInfo.get(i))) {
                 this.myMarbles.add(new Marble(this.x, this.y, 150, 150, this.allMarbleInfo.get(i)));
             } else {
                 this.enemies.add(new Marble(0, 0, 150, 150, this.allMarbleInfo.get(i)));
             }
-
         }
         int unitX = Global.SCREEN_X / 5;
         for (int i = 0; i < 3; i++) {
@@ -102,6 +112,13 @@ public class LevelMenu extends Scene {
         this.isReleased = true;
         this.delay = new Delay(20);
         this.delay.start();
+        for (int i = 0; i < this.isMask.length; i++) {
+            if (i < this.playerInfo.getLevel()) {
+                this.isMask[i] = false;
+            } else {
+                this.isMask[i] = true;
+            }
+        }
     }
 
     @Override
@@ -141,12 +158,16 @@ public class LevelMenu extends Scene {
             this.button.get(0).update();
         }
     }
-    
-    private LevelScene chooseLevel(){
-        switch(backIdx){
-            case 0:
-                return new Level1(sceneController, fightMarbles, this.enemyFightMarbles, this.playerInfo);
 
+    private Scene chooseLevel() {
+        switch (backIdx) {
+            case 0:
+                if (!isSkip) {
+                    return new Tutorial(sceneController, ImgInfo.HOWTOSTRIKE_PATH, 5,
+                            new Level1(sceneController, fightMarbles, this.enemyFightMarbles, this.playerInfo));
+                } else {
+                    return new Level1(sceneController, fightMarbles, this.enemyFightMarbles, this.playerInfo);
+                }
             case 1:
                 return new Level2(sceneController, fightMarbles, this.enemyFightMarbles, this.playerInfo);
 
@@ -194,10 +215,10 @@ public class LevelMenu extends Scene {
     public void paint(Graphics g) {
         this.menu.paintMenu(g);
         this.p1.paint(g);
-        PaintText.paint(g, new Font("Arial Unicode MS", Font.BOLD, 24), 
-                Color.BLACK, this.playerInfo.getName(), 100, 300, 100); 
-        PaintText.paint(g, new Font("Arial Unicode MS", Font.BOLD, 20), 
-                Color.BLACK, "Lv." + this.playerInfo.getLevel(), 105, 110, 100); 
+        PaintText.paint(g, new Font("Arial Unicode MS", Font.BOLD, 24),
+                Color.BLACK, this.playerInfo.getName(), 100, 300, 100);
+        PaintText.paint(g, new Font("Arial Unicode MS", Font.BOLD, 20),
+                Color.BLACK, "Lv." + this.playerInfo.getLevel(), 105, 110, 100);
         int c = count;
         if (c == 0) {
             c = 1;
@@ -216,6 +237,10 @@ public class LevelMenu extends Scene {
 
         if (this.count >= 4) {
             this.background.paintItem(g, 350, 380, 580, 200);
+            if (isMask[backIdx]) {
+                this.mask.paintItem(g, 350, 380, 580, 200);
+                this.lock.paint(g);
+            }
         }
 
         for (int i = 0; i < this.buttons.size(); i++) {
@@ -225,15 +250,15 @@ public class LevelMenu extends Scene {
     }
 
     public void paintText(Graphics g, Marble m, int x, int y) {
-        PaintText.paint(g, new Font("Arial Unicode MS", Font.BOLD, 32), 
-                Color.BLACK, m.getInfo().getName(), x, y, (int)m.getWidth());     
-        PaintText.paint(g, new Font("VinerHandITC", Font.BOLD, 24), 
-                Color.BLACK, "HP: " + m.getInfo().getHp(), x-8, y+150, (int)m.getWidth());
-        PaintText.paint(g, new Font("VinerHandITC", Font.BOLD, 24), 
-                Color.BLACK, "ATK: " + m.getInfo().getAtk(), x-8, y+180, (int)m.getWidth());
-        PaintText.paint(g, new Font("VinerHandITC", Font.BOLD, 24), 
-                Color.BLACK, "Velocity: " + (int) m.getInfo().getV() + " m/s", 
-                x-8, y+210, (int)m.getWidth());
+        PaintText.paint(g, new Font("Arial Unicode MS", Font.BOLD, 32),
+                Color.BLACK, m.getInfo().getName(), x, y, (int) m.getWidth());
+        PaintText.paint(g, new Font("VinerHandITC", Font.BOLD, 24),
+                Color.BLACK, "HP: " + m.getInfo().getHp(), x - 8, y + 150, (int) m.getWidth());
+        PaintText.paint(g, new Font("VinerHandITC", Font.BOLD, 24),
+                Color.BLACK, "ATK: " + m.getInfo().getAtk(), x - 8, y + 180, (int) m.getWidth());
+        PaintText.paint(g, new Font("VinerHandITC", Font.BOLD, 24),
+                Color.BLACK, "Velocity: " + (int) m.getInfo().getV() + " m/s",
+                x - 8, y + 210, (int) m.getWidth());
     }
 
     @Override

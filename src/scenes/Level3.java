@@ -111,11 +111,18 @@ public class Level3 extends LevelScene {
     protected void strikeStones() {
         for (int i = 0; i < this.marbles.size(); i++) {
             for (int j = 0; j < this.stones.size(); j++) {
-                if (this.marbles.get(i).getDetect().isCollision(this.stones.get(j))
-                        && this.marbles.get(i).goVec().getValue() > 0) {
-                    this.marbles.get(i).detectStill(this.stones.get(j));
+                int dir = this.marbles.get(i).getDetect().isCollideRect(this.stones.get(j));
+                if (dir > 0 && this.marbles.get(i).goVec().getValue() > 0) {
+                    this.marbles.get(i).detectRect(this.stones.get(j), dir);
                     this.stones.get(j).setCollide(true);
-                    this.marbles.get(i).hit(this.stones.get(j));
+                    Vector go = this.marbles.get(i).goVec();
+                    if (dir == 1) {
+                        this.marbles.get(i).setGo(new Vector(go.getX(), -go.getY()));
+                    } else if (dir == 2) {
+                        this.marbles.get(i).setGo(new Vector(-go.getX(), go.getY()));
+                    } else {
+                        this.marbles.get(i).setGo(new Vector(-go.getX(), -go.getY()));
+                    }
                     this.hitCount += this.marbles.get(i).explode(this.stones.get(j));
                 }
             }

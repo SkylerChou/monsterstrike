@@ -97,9 +97,8 @@ public class PlayerScene extends Scene {
             }
             this.playerInfo.setName(name);
         }else{
-
             sceneController.changeScene(new LevelMenu(sceneController, 
-                        this.playerInfo, "marbleInfoInit.csv"));
+                        this.playerInfo, "marbleInfoInit.csv", false));
         }
         if (this.isEnter) {
             sceneController.changeScene(new Menu(sceneController));

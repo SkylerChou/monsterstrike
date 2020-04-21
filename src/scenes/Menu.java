@@ -5,11 +5,8 @@
  */
 package scenes;
 
-import controllers.IRC;
 import controllers.SceneController;
-import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import monsterstrike.gameobject.*;
 import monsterstrike.util.*;
@@ -71,10 +68,12 @@ public class Menu extends Scene {
             sceneController.changeScene(new PlayerScene(sceneController));
             this.isEnter = false;
         } else if (this.isEnter && this.dino.getCenterY() == Global.SCREEN_Y / 2 + h) {
-            sceneController.changeScene(new LevelMenu(sceneController, "playerInfo.csv", "marbleInfo.csv"));
+            sceneController.changeScene(new LevelMenu(sceneController, "playerInfo.csv", "marbleInfo.csv", true));
             this.isEnter = false;
         } else if (this.isEnter && this.dino.getCenterY() == Global.SCREEN_Y / 2 + 2 * h) {
-            sceneController.changeScene(new TutorialPinball(sceneController));
+            sceneController.changeScene(new Tutorial(sceneController, "/resources/howtoplay.png", 
+                    5, new PingPong(sceneController)));
+//            sceneController.changeScene(new TutorialPinball(sceneController));
             this.isEnter = false;
         } else if (this.isEnter && this.dino.getCenterY() == Global.SCREEN_Y / 2 + 3 * h) {
             System.exit(0);
