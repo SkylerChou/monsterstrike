@@ -19,10 +19,10 @@ public abstract class SceneObject {
 
     public SceneObject(int x, int y, int width, int height) {
         this.rect = Rect.genWithCenter(x, y, width, height);
-        this.collider=Rect.genWithCenter(x, y, width, height);
+        this.collider = Rect.genWithCenter(x, y, width, height);
     }
 
-   public float getCenterX() {
+    public float getCenterX() {
         return this.collider.centerX();
     }
 
@@ -46,13 +46,12 @@ public abstract class SceneObject {
         return this.rect.height();
     }
 
-
     public void offset(float dx, float dy) {
         this.rect.offset(dx, dy);
         this.collider.offset(dx, dy);
     }
-    
-    public void setX(float x){
+
+    public void setX(float x) {
         this.rect.setLeft(x);
     }
 

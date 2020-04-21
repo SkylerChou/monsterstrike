@@ -7,10 +7,10 @@ package monsterstrike.util;
 
 public class Global {
 
-    public static final boolean IS_DEBUG =false;
+    public static final boolean IS_DEBUG = false;
 
     //視窗大小
-    public static final int FRAME_X =1280;
+    public static final int FRAME_X = 1280;
     public static final int FRAME_Y = 680;
     public static final int SCREEN_X = FRAME_X - 8 - 8;
     public static final int SCREEN_Y = FRAME_Y - 31 - 8;
@@ -31,19 +31,20 @@ public class Global {
     public static final int RIGHT2 = 5;
     public static final int DOWN = 3;
     public static final int DOWN2 = 8;
-    public static final int ENTER=4;
-    
+    public static final int ENTER = 4;
+    public static final int SPACE = 9;
+
     public static final int NORMAL_MARBLE_R = 50;
     public static final int GENIE_MASS = 1;
 
-    public static final int[] POSITION_X = {random(60,250), random(60,250), random(60,250)};
+    public static final int[] POSITION_X = {random(60, 250), random(60, 250), random(60, 250)};
     public static final int[] POSITION_Y = {180, 270, 405};
 
     public static final int[] ENEMYPOS_X = {850, 1000, 850, 700};
     public static final int[] ENEMYPOS_Y = {180, 270, 405, 300, 200};
-    
+
     public static final int INFO_H = 135;
-    
+
     public static int random(int min, int max) {
         if (min > max) {
             int tmp = min;

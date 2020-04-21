@@ -58,12 +58,19 @@ public class ImgInfo {
     public static final String[] BACKGROUND_PATH = {ICE_PATH, FIRE_PATH, GRASS_PATH, LIGHT_PATH, DARK_PATH};
     public static final int[][] BACKGROUND_SIZE = {ICE_SIZE, FIRE_SIZE, GRASS_SIZE, LIGHT_SIZE, DARK_SIZE};
 
+    public static final String MASK_PATH = BACKGROUND_ROOT + "mask.png";
+    public static final String LOCK_PATH = BACKGROUND_ROOT + "lock.png";
+    
+            
+    
     //loading 
     public static final String LOADING_PATH = BACKGROUND_ROOT + "loading.png";
     public static final int[] LOADING_SIZE = {1920, 800};
 
     //howtoplay
     public static final String HOWTOPLAY_PATH = "/resources/howtoplay.png";
+    public static final String HOWTOSTRIKE_PATH = "/resources/howtostrike.png";
+    public static final String STORY_PATH = "/resources/story1.png";
     public static final int[] HOWTOPLAY_SIZE = {1600, 1099};
 
     //ITEM

@@ -31,7 +31,7 @@ public class Item extends SceneObject{
         g.drawImage(img, (int)this.getX(),(int)this.getY(), 
                 (int)this.getWidth(), (int)this.getHeight(), null);
     }
-    
+
     public void paintResize(Graphics g, float ratio){
         g.drawImage(img, (int)this.getX(),(int)this.getY(), 
                 (int)(this.getWidth() * ratio), (int)this.getHeight(), null);

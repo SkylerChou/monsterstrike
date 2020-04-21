@@ -136,9 +136,7 @@ public abstract class LevelScene extends Scene {
 //        if (this.delay.isTrig()) { //慢動作delay，Debug再開
         if (this.state == 0) { //設定背景起始位置， 敵人怪物降落           
             this.background.setX((this.sceneCount + 1) * ImgInfo.BACKGROUND_SIZE[idx][0]);
-            if (dropEnemies()) {
-
-            }
+            dropEnemies();
         } else if (this.state == 1) { //遊戲開始
             if (!isLose() && !isWin) {
                 updateMarbles();
@@ -158,7 +156,7 @@ public abstract class LevelScene extends Scene {
                 FileIO.writePlayer("playerInfo.csv", this.playerinfo);
                 FileIO.writeMarble("marbleInfo.csv", null);
                 if (isEnter) {
-                    sceneController.changeScene(new LevelMenu(sceneController, this.playerinfo, "marbleInfo.csv"));
+                    sceneController.changeScene(new LevelMenu(sceneController, this.playerinfo, "marbleInfo.csv", true));
                     return;
                 }
             }
@@ -179,7 +177,7 @@ public abstract class LevelScene extends Scene {
                 m.update(); //抽中角色動畫
             }
             if (isEnter) {  //Win之後按Enter回LevelMenu
-                sceneController.changeScene(new LevelMenu(sceneController, this.playerinfo, "marbleInfo.csv"));
+                sceneController.changeScene(new LevelMenu(sceneController, this.playerinfo, "marbleInfo.csv", true));
             }
         }
         if (this.isClick) { //滑鼠按下Home回主畫面
@@ -283,7 +281,7 @@ public abstract class LevelScene extends Scene {
         for (int i = 0; i < this.battleEnemies.size(); i++) {
             this.battleEnemies.remove(i);
         }
-        if(this.battleEnemies.isEmpty()){
+        if (this.battleEnemies.isEmpty()) {
             return true;
         }
         return false;

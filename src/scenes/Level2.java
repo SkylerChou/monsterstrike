@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import monsterstrike.gameobject.ImgInfo;
 import monsterstrike.gameobject.Stone;
 import monsterstrike.gameobject.marble.Marble;
+import monsterstrike.graph.Vector;
 import monsterstrike.util.Global;
 import player.PlayerInfo;
 
@@ -52,18 +53,18 @@ public class Level2 extends LevelScene {
             }
         }
     }
-    
+
     @Override
-    protected boolean removeStones(){
-        for(int i=0; i<this.stones.size(); i++){
+    protected boolean removeStones() {
+        for (int i = 0; i < this.stones.size(); i++) {
             this.stones.remove(i);
         }
-        if(this.stones.isEmpty()){
+        if (this.stones.isEmpty()) {
             return true;
         }
         return false;
     }
-    
+
     @Override
     protected void hitGameObject() {
         hitProp();
@@ -107,13 +108,13 @@ public class Level2 extends LevelScene {
                         (Global.SCREEN_Y - Global.INFO_H - 30), 50, 50));
             }
             for (int i = 0; i < 5; i++) {
-                this.stones.add(new Stone(ImgInfo.STONE_PATH, (int) ((Global.SCREEN_X/2 - 100) + (i * 40)),
+                this.stones.add(new Stone(ImgInfo.STONE_PATH, (int) ((Global.SCREEN_X / 2 - 100) + (i * 40)),
                         ((Global.SCREEN_Y - Global.INFO_H) / 2 - 100), 50, 50));
-                this.stones.add(new Stone(ImgInfo.STONE_PATH, (int) ((Global.SCREEN_X/2 - 100) + (i * 40)),
+                this.stones.add(new Stone(ImgInfo.STONE_PATH, (int) ((Global.SCREEN_X / 2 - 100) + (i * 40)),
                         ((Global.SCREEN_Y - Global.INFO_H) / 2 + 100), 50, 50));
-                this.stones.add(new Stone(ImgInfo.STONE_PATH, (int) (Global.SCREEN_X/2 - 100),
+                this.stones.add(new Stone(ImgInfo.STONE_PATH, (int) (Global.SCREEN_X / 2 - 100),
                         ((Global.SCREEN_Y - Global.INFO_H) / 2 - 100) + (i * 40), 50, 50));
-                this.stones.add(new Stone(ImgInfo.STONE_PATH, (int) (Global.SCREEN_X/2 + 100),
+                this.stones.add(new Stone(ImgInfo.STONE_PATH, (int) (Global.SCREEN_X / 2 + 100),
                         ((Global.SCREEN_Y - Global.INFO_H) / 2 - 100) + (i * 40), 50, 50));
             }
         }
@@ -123,11 +124,18 @@ public class Level2 extends LevelScene {
     protected void strikeStones() {
         for (int i = 0; i < this.marbles.size(); i++) {
             for (int j = 0; j < this.stones.size(); j++) {
-                if (this.marbles.get(i).getDetect().isCollision(this.stones.get(j))
-                        && this.marbles.get(i).goVec().getValue() > 0) {
-                    this.marbles.get(i).detectStill(this.stones.get(j));
+                int dir = this.marbles.get(i).getDetect().isCollideRect(this.stones.get(j));
+                if (dir > 0 && this.marbles.get(i).goVec().getValue() > 0) {
+                    this.marbles.get(i).detectRect(this.stones.get(j), dir);
                     this.stones.get(j).setCollide(true);
-                    this.marbles.get(i).hit(this.stones.get(j));
+                    Vector go = this.marbles.get(i).goVec();
+                    if (dir == 1) {
+                        this.marbles.get(i).setGo(new Vector(go.getX(), -go.getY()));
+                    } else if (dir == 2) {
+                        this.marbles.get(i).setGo(new Vector(-go.getX(), go.getY()));
+                    } else {
+                        this.marbles.get(i).setGo(new Vector(-go.getX(), -go.getY()));
+                    }
                     this.hitCount += this.marbles.get(i).explode(this.stones.get(j));
                 }
             }

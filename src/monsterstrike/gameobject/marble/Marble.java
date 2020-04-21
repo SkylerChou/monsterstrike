@@ -241,6 +241,28 @@ public class Marble extends GameObject {
         }
     }
 
+    public void detectRect(GameObject target, int dir) {
+        float d = 1;
+        if (dir == 1 && this.goVec.getY() > 0) {
+            d = (this.detect.getCenterY() - target.top() + this.getR()) / this.goVec.getY();
+        } else if (dir == 1 && this.goVec.getY() < 0) {
+            d = (target.bottom() - this.detect.getCenterY() + this.getR()) / -this.goVec.getY();
+        } else if (dir == 2 && this.goVec.getX() > 0) {
+            d = (this.detect.getCenterX() - target.left() + this.getR()) / this.goVec.getX();
+        } else if (dir == 2 && this.goVec.getX() < 0) {
+            d = (target.right() - this.detect.getCenterX() + this.getR()) / -this.goVec.getX();
+        } else if (dir == 3 && this.goVec.getX() > 0 && this.getY() > 0) {
+
+        } else if (dir == 3 && this.goVec.getX() > 0 && this.getY() < 0) {
+
+        } else if (dir == 3 && this.goVec.getX() < 0 && this.getY() > 0) {
+
+        } else if (dir == 3 && this.goVec.getX() < 0 && this.getY() < 0) {
+
+        }
+        this.offset(this.goVec.getX() * d, this.goVec.getY() * d);
+    }
+
     public float dist(GameObject target) {
         float dist = (float) Math.sqrt(Math.pow((target.getCenterX() - this.getCenterX()), 2)
                 + Math.pow((target.getCenterY() - this.getCenterY()), 2));
