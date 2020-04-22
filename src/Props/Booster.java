@@ -5,6 +5,7 @@
  */
 package Props;
 
+import controllers.ARC;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import monsterstrike.gameobject.ImgInfo;
@@ -24,6 +25,7 @@ public class Booster extends Prop {
     @Override
     public void useProp(ArrayList<Marble> marble, int idx) {
         if (!isUsed) {
+            ARC.getInstance().play("/resources/wav/prop.wav");
             marble.get(idx).setVelocity(1.2f);
 //            System.out.println(marble.get(idx).getInfo().getName() + "加速");
             this.isUsed = true;

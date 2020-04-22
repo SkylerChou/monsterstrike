@@ -162,16 +162,22 @@ public abstract class LevelScene extends Scene {
 
             calculateHP();//計算我方HP
 
-            enemyDie(); //判斷敵人死亡
+            enemyDie();//判斷敵人死亡
+            
+            for (int i = 0; i < this.battleEnemies.size(); i++) {
+                if (this.battleEnemies.get(i).getIsCollide()) {
+                    ARC.getInstance().play("/resources/wav/die.wav");
+                }
+            }
 
             updateShineFrame();
 
             if (isLose()) { //我方輸了
                 FileIO.writePlayer("playerInfo.csv", this.playerinfo);
                 FileIO.writeMarble("marbleInfo.csv", null);
+                ARC.getInstance().play("/resources/wav/lose1.wav");
                 if (isEnter) {
                     this.music.stop();
-                    ARC.getInstance().play("/resources/wav/menu.wav");
                     sceneController.changeScene(new LevelMenu(sceneController, this.playerinfo, "marbleInfo.csv", true));
                     return;
                 }
@@ -193,10 +199,12 @@ public abstract class LevelScene extends Scene {
                 m.update(); //抽中角色動畫
             }
             if (isEnter) {  //Win之後按Enter回LevelMenu
+                this.music.stop();
                 sceneController.changeScene(new LevelMenu(sceneController, this.playerinfo, "marbleInfo.csv", true));
             }
         }
         if (this.isClick) { //滑鼠按下Home回主畫面
+            this.music.stop();
             sceneController.changeScene(new Menu(sceneController));
         }
         if (this.isOnButton) { //游標在Home
@@ -217,6 +225,8 @@ public abstract class LevelScene extends Scene {
     }
 
     private void win() {
+        this.music.stop();
+        ARC.getInstance().play("/resources/wav/win2.wav");
         m = this.allEnemies.luckyDraw();
         m.getInfo().setState(0);
         m.setCenterX(850);
@@ -336,6 +346,7 @@ public abstract class LevelScene extends Scene {
 
     protected boolean isLose() {
         if (this.currentHp <= 0) {
+            ARC.getInstance().play("/resources/wav/lose1.wav");
             return true;
         }
         return false;

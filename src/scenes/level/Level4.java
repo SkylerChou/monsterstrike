@@ -5,6 +5,7 @@
  */
 package scenes.level;
 
+import controllers.ARC;
 import controllers.SceneController;
 import java.awt.Graphics;
 import java.util.ArrayList;
@@ -81,6 +82,7 @@ public class Level4 extends LevelScene {
             for (int i = 0; i < this.marbles.size(); i++) {
                 for (int j = 0; j < this.clouds.size(); j++) {
                     if (this.marbles.get(i).getDetect().isCollision(this.clouds.get(j))) {
+                        ARC.getInstance().play("/resources/wav/collide.wav");
                         this.marbles.get(i).detectStill(this.clouds.get(j));
                         this.clouds.get(j).setCollide(true);
                         this.clouds.get(j).setGo(this.marbles.get(i).goVec());

@@ -5,6 +5,7 @@
  */
 package scenes.level;
 
+import controllers.ARC;
 import controllers.SceneController;
 import java.awt.Graphics;
 import java.util.ArrayList;
@@ -46,6 +47,7 @@ public class Level2 extends LevelScene {
             if (this.stones.get(i).getCollide()) {
                 this.stones.get(i).update();
                 if (this.stones.get(i).getStop()) {
+                    ARC.getInstance().play("/resources/wav/damage.wav");
                     this.stones.remove(i);
                     i--;
                 }
@@ -128,8 +130,8 @@ public class Level2 extends LevelScene {
 
     private void strikeStones() {
         for (int i = 0; i < this.marbles.size(); i++) {
-            for (int j = 0; j < this.stones.size(); j++) {                
-                if (this.marbles.get(i).getDetect().isCollision(this.stones.get(j)) && this.marbles.get(i).goVec().getValue() > 0 ) {
+            for (int j = 0; j < this.stones.size(); j++) {
+                if (this.marbles.get(i).getDetect().isCollision(this.stones.get(j)) && this.marbles.get(i).goVec().getValue() > 0) {
                     this.marbles.get(i).detectStill(this.stones.get(j));
                     this.marbles.get(i).hit(this.stones.get(j));
                     this.stones.get(j).setCollide(true);
