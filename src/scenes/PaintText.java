@@ -45,13 +45,35 @@ public class PaintText {
     }
 
     public static void paintTwinkle(Graphics g, Font font1, Font font2, Color color, Color shadow,
-            String text1,String text2, int x, int y, int offset, int width, int delay) {
+            String text1, String text2, int x, int y, int offset, int width, int delay) {
         if (count++ % delay < delay / 2) {
             paintWithShadow(g, font1, color, shadow, text1, x, y, offset, width);
-            paintWithShadow(g, font1, color, shadow, text2, x, y+80, offset, width);
+            paintWithShadow(g, font1, color, shadow, text2, x, y + 80, offset, width);
         } else {
             paintWithShadow(g, font2, color, shadow, text1, x, y, offset, width);
-            paintWithShadow(g, font2, color, shadow, text2, x, y+80, offset, width);
+            paintWithShadow(g, font2, color, shadow, text2, x, y + 80, offset, width);
+        }
+        if (count >= 1000) {
+            count = 0;
+        }
+    }
+
+    public static void paintTwinkle(Graphics g, Font font1, Color color,
+            String text1, int x, int y, int width, int delay) {
+        if (count++ % delay < delay / 2) {
+            paint(g, font1, color, text1, x, y, width);
+        }
+        if (count >= 1000) {
+            count = 0;
+        }
+    }
+
+    public static void paintTwinkle(Graphics g, Font font1, Font font2, Color color,
+            String text1, int x, int y, int width, int delay) {
+        if (count++ % delay < delay / 2) {
+            paint(g, font1, color, text1, x, y, width);
+        } else {
+            paint(g, font2, color, text1, x, y, width);
         }
         if (count >= 1000) {
             count = 0;

@@ -18,13 +18,12 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import monsterstrike.gameobject.*;
 import monsterstrike.gameobject.marble.Marble;
-import monsterstrike.gameobject.marble.MarbleArray;
 import monsterstrike.gameobject.marble.MarbleInfo;
 import monsterstrike.graph.*;
 import monsterstrike.util.*;
 import player.PlayerInfo;
 
-public class PingPong extends Scene {
+public class PinBall extends Scene {
 
     public static final int POS_X = 50;
     public static final int POS_Y = 50;
@@ -58,9 +57,9 @@ public class PingPong extends Scene {
     private Marble specialMarble; //抽中怪物  
     private PlayerInfo playerinfo;
 
-    public PingPong(SceneController sceneController) {
+    public PinBall(SceneController sceneController, PlayerInfo playerinfo) {
         super(sceneController);
-//        this.playerinfo = playerinfo;
+        this.playerinfo = playerinfo;
         this.scoreBoard = IRC.getInstance().tryGetImage("/resources/score.png");
         this.post = new ArrayList<>();
         this.buttons = new ArrayList<>();
@@ -207,7 +206,7 @@ public class PingPong extends Scene {
         }
         if (this.isReplay) {
             System.out.println(this.isReplay);
-            sceneController.changeScene(new PingPong(sceneController));
+            sceneController.changeScene(new PinBall(sceneController, this.playerinfo));
         }
         if (this.score >= 50 && this.isEnd && this.isPaint) {
             lottery();

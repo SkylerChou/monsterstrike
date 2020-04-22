@@ -16,7 +16,6 @@ import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
-
 public class ARC {
     // 單例
 
@@ -52,5 +51,5 @@ public class ARC {
             }
         }).start();
     }
-}
 
+}

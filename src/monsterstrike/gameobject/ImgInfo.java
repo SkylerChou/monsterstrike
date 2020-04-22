@@ -48,6 +48,8 @@ public class ImgInfo {
     //背景
     private static final String BACKGROUND_ROOT = "/resources/backgrounds/";
     public static final String LEVELBACK_PATH = BACKGROUND_ROOT + "levelBackground.png";
+    public static final String BACK_PATH = BACKGROUND_ROOT + "background.png";
+    
     private static final String GRASS_PATH = BACKGROUND_ROOT + "grass.png";
     private static final int[] GRASS_SIZE = {1280, 680}; //圖片寬高
     private static final String ICE_PATH = BACKGROUND_ROOT + "snow.png";
@@ -61,9 +63,11 @@ public class ImgInfo {
 
     public static final String[] BACKGROUND_PATH = {ICE_PATH, FIRE_PATH, GRASS_PATH, LIGHT_PATH, DARK_PATH};
     public static final int[][] BACKGROUND_SIZE = {ICE_SIZE, FIRE_SIZE, GRASS_SIZE, LIGHT_SIZE, DARK_SIZE};
-
+    
     public static final String MASK_PATH = BACKGROUND_ROOT + "mask.png";
     public static final String LOCK_PATH = BACKGROUND_ROOT + "lock.png";
+    
+    public static final String[] GAME_PATH = {BACKGROUND_ROOT + "pinball.png", BACKGROUND_ROOT + "strike.png"};
 
     
     //loading 

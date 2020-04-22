@@ -5,6 +5,7 @@
  */
 package scenes;
 
+import controllers.ARC;
 import controllers.IRC;
 import controllers.SceneController;
 import java.awt.Color;
@@ -12,7 +13,6 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 import player.PlayerInfo;
 import monsterstrike.gameobject.*;
 import monsterstrike.util.CommandSolver;
@@ -29,7 +29,6 @@ public class PlayerScene extends Scene {
     private Background menu;
     private Player[] players;
     private String name;
-    private boolean isSet;
     private boolean isReleased;
     private int currentIdx;
     private Button[] shineFrame;
@@ -48,7 +47,6 @@ public class PlayerScene extends Scene {
         this.img = IRC.getInstance().tryGetImage("/resources/items/input.png");
         this.players = new Player[2];
         this.shineFrame = new Button[2];
-        isSet = false;
         this.currentIdx = 0;
         this.isDone = false;
         this.isEnter = false;
@@ -95,10 +93,10 @@ public class PlayerScene extends Scene {
             if(name.equals("")){
                 name = "user";
             }
-            this.playerInfo.setName(name);
+            this.playerInfo.setName(name);        
         }else{
             sceneController.changeScene(new LevelMenu(sceneController, 
-                        this.playerInfo, "marbleInfoInit.csv", false));
+                        this.playerInfo, "mymarbleInit.csv", false));
         }
         if (this.isEnter) {
             sceneController.changeScene(new Menu(sceneController));
@@ -123,44 +121,27 @@ public class PlayerScene extends Scene {
         }
 
         if (enterCount > 0) {
-            g.setFont(new Font("VinerHandITC", Font.PLAIN, 24));
-            g.setColor(Color.BLACK);
-            g.drawString("Player Name: ", Global.SCREEN_X / 2 - 150, 500);
-            g.drawString("Level 1", Global.SCREEN_X / 2 - 150, 530);
+            PaintText.paint(g, new Font("VinerHandITC", Font.PLAIN, 24), 
+                    Color.BLACK, "Player Name: ",-70, 500, Global.SCREEN_X);
+            PaintText.paint(g, new Font("VinerHandITC", Font.PLAIN, 24), 
+                    Color.BLACK, "Level 1", -40, 550, Global.SCREEN_X);
 
             if (enterCount == 1) {
                 g.drawImage(img, Global.SCREEN_X / 2 + 10, 475, 150, 30, null);
                 if (isDone || isClick) {
                     g.setFont(new Font("VinerHandITC", Font.PLAIN, 24));
                     g.setColor(Color.WHITE);
-                    g.drawString(name, Global.SCREEN_X / 2 + 10, 500);
+                    g.drawString(name, Global.SCREEN_X / 2 + 20, 500);
                     g.drawImage(img, Global.SCREEN_X / 2 + 10, 475, 150, 30, null);
-                    if (overCount++ % 30 < 15) {
-                        g.setFont(new Font("VinerHandITC", Font.BOLD, 24));
-                        g.setColor(Color.WHITE);
-                        g.drawString("|", Global.SCREEN_X / 2 + 10, 495);
-                    }
-                    if (overCount == 1000) {
-                        overCount = 0;
-                    }
+                    PaintText.paintTwinkle(g, new Font("VinerHandITC", Font.BOLD, 24), Color.WHITE, "|", 15, 
+                            495, Global.SCREEN_X, 30);
                 }
             } else if (enterCount == 2) {
                 g.setFont(new Font("VinerHandITC", Font.PLAIN, 24));
                 g.setColor(Color.BLACK);
                 g.drawString(name, Global.SCREEN_X / 2 + 10, 500);
-
-                if (overCount++ % 30 < 15) {
-                    g.setFont(new Font("Showcard Gothic", Font.PLAIN, 40));
-                    g.setColor(Color.BLACK);
-                    g.drawString("START", Global.SCREEN_X - 300, 500);
-                }else{
-                    g.setFont(new Font("Showcard Gothic", Font.PLAIN, 44));
-                    g.setColor(Color.BLACK);
-                    g.drawString("START", Global.SCREEN_X - 290, 500);
-                }
-                if (overCount == 1000) {
-                    overCount = 0;
-                }
+                PaintText.paintTwinkle(g, new Font("Showcard Gothic", Font.PLAIN, 40), new Font("Showcard Gothic", Font.PLAIN, 44),
+                        Color.BLACK, "START", Global.SCREEN_X/2 + 100, 550, Global.SCREEN_X/2, 30);
             }
         }
 //        g.drawString("Level 1", Global.SCREEN_X / 2 - 70, 540);

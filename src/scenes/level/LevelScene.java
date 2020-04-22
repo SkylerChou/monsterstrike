@@ -19,11 +19,7 @@ import monsterstrike.gameobject.*;
 import monsterstrike.gameobject.marble.*;
 import monsterstrike.util.*;
 import player.Player;
-import scenes.FileIO;
-import scenes.LevelMenu;
-import scenes.Menu;
-import scenes.PaintText;
-import scenes.Scene;
+import scenes.*;
 
 public abstract class LevelScene extends Scene {
 
@@ -160,10 +156,11 @@ public abstract class LevelScene extends Scene {
             updateShineFrame();
 
             if (isLose()) { //我方輸了
+                String mymarbleFile = "mymarbleInfo" + this.playerinfo.getName() + ".csv";
                 FileIO.writePlayer("playerInfo.csv", this.playerinfo);
-                FileIO.writeMarble("marbleInfo.csv", null);
+                FileIO.writeMarble(mymarbleFile, null);
                 if (isEnter) {
-                    sceneController.changeScene(new LevelMenu(sceneController, this.playerinfo, "marbleInfo.csv", true));
+                    sceneController.changeScene(new LevelMenu(sceneController, this.playerinfo, mymarbleFile, true));
                     return;
                 }
             }
@@ -184,11 +181,17 @@ public abstract class LevelScene extends Scene {
                 m.update(); //抽中角色動畫
             }
             if (isEnter) {  //Win之後按Enter回LevelMenu
-                sceneController.changeScene(new LevelMenu(sceneController, this.playerinfo, "marbleInfo.csv", true));
+                String mymarbleFile = "mymarbleInfo" + this.playerinfo.getName() + ".csv";
+                sceneController.changeScene(new LevelMenu(sceneController, this.playerinfo, mymarbleFile, true));
+                return;
             }
         }
         if (this.isClick) { //滑鼠按下Home回主畫面
+            String mymarbleFile = "mymarbleInfo" + this.playerinfo.getName() + ".csv";
+            FileIO.writePlayer("playerInfo.csv", this.playerinfo);
+            FileIO.writeMarble(mymarbleFile, null);
             sceneController.changeScene(new Menu(sceneController));
+            return;
         }
         if (this.isOnButton) { //游標在Home
             this.buttons.get(0).update();
@@ -217,8 +220,9 @@ public abstract class LevelScene extends Scene {
         if (this.playerinfo.getLevel() - 1 == this.idx && this.playerinfo.getLevel() != 5) {
             this.playerinfo.setLevel(this.playerinfo.getLevel() + 1);
         }
+        String mymarbleFile = "mymarbleInfo" + this.playerinfo.getName() + ".csv";
         FileIO.writePlayer("playerInfo.csv", this.playerinfo);
-        FileIO.writeMarble("marbleInfo.csv", m.getInfo());
+        FileIO.writeMarble(mymarbleFile, m.getInfo());
         System.out.println("抽中怪物:" + m.getInfo().getName());
         System.out.println(this.playerinfo);
         this.isDraw = true;

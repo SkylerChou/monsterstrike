@@ -22,7 +22,6 @@ public class Player {
     private int h;
 
     public Player(int idx, int x, int y, int w, int h) {
-        
         this.idx = idx;
         this.rendererRun = new Renderer(ImgInfo.PLAYERRUN_PATH[idx],
                 ImgInfo.PLAYERRUN_NUM[idx], 10);

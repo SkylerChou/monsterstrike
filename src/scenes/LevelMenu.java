@@ -26,7 +26,8 @@ public class LevelMenu extends Scene {
     private int idx;
     private Marble[] fightMarbles; //我方對戰怪物
     private ArrayList<Marble> enemyFightMarbles; //敵方出戰怪物
-    private ArrayList<MarbleInfo> allMarbleInfo; //所有怪物info
+    private ArrayList<MarbleInfo> allMarbleInfo; //所有敵人怪物info
+    private ArrayList<MarbleInfo> myMarbleInfo;
     private ArrayList<Marble> myMarbles; //我方所有怪物
     private ArrayList<Marble> enemies; //敵方所有怪物
     private PlayerInfo playerInfo;
@@ -42,39 +43,24 @@ public class LevelMenu extends Scene {
     private int level;
     private Player p1;
 
-    private ArrayList<Button> button;
+    private Button home;
     private boolean isEnter;
     private boolean isOnButton;
     private boolean isSkip;
     private boolean[] isMask;
 
     //首次玩
-    public LevelMenu(SceneController sceneController, PlayerInfo playerInfo, String file, boolean isSkip) {
+    public LevelMenu(SceneController sceneController, PlayerInfo playerInfo, String myMarbleFile, boolean isSkip) {
         super(sceneController);
         this.playerInfo = playerInfo;
-        this.allMarbleInfo = FileIO.readMarble(file);
+        this.allMarbleInfo = FileIO.readMarble("marbleInfo.csv");
+        this.myMarbleInfo = FileIO.readMarble(myMarbleFile);
         this.level = playerInfo.getLevel();
         this.myMarbles = new ArrayList<>();
         this.enemies = new ArrayList<>();
         this.fightMarbles = new Marble[3];
         this.buttons = new ArrayList<>();
         this.enemyFightMarbles = new ArrayList<>();
-        this.button = new ArrayList<>();
-        this.isSkip = isSkip;
-        this.isMask = new boolean[5];
-    }
-
-    public LevelMenu(SceneController sceneController, String playerFile, String file, boolean isSkip) {
-        super(sceneController);
-        this.playerInfo = FileIO.readPlayer(playerFile, 0);
-        this.allMarbleInfo = FileIO.readMarble(file);
-        this.level = playerInfo.getLevel();
-        this.myMarbles = new ArrayList<>();
-        this.enemies = new ArrayList<>();
-        this.fightMarbles = new Marble[3];
-        this.buttons = new ArrayList<>();
-        this.enemyFightMarbles = new ArrayList<>();
-        this.button = new ArrayList<>();
         this.isSkip = isSkip;
         this.isMask = new boolean[5];
     }
@@ -88,16 +74,15 @@ public class LevelMenu extends Scene {
         this.x = 350;
         this.y = 200;
         this.backIdx = 0;
-        this.button.add(new Button(ImgInfo.HOME, Global.SCREEN_X - 30, 30, ImgInfo.SETTING_INFO[0], ImgInfo.SETTING_INFO[1], 20));
+        this.home = new Button(ImgInfo.HOME, Global.SCREEN_X - 30, 30, ImgInfo.SETTING_INFO[0], ImgInfo.SETTING_INFO[1], 20);
         this.background = new Background(ImgInfo.BACKGROUND_PATH[this.backIdx], 0, 0, this.backIdx);
         this.mask = new Background(ImgInfo.MASK_PATH, 0, 0, 0);
         this.lock = new Item(ImgInfo.LOCK_PATH, 900, 410, 50, 50);
         for (int i = 0; i < this.allMarbleInfo.size(); i++) {
-            if (inMySerials(this.allMarbleInfo.get(i))) {
-                this.myMarbles.add(new Marble(this.x, this.y, 150, 150, this.allMarbleInfo.get(i)));
-            } else {
-                this.enemies.add(new Marble(0, 0, 150, 150, this.allMarbleInfo.get(i)));
-            }
+            this.enemies.add(new Marble(0, 0, 150, 150, this.allMarbleInfo.get(i)));
+        }
+        for(int i=0; i<this.myMarbleInfo.size(); i++){
+            this.myMarbles.add(new Marble(this.x, this.y, 150, 150, this.myMarbleInfo.get(i)));
         }
         int unitX = Global.SCREEN_X / 5;
         for (int i = 0; i < 3; i++) {
@@ -154,7 +139,7 @@ public class LevelMenu extends Scene {
             sceneController.changeScene(new Menu(sceneController));
         }
         if (this.isOnButton) {
-            this.button.get(0).update();
+            this.home.update();
         }
     }
 
@@ -198,16 +183,6 @@ public class LevelMenu extends Scene {
         }
     }
 
-    private boolean inMySerials(MarbleInfo info) {
-        int[] serials = this.playerInfo.getMyMarbleSerials();
-        for (int i = 0; i < serials.length; i++) {
-            if (info.getSerial() == serials[i] && info.getState() == 0) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     @Override
     public void sceneEnd() {
 
@@ -248,7 +223,7 @@ public class LevelMenu extends Scene {
         for (int i = 0; i < this.buttons.size(); i++) {
             this.buttons.get(i).paint(g);
         }
-        this.button.get(0).paint(g);
+        this.home.paint(g);
     }
 
     public void paintText(Graphics g, Marble m, int x, int y) {

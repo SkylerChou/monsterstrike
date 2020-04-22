@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import player.PlayerInfo;
 import monsterstrike.gameobject.marble.MarbleInfo;
+import monsterstrike.util.Global;
 
 public class FileIO {
 
@@ -33,7 +34,7 @@ public class FileIO {
     public static ArrayList<MarbleInfo> readMarble(String fileName) {
         BufferedReader br;
         try {
-            br = new BufferedReader(new FileReader(fileName));
+            br = new BufferedReader(new FileReader(Global.FILE_ROOT + fileName));
             ArrayList<MarbleInfo> arr = new ArrayList<>();
             br.readLine();
             while (br.ready()) {
@@ -57,7 +58,7 @@ public class FileIO {
     public static PlayerInfo readPlayer(String fileName, int idx) {
         BufferedReader br;
         try {
-            br = new BufferedReader(new FileReader(fileName));
+            br = new BufferedReader(new FileReader(Global.FILE_ROOT + fileName));
             ArrayList<PlayerInfo> arr = new ArrayList<>();
             br.readLine();
             while (br.ready()) {
@@ -82,8 +83,7 @@ public class FileIO {
 
     public static void writeMarble(String fileName, MarbleInfo marble) {
         try {
-            BufferedWriter bw = new BufferedWriter((new FileWriter(fileName, true)));
-//            for (int i = 0; i < marbles.size(); i++) {
+            BufferedWriter bw = new BufferedWriter((new FileWriter(Global.FILE_ROOT+ fileName, true)));
             if (marble != null) {
                 MarbleInfo m = marble;
                 String tmp = m.getSerial() + "," + m.getName() + "," + m.getImgName() + "," + m.getShowIdx() + ","
@@ -103,11 +103,9 @@ public class FileIO {
 
     public static void writePlayer(String fileName, PlayerInfo players) {
         try {
-            BufferedWriter bw = new BufferedWriter((new FileWriter(fileName)));
-            bw.append("角色編號,姓名,等級,怪物編號");
-            bw.newLine();
-//            for (int i = 0; i < players.size(); i++) {
-//                PlayerInfo m = players.get(i);
+            BufferedWriter bw = new BufferedWriter((new FileWriter("/src/resources/" + fileName, true)));
+//            bw.append("角色編號,姓名,等級,怪物編號");
+//            bw.newLine();
             int[] marbleSerials = players.getMyMarbleSerials();
             String serial = "\"";
             for (int j = 0; j < marbleSerials.length; j++) {

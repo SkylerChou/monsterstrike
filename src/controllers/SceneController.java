@@ -5,7 +5,6 @@
  */
 package controllers;
 
-import java.awt.Color;
 import monsterstrike.util.CommandSolver.KeyListener;
 import monsterstrike.util.CommandSolver.MouseCommandListener;
 import java.awt.Graphics;
@@ -71,12 +70,8 @@ public class SceneController {
         return null;
     }
 
-    private int test = 0;
-
     public void paint(Graphics g) {
         if (this.isLoading) {
-//            g.setColor(Color.white);
-//            g.drawString((test++) + "", 600, 340);
             g.drawImage(img, 0, 0, Global.SCREEN_X, Global.SCREEN_Y, null);
             this.dino.paint(g);
             return;
