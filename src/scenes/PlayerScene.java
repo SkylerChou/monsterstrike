@@ -6,13 +6,14 @@
 package scenes;
 
 import controllers.IRC;
+import controllers.MRC;
 import controllers.SceneController;
+import java.applet.AudioClip;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 import player.PlayerInfo;
 import monsterstrike.gameobject.*;
 import monsterstrike.util.CommandSolver;
@@ -41,6 +42,7 @@ public class PlayerScene extends Scene {
     private int overCount;
     private int enterCount;
     private BufferedImage img;
+    private AudioClip music;
 
     public PlayerScene(SceneController sceneController) {
         super(sceneController);
@@ -57,6 +59,7 @@ public class PlayerScene extends Scene {
         this.overCount = 0;
         this.enterCount = 0;
         this.name = "";
+        this.music=MRC.getInstance().tryGetMusic("/resources/wav/charaterSeletion.wav");
     }
 
     @Override
@@ -70,6 +73,7 @@ public class PlayerScene extends Scene {
         }
         this.button = new Button(ImgInfo.HOME, Global.SCREEN_X - 30, 30,
                 ImgInfo.SETTING_INFO[0], ImgInfo.SETTING_INFO[1], 20);
+        this.music.loop();
     }
 
     @Override
@@ -97,10 +101,12 @@ public class PlayerScene extends Scene {
             }
             this.playerInfo.setName(name);
         }else{
+            this.music.stop();
             sceneController.changeScene(new LevelMenu(sceneController, 
                         this.playerInfo, "marbleInfoInit.csv", false));
         }
         if (this.isEnter) {
+            this.music.stop();
             sceneController.changeScene(new Menu(sceneController));
         }
         if (this.isOnButton) {

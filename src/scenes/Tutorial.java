@@ -5,7 +5,10 @@
  */
 package scenes;
 
+import controllers.ARC;
+import controllers.MRC;
 import controllers.SceneController;
+import java.applet.AudioClip;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -26,6 +29,7 @@ public class Tutorial extends Scene {
     private Scene next;
     private int imgNum;
     private boolean isSkip;
+    private AudioClip music;
 
     public Tutorial(SceneController sceneController, String path, int imgNum, Scene next) {
         super(sceneController);
@@ -34,12 +38,13 @@ public class Tutorial extends Scene {
         this.isEnter = false;
         this.next = next;
         this.imgNum = imgNum;
-        this.isSkip=false;
+        this.isSkip = false;
+        this.music=MRC.getInstance().tryGetMusic("/resources/wav/Tutorial.wav");
     }
 
     @Override
     public void sceneBegin() {
-
+        this.music.loop();
     }
 
     @Override
@@ -47,9 +52,11 @@ public class Tutorial extends Scene {
         if (this.count < imgNum) {
             this.howToPlay.updateOneByOne(count);
         } else {
+            this.music.stop();
             this.sceneController.changeScene(next);
         }
-        if(this.isSkip){
+        if (this.isSkip) {
+            this.music.stop();
             sceneController.changeScene(next);
         }
     }
@@ -62,12 +69,12 @@ public class Tutorial extends Scene {
     @Override
     public void paint(Graphics g) {
         this.howToPlay.paint(g, 0, 0, Global.SCREEN_X, Global.SCREEN_Y, ImgInfo.HOWTOPLAY_SIZE[0], ImgInfo.HOWTOPLAY_SIZE[1]);
-         PaintText.paintTwinkle(g, new Font("Showcard Gothic", Font.PLAIN, 18),
-                    new Font("Showcard Gothic", Font.PLAIN, 20), Color.WHITE, Color.BLACK,
-                    "Press   \" SPACE \"  to Next Page", "", 450, 570, 2, Global.SCREEN_X, 60);
-         PaintText.paintTwinkle(g, new Font("Showcard Gothic", Font.PLAIN, 18),
-                    new Font("Showcard Gothic", Font.PLAIN, 20), Color.WHITE, Color.BLACK,
-                    "Press   \" S \"  to Skip", "", 450, 590, 2, Global.SCREEN_X, 60);
+        PaintText.paintTwinkle(g, new Font("Showcard Gothic", Font.PLAIN, 18),
+                new Font("Showcard Gothic", Font.PLAIN, 20), Color.WHITE, Color.BLACK,
+                "Press   \" SPACE \"  to Next Page", "", 450, 570, 2, Global.SCREEN_X, 60);
+        PaintText.paintTwinkle(g, new Font("Showcard Gothic", Font.PLAIN, 18),
+                new Font("Showcard Gothic", Font.PLAIN, 20), Color.WHITE, Color.BLACK,
+                "Press   \" Z \"  to Skip", "", 450, 590, 2, Global.SCREEN_X, 60);
     }
 
     @Override
@@ -90,8 +97,8 @@ public class Tutorial extends Scene {
                         count++;
                         isEnter = true;
                         break;
-                    case Global.S:
-                        isSkip=true;
+                    case Global.Z:
+                        isSkip = true;
                         break;
                 }
             }

@@ -5,6 +5,7 @@
  */
 package interfaceskills;
 
+import controllers.ARC;
 import java.util.ArrayList;
 import monsterstrike.gameobject.GameObject;
 import monsterstrike.gameobject.marble.Marble;
@@ -40,6 +41,7 @@ public class Heal extends Skills {
     public int useSkill(Marble self, ArrayList<Marble> selfMarbles, int idx) {
         this.hitCount = 0;
         this.selfMarbles = selfMarbles;
+        ARC.getInstance().play("/resources/wav/heal.wav");
 //        System.out.println(self.getInfo().getName() + "使出治癒");
         int attr = self.getInfo().getAttribute();
         for (int i = 0; i < selfMarbles.size(); i++) {

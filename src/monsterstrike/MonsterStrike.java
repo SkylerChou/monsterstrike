@@ -27,7 +27,7 @@ public class MonsterStrike {
             {KeyEvent.VK_D, Global.RIGHT2},
             {KeyEvent.VK_ENTER, Global.ENTER},
             {KeyEvent.VK_SPACE, Global.SPACE},
-            {KeyEvent.VK_S, Global.S}
+            {KeyEvent.VK_Z, Global.Z}
         };
 
         GameKernel gk = new GameKernel.Builder(gi, Global.MILLISEC_PER_UPDATE, Global.LIMIT_DELTA_TIME)

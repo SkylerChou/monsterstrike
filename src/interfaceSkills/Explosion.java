@@ -5,6 +5,7 @@
  */
 package interfaceskills;
 
+import controllers.ARC;
 import java.util.ArrayList;
 import monsterstrike.gameobject.GameObject;
 import monsterstrike.gameobject.marble.Marble;
@@ -64,6 +65,7 @@ public class Explosion extends Skills {
                 }
                 target.get(i).getInfo().setHp(target.get(i).getInfo().getHp() - atk);
                 this.hitCount++;
+                ARC.getInstance().play("/resources/wav/boom.wav");
 //                System.out.println(target.get(i).getInfo().getName() + "血量:" + target.get(i).getInfo().getHp());
             }
         }

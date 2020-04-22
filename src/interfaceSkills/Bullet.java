@@ -5,6 +5,7 @@
  */
 package interfaceskills;
 
+import controllers.ARC;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
@@ -67,6 +68,7 @@ public class Bullet extends Skills {
                 this.skill[i].setDy(vec.getUnitY() * 3);
             }
         }
+        ARC.getInstance().play("/resources/wav/shoot.wav");
         return this.hitCount;
     }
 

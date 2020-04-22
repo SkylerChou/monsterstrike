@@ -33,7 +33,7 @@ public class Global {
     public static final int DOWN2 = 8;
     public static final int ENTER = 4;
     public static final int SPACE = 9;
-    public static final int S = 10;
+    public static final int Z= 10;
 
     public static final int NORMAL_MARBLE_R = 50;
     public static final int GENIE_MASS = 1;

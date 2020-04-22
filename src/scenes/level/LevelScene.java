@@ -6,9 +6,12 @@
 package scenes.level;
 
 import Props.*;
+import controllers.ARC;
+import controllers.MRC;
 import monsterstrike.graph.Vector;
 import controllers.SceneController;
 import interfaceskills.SkillComponent;
+import java.applet.AudioClip;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -66,6 +69,8 @@ public abstract class LevelScene extends Scene {
     protected boolean isWin;
     private boolean isDraw;
 
+    private AudioClip music;
+
     public LevelScene(SceneController sceneController, int backIdx,
             Marble[] myMarbles, ArrayList<Marble> enemies, PlayerInfo playerinfo) {
         super(sceneController);
@@ -109,10 +114,12 @@ public abstract class LevelScene extends Scene {
         this.overCount = 0;
         this.isWin = false;
         this.isDraw = false;
+        this.music = MRC.getInstance().tryGetMusic("/resources/wav/battle.wav");
     }
 
     @Override
     public void sceneBegin() {
+        this.music.loop();
         this.background = new Background(ImgInfo.BACKGROUND_PATH[idx], 3 * ImgInfo.BACKGROUND_SIZE[idx][0], ImgInfo.BACKGROUND_SIZE[idx][1], idx);
         for (int i = 0; i < 3; i++) {
             this.marbles.get(i).setCenterX(Global.POSITION_X[i]);
@@ -163,6 +170,8 @@ public abstract class LevelScene extends Scene {
                 FileIO.writePlayer("playerInfo.csv", this.playerinfo);
                 FileIO.writeMarble("marbleInfo.csv", null);
                 if (isEnter) {
+                    this.music.stop();
+                    ARC.getInstance().play("/resources/wav/menu.wav");
                     sceneController.changeScene(new LevelMenu(sceneController, this.playerinfo, "marbleInfo.csv", true));
                     return;
                 }
@@ -446,6 +455,8 @@ public abstract class LevelScene extends Scene {
             } else {
                 setCollide();
                 this.battleEnemies.get(i).setUseSkill(true);
+                for (int k = 0; k < 3; k++) {
+                }
             }
         }
     }
