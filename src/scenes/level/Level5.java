@@ -79,7 +79,6 @@ public class Level5 extends LevelScene {
     }
 
     private void hitHoles() {
-          ARC.getInstance().play("/resources/wav/suck.wav");
         for (int i = 0; i < this.marbles.size(); i++) {
             for (int j = 0; j < this.blackholes.size(); j++) {
                 if (dist(this.marbles.get(i), this.blackholes.get(j)) < 30
