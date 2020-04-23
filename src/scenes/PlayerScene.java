@@ -99,7 +99,7 @@ public class PlayerScene extends Scene {
         }else{
             this.music.stop();
             sceneController.changeScene(new LevelMenu(sceneController, 
-                        this.playerInfo, "marbleInfoInit.csv", false));
+                        this.playerInfo, "mymarbleInfoInit.csv", false));
         }
         if (this.isEnter) {
             this.music.stop();

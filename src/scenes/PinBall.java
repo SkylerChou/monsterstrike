@@ -7,9 +7,7 @@ package scenes;
 
 import Props.Heart;
 import Props.Prop;
-import controllers.ARC;
-import controllers.IRC;
-import controllers.MRC;
+import controllers.*;
 import controllers.SceneController;
 import java.applet.AudioClip;
 import java.awt.Color;
@@ -235,9 +233,10 @@ public class PinBall extends Scene {
         this.specialMarble.setCenterX(550);
         this.specialMarble.setCenterY(400);
         this.isPaint = false;
-//         this.playerinfo.addMyMarbleSerial(specialMarble.getInfo().getSerial());
+        this.playerinfo.addMyMarbleSerial(specialMarble.getInfo().getSerial());
 //        FileIO.writePlayer("playerInfo.csv", this.playerinfo);
-//        FileIO.writeMarble("marbleInfo.csv", specialMarble.getInfo());
+        String fileName = "mymarbleInfo" + this.playerinfo.getSerial() + ".csv";
+        FileIO.writeMarble(fileName, specialMarble.getInfo());
         System.out.println("抽中怪物:" + specialMarble.getInfo().getName());
 //        System.out.println(this.playerinfo);
     }
