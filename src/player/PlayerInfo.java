@@ -9,18 +9,24 @@ public class PlayerInfo {
 
     private String name;
     private int serial;
+    private int playerNum;
     private int level;
     private int[] myMarbleSerials;
 
-    public PlayerInfo(int serial, String name, int level, int[] myMarbleSerials) {
+    public PlayerInfo(int serial, int playerNum, String name, int level, int[] myMarbleSerials) {
         this.name = name;
         this.level = level;
+        this.playerNum = playerNum;
         this.serial = serial;
         this.myMarbleSerials = myMarbleSerials;
     }
 
     public int getSerial() {
         return this.serial;
+    }
+    
+    public int playerNum(){
+        return this.playerNum;
     }
 
     public String getName() {
@@ -30,6 +36,7 @@ public class PlayerInfo {
     public int getLevel() {
         return this.level;
     }
+    
 
     public int[] getMyMarbleSerials() {
         return this.myMarbleSerials;
@@ -54,6 +61,10 @@ public class PlayerInfo {
 
     public void setSerial(int serial) {
         this.serial = serial;
+    }
+    
+    public void setPlayerNum(int playerNum){
+        this.playerNum = playerNum;
     }
 
     @Override

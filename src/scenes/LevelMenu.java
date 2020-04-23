@@ -67,7 +67,7 @@ public class LevelMenu extends Scene {
 
     @Override
     public void sceneBegin() {
-        this.p1 = new Player(this.playerInfo.getSerial() - 1, 100, 120, 100, 150);
+        this.p1 = new Player(this.playerInfo.playerNum()- 1, 0, 100, 120, 100, 150);
         this.menu = new Background(ImgInfo.LEVELBACK_PATH, 0, 0, 1);
         this.count = 0;
         this.idx = 0;
@@ -81,7 +81,7 @@ public class LevelMenu extends Scene {
         for (int i = 0; i < this.allMarbleInfo.size(); i++) {
             this.enemies.add(new Marble(0, 0, 150, 150, this.allMarbleInfo.get(i)));
         }
-        for(int i=0; i<this.myMarbleInfo.size(); i++){
+        for (int i = 0; i < this.myMarbleInfo.size(); i++) {
             this.myMarbles.add(new Marble(this.x, this.y, 150, 150, this.myMarbleInfo.get(i)));
         }
         int unitX = Global.SCREEN_X / 5;
@@ -136,7 +136,7 @@ public class LevelMenu extends Scene {
             this.buttons.get(i + 1).update();
         }
         if (this.isEnter) {
-            sceneController.changeScene(new Menu(sceneController));
+            sceneController.changeScene(new FileIOScene(sceneController, playerInfo, "w"));
         }
         if (this.isOnButton) {
             this.home.update();

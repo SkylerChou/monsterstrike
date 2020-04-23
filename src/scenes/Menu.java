@@ -7,7 +7,6 @@ package scenes;
 
 import controllers.SceneController;
 import java.awt.Graphics;
-import java.io.File;
 import java.util.ArrayList;
 import monsterstrike.gameobject.*;
 import monsterstrike.util.*;
@@ -65,10 +64,11 @@ public class Menu extends Scene {
         }
 
         if (this.isEnter && this.dino.getCenterY() == Global.SCREEN_Y / 2) {
+            FileIO.copy("mymarbleInfoInit.csv", "mymarbleInfoTmp.csv");
             sceneController.changeScene(new PlayerScene(sceneController));
             this.isEnter = false;
         } else if (this.isEnter && this.dino.getCenterY() == Global.SCREEN_Y / 2 + h) {
-            sceneController.changeScene(new ChooseGame(sceneController, "playerInfo.csv"));
+            sceneController.changeScene(new FileIOScene(sceneController, "r"));
             this.isEnter = false;
         } else if (this.isEnter && this.dino.getCenterY() == Global.SCREEN_Y / 2 + 2 * h) {
             System.exit(0);

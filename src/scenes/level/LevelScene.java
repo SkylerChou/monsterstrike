@@ -67,7 +67,7 @@ public abstract class LevelScene extends Scene {
         super(sceneController);
         this.idx = backIdx;
         this.playerinfo = playerinfo;
-        this.player = new Player(this.playerinfo.getSerial() - 1, Global.SCREEN_X / 2 + 100,
+        this.player = new Player(this.playerinfo.playerNum() - 1, 0, Global.SCREEN_X / 2 + 100,
                 Global.SCREEN_Y - 85, 50, 75);
         this.item = new Item(ImgInfo.INFOFORM_PATH, Global.SCREEN_X / 2, Global.SCREEN_Y - Global.INFO_H / 2,
                 Global.SCREEN_X, Global.INFO_H);
@@ -156,8 +156,7 @@ public abstract class LevelScene extends Scene {
             updateShineFrame();
 
             if (isLose()) { //我方輸了
-                String mymarbleFile = "mymarbleInfo" + this.playerinfo.getName() + ".csv";
-                FileIO.writePlayer("playerInfo.csv", this.playerinfo);
+                String mymarbleFile = "mymarbleInfoTmp.csv";
                 FileIO.writeMarble(mymarbleFile, null);
                 if (isEnter) {
                     sceneController.changeScene(new LevelMenu(sceneController, this.playerinfo, mymarbleFile, true));
@@ -181,16 +180,16 @@ public abstract class LevelScene extends Scene {
                 m.update(); //抽中角色動畫
             }
             if (isEnter) {  //Win之後按Enter回LevelMenu
-                String mymarbleFile = "mymarbleInfo" + this.playerinfo.getName() + ".csv";
-                sceneController.changeScene(new LevelMenu(sceneController, this.playerinfo, mymarbleFile, true));
+                String mymarbleFile = "mymarbleInfoTmp.csv";
+                FileIO.writeMarble(mymarbleFile, m.getInfo());
+                sceneController.changeScene(new LevelMenu(sceneController, this.playerinfo, mymarbleFile, false));
                 return;
             }
         }
         if (this.isClick) { //滑鼠按下Home回主畫面
-            String mymarbleFile = "mymarbleInfo" + this.playerinfo.getName() + ".csv";
-            FileIO.writePlayer("playerInfo.csv", this.playerinfo);
+            String mymarbleFile = "mymarbleInfoTmp.csv";
             FileIO.writeMarble(mymarbleFile, null);
-            sceneController.changeScene(new Menu(sceneController));
+            sceneController.changeScene(new FileIOScene(sceneController, this.playerinfo,"w"));
             return;
         }
         if (this.isOnButton) { //游標在Home
@@ -220,9 +219,10 @@ public abstract class LevelScene extends Scene {
         if (this.playerinfo.getLevel() - 1 == this.idx && this.playerinfo.getLevel() != 5) {
             this.playerinfo.setLevel(this.playerinfo.getLevel() + 1);
         }
-        String mymarbleFile = "mymarbleInfo" + this.playerinfo.getName() + ".csv";
-        FileIO.writePlayer("playerInfo.csv", this.playerinfo);
-        FileIO.writeMarble(mymarbleFile, m.getInfo());
+//        String mymarbleFile = "mymarbleInfo" + this.playerinfo.getName() + ".csv";
+//        FileIO.writePlayer("playerInfo.csv", this.playerinfo);
+//        FileIO.writeMarble(mymarbleFile, m.getInfo());
+
         System.out.println("抽中怪物:" + m.getInfo().getName());
         System.out.println(this.playerinfo);
         this.isDraw = true;

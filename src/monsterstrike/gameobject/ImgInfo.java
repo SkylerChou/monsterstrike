@@ -160,7 +160,7 @@ public class ImgInfo {
     //Player
     private static final String PLAYER_ROOT = "/resources/player/";
     public static final String[] PLAYERRUN_PATH = {PLAYER_ROOT + "running1.png", PLAYER_ROOT + "running2.png"};
-    public static final String[] PLAYERSTAND_PATH = {PLAYER_ROOT + "stand1.png", PLAYER_ROOT + "stand2.png"};
+    public static final String[][] PLAYERSTAND_PATH = {{PLAYER_ROOT + "stand1.png", PLAYER_ROOT + "stand1L.png"}, {PLAYER_ROOT + "stand2.png", PLAYER_ROOT + "stand2L.png"}};
 
     public static final int[] PLAYERRUN_NUM = {5, 4};
     public static final int[] PLAYERSTAND_NUM = {2, 2};

@@ -7,6 +7,7 @@ package scenes;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -55,7 +56,7 @@ public class FileIO {
         return null;
     }
 
-    public static PlayerInfo readPlayer(String fileName, int idx) {
+    public static ArrayList<PlayerInfo> readPlayer(String fileName) {
         BufferedReader br;
         try {
             br = new BufferedReader(new FileReader(Global.FILE_ROOT + fileName));
@@ -64,26 +65,45 @@ public class FileIO {
             while (br.ready()) {
                 String str = br.readLine();
                 String[] tmp = str.split(",");
-                String[] tmp2 = tmp[3].split("\"")[1].split(";");
+                String[] tmp2 = tmp[4].split("\"")[1].split(";");
                 int[] marbleSerials = new int[tmp2.length];
                 for (int i = 0; i < tmp2.length; i++) {
                     marbleSerials[i] = Integer.parseInt(tmp2[i]);
                 }
-                PlayerInfo m = new PlayerInfo(Integer.parseInt(tmp[0]), tmp[1],
-                        Integer.parseInt(tmp[2]), marbleSerials);
+                PlayerInfo m = new PlayerInfo(Integer.parseInt(tmp[0]), Integer.parseInt(tmp[1]), tmp[2],
+                        Integer.parseInt(tmp[3]), marbleSerials);
                 arr.add(m);
             }
             br.close();
-            return arr.get(idx);
+            return arr;
         } catch (IOException e) {
             e.getStackTrace();
         }
         return null;
     }
+    
+    public static void copy(String from, String to){
+        BufferedReader br;
+        try {
+            br = new BufferedReader(new FileReader(Global.FILE_ROOT + from));
+            BufferedWriter bw = new BufferedWriter((new FileWriter(Global.FILE_ROOT + to)));
+            while (br.ready()) {
+                String str = br.readLine();
+                System.out.println();
+                bw.append(str);
+                bw.newLine();
+            }
+            bw.flush();
+            bw.close();
+            br.close();
+        } catch (IOException e) {
+            e.getStackTrace();
+        }
+    }
 
     public static void writeMarble(String fileName, MarbleInfo marble) {
         try {
-            BufferedWriter bw = new BufferedWriter((new FileWriter(Global.FILE_ROOT+ fileName, true)));
+            BufferedWriter bw = new BufferedWriter((new FileWriter(Global.FILE_ROOT + fileName, true)));
             if (marble != null) {
                 MarbleInfo m = marble;
                 String tmp = m.getSerial() + "," + m.getName() + "," + m.getImgName() + "," + m.getShowIdx() + ","
@@ -101,27 +121,44 @@ public class FileIO {
         }
     }
 
-    public static void writePlayer(String fileName, PlayerInfo players) {
+    public static void writePlayer(ArrayList<PlayerInfo> origin, String fileName, PlayerInfo players, int idx) {
         try {
-            BufferedWriter bw = new BufferedWriter((new FileWriter("/src/resources/" + fileName, true)));
-//            bw.append("角色編號,姓名,等級,怪物編號");
-//            bw.newLine();
-            int[] marbleSerials = players.getMyMarbleSerials();
-            String serial = "\"";
-            for (int j = 0; j < marbleSerials.length; j++) {
-                serial += marbleSerials[j];
-                if (j != marbleSerials.length - 1) {
-                    serial += ";";
-                }
-            }
-            String tmp = players.getSerial() + "," + players.getName() + "," + players.getLevel() + "," + serial + "\"";
-            bw.append(tmp);
+            BufferedWriter bw = new BufferedWriter((new FileWriter(Global.FILE_ROOT + fileName)));
+            bw.append("序號,角色編號,姓名,等級,怪物編號");
             bw.newLine();
-//            }
+            int[] marbleSerials = players.getMyMarbleSerials();
+            String serial = serialToString(marbleSerials);
+            String tmp = (idx + 1) + "," + players.playerNum() + "," + players.getName() + "," + players.getLevel() + "," + serial + "\"";
+            for (int i = 0; i < origin.size(); i++) {
+                if (i == idx) {
+                    bw.append(tmp);
+                } else {
+                    String s = serialToString(origin.get(i).getMyMarbleSerials());
+                    String data = (i + 1) + "," + origin.get(i).playerNum() + "," + origin.get(i).getName() + "," + origin.get(i).getLevel() + "," + s + "\"";
+                    bw.append(data);
+                }
+                bw.newLine();
+            }
+            if (origin.size() <= idx) {
+                bw.append(tmp);
+                bw.newLine();
+            }
             bw.flush();
             bw.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
+    private static String serialToString(int[] marbleSerials) {
+        String serial = "\"";
+        for (int j = 0; j < marbleSerials.length; j++) {
+            serial += marbleSerials[j];
+            if (j != marbleSerials.length - 1) {
+                serial += ";";
+            }
+        }
+        return serial;
+    }
+
 }

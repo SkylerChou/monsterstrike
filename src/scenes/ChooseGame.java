@@ -23,7 +23,8 @@ public class ChooseGame extends Scene {
     private PlayerInfo playerInfo;
     private Background menu;
     private Background[] game;
-    private Player p1;
+    private Player playerR;
+    private Player playerL;
     private Button home;
     private Button[] shineFrame;
     private int currentIdx;
@@ -32,10 +33,9 @@ public class ChooseGame extends Scene {
     private boolean isClick;
     private boolean isReleased;
 
-    public ChooseGame(SceneController sceneController, String playerInfo) {
+    public ChooseGame(SceneController sceneController, PlayerInfo playerInfo) {
         super(sceneController);
-        this.playerInfo = FileIO.readPlayer(playerInfo, 0);
-//        this.playerInfo = playerInfo;
+        this.playerInfo = playerInfo;
         this.shineFrame = new Button[2];
         this.game = new Background[2];
         this.currentIdx = 0;
@@ -47,7 +47,9 @@ public class ChooseGame extends Scene {
     @Override
     public void sceneBegin() {
         this.menu = new Background(ImgInfo.BACK_PATH, 0, 0, 1);
-        this.p1 = new Player(this.playerInfo.getSerial() - 1, 100, 120, 100, 150);
+        this.playerR = new Player(this.playerInfo.playerNum() - 1, 0, 100, 120, 100, 150);
+        this.playerL = new Player(this.playerInfo.playerNum() - 1, 1, Global.SCREEN_X - 200, 120, 100, 150);
+
         this.home = new Button(ImgInfo.HOME, Global.SCREEN_X - 30, 30, ImgInfo.SETTING_INFO[0], ImgInfo.SETTING_INFO[1], 20);
         for (int i = 0; i < this.shineFrame.length; i++) {
             shineFrame[i] = new Button(ImgInfo.SHINEFRAME_PATH, 450 * (i + 1) - 50, 305,
@@ -59,7 +61,8 @@ public class ChooseGame extends Scene {
 
     @Override
     public void sceneUpdate() {
-        this.p1.update();
+        this.playerR.update();
+        this.playerL.update();
         if (enterCount == 0) {
             this.shineFrame[currentIdx].update();
             if (currentIdx == 0) {
@@ -75,7 +78,7 @@ public class ChooseGame extends Scene {
                         new PinBall(sceneController, this.playerInfo)));
             } else {
                 sceneController.changeScene(new LevelMenu(sceneController,
-                        this.playerInfo, "mymarbleInfo.csv", false));
+                        this.playerInfo, "mymarbleInfo" + this.playerInfo.getSerial() + ".csv", false));
             }
         }
         if (this.isClick) {
@@ -96,12 +99,12 @@ public class ChooseGame extends Scene {
     public void paint(Graphics g) {
         this.menu.paintMenu(g);
         this.home.paint(g);
-        this.p1.paint(g);
         for (int i = 0; i < this.shineFrame.length; i++) {
             this.game[i].paintItem(g, 450 * (i + 1) - 228, 191, 360, 227);
             this.shineFrame[i].paint(g);
         }
         if (this.currentIdx == 0) {
+            this.playerR.paint(g);
             PaintText.paint(g, new Font("Showcard Gothic", Font.PLAIN, 40),
                     Color.BLACK, "Strike", 90 + 450, 150, Global.SCREEN_X / 2);
             PaintText.paintTwinkle(g, new Font("Showcard Gothic", Font.PLAIN, 40), new Font("Showcard Gothic", Font.PLAIN, 44),
@@ -111,6 +114,7 @@ public class ChooseGame extends Scene {
             PaintText.paint(g, new Font("Arial Unicode MS", Font.PLAIN, 30),
                     Color.BLACK, "出發討伐暗黑大魔王！", 90 + 450, 500, Global.SCREEN_X / 2);
         } else {
+            this.playerL.paint(g);
             PaintText.paintTwinkle(g, new Font("Showcard Gothic", Font.PLAIN, 40), new Font("Showcard Gothic", Font.PLAIN, 44),
                     Color.BLACK, "Strike", 90 + 450, 150, Global.SCREEN_X / 2, 60);
             PaintText.paint(g, new Font("Showcard Gothic", Font.PLAIN, 40),

@@ -5,7 +5,6 @@
  */
 package scenes;
 
-import controllers.ARC;
 import controllers.IRC;
 import controllers.SceneController;
 import java.awt.Color;
@@ -24,7 +23,7 @@ import player.Player;
  * @author yuin8
  */
 public class PlayerScene extends Scene {
-
+    
     private PlayerInfo playerInfo;
     private Background menu;
     private Player[] players;
@@ -37,13 +36,12 @@ public class PlayerScene extends Scene {
     private boolean isOnButton;
     private boolean isClick;
     private Button button;
-    private int overCount;
     private int enterCount;
     private BufferedImage img;
-
+    
     public PlayerScene(SceneController sceneController) {
         super(sceneController);
-        this.playerInfo = FileIO.readPlayer("playerInfoInit.csv", 0);
+        this.playerInfo = FileIO.readPlayer("playerInfoInit.csv").get(0);
         this.img = IRC.getInstance().tryGetImage("/resources/items/input.png");
         this.players = new Player[2];
         this.shineFrame = new Button[2];
@@ -52,16 +50,15 @@ public class PlayerScene extends Scene {
         this.isEnter = false;
         this.isOnButton = false;
         this.isClick = false;
-        this.overCount = 0;
         this.enterCount = 0;
         this.name = "";
     }
-
+    
     @Override
     public void sceneBegin() {
         this.menu = new Background(ImgInfo.LEVELBACK_PATH, 0, 0, 1);
         for (int i = 0; i < this.players.length; i++) {
-            players[i] = new Player(i, 300 * (i + 1) + 100, 200, 150, 213);
+            players[i] = new Player(i, 0, 300 * (i + 1) + 100, 200, 150, 213);
             shineFrame[i] = new Button(ImgInfo.SHINEFRAME_PATH, 300 * (i + 1) + 175, 305,
                     180, 250, 20);
             this.shineFrame[i].setIsShow(true);
@@ -69,7 +66,7 @@ public class PlayerScene extends Scene {
         this.button = new Button(ImgInfo.HOME, Global.SCREEN_X - 30, 30,
                 ImgInfo.SETTING_INFO[0], ImgInfo.SETTING_INFO[1], 20);
     }
-
+    
     @Override
     public void sceneUpdate() {
         if (enterCount == 0) {
@@ -88,15 +85,15 @@ public class PlayerScene extends Scene {
             } else {
                 this.shineFrame[0].setIsShow(false);
             }
-        } else if(enterCount ==2){
-            this.playerInfo.setSerial(currentIdx + 1);
-            if(name.equals("")){
+        } else if (enterCount == 2) {
+            this.playerInfo.setPlayerNum(currentIdx + 1);
+            if (name.equals("")) {
                 name = "user";
             }
-            this.playerInfo.setName(name);        
-        }else{
-            sceneController.changeScene(new LevelMenu(sceneController, 
-                        this.playerInfo, "mymarbleInit.csv", false));
+            this.playerInfo.setName(name);            
+        } else {
+            sceneController.changeScene(new LevelMenu(sceneController,
+                    this.playerInfo, "mymarbleInfoInit.csv", false));
         }
         if (this.isEnter) {
             sceneController.changeScene(new Menu(sceneController));
@@ -105,12 +102,12 @@ public class PlayerScene extends Scene {
             this.button.update();
         }
     }
-
+    
     @Override
     public void sceneEnd() {
-
+        
     }
-
+    
     @Override
     public void paint(Graphics g) {
         this.menu.paintMenu(g);
@@ -119,13 +116,13 @@ public class PlayerScene extends Scene {
             this.players[i].paint(g);
             this.shineFrame[i].paint(g);
         }
-
+        
         if (enterCount > 0) {
-            PaintText.paint(g, new Font("VinerHandITC", Font.PLAIN, 24), 
-                    Color.BLACK, "Player Name: ",-70, 500, Global.SCREEN_X);
-            PaintText.paint(g, new Font("VinerHandITC", Font.PLAIN, 24), 
+            PaintText.paint(g, new Font("VinerHandITC", Font.PLAIN, 24),
+                    Color.BLACK, "Player Name: ", -70, 500, Global.SCREEN_X);
+            PaintText.paint(g, new Font("VinerHandITC", Font.PLAIN, 24),
                     Color.BLACK, "Level 1", -40, 550, Global.SCREEN_X);
-
+            
             if (enterCount == 1) {
                 g.drawImage(img, Global.SCREEN_X / 2 + 10, 475, 150, 30, null);
                 if (isDone || isClick) {
@@ -133,7 +130,7 @@ public class PlayerScene extends Scene {
                     g.setColor(Color.WHITE);
                     g.drawString(name, Global.SCREEN_X / 2 + 20, 500);
                     g.drawImage(img, Global.SCREEN_X / 2 + 10, 475, 150, 30, null);
-                    PaintText.paintTwinkle(g, new Font("VinerHandITC", Font.BOLD, 24), Color.WHITE, "|", 15, 
+                    PaintText.paintTwinkle(g, new Font("VinerHandITC", Font.BOLD, 24), Color.WHITE, "|", 15,
                             495, Global.SCREEN_X, 30);
                 }
             } else if (enterCount == 2) {
@@ -141,24 +138,24 @@ public class PlayerScene extends Scene {
                 g.setColor(Color.BLACK);
                 g.drawString(name, Global.SCREEN_X / 2 + 10, 500);
                 PaintText.paintTwinkle(g, new Font("Showcard Gothic", Font.PLAIN, 40), new Font("Showcard Gothic", Font.PLAIN, 44),
-                        Color.BLACK, "START", Global.SCREEN_X/2 + 100, 550, Global.SCREEN_X/2, 30);
+                        Color.BLACK, "START", Global.SCREEN_X / 2 + 100, 550, Global.SCREEN_X / 2, 30);
             }
         }
 //        g.drawString("Level 1", Global.SCREEN_X / 2 - 70, 540);
     }
-
+    
     @Override
     public CommandSolver.KeyListener getKeyListener() {
         return new MyKeyListener();
     }
-
+    
     @Override
     public CommandSolver.MouseCommandListener getMouseListener() {
         return new MyMouseListener();
     }
-
+    
     public class MyKeyListener implements CommandSolver.KeyListener {
-
+        
         @Override
         public void keyPressed(int commandCode, long trigTime) {
             if (isReleased) {
@@ -173,12 +170,12 @@ public class PlayerScene extends Scene {
                 }
             }
         }
-
+        
         @Override
         public void keyReleased(int commandCode, long trigTime) {
             isReleased = true;
         }
-
+        
         @Override
         public void keyTyped(char c, long trigTime) {
             if (isDone && enterCount == 1) {
@@ -189,9 +186,9 @@ public class PlayerScene extends Scene {
             }
         }
     }
-
+    
     public class MyMouseListener implements CommandSolver.MouseCommandListener {
-
+        
         @Override
         public void mouseTrig(MouseEvent e, CommandSolver.MouseState state, long trigTime) {
             if (state == CommandSolver.MouseState.PRESSED && e.getX() > Global.SCREEN_X - 30 - ImgInfo.SETTING_INFO[1] / 2 && e.getX() < Global.SCREEN_X - 30 + ImgInfo.SETTING_INFO[1] / 2
@@ -209,5 +206,5 @@ public class PlayerScene extends Scene {
             }
         }
     }
-
+    
 }

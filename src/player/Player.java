@@ -21,11 +21,11 @@ public class Player {
     private int w;
     private int h;
 
-    public Player(int idx, int x, int y, int w, int h) {
+    public Player(int idx, int dir, int x, int y, int w, int h) {
         this.idx = idx;
         this.rendererRun = new Renderer(ImgInfo.PLAYERRUN_PATH[idx],
                 ImgInfo.PLAYERRUN_NUM[idx], 10);
-        this.rendererStand = new Renderer(ImgInfo.PLAYERSTAND_PATH[idx],
+        this.rendererStand = new Renderer(ImgInfo.PLAYERSTAND_PATH[idx][dir],
                 ImgInfo.PLAYERSTAND_NUM[idx], 10);
         this.state = 0;
         this.x = x;
@@ -33,12 +33,12 @@ public class Player {
         this.w = w;
         this.h = h;
     }
-    
-    public void setName(String name){
+
+    public void setName(String name) {
         info.setName(name);
     }
-    
-    public void setState(int state){
+
+    public void setState(int state) {
         this.state = state;
     }
 
@@ -58,6 +58,7 @@ public class Player {
             this.rendererRun.paint(g, x, y, w, h,
                     ImgInfo.PLAYERSTAND_INFO[idx][0], ImgInfo.PLAYERRUN_INFO[idx][1]);
         }
+
     }
 
 }

@@ -45,7 +45,7 @@ public class Global {
     public static final int[] ENEMYPOS_Y = {180, 270, 405, 300, 200};
 
     public static final int INFO_H = 135;
-    public static final String FILE_ROOT = "./src/resources/";
+    public static final String FILE_ROOT = "./src/resources/file/";
 
     public static int random(int min, int max) {
         if (min > max) {
