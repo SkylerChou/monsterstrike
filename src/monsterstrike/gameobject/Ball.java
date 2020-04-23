@@ -5,6 +5,7 @@
  */
 package monsterstrike.gameobject;
 
+import controllers.ARC;
 import java.awt.Graphics;
 import monsterstrike.graph.Vector;
 import monsterstrike.util.Global;
@@ -68,14 +69,17 @@ public class Ball extends GameObject {
 //                || this.getCenterY() + this.getR() >= Global.SCREEN_Y - Global.INFO_H
                 ) {
             if (this.getCenterX() - this.getR() <= 0) {
+                ARC.getInstance().play("/resources/wav/Pinball.wav");
                 this.setCenterX(this.getR());
                 this.getGoVec().setX(-this.getGoVec().getX());
             }
             if (this.getCenterX() + this.getR() >= Global.SCREEN_X) {
+                ARC.getInstance().play("/resources/wav/Pinball.wav");
                 this.setCenterX(Global.SCREEN_X - this.getR());
                 this.getGoVec().setX(-this.getGoVec().getX());
             }
             if (this.getCenterY() - this.getR() <= 0) {
+                ARC.getInstance().play("/resources/wav/Pinball.wav");
                 this.setCenterY(this.getR());
                 this.getGoVec().setY(-this.getGoVec().getY());
             }

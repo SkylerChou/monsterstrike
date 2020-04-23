@@ -5,6 +5,7 @@
  */
 package interfaceskills;
 
+import controllers.ARC;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
@@ -51,6 +52,7 @@ public class Missile extends Skills {
         this.target = target;
         this.self = self;
 //        System.out.println(self.getInfo().getName() + "導彈!");
+        ARC.getInstance().play("/resources/wav/shoot.wav");
         int attr = self.getInfo().getAttribute();
 
         for (int i = 0; i < target.size(); i++) {

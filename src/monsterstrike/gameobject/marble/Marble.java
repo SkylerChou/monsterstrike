@@ -5,6 +5,7 @@
  */
 package monsterstrike.gameobject.marble;
 
+import controllers.ARC;
 import monsterstrike.util.Global;
 import interfaceskills.*;
 import java.awt.Graphics;
@@ -189,7 +190,7 @@ public class Marble extends GameObject {
         this.centerY = y;
         if (this.isSpin && this.spinDelay.isTrig()) {
             float rad = (float) (Math.toRadians(360 / 60) * spinCount);
-            float r2 = 0.5f*this.getR();
+            float r2 = 0.5f * this.getR();
             float dx = (float) (2 * r2 * Math.cos((Math.PI - rad) / 2) * Math.cos(rad / 2));
             float dy = (float) (2 * r2 * Math.cos((Math.PI - rad) / 2) * Math.sin(rad / 2));
             this.setCenterX(x + dx);

@@ -5,6 +5,7 @@
  */
 package interfaceskills;
 
+import controllers.ARC;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
@@ -30,6 +31,7 @@ public class Laser extends Skills {
     @Override
     public int useSkill(Marble self, ArrayList<Marble> target, int targetIdx) {
 //        System.out.print(self.getInfo().getName() + " 爆擊 !");
+        ARC.getInstance().play("/resources/wav/laser.wav");
         int attr = self.getInfo().getAttribute();
         int halfLength = SkillImg.SKILL_UNIT_Y[SKILL_IDX][attr] / 2;
         this.skill[0] = new SkillComponent(SKILL_IDX, attr, SkillImg.SKILL_NUM[SKILL_IDX][attr],

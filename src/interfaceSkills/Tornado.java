@@ -5,6 +5,7 @@
  */
 package interfaceskills;
 
+import controllers.ARC;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import monsterstrike.gameobject.GameObject;
@@ -28,6 +29,7 @@ public class Tornado extends Skills {
     public int useSkill(Marble self, ArrayList<Marble> target, int idx) {
         this.hitCount = 0;
 //        System.out.println(self.getInfo().getName() + " 爆擊 !");
+        ARC.getInstance().play("/resources/wav/middle_punch.wav");
         int attr = self.getInfo().getAttribute();
         for (int i = 0; i < target.size(); i++) {
             this.skill[i] = new SkillComponent(SKILL_IDX, attr, SkillImg.SKILL_NUM[SKILL_IDX][attr],

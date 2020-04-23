@@ -6,7 +6,9 @@
 package scenes;
 
 import controllers.IRC;
+import controllers.MRC;
 import controllers.SceneController;
+import java.applet.AudioClip;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -38,7 +40,8 @@ public class PlayerScene extends Scene {
     private Button button;
     private int enterCount;
     private BufferedImage img;
-    
+    private AudioClip music;
+
     public PlayerScene(SceneController sceneController) {
         super(sceneController);
         this.playerInfo = FileIO.readPlayer("playerInfoInit.csv").get(0);
@@ -52,6 +55,7 @@ public class PlayerScene extends Scene {
         this.isClick = false;
         this.enterCount = 0;
         this.name = "";
+        this.music=MRC.getInstance().tryGetMusic("/resources/wav/charaterSeletion.wav");
     }
     
     @Override
@@ -65,6 +69,7 @@ public class PlayerScene extends Scene {
         }
         this.button = new Button(ImgInfo.HOME, Global.SCREEN_X - 30, 30,
                 ImgInfo.SETTING_INFO[0], ImgInfo.SETTING_INFO[1], 20);
+        this.music.loop();
     }
     
     @Override
@@ -90,12 +95,14 @@ public class PlayerScene extends Scene {
             if (name.equals("")) {
                 name = "user";
             }
-            this.playerInfo.setName(name);            
-        } else {
-            sceneController.changeScene(new LevelMenu(sceneController,
-                    this.playerInfo, "mymarbleInfoInit.csv", false));
+            this.playerInfo.setName(name);
+        }else{
+            this.music.stop();
+            sceneController.changeScene(new LevelMenu(sceneController, 
+                        this.playerInfo, "marbleInfoInit.csv", false));
         }
         if (this.isEnter) {
+            this.music.stop();
             sceneController.changeScene(new Menu(sceneController));
         }
         if (this.isOnButton) {

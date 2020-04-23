@@ -5,8 +5,10 @@
  */
 package scenes;
 
+import controllers.MRC;
 import scenes.level.*;
 import controllers.SceneController;
+import java.applet.AudioClip;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -49,6 +51,8 @@ public class LevelMenu extends Scene {
     private boolean isSkip;
     private boolean[] isMask;
 
+    private AudioClip music;
+
     //首次玩
     public LevelMenu(SceneController sceneController, PlayerInfo playerInfo, String myMarbleFile, boolean isSkip) {
         super(sceneController);
@@ -61,13 +65,15 @@ public class LevelMenu extends Scene {
         this.fightMarbles = new Marble[3];
         this.buttons = new ArrayList<>();
         this.enemyFightMarbles = new ArrayList<>();
+        this.music = MRC.getInstance().tryGetMusic("/resources/wav/menu1.wav");
         this.isSkip = isSkip;
         this.isMask = new boolean[5];
     }
 
     @Override
     public void sceneBegin() {
-        this.p1 = new Player(this.playerInfo.playerNum()- 1, 0, 100, 120, 100, 150);
+        this.music.loop();
+        this.p1 = new Player(this.playerInfo.playerNum() - 1, 0, 100, 120, 100, 150);
         this.menu = new Background(ImgInfo.LEVELBACK_PATH, 0, 0, 1);
         this.count = 0;
         this.idx = 0;
@@ -117,6 +123,7 @@ public class LevelMenu extends Scene {
                 }
                 this.enemyFightMarbles.add(this.enemies.get(i));
             }
+            this.music.stop();
             sceneController.changeScene(chooseLevel());
             return;
         } else {
@@ -137,6 +144,7 @@ public class LevelMenu extends Scene {
         }
         if (this.isEnter) {
             sceneController.changeScene(new FileIOScene(sceneController, playerInfo, "w"));
+            this.music.stop();
         }
         if (this.isOnButton) {
             this.home.update();

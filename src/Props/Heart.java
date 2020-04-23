@@ -5,6 +5,7 @@
  */
 package Props;
 
+import controllers.ARC;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import monsterstrike.gameobject.ImgInfo;
@@ -24,6 +25,7 @@ public class Heart extends Prop {
     @Override
     public void useProp(ArrayList<Marble> marble, int idx) {
         if (!isUsed) {
+            ARC.getInstance().play("/resources/wav/prop.wav");
             for (int i = 0; i < marble.size(); i++) {
                 marble.get(i).getInfo().setHp(marble.get(i).getInfo().getHp() + 50);
 //                System.out.println(marble.get(i).getInfo().getName() + "補血");

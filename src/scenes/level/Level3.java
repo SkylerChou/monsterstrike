@@ -5,6 +5,7 @@
  */
 package scenes.level;
 
+import controllers.ARC;
 import controllers.SceneController;
 import java.awt.Graphics;
 import java.util.ArrayList;
@@ -58,6 +59,7 @@ public class Level3 extends LevelScene {
             if (this.stones.get(i).getCollide()) {
                 this.stones.get(i).update();
                 if (this.stones.get(i).getStop()) {
+                    ARC.getInstance().play("/resources/wav/damage.wav");
                     this.stones.remove(i);
                     i--;
                 }

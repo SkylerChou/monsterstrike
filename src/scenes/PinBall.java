@@ -7,8 +7,11 @@ package scenes;
 
 import Props.Heart;
 import Props.Prop;
+import controllers.ARC;
 import controllers.IRC;
+import controllers.MRC;
 import controllers.SceneController;
+import java.applet.AudioClip;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -56,8 +59,9 @@ public class PinBall extends Scene {
     private ArrayList<Marble> Allteeth; //所有平面怪物
     private Marble specialMarble; //抽中怪物  
     private PlayerInfo playerinfo;
+    private AudioClip music;
 
-    public PinBall(SceneController sceneController, PlayerInfo playerinfo) {
+    public PinBall(SceneController sceneController, PlayerInfo playerinfo) {       
         super(sceneController);
         this.playerinfo = playerinfo;
         this.scoreBoard = IRC.getInstance().tryGetImage("/resources/score.png");
@@ -70,10 +74,12 @@ public class PinBall extends Scene {
         for (int i = 0; i < this.allMarbleInfo.size(); i++) {
             this.Allteeth.add(new Marble(0, 0, 150, 150, this.allMarbleInfo.get(i)));
         }
+        this.music = MRC.getInstance().tryGetMusic("/resources/wav/pinBack.wav");
     }
 
     @Override
     public void sceneBegin() {
+        this.music.loop();
         this.hearts = new Prop[3];
         for (int i = 0; i < 10; i++) {
             int y = Global.random(50, 200);
@@ -126,6 +132,7 @@ public class PinBall extends Scene {
                 if ((racket.right() >= this.ball.getCenterX() - this.ball.getR()
                         && racket.left() <= this.ball.getCenterX() + this.ball.getR())
                         && (this.ball.getCenterY() + this.ball.getR() >= 590)) {
+                    ARC.getInstance().play("/resources/wav/Pinball.wav");
                     this.ball.setCenterY(580 - this.ball.getR());
                     this.ball.getGoVec().setY(-this.ball.getGoVec().getY());
                     this.score += 10;
@@ -134,6 +141,7 @@ public class PinBall extends Scene {
                 }
 
                 if (this.ball.isCollision(this.dino)) {
+                    ARC.getInstance().play("/resources/wav/Pinball.wav");
                     this.ball.hit(dino);
                 }
                 for (int i = 0; i < this.post.size(); i++) {
@@ -146,6 +154,9 @@ public class PinBall extends Scene {
                         this.post.get(i).setGo(this.ball.getGoVec());
                         this.ball.hit(this.post.get(i));
                         this.post.get(i).setIsCollide(true);
+                        if (this.post.get(i).getIsCollide()) {
+                            ARC.getInstance().play("/resources/wav/Pinball.wav");
+                        }
                     }
                 }
                 for (int i = 0; i < this.post.size(); i++) {
@@ -164,6 +175,7 @@ public class PinBall extends Scene {
                 }
                 for (int i = 0; i < this.post.size(); i++) {
                     if (this.home.isCollision(this.post.get(i))) {
+                        ARC.getInstance().play("/resources/wav/mushroom.wav");
                         this.score += 5;
                         this.post.remove(i);
                     }
@@ -178,7 +190,6 @@ public class PinBall extends Scene {
                 if (this.isOut) {
                     if (this.countHeart == 0) {
                         this.isEnd = true;
-//                    sceneController.changeScene(new Menu(sceneController));
                     }
                     for (int i = 0; i < this.hearts.length; i++) {
                         if (this.countHeart > 0 && this.countHeart == i) {
@@ -190,7 +201,6 @@ public class PinBall extends Scene {
                         this.ball.setCenterX(POS_X);
                         this.ball.setCenterY(POS_Y);
                         this.ball.setGo(new Vector(1, -3));
-
                         this.isOut = false;
                     }
                 }
@@ -199,22 +209,25 @@ public class PinBall extends Scene {
 
         }
         if (this.isEnter) {
+            this.music.stop();
             sceneController.changeScene(new Menu(sceneController));
         }
         if (this.isOnButton) {
             this.buttons.get(0).update();
         }
         if (this.isReplay) {
-            System.out.println(this.isReplay);
             sceneController.changeScene(new PinBall(sceneController, this.playerinfo));
+            this.music.stop();
         }
         if (this.score >= 50 && this.isEnd && this.isPaint) {
+            this.music.stop();
+            ARC.getInstance().play("/resources/wav/win1.wav");
             lottery();
         }
         if (this.score >= 50 && this.isEnd) {
+            this.music.stop();
             this.specialMarble.update();
         }
-
     }
 
     public void lottery() {
@@ -303,14 +316,14 @@ public class PinBall extends Scene {
                 this.hearts[i].paintComponent(g);
             }
         }
-        if (this.score >= 50&&this.isEnd) {
+        if (this.score >= 50 && this.isEnd) {
             PaintText.paintTwinkle(g, new Font("Showcard Gothic", Font.PLAIN, 48),
                     new Font("Showcard Gothic", Font.PLAIN, 54), Color.YELLOW, Color.BLACK,
                     "Press   \" SPACE \"  to Restart ", "You Gain", 0, 300, 2, Global.SCREEN_X, 30);
             PaintText.paintWithShadow(g, new Font("Showcard Gothic", Font.TRUETYPE_FONT, 44), Color.ORANGE, Color.BLACK, "Total Score: " + score, 0, Global.SCREEN_Y / 2 - 98, 2, Global.SCREEN_X);
-                this.specialMarble.paint(g, (int) this.specialMarble.getCenterX(), (int) this.specialMarble.getCenterY(), (int) this.specialMarble.getWidth(), (int) this.specialMarble.getHeight(), 228, 227);
-        }else if(this.isEnd){
-              PaintText.paintTwinkle(g, new Font("Showcard Gothic", Font.PLAIN, 48),
+            this.specialMarble.paint(g, (int) this.specialMarble.getCenterX(), (int) this.specialMarble.getCenterY(), (int) this.specialMarble.getWidth(), (int) this.specialMarble.getHeight(), 228, 227);
+        } else if (this.isEnd) {
+            PaintText.paintTwinkle(g, new Font("Showcard Gothic", Font.PLAIN, 48),
                     new Font("Showcard Gothic", Font.PLAIN, 54), Color.YELLOW, Color.BLACK,
                     "Press   \" SPACE \"  to Restart ", "", 0, 300, 2, Global.SCREEN_X, 30);
             PaintText.paintWithShadow(g, new Font("Showcard Gothic", Font.TRUETYPE_FONT, 44), Color.ORANGE, Color.BLACK, "Total Score: " + score, 0, Global.SCREEN_Y / 2 - 98, 2, Global.SCREEN_X);
@@ -375,7 +388,6 @@ public class PinBall extends Scene {
                             racket.offset(12, 0);
                         }
                         break;
-
                 }
             }
             if (isEnd) {
