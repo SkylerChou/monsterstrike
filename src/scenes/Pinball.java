@@ -21,7 +21,6 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import monsterstrike.gameobject.*;
 import monsterstrike.gameobject.marble.Marble;
-import monsterstrike.gameobject.marble.MarbleArray;
 import monsterstrike.gameobject.marble.MarbleInfo;
 import monsterstrike.graph.*;
 import monsterstrike.util.*;
@@ -390,7 +389,6 @@ public class Pinball extends Scene {
                             racket.offset(12, 0);
                         }
                         break;
-
                 }
             }
             if (isEnd) {
