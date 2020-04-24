@@ -166,4 +166,14 @@ public class ImgInfo {
     public static final int[] PLAYERSTAND_NUM = {2, 2};
     public static final int[][] PLAYERRUN_INFO = {{480, 695}, {480, 640}};
     public static final int[][] PLAYERSTAND_INFO = {{475, 674}, {475, 640}};
+    
+     public static final String WRITE = ITEM_ROOT + "write.png";
+     public static final String SAVE = ITEM_ROOT + "save.png";
+     public static final String [] YES = { ITEM_ROOT + "yes1.png", ITEM_ROOT + "yes2.png"};
+     public static final String[] NO = { ITEM_ROOT + "no1.png", ITEM_ROOT + "no2.png"};
+     public static final String [] FIGHT = { ITEM_ROOT + "fight1.png", ITEM_ROOT + "fight2.png"};
+     public static final String[] FRIEND = { ITEM_ROOT + "friend1.png", ITEM_ROOT + "friend2.png"};
+    
+     public static final int[] YesNo_INFO = {150, 50};//img_width, img_height  
+     public static final int[] WINDOW_INFO = {625, 273};//img_width, img_height  
 }

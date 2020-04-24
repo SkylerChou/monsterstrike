@@ -22,7 +22,7 @@ import player.Player;
 
 public class LevelMenu extends Scene {
 
-    private ArrayList<Button> buttons;
+    private ArrayList<ButtonRenderer> buttons;
     private Background menu;
     private int count;
     private int idx;
@@ -38,7 +38,6 @@ public class LevelMenu extends Scene {
     private Background mask;
     private Item lock;
     private int backIdx;
-    private boolean isReleased;
     private int x;
     private int y;
     private Delay delay;
@@ -47,7 +46,6 @@ public class LevelMenu extends Scene {
 
     private Button home;
     private boolean isEnter;
-    private boolean isOnButton;
     private boolean isSkip;
     private boolean[] isMask;
 
@@ -68,6 +66,8 @@ public class LevelMenu extends Scene {
         this.music = MRC.getInstance().tryGetMusic("/resources/wav/menu1.wav");
         this.isSkip = isSkip;
         this.isMask = new boolean[5];
+        this.home = new ButtonA(Global.SCREEN_X - 5 - ImgInfo.SETTING_INFO[0], 5, Global.SCREEN_X - 5, 5 + ImgInfo.SETTING_INFO[1],ImgInfo.HOME,ImgInfo.SETTING_INFO[0], ImgInfo.SETTING_INFO[1]);
+        this.home.setListener(new ButtonClickListener());
     }
 
     @Override
@@ -80,7 +80,6 @@ public class LevelMenu extends Scene {
         this.x = 350;
         this.y = 200;
         this.backIdx = 0;
-        this.home = new Button(ImgInfo.HOME, Global.SCREEN_X - 30, 30, ImgInfo.SETTING_INFO[0], ImgInfo.SETTING_INFO[1], 20);
         this.background = new Background(ImgInfo.BACKGROUND_PATH[this.backIdx], 0, 0, this.backIdx);
         this.mask = new Background(ImgInfo.MASK_PATH, 0, 0, 0);
         this.lock = new Item(ImgInfo.LOCK_PATH, 900, 410, 50, 50);
@@ -92,14 +91,13 @@ public class LevelMenu extends Scene {
         }
         int unitX = Global.SCREEN_X / 5;
         for (int i = 0; i < 3; i++) {
-            buttons.add(new Button(ImgInfo.RIGHT, unitX + 190, 220, ImgInfo.CHOOSEBUTTON_INFO[0], ImgInfo.CHOOSEBUTTON_INFO[1]));
-            buttons.add(new Button(ImgInfo.LEFT, unitX, 220, ImgInfo.CHOOSEBUTTON_INFO[0], ImgInfo.CHOOSEBUTTON_INFO[1]));
+            buttons.add(new ButtonRenderer(ImgInfo.RIGHT, unitX + 190, 220, ImgInfo.CHOOSEBUTTON_INFO[0], ImgInfo.CHOOSEBUTTON_INFO[1]));
+            buttons.add(new ButtonRenderer(ImgInfo.LEFT, unitX, 220, ImgInfo.CHOOSEBUTTON_INFO[0], ImgInfo.CHOOSEBUTTON_INFO[1]));
             unitX += 290;
         }
-        buttons.add(new Button(ImgInfo.RIGHT, 970, 480, ImgInfo.CHOOSEBUTTON_INFO[0], ImgInfo.CHOOSEBUTTON_INFO[1]));
-        buttons.add(new Button(ImgInfo.LEFT, 300, 480, ImgInfo.CHOOSEBUTTON_INFO[0], ImgInfo.CHOOSEBUTTON_INFO[1]));
+        buttons.add(new ButtonRenderer(ImgInfo.RIGHT, 970, 480, ImgInfo.CHOOSEBUTTON_INFO[0], ImgInfo.CHOOSEBUTTON_INFO[1]));
+        buttons.add(new ButtonRenderer(ImgInfo.LEFT, 300, 480, ImgInfo.CHOOSEBUTTON_INFO[0], ImgInfo.CHOOSEBUTTON_INFO[1]));
         this.currentMarble = this.myMarbles.get(0);
-        this.isReleased = true;
         this.delay = new Delay(20);
         this.delay.start();
         for (int i = 0; i < this.isMask.length; i++) {
@@ -145,9 +143,6 @@ public class LevelMenu extends Scene {
         if (this.isEnter) {
             sceneController.changeScene(new FileIOScene(sceneController, playerInfo, "w"));
             this.music.stop();
-        }
-        if (this.isOnButton) {
-            this.home.update();
         }
     }
 
@@ -261,9 +256,11 @@ public class LevelMenu extends Scene {
 
         @Override
         public void keyPressed(int commandCode, long trigTime) {
-            if (isReleased) {
-                isReleased = false;
-                switch (commandCode) {
+        }
+
+        @Override
+        public void keyReleased(int commandCode, long trigTime) {
+            switch (commandCode) {
                     case Global.LEFT:
                         if (count <= 3) {
                             idx--;
@@ -294,12 +291,6 @@ public class LevelMenu extends Scene {
                         enter();
                         break;
                 }
-            }
-        }
-
-        @Override
-        public void keyReleased(int commandCode, long trigTime) {
-            isReleased = true;
         }
 
         @Override
@@ -311,15 +302,10 @@ public class LevelMenu extends Scene {
 
         @Override
         public void mouseTrig(MouseEvent e, CommandSolver.MouseState state, long trigTime) {
+           home.update(e, state);
             if (state == CommandSolver.MouseState.PRESSED && e.getX() > Global.SCREEN_X - 30 - ImgInfo.SETTING_INFO[1] / 2 && e.getX() < Global.SCREEN_X - 30 + ImgInfo.SETTING_INFO[1] / 2
                     && e.getY() > 30 - ImgInfo.SETTING_INFO[1] / 2 && e.getY() < 30 + ImgInfo.SETTING_INFO[1] / 2) {
                 isEnter = true;
-            }
-            if (state == CommandSolver.MouseState.MOVED && e.getX() > Global.SCREEN_X - 30 - ImgInfo.SETTING_INFO[1] / 2 && e.getX() < Global.SCREEN_X - 30 + ImgInfo.SETTING_INFO[1] / 2
-                    && e.getY() > 30 - ImgInfo.SETTING_INFO[1] / 2 && e.getY() < 30 + ImgInfo.SETTING_INFO[1] / 2) {
-                isOnButton = true;
-            } else {
-                isOnButton = false;
             }
         }
     }

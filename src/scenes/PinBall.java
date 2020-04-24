@@ -46,9 +46,7 @@ public class PinBall extends Scene {
     private boolean isOut;
     private int countHeart;
 
-    private ArrayList<Button> buttons;
     private boolean isEnter;
-    private boolean isOnButton;
     private boolean isEnd;
     private boolean isReplay;
     private boolean isPaint;
@@ -58,13 +56,13 @@ public class PinBall extends Scene {
     private Marble specialMarble; //抽中怪物  
     private PlayerInfo playerinfo;
     private AudioClip music;
+    private Button button;
 
-    public PinBall(SceneController sceneController, PlayerInfo playerinfo) {       
+    public PinBall(SceneController sceneController, PlayerInfo playerinfo) {
         super(sceneController);
         this.playerinfo = playerinfo;
         this.scoreBoard = IRC.getInstance().tryGetImage("/resources/score.png");
         this.post = new ArrayList<>();
-        this.buttons = new ArrayList<>();
         this.allMarbleInfo = new ArrayList<>();
         this.Allteeth = new ArrayList<>();
 
@@ -73,6 +71,8 @@ public class PinBall extends Scene {
             this.Allteeth.add(new Marble(0, 0, 150, 150, this.allMarbleInfo.get(i)));
         }
         this.music = MRC.getInstance().tryGetMusic("/resources/wav/pinBack.wav");
+        this.button = new ButtonA(Global.SCREEN_X - 5 - ImgInfo.SETTING_INFO[0], 5, Global.SCREEN_X - 5, 5 + ImgInfo.SETTING_INFO[1],ImgInfo.HOME, ImgInfo.SETTING_INFO[0], ImgInfo.SETTING_INFO[1]);
+        this.button.setListener(new ButtonClickListener());
     }
 
     @Override
@@ -84,7 +84,6 @@ public class PinBall extends Scene {
             this.post.add(new Obstacle(ImgInfo.POSTS_PATH, 150 + i * 150, 150 + y,
                     ImgInfo.POST_INFO[0], ImgInfo.POST_INFO[1], ImgInfo.POST_INFO[2], ImgInfo.POST_INFO[3]));
         }
-        this.buttons.add(new Button(ImgInfo.HOME, Global.SCREEN_X - 30, 30, ImgInfo.SETTING_INFO[0], ImgInfo.SETTING_INFO[1], 20));
         this.home = new SpecialEffect(ImgInfo.BLACKHOLE, 1000, 500,
                 ImgInfo.BLACKHOLE_INFO[0], ImgInfo.BLACKHOLE_INFO[1], 40);
         this.home.setShine(true);
@@ -96,7 +95,6 @@ public class PinBall extends Scene {
         this.background.setX(2 * ImgInfo.BACKGROUND_SIZE[idx][0]);
         this.dinoGetNum = 0;
         this.isEnter = false;
-        this.isOnButton = false;
         this.isEnd = false;
         this.isReplay = false;
         this.isPaint = true;
@@ -210,9 +208,6 @@ public class PinBall extends Scene {
             this.music.stop();
             sceneController.changeScene(new Menu(sceneController));
         }
-        if (this.isOnButton) {
-            this.buttons.get(0).update();
-        }
         if (this.isReplay) {
             sceneController.changeScene(new PinBall(sceneController, this.playerinfo));
             this.music.stop();
@@ -299,7 +294,7 @@ public class PinBall extends Scene {
     @Override
     public void paint(Graphics g) {
         this.background.paintMenu(g);
-        this.buttons.get(0).paint(g);
+        this.button.paint(g);
         this.arrow.paint(g);
         this.home.paint(g);
         this.dino.paint(g);
@@ -420,15 +415,10 @@ public class PinBall extends Scene {
 
         @Override
         public void mouseTrig(MouseEvent e, CommandSolver.MouseState state, long trigTime) {
+           button.update(e, state);
             if (state == CommandSolver.MouseState.PRESSED && e.getX() > Global.SCREEN_X - 30 - ImgInfo.SETTING_INFO[1] / 2 && e.getX() < Global.SCREEN_X - 30 + ImgInfo.SETTING_INFO[1] / 2
                     && e.getY() > 30 - ImgInfo.SETTING_INFO[1] / 2 && e.getY() < 30 + ImgInfo.SETTING_INFO[1] / 2) {
                 isEnter = true;
-            }
-            if (state == CommandSolver.MouseState.MOVED && e.getX() > Global.SCREEN_X - 30 - ImgInfo.SETTING_INFO[1] / 2 && e.getX() < Global.SCREEN_X - 30 + ImgInfo.SETTING_INFO[1] / 2
-                    && e.getY() > 30 - ImgInfo.SETTING_INFO[1] / 2 && e.getY() < 30 + ImgInfo.SETTING_INFO[1] / 2) {
-                isOnButton = true;
-            } else {
-                isOnButton = false;
             }
             if (checkStop()) {
                 if (state == CommandSolver.MouseState.PRESSED) {

@@ -5,46 +5,41 @@
  */
 package monsterstrike.gameobject;
 
-import java.awt.Graphics;
+import java.awt.event.MouseEvent;
+import monsterstrike.util.CommandSolver;
 
-public class Button extends SceneObject {
+/**
+ *
+ * @author kim19
+ */
+public abstract class Button extends Component {
 
-    private ObjectRenderer renderer;
-    private boolean isShow;
-
-    public Button(String[] path, int x, int y, int width, int height) {
-        super(x, y, width, height);
-        this.renderer = new ObjectRenderer(path, 0);
-        this.isShow = true;
+    public interface OnClickListener {
+        public void onClick(Component c);
     }
 
-    public Button(String[] path, int x, int y, int width, int height, int frame) {
-        super(x, y, width, height);
-        this.renderer = new ObjectRenderer(path, frame);
-        this.isShow = true;
-    }
+    private OnClickListener listener;
 
-    public void resetImg() {
-        this.renderer.restImg();
-    }
-
-    public void update() {
-        this.renderer.update();
-    }
-
-    public void setIsShow(boolean isShow) {
-        this.isShow = isShow;
-    }
-
-    public boolean getIsShow() {
-        return this.isShow;
+    public Button(int left, int top, int right, int bottom) {
+        super(left, top, right, bottom);
     }
 
     @Override
-    public void paint(Graphics g) {
-        if (this.isShow) {
-            this.renderer.paint(g, (int) this.getX(), (int) this.getY(),
-                    (int) this.getWidth(), (int) this.getHeight());
+    public void update(MouseEvent e, CommandSolver.MouseState state) {
+        // 前一幀的狀態 => 按下
+        int lastState = currentState;
+        super.update(e, state);
+        // 當前這一幀的狀態 => Hover
+
+        if (lastState == Component.STATE_PRESSED
+                && currentState == Component.STATE_HOVER) {
+            if(listener != null){
+                listener.onClick(this);
+            }
         }
+    }
+
+    public void setListener(OnClickListener listener) {
+        this.listener = listener;
     }
 }

@@ -5,6 +5,7 @@
  */
 package scenes;
 
+import controllers.IRC;
 import controllers.MRC;
 import controllers.SceneController;
 import java.applet.AudioClip;
@@ -12,6 +13,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import monsterstrike.gameobject.*;
 import monsterstrike.util.*;
@@ -20,17 +22,19 @@ import player.PlayerInfo;
 
 public class FileIOScene extends Scene {
 
+    private BufferedImage img1;
+    private BufferedImage img2;
     private Button home;
+    private Button yes;
+    private Button no;
     private Background menu;
-    private Button shineFrame;
+    private ButtonRenderer shineFrame;
     private ArrayList<PlayerInfo> playersInfo;
     private PlayerInfo playerInfo;
     private ArrayList<Player> players;
     private int currentIdx;
     private int enterCount;
-    private boolean isOnButton;  //滑鼠在Home鍵上
     private boolean isClick;    //是否按下Home鍵
-    private boolean isReleased;
     private boolean isEmpty;    //讀取狀態是否沒有玩家資料
     private boolean isSave;     //決定是否儲存
     private Item[] back;
@@ -60,7 +64,6 @@ public class FileIOScene extends Scene {
             this.enterCount = 0;
         }
         this.isClick = false;
-        this.isOnButton = false;
     }
 
     public FileIOScene(SceneController sceneController, PlayerInfo playerInfo, String state) {
@@ -77,7 +80,6 @@ public class FileIOScene extends Scene {
             this.enterCount = 0;
         }
         this.isClick = false;
-        this.isOnButton = false;
         this.yesOnBtn = false;
         this.noOnBtn = false;
         this.isWrite = false;
@@ -89,14 +91,21 @@ public class FileIOScene extends Scene {
 
     @Override
     public void sceneBegin() {
+        this.img1 = IRC.getInstance().tryGetImage("/resources/items/write.png");
+        this.img2 = IRC.getInstance().tryGetImage("/resources/items/save.png");
+        this.home = new ButtonA(Global.SCREEN_X - 5 - ImgInfo.SETTING_INFO[0], 5, Global.SCREEN_X - 5, 5 + ImgInfo.SETTING_INFO[1], ImgInfo.HOME, ImgInfo.SETTING_INFO[0], ImgInfo.SETTING_INFO[1]);
+        this.home.setListener(new ButtonClickListener());
+        this.yes = new ButtonA(Global.SCREEN_X / 2 -170, Global.SCREEN_Y / 2 + 35, Global.SCREEN_X / 2 - 170 + ImgInfo.YesNo_INFO[0], Global.SCREEN_Y / 2 + 35 + ImgInfo.YesNo_INFO[1], ImgInfo.YES, ImgInfo.YesNo_INFO[0], ImgInfo.YesNo_INFO[1]);
+        this.yes.setListener(new ButtonClickListener());
+        this.no = new ButtonA(Global.SCREEN_X / 2 + 20, Global.SCREEN_Y / 2 + 35, Global.SCREEN_X / 2 + 20 + ImgInfo.YesNo_INFO[0], Global.SCREEN_Y / 2 + 35 + ImgInfo.YesNo_INFO[1], ImgInfo.NO, ImgInfo.YesNo_INFO[0], ImgInfo.YesNo_INFO[1]);
+        this.no.setListener(new ButtonClickListener());
         this.music = MRC.getInstance().tryGetMusic("/resources/wav/charaterSeletion.wav");
         this.music.loop();
         this.menu = new Background(ImgInfo.BACK_PATH, 0, 0, 1);
         if (this.isEmpty) {//讀取無存檔
-            this.home = new Button(ImgInfo.HOME, Global.SCREEN_X / 2 + 100, Global.SCREEN_Y / 2 - 20, ImgInfo.SETTING_INFO[0], ImgInfo.SETTING_INFO[1], 20);
+            this.home = new ButtonA(Global.SCREEN_X / 2 + 100, Global.SCREEN_Y / 2 - 20, ImgInfo.SETTING_INFO[0], ImgInfo.SETTING_INFO[1], ImgInfo.HOME, ImgInfo.SETTING_INFO[0], ImgInfo.SETTING_INFO[1]);
         } else {
-            this.home = new Button(ImgInfo.HOME, Global.SCREEN_X - 30, 30, ImgInfo.SETTING_INFO[0], ImgInfo.SETTING_INFO[1], 20);
-            this.shineFrame = new Button(ImgInfo.SHINEFRAME_PATH, Global.SCREEN_X / 2, 150 + 120 * (1 + currentIdx),
+            this.shineFrame = new ButtonRenderer(ImgInfo.SHINEFRAME_PATH, Global.SCREEN_X / 2, 150 + 120 * (1 + currentIdx),
                     350, 100, 14);
             this.shineFrame.setIsShow(true);
             for (int i = 0; i < this.playersInfo.size(); i++) {
@@ -116,9 +125,8 @@ public class FileIOScene extends Scene {
     @Override
     public void sceneUpdate() {
         if (this.isEmpty || (!isSave && !showWindow && this.playersInfo.isEmpty())) {
-            this.home.update();
-            this.home.setCenterX(Global.SCREEN_X / 2 + 100);
-            this.home.setCenterY(Global.SCREEN_Y / 2 - 20);
+            this.home.setX(Global.SCREEN_X / 2 + 100);
+            this.home.setY(Global.SCREEN_Y / 2 - 20);
         } else {
             this.shineFrame.update();
             this.shineFrame.setCenterY(150 + 120 * (1 + currentIdx));
@@ -152,9 +160,6 @@ public class FileIOScene extends Scene {
                         sceneController.changeScene(new ChooseGame(sceneController, this.playersInfo.get(currentIdx)));
                     }
                 }
-            }
-            if (this.isOnButton) {
-                this.home.update();
             }
         }
 
@@ -202,9 +207,13 @@ public class FileIOScene extends Scene {
             PaintText.paintTwinkle(g, new Font("Arial Unicode MS", Font.PLAIN, 26), new Font("Arial Unicode MS", Font.PLAIN, 32),
                     Color.BLACK, "尚無存檔！", 0, Global.SCREEN_Y / 2, Global.SCREEN_X, 30);
         } else if (this.showWindow) {
-            PaintText.paintWindow(g, new Font("Arial Unicode MS", Font.PLAIN, 24), "是否儲存檔案？", yesOnBtn, noOnBtn);
+            g.drawImage(img1, Global.SCREEN_X / 4, Global.SCREEN_Y / 4, ImgInfo.WINDOW_INFO[0], ImgInfo.WINDOW_INFO[1], null);
+            this.yes.paint(g);
+            this.no.paint(g);
         } else if (this.showCheckWindow) {
-            PaintText.paintWindow(g, new Font("Arial Unicode MS", Font.PLAIN, 24), "確定寫入嗎？", yesOnBtn, noOnBtn);
+            g.drawImage(img2, Global.SCREEN_X / 4, Global.SCREEN_Y / 4, ImgInfo.WINDOW_INFO[0], ImgInfo.WINDOW_INFO[1], null);
+            this.yes.paint(g);
+            this.no.paint(g);
         } else {
             for (int i = 0; i < this.back.length; i++) {
                 this.back[i].paint(g);
@@ -241,8 +250,12 @@ public class FileIOScene extends Scene {
 
         @Override
         public void keyPressed(int commandCode, long trigTime) {
-            if (isReleased && !isEmpty && !showWindow) {
-                isReleased = false;
+
+        }
+
+        @Override
+        public void keyReleased(int commandCode, long trigTime) {
+            if (!isEmpty && !showWindow) {
                 int bound = playersInfo.size() - 1;
                 if (isSave) {
                     bound = 2;
@@ -271,11 +284,6 @@ public class FileIOScene extends Scene {
         }
 
         @Override
-        public void keyReleased(int commandCode, long trigTime) {
-            isReleased = true;
-        }
-
-        @Override
         public void keyTyped(char c, long trigTime) {
 
         }
@@ -285,14 +293,17 @@ public class FileIOScene extends Scene {
 
         @Override
         public void mouseTrig(MouseEvent e, CommandSolver.MouseState state, long trigTime) {
+            home.update(e, state);
+            yes.update(e, state);
+            no.update(e, state);
             if (isEmpty || (!isSave && !showWindow && playersInfo.isEmpty())) { //讀取無存檔
                 if (state == CommandSolver.MouseState.PRESSED && e.getX() > 710 && e.getX() < 755
                         && e.getY() > 276 && e.getY() < 323) {
                     isClick = true;
                 }
             } else if (showWindow || showCheckWindow) {
-                if (state == CommandSolver.MouseState.PRESSED && e.getX() > 552 && e.getX() < 612
-                        && e.getY() > 330 && e.getY() < 360) {
+              if (state == CommandSolver.MouseState.PRESSED && e.getX() >yes.getLeft() && e.getX() < yes.getLeft()+yes.getW()
+                        && e.getY() > yes.getTop() && e.getY() < yes.getTop()+yes.getH()) {
                     if (showWindow) {
                         isSave = true;
                         showWindow = false;
@@ -300,8 +311,8 @@ public class FileIOScene extends Scene {
                         isCheck = true;
                         showCheckWindow = false;
                     }
-                } else if (state == CommandSolver.MouseState.PRESSED && e.getX() > 653 && e.getX() < 710
-                        && e.getY() > 330 && e.getY() < 360) {
+                } else if (state == CommandSolver.MouseState.PRESSED && e.getX() >no.getLeft() && e.getX() < no.getLeft()+no.getW()
+                        && e.getY() > no.getTop() && e.getY() < no.getTop()+no.getH()) {
                     if (showWindow) {
                         isSave = false;
                         showWindow = false;
@@ -311,26 +322,11 @@ public class FileIOScene extends Scene {
                         showCheckWindow = false;
                     }
                 }
-                if (state == CommandSolver.MouseState.MOVED && e.getX() > 552 && e.getX() < 612
-                        && e.getY() > 330 && e.getY() < 360) {
-                    yesOnBtn = true;
-                } else if (state == CommandSolver.MouseState.MOVED && e.getX() > 653 && e.getX() < 710
-                        && e.getY() > 330 && e.getY() < 360) {
-                    noOnBtn = true;
-                } else {
-                    yesOnBtn = false;
-                    noOnBtn = false;
-                }
             } else {
+                home.update(e, state);
                 if (state == CommandSolver.MouseState.PRESSED && e.getX() > Global.SCREEN_X - 30 - ImgInfo.SETTING_INFO[1] / 2 && e.getX() < Global.SCREEN_X - 30 + ImgInfo.SETTING_INFO[1] / 2
                         && e.getY() > 30 - ImgInfo.SETTING_INFO[1] / 2 && e.getY() < 30 + ImgInfo.SETTING_INFO[1] / 2) {
                     isClick = true;
-                }
-                if (state == CommandSolver.MouseState.MOVED && e.getX() > Global.SCREEN_X - 30 - ImgInfo.SETTING_INFO[1] / 2 && e.getX() < Global.SCREEN_X - 30 + ImgInfo.SETTING_INFO[1] / 2
-                        && e.getY() > 30 - ImgInfo.SETTING_INFO[1] / 2 && e.getY() < 30 + ImgInfo.SETTING_INFO[1] / 2) {
-                    isOnButton = true;
-                } else {
-                    isOnButton = false;
                 }
             }
         }

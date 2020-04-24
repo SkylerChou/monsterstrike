@@ -29,7 +29,7 @@ public abstract class LevelScene extends Scene {
     private Background background;
     private Item item; //資訊欄
     private Item blood; //血條
-    private Button[] shineFrame; //資訊欄怪物亮框
+    private ButtonRenderer[] shineFrame; //資訊欄怪物亮框
     private Marble[] myMarbles; //資訊欄顯示怪物
     protected ArrayList<Marble> marbles; //我方出戰怪物
     private MarbleArray allEnemies; //敵方所有怪物
@@ -57,9 +57,8 @@ public abstract class LevelScene extends Scene {
     private PlayerInfo playerinfo;
     private int overCount;
 
-    private ArrayList<Button> buttons;
+    private Button home;
     private boolean isEnter;
-    private boolean isOnButton;
     private boolean isCount;
     private boolean isClick;
     protected boolean isWin;
@@ -78,7 +77,7 @@ public abstract class LevelScene extends Scene {
                 Global.SCREEN_X, Global.INFO_H);
         this.blood = new Item(ImgInfo.BLOOD_PATH, ImgInfo.BLOOD_INFO[0], ImgInfo.BLOOD_INFO[1],
                 ImgInfo.BLOOD_INFO[2], ImgInfo.BLOOD_INFO[3]);
-        this.shineFrame = new Button[3];
+        this.shineFrame = new ButtonRenderer[3];
         this.atkRound = new int[3];
         this.marbles = new ArrayList<>();
         this.battleEnemies = new ArrayList<>();
@@ -102,15 +101,15 @@ public abstract class LevelScene extends Scene {
         this.tmpCount = 1;
         this.tmpCount2 = 0;
         this.props = new ArrayList<>();
-        this.buttons = new ArrayList<>();
         this.isEnter = false;
-        this.isOnButton = false;
         this.isCount = false;
         this.isClick = false;
         this.overCount = 0;
         this.isWin = false;
         this.isDraw = false;
         this.music = MRC.getInstance().tryGetMusic("/resources/wav/battle.wav");
+        this.home = new ButtonA(Global.SCREEN_X - 30 - ImgInfo.SETTING_INFO[0], Global.SCREEN_Y - 75, Global.SCREEN_X - 30, Global.SCREEN_Y -75 + ImgInfo.SETTING_INFO[1], ImgInfo.HOME, ImgInfo.SETTING_INFO[0], ImgInfo.SETTING_INFO[1]);
+        this.home.setListener(new ButtonClickListener());
     }
 
     @Override
@@ -123,11 +122,10 @@ public abstract class LevelScene extends Scene {
             this.marbles.get(i).setDetect(this.marbles.get(i).duplicate());
         }
         for (int i = 0; i < this.shineFrame.length; i++) {
-            this.shineFrame[i] = new Button(ImgInfo.SHINEFRAME_PATH, (int) this.myMarbles[i].getCenterX(), (int) this.myMarbles[i].getCenterY(),
+            this.shineFrame[i] = new ButtonRenderer(ImgInfo.SHINEFRAME_PATH, (int) this.myMarbles[i].getCenterX(), (int) this.myMarbles[i].getCenterY(),
                     ImgInfo.SHINEFRAME_INFO[0], ImgInfo.SHINEFRAME_INFO[1], 20);
             this.shineFrame[i].setIsShow(false);
         }
-        this.buttons.add(new Button(ImgInfo.HOME, Global.SCREEN_X - 50, Global.SCREEN_Y - 50, ImgInfo.SETTING_INFO[0], ImgInfo.SETTING_INFO[1], 20));
         this.arrow = new Arrow(ImgInfo.ARROW, 0, 0, ImgInfo.ARROW_INFO);
         this.currentIdx = 0;
         this.count = 0;
@@ -159,7 +157,7 @@ public abstract class LevelScene extends Scene {
             calculateHP();//計算我方HP
 
             enemyDie();//判斷敵人死亡
-            
+
             for (int i = 0; i < this.battleEnemies.size(); i++) {
                 if (this.battleEnemies.get(i).getIsCollide()) {
                     ARC.getInstance().play("/resources/wav/die.wav");
@@ -205,11 +203,7 @@ public abstract class LevelScene extends Scene {
             String mymarbleFile = "mymarbleInfoTmp.csv";
             FileIO.writeMarble(mymarbleFile, null);
             this.music.stop();
-            sceneController.changeScene(new FileIOScene(sceneController, this.playerinfo,"w"));
-            return;
-        }
-        if (this.isOnButton) { //游標在Home
-            this.buttons.get(0).update();
+            sceneController.changeScene(new FileIOScene(sceneController, this.playerinfo, "w"));
         }
 //        }
     }
@@ -583,7 +577,7 @@ public abstract class LevelScene extends Scene {
         this.item.paint(g);
         paintGameObject(g);
         this.blood.paintResize(g, this.ratio);
-        this.buttons.get(0).paint(g);
+        this.home.paint(g);
         this.player.paint(g);
         if (this.arrow != null && this.arrow.getShow()) {
             this.arrow.paint(g);
@@ -696,14 +690,14 @@ public abstract class LevelScene extends Scene {
 
         @Override
         public void keyPressed(int commandCode, long trigTime) {
-            if ((isLose() || isWin) && commandCode == Global.ENTER) {
-                System.out.println("!");
-                isEnter = true;
-            }
         }
 
         @Override
         public void keyReleased(int commandCode, long trigTime) {
+            if ((isLose() || isWin) && commandCode == Global.ENTER) {
+                System.out.println("!");
+                isEnter = true;
+            }
         }
 
         @Override
@@ -721,17 +715,11 @@ public abstract class LevelScene extends Scene {
 
         @Override
         public void mouseTrig(MouseEvent e, CommandSolver.MouseState mouseState, long trigTime) {
+            home.update(e, mouseState);
             if (mouseState == CommandSolver.MouseState.PRESSED && e.getX() > Global.SCREEN_X - 50 - ImgInfo.SETTING_INFO[1] / 2 && e.getX() < Global.SCREEN_X - 50 + ImgInfo.SETTING_INFO[1] / 2
                     && e.getY() > Global.SCREEN_Y - 50 - ImgInfo.SETTING_INFO[1] / 2 && e.getY() < Global.SCREEN_Y - 50 + ImgInfo.SETTING_INFO[1] / 2) {
                 isClick = true;
             }
-            if (mouseState == CommandSolver.MouseState.MOVED && e.getX() > Global.SCREEN_X - 50 - ImgInfo.SETTING_INFO[1] / 2 && e.getX() < Global.SCREEN_X - 50 + ImgInfo.SETTING_INFO[1] / 2
-                    && e.getY() > Global.SCREEN_Y - 50 - ImgInfo.SETTING_INFO[1] / 2 && e.getY() < Global.SCREEN_Y - 50 + ImgInfo.SETTING_INFO[1] / 2) {
-                isOnButton = true;
-            } else {
-                isOnButton = false;
-            }
-
             if (state == 1 && checkAllStop() && allSkillStop(battleEnemies)) {
                 arrow.setResizeMag(0);
 

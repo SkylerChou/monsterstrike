@@ -81,33 +81,32 @@ public class PaintText {
         }
     }
 
-    public static void paintWindow(Graphics g, Font font, String text,
-            boolean yesOnBtn, boolean noOnBtn) {
-        Color c1 = Color.GRAY;
-        Color c2 = Color.GRAY;
-        if (yesOnBtn) {
-            c1 = Color.YELLOW;
-        } else if (noOnBtn) {
-            c2 = Color.YELLOW;
-        }
+    public static void paintWindow(Graphics g, Font font, String text) {
+//        Color c1 = Color.GRAY;
+//        Color c2 = Color.GRAY;
+//        if (yesOnBtn) {
+//            c1 = Color.YELLOW;
+//        } else if (noOnBtn) {
+//            c2 = Color.YELLOW;
+//        }
         g.setColor(Color.WHITE);
         g.fillRect(Global.SCREEN_X / 2 - 100, Global.SCREEN_Y / 2 - 50, 200, 100);
         g.setColor(Color.BLACK);
         g.drawRect(Global.SCREEN_X / 2 - 100, Global.SCREEN_Y / 2 - 50, 200, 100);
-        g.setColor(c1);
-        g.fillRect(Global.SCREEN_X / 2 - 80, Global.SCREEN_Y / 2 + 10, 60, 30);
-        g.setColor(Color.BLACK);
-        g.drawRect(Global.SCREEN_X / 2 - 80, Global.SCREEN_Y / 2 + 10, 60, 30);
-        g.setColor(c2);
-        g.fillRect(Global.SCREEN_X / 2 + 20, Global.SCREEN_Y / 2 + 10, 60, 30);
-        g.setColor(Color.BLACK);
-        g.drawRect(Global.SCREEN_X / 2 + 20, Global.SCREEN_Y / 2 + 10, 60, 30);
+//        g.setColor(c1);
+//        g.fillRect(Global.SCREEN_X / 2 - 80, Global.SCREEN_Y / 2 + 10, 60, 30);
+//        g.setColor(Color.BLACK);
+//        g.drawRect(Global.SCREEN_X / 2 - 80, Global.SCREEN_Y / 2 + 10, 60, 30);
+//        g.setColor(c2);
+//        g.fillRect(Global.SCREEN_X / 2 + 20, Global.SCREEN_Y / 2 + 10, 60, 30);
+//        g.setColor(Color.BLACK);
+//        g.drawRect(Global.SCREEN_X / 2 + 20, Global.SCREEN_Y / 2 + 10, 60, 30);
         PaintText.paint(g, font, Color.BLACK,
                 text, 0, Global.SCREEN_Y / 2 - 10, Global.SCREEN_X);
-        PaintText.paint(g, font, Color.BLACK,
-                "是", Global.SCREEN_X / 2 - 80, Global.SCREEN_Y / 2 + 35, 60);
-        PaintText.paint(g, font, Color.BLACK,
-                "否", Global.SCREEN_X / 2 + 20, Global.SCREEN_Y / 2 + 35, 60);
+//        PaintText.paint(g, font, Color.BLACK,
+//                "是", Global.SCREEN_X / 2 - 80, Global.SCREEN_Y / 2 + 35, 60);
+//        PaintText.paint(g, font, Color.BLACK,
+//                "否", Global.SCREEN_X / 2 + 20, Global.SCREEN_Y / 2 + 35, 60);
 
     }
 
