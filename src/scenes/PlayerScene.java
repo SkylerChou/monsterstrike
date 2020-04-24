@@ -25,19 +25,17 @@ import player.Player;
  * @author yuin8
  */
 public class PlayerScene extends Scene {
-    
+
     private PlayerInfo playerInfo;
     private Background menu;
     private Player[] players;
     private String name;
-    private boolean isReleased;
     private int currentIdx;
     private ButtonRenderer[] shineFrame;
     private boolean isDone;
     private boolean isEnter;
-    private boolean isOnButton;
     private boolean isClick;
-    private ButtonRenderer button;
+    private Button home;
     private int enterCount;
     private BufferedImage img;
     private AudioClip music;
@@ -51,14 +49,14 @@ public class PlayerScene extends Scene {
         this.currentIdx = 0;
         this.isDone = false;
         this.isEnter = false;
-        this.isOnButton = false;
         this.isClick = false;
         this.enterCount = 0;
         this.name = "";
-        this.music=MRC.getInstance().tryGetMusic("/resources/wav/charaterSeletion.wav");
-        this.isReleased = true;
+        this.music = MRC.getInstance().tryGetMusic("/resources/wav/charaterSeletion.wav");
+        this.home = new ButtonA(Global.SCREEN_X - 5 - ImgInfo.SETTING_INFO[0], 5, Global.SCREEN_X - 5, 5 + ImgInfo.SETTING_INFO[1], ImgInfo.HOME, ImgInfo.SETTING_INFO[0], ImgInfo.SETTING_INFO[1]);
+        this.home.setListener(new ButtonClickListener());
     }
-    
+
     @Override
     public void sceneBegin() {
         this.menu = new Background(ImgInfo.LEVELBACK_PATH, 0, 0, 1);
@@ -68,11 +66,9 @@ public class PlayerScene extends Scene {
                     180, 250, 20);
             this.shineFrame[i].setIsShow(true);
         }
-        this.button = new ButtonRenderer(ImgInfo.HOME, Global.SCREEN_X - 30, 30,
-                ImgInfo.SETTING_INFO[0], ImgInfo.SETTING_INFO[1], 20);
         this.music.loop();
     }
-    
+
     @Override
     public void sceneUpdate() {
         if (enterCount == 0) {
@@ -97,40 +93,37 @@ public class PlayerScene extends Scene {
                 name = "user";
             }
             this.playerInfo.setName(name);
-        }else{
+        } else {
             this.music.stop();
-            sceneController.changeScene(new LevelMenu(sceneController, 
-                        this.playerInfo, "mymarbleInfoInit.csv", false));
+            sceneController.changeScene(new LevelMenu(sceneController,
+                    this.playerInfo, "mymarbleInfoInit.csv", false));
         }
         if (this.isEnter) {
             this.music.stop();
             sceneController.changeScene(new Menu(sceneController));
         }
-        if (this.isOnButton) {
-            this.button.update();
-        }
     }
-    
+
     @Override
     public void sceneEnd() {
-        
+
     }
-    
+
     @Override
     public void paint(Graphics g) {
         this.menu.paintMenu(g);
-        this.button.paint(g);
+        this.home.paint(g);
         for (int i = 0; i < this.players.length; i++) {
             this.players[i].paint(g);
             this.shineFrame[i].paint(g);
         }
-        
+
         if (enterCount > 0) {
             PaintText.paint(g, new Font("VinerHandITC", Font.PLAIN, 24),
                     Color.BLACK, "Player Name: ", -70, 500, Global.SCREEN_X);
             PaintText.paint(g, new Font("VinerHandITC", Font.PLAIN, 24),
                     Color.BLACK, "Level 1", -40, 550, Global.SCREEN_X);
-            
+
             if (enterCount == 1) {
                 g.drawImage(img, Global.SCREEN_X / 2 + 10, 475, 150, 30, null);
                 if (isDone || isClick) {
@@ -151,39 +144,36 @@ public class PlayerScene extends Scene {
         }
 //        g.drawString("Level 1", Global.SCREEN_X / 2 - 70, 540);
     }
-    
+
     @Override
     public CommandSolver.KeyListener getKeyListener() {
         return new MyKeyListener();
     }
-    
+
     @Override
     public CommandSolver.MouseCommandListener getMouseListener() {
         return new MyMouseListener();
     }
-    
+
     public class MyKeyListener implements CommandSolver.KeyListener {
-        
+
         @Override
         public void keyPressed(int commandCode, long trigTime) {
-            if (isReleased) {
-                isReleased = false;
-                if (commandCode == Global.LEFT && currentIdx == 1) {
-                    currentIdx = 0;
-                } else if (commandCode == Global.RIGHT && currentIdx == 0) {
-                    currentIdx = 1;
-                } else if (commandCode == Global.ENTER) {
-                    isDone = true;
-                    enterCount++;
-                }
-            }
+
         }
-        
+
         @Override
         public void keyReleased(int commandCode, long trigTime) {
-            isReleased = true;
+            if (commandCode == Global.LEFT && currentIdx == 1) {
+                currentIdx = 0;
+            } else if (commandCode == Global.RIGHT && currentIdx == 0) {
+                currentIdx = 1;
+            } else if (commandCode == Global.ENTER) {
+                isDone = true;
+                enterCount++;
+            }
         }
-        
+
         @Override
         public void keyTyped(char c, long trigTime) {
             if (isDone && enterCount == 1) {
@@ -194,11 +184,12 @@ public class PlayerScene extends Scene {
             }
         }
     }
-    
+
     public class MyMouseListener implements CommandSolver.MouseCommandListener {
-        
+
         @Override
         public void mouseTrig(MouseEvent e, CommandSolver.MouseState state, long trigTime) {
+            home.update(e, state);
             if (state == CommandSolver.MouseState.PRESSED && e.getX() > Global.SCREEN_X - 30 - ImgInfo.SETTING_INFO[1] / 2 && e.getX() < Global.SCREEN_X - 30 + ImgInfo.SETTING_INFO[1] / 2
                     && e.getY() > 30 - ImgInfo.SETTING_INFO[1] / 2 && e.getY() < 30 + ImgInfo.SETTING_INFO[1] / 2) {
                 isEnter = true;
@@ -206,13 +197,7 @@ public class PlayerScene extends Scene {
                     && e.getY() > 475 && e.getY() < 505) {
                 isClick = true;
             }
-            if (state == CommandSolver.MouseState.MOVED && e.getX() > Global.SCREEN_X - 30 - ImgInfo.SETTING_INFO[1] / 2 && e.getX() < Global.SCREEN_X - 30 + ImgInfo.SETTING_INFO[1] / 2
-                    && e.getY() > 30 - ImgInfo.SETTING_INFO[1] / 2 && e.getY() < 30 + ImgInfo.SETTING_INFO[1] / 2) {
-                isOnButton = true;
-            } else {
-                isOnButton = false;
-            }
         }
     }
-    
+
 }

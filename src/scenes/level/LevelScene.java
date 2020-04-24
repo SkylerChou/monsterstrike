@@ -57,9 +57,8 @@ public abstract class LevelScene extends Scene {
     private PlayerInfo playerinfo;
     private int overCount;
 
-    private ArrayList<ButtonRenderer> buttons;
+    private Button home;
     private boolean isEnter;
-    private boolean isOnButton;
     private boolean isCount;
     private boolean isClick;
     protected boolean isWin;
@@ -103,9 +102,7 @@ public abstract class LevelScene extends Scene {
         this.tmpCount = 1;
         this.tmpCount2 = 0;
         this.props = new ArrayList<>();
-        this.buttons = new ArrayList<>();
         this.isEnter = false;
-        this.isOnButton = false;
         this.isCount = false;
         this.isClick = false;
         this.overCount = 0;
@@ -113,6 +110,8 @@ public abstract class LevelScene extends Scene {
         this.isDraw = false;
         this.enemyIsAtk = false;
         this.music = MRC.getInstance().tryGetMusic("/resources/wav/battle.wav");
+        this.home = new ButtonA(Global.SCREEN_X - 30 - ImgInfo.SETTING_INFO[0], Global.SCREEN_Y - 75, Global.SCREEN_X - 30, Global.SCREEN_Y -75 + ImgInfo.SETTING_INFO[1], ImgInfo.HOME, ImgInfo.SETTING_INFO[0], ImgInfo.SETTING_INFO[1]);
+        this.home.setListener(new ButtonClickListener());
     }
 
     @Override
@@ -129,7 +128,6 @@ public abstract class LevelScene extends Scene {
                     ImgInfo.SHINEFRAME_INFO[0], ImgInfo.SHINEFRAME_INFO[1], 20);
             this.shineFrame[i].setIsShow(false);
         }
-        this.buttons.add(new ButtonRenderer(ImgInfo.HOME, Global.SCREEN_X - 50, Global.SCREEN_Y - 50, ImgInfo.SETTING_INFO[0], ImgInfo.SETTING_INFO[1], 20));
         this.arrow = new Arrow(ImgInfo.ARROW, 0, 0, ImgInfo.ARROW_INFO);
         this.currentIdx = 0;
         this.count = 0;
@@ -209,10 +207,6 @@ public abstract class LevelScene extends Scene {
             FileIO.writeMarble(mymarbleFile, null);
             this.music.stop();
             sceneController.changeScene(new FileIOScene(sceneController, this.playerinfo, "w"));
-            return;
-        }
-        if (this.isOnButton) { //游標在Home
-            this.buttons.get(0).update();
         }
 //        }
     }
@@ -606,7 +600,7 @@ public abstract class LevelScene extends Scene {
         this.item.paint(g);
         paintGameObject(g);
         this.blood.paintResize(g, this.ratio);
-        this.buttons.get(0).paint(g);
+        this.home.paint(g);
         this.player.paint(g);
         if (this.arrow != null && this.arrow.getShow()) {
             this.arrow.paint(g);
@@ -719,7 +713,6 @@ public abstract class LevelScene extends Scene {
 
         @Override
         public void keyPressed(int commandCode, long trigTime) {
-
         }
 
         @Override
@@ -745,19 +738,13 @@ public abstract class LevelScene extends Scene {
 
         @Override
         public void mouseTrig(MouseEvent e, CommandSolver.MouseState mouseState, long trigTime) {
-            //滑鼠按下Home鍵
+            home.update(e, mouseState);
             if (mouseState == CommandSolver.MouseState.PRESSED && e.getX() > Global.SCREEN_X - 50 - ImgInfo.SETTING_INFO[1] / 2 && e.getX() < Global.SCREEN_X - 50 + ImgInfo.SETTING_INFO[1] / 2
                     && e.getY() > Global.SCREEN_Y - 50 - ImgInfo.SETTING_INFO[1] / 2 && e.getY() < Global.SCREEN_Y - 50 + ImgInfo.SETTING_INFO[1] / 2) {
                 isClick = true;
             }
-            if (mouseState == CommandSolver.MouseState.MOVED && e.getX() > Global.SCREEN_X - 50 - ImgInfo.SETTING_INFO[1] / 2 && e.getX() < Global.SCREEN_X - 50 + ImgInfo.SETTING_INFO[1] / 2
-                    && e.getY() > Global.SCREEN_Y - 50 - ImgInfo.SETTING_INFO[1] / 2 && e.getY() < Global.SCREEN_Y - 50 + ImgInfo.SETTING_INFO[1] / 2) {
-                isOnButton = true;
-            } else {
-                isOnButton = false;
-            }
-
-            if (state == 1 && checkAllStop() && !enemyIsAtk) {
+            if (state == 1 && checkAllStop() && allSkillStop(battleEnemies)) {
+                arrow.setResizeMag(0);
 
                 if (mouseState == CommandSolver.MouseState.DRAGGED) {
                     if (!this.isPressed) {

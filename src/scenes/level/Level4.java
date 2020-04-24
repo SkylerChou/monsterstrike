@@ -82,7 +82,7 @@ public class Level4 extends LevelScene {
             for (int i = 0; i < this.marbles.size(); i++) {
                 for (int j = 0; j < this.clouds.size(); j++) {
                     if (this.marbles.get(i).getDetect().isCollision(this.clouds.get(j))) {
-                        if(this.marbles.get(i).getInfo().getV()==0){
+                        if(this.marbles.get(i).goVec().getValue()!=0){
                             ARC.getInstance().play("/resources/wav/collide.wav");
                         }
                         this.marbles.get(i).detectStill(this.clouds.get(j));

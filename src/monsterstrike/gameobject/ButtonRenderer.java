@@ -7,6 +7,7 @@ package monsterstrike.gameobject;
 
 import java.awt.Graphics;
 
+
 public class ButtonRenderer extends SceneObject {
 
     private ObjectRenderer renderer;
@@ -28,6 +29,7 @@ public class ButtonRenderer extends SceneObject {
         this.renderer.restImg();
     }
 
+    @Override
     public void update() {
         this.renderer.update();
     }
@@ -47,4 +49,5 @@ public class ButtonRenderer extends SceneObject {
                     (int) this.getWidth(), (int) this.getHeight());
         }
     }
+
 }

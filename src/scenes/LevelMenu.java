@@ -44,9 +44,8 @@ public class LevelMenu extends Scene {
     private int level;
     private Player p1;
 
-    private ButtonRenderer home;
+    private Button home;
     private boolean isEnter;
-    private boolean isOnButton;
     private boolean isSkip;
     private boolean[] isMask;
 
@@ -67,6 +66,8 @@ public class LevelMenu extends Scene {
         this.music = MRC.getInstance().tryGetMusic("/resources/wav/menu1.wav");
         this.isSkip = isSkip;
         this.isMask = new boolean[5];
+        this.home = new ButtonA(Global.SCREEN_X - 5 - ImgInfo.SETTING_INFO[0], 5, Global.SCREEN_X - 5, 5 + ImgInfo.SETTING_INFO[1],ImgInfo.HOME,ImgInfo.SETTING_INFO[0], ImgInfo.SETTING_INFO[1]);
+        this.home.setListener(new ButtonClickListener());
     }
 
     @Override
@@ -79,7 +80,6 @@ public class LevelMenu extends Scene {
         this.x = 350;
         this.y = 200;
         this.backIdx = 0;
-        this.home = new ButtonRenderer(ImgInfo.HOME, Global.SCREEN_X - 30, 30, ImgInfo.SETTING_INFO[0], ImgInfo.SETTING_INFO[1], 20);
         this.background = new Background(ImgInfo.BACKGROUND_PATH[this.backIdx], 0, 0, this.backIdx);
         this.mask = new Background(ImgInfo.MASK_PATH, 0, 0, 0);
         this.lock = new Item(ImgInfo.LOCK_PATH, 900, 410, 50, 50);
@@ -143,9 +143,6 @@ public class LevelMenu extends Scene {
         if (this.isEnter) {
             sceneController.changeScene(new FileIOScene(sceneController, playerInfo, "w"));
             this.music.stop();
-        }
-        if (this.isOnButton) {
-            this.home.update();
         }
     }
 
@@ -263,36 +260,36 @@ public class LevelMenu extends Scene {
         @Override
         public void keyReleased(int commandCode, long trigTime) {
             switch (commandCode) {
-                case Global.LEFT:
-                    if (count <= 3) {
-                        idx--;
-                        if (idx < 0) {
-                            idx = myMarbles.size() - 1;
+                    case Global.LEFT:
+                        if (count <= 3) {
+                            idx--;
+                            if (idx < 0) {
+                                idx = myMarbles.size() - 1;
+                            }
+                        } else {
+                            backIdx--;
+                            if (backIdx < 0) {
+                                backIdx = ImgInfo.BACKGROUND_PATH.length - 1;
+                            }
                         }
-                    } else {
-                        backIdx--;
-                        if (backIdx < 0) {
-                            backIdx = ImgInfo.BACKGROUND_PATH.length - 1;
+                        break;
+                    case Global.RIGHT:
+                        if (count <= 3) {
+                            idx++;
+                            if (idx >= myMarbles.size()) {
+                                idx = 0;
+                            }
+                        } else {
+                            backIdx++;
+                            if (backIdx >= ImgInfo.BACKGROUND_PATH.length) {
+                                backIdx = 0;
+                            }
                         }
-                    }
-                    break;
-                case Global.RIGHT:
-                    if (count <= 3) {
-                        idx++;
-                        if (idx >= myMarbles.size()) {
-                            idx = 0;
-                        }
-                    } else {
-                        backIdx++;
-                        if (backIdx >= ImgInfo.BACKGROUND_PATH.length) {
-                            backIdx = 0;
-                        }
-                    }
-                    break;
-                case Global.ENTER:
-                    enter();
-                    break;
-            }
+                        break;
+                    case Global.ENTER:
+                        enter();
+                        break;
+                }
         }
 
         @Override
@@ -304,15 +301,10 @@ public class LevelMenu extends Scene {
 
         @Override
         public void mouseTrig(MouseEvent e, CommandSolver.MouseState state, long trigTime) {
+           home.update(e, state);
             if (state == CommandSolver.MouseState.PRESSED && e.getX() > Global.SCREEN_X - 30 - ImgInfo.SETTING_INFO[1] / 2 && e.getX() < Global.SCREEN_X - 30 + ImgInfo.SETTING_INFO[1] / 2
                     && e.getY() > 30 - ImgInfo.SETTING_INFO[1] / 2 && e.getY() < 30 + ImgInfo.SETTING_INFO[1] / 2) {
                 isEnter = true;
-            }
-            if (state == CommandSolver.MouseState.MOVED && e.getX() > Global.SCREEN_X - 30 - ImgInfo.SETTING_INFO[1] / 2 && e.getX() < Global.SCREEN_X - 30 + ImgInfo.SETTING_INFO[1] / 2
-                    && e.getY() > 30 - ImgInfo.SETTING_INFO[1] / 2 && e.getY() < 30 + ImgInfo.SETTING_INFO[1] / 2) {
-                isOnButton = true;
-            } else {
-                isOnButton = false;
             }
         }
     }
