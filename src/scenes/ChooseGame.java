@@ -5,7 +5,9 @@
  */
 package scenes;
 
+import controllers.MRC;
 import controllers.SceneController;
+import java.applet.AudioClip;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -32,6 +34,7 @@ public class ChooseGame extends Scene {
     private boolean isOnButton;
     private boolean isClick;
     private boolean isReleased;
+    private AudioClip music;
 
     public ChooseGame(SceneController sceneController, PlayerInfo playerInfo) {
         super(sceneController);
@@ -42,10 +45,12 @@ public class ChooseGame extends Scene {
         this.isClick = false;
         this.isOnButton = false;
         this.enterCount = 0;
+        this.music=MRC.getInstance().tryGetMusic("/resources/wav/charaterSeletion.wav");
     }
 
     @Override
     public void sceneBegin() {
+        this.music.loop();
         this.menu = new Background(ImgInfo.BACK_PATH, 0, 0, 1);
         this.playerR = new Player(this.playerInfo.playerNum() - 1, 0, 100, 120, 100, 150);
         this.playerL = new Player(this.playerInfo.playerNum() - 1, 1, Global.SCREEN_X - 200, 120, 100, 150);
@@ -74,14 +79,17 @@ public class ChooseGame extends Scene {
             }
         } else if (enterCount == 1) {
             if (currentIdx == 0) {
+                this.music.stop();
                 sceneController.changeScene(new Tutorial(sceneController, ImgInfo.HOWTOPLAY_PATH, 5,
                         new PinBall(sceneController, this.playerInfo)));
             } else {
+                this.music.stop();
                 sceneController.changeScene(new LevelMenu(sceneController,
                         this.playerInfo, "mymarbleInfo" + this.playerInfo.getSerial() + ".csv", false));
             }
         }
         if (this.isClick) {
+            this.music.stop();
             sceneController.changeScene(new Menu(sceneController));
             return;
         }

@@ -5,7 +5,9 @@
  */
 package scenes;
 
+import controllers.MRC;
 import controllers.SceneController;
+import java.applet.AudioClip;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -28,7 +30,7 @@ public class FileIOScene extends Scene {
     private int enterCount;
     private boolean isOnButton;  //滑鼠在Home鍵上
     private boolean isClick;    //是否按下Home鍵
-    private boolean isReleased; 
+    private boolean isReleased;
     private boolean isEmpty;    //讀取狀態是否沒有玩家資料
     private boolean isSave;     //決定是否儲存
     private Item[] back;
@@ -41,6 +43,8 @@ public class FileIOScene extends Scene {
     private boolean isCheck;  //是否確認寫入
     private boolean isRead;   //寫入檔案後是否完成讀取
     private boolean again;    //是否重新選擇寫入位置
+
+    private AudioClip music;
 
     public FileIOScene(SceneController sceneController, String state) {
         super(sceneController);
@@ -85,6 +89,8 @@ public class FileIOScene extends Scene {
 
     @Override
     public void sceneBegin() {
+        this.music = MRC.getInstance().tryGetMusic("/resources/wav/charaterSeletion.wav");
+        this.music.loop();
         this.menu = new Background(ImgInfo.BACK_PATH, 0, 0, 1);
         if (this.isEmpty) {//讀取無存檔
             this.home = new Button(ImgInfo.HOME, Global.SCREEN_X / 2 + 100, Global.SCREEN_Y / 2 - 20, ImgInfo.SETTING_INFO[0], ImgInfo.SETTING_INFO[1], 20);
@@ -121,12 +127,14 @@ public class FileIOScene extends Scene {
             }
             if (this.state.equals("r") && this.enterCount == 1) { //read
                 if (this.playersInfo.get(currentIdx).playerNum() != 0) {
+                    this.music.stop();
                     sceneController.changeScene(new ChooseGame(sceneController, this.playersInfo.get(currentIdx)));
                 }
             } else if (this.state.equals("w")) { //write               
                 if (!isWrite) {
                     if (!isSave) { //不存檔
                         if (this.playersInfo.get(currentIdx).playerNum() != 0 && this.enterCount == 1) {
+                            this.music.stop();
                             sceneController.changeScene(new ChooseGame(sceneController, this.playersInfo.get(currentIdx)));
                         }
                     } else if (enterCount == 1 && !again) { //要存檔
@@ -140,6 +148,7 @@ public class FileIOScene extends Scene {
                     }
                 } else if (enterCount == 2) {
                     if (this.playersInfo.get(currentIdx).playerNum() != 0) {
+                        this.music.stop();
                         sceneController.changeScene(new ChooseGame(sceneController, this.playersInfo.get(currentIdx)));
                     }
                 }
@@ -154,6 +163,7 @@ public class FileIOScene extends Scene {
         }
 
         if (this.isClick || (isCheck && isRead)) {
+            this.music.stop();
             sceneController.changeScene(new Menu(sceneController));
         }
 
@@ -172,6 +182,7 @@ public class FileIOScene extends Scene {
         this.playersInfo = FileIO.readPlayer("playerInfo.csv");
         for (int i = 0; i < this.playersInfo.size(); i++) {
             if (this.playersInfo.get(i).playerNum() != 0) {
+                this.music.stop();
                 this.players.set(i, new Player(this.playersInfo.get(i).playerNum() - 1, 0, Global.SCREEN_X / 2 - 130, 110 + 120 * (1 + i), 50, 75));
             }
         }
