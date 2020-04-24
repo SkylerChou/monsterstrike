@@ -26,7 +26,7 @@ public class Booster extends Prop {
     public void useProp(ArrayList<Marble> marble, int idx) {
         if (!isUsed) {
             ARC.getInstance().play("/resources/wav/prop.wav");
-            marble.get(idx).setVelocity(1.2f);
+            marble.get(idx).setVelocity(1.2f*marble.get(idx).goVec().getValue() + 10);
 //            System.out.println(marble.get(idx).getInfo().getName() + "加速");
             this.isUsed = true;
         }

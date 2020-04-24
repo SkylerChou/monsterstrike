@@ -44,7 +44,6 @@ public class Level5 extends LevelScene {
     @Override
     protected void genGameObject() {
         genBattleEnemies();
-        genProps();
         genHoles();
     }
 

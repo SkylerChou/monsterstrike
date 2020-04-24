@@ -74,9 +74,9 @@ public class Level3 extends LevelScene {
     private void genStones() {
         for (int j = 0; j < 3; j++) {
             for (int i = 0; i < 5; i++) {
-                int x = Global.SCREEN_X / 2;
+                int x = Global.SCREEN_X / 2 - 50 * sceneCount;
                 if (i % 2 != 0) {
-                    x = Global.SCREEN_X / 2 + 50;
+                    x = Global.SCREEN_X / 2 + 50 - 50 * sceneCount;
                 }
                 this.stones.add(new Stone(ImgInfo.ROCK_PATH, x + Global.FRAME_X * j,
                         (2 * i + 1) * (Global.SCREEN_Y - Global.INFO_H) / 11, 60, 60));
@@ -111,8 +111,8 @@ public class Level3 extends LevelScene {
 
     private void strikeStones() {
         for (int i = 0; i < this.marbles.size(); i++) {
-            for (int j = 0; j < this.stones.size(); j++) {                
-                if (this.marbles.get(i).getDetect().isCollision(this.stones.get(j)) && this.marbles.get(i).goVec().getValue() > 0 ) {
+            for (int j = 0; j < this.stones.size(); j++) {
+                if (this.marbles.get(i).getDetect().isCollision(this.stones.get(j)) && this.marbles.get(i).goVec().getValue() > 0) {
                     this.marbles.get(i).detectStill(this.stones.get(j));
                     this.marbles.get(i).hit(this.stones.get(j));
                     this.stones.get(j).setCollide(true);
@@ -121,7 +121,7 @@ public class Level3 extends LevelScene {
             }
         }
     }
-    
+
     private void hitPeople() {
         for (int i = 0; i < this.marbles.size(); i++) {
             if (!this.people.get(this.sceneCount).getSet() && this.marbles.get(i).isCollision(this.people.get(this.sceneCount))) {
@@ -148,16 +148,15 @@ public class Level3 extends LevelScene {
             }
         }
     }
-    
+
     @Override
-    protected boolean removeGameObject(){
-        if(removeStones()){
+    protected boolean removeGameObject() {
+        if (removeStones()) {
             return true;
         }
         return false;
     }
 
-    
     private boolean removeStones() {
         for (int i = 0; i < this.stones.size(); i++) {
             this.stones.remove(i);
@@ -171,7 +170,6 @@ public class Level3 extends LevelScene {
     @Override
     protected void paintGameObject(Graphics g) {
         paintStones(g);
-        paintProps(g);
         paintPeople(g);
     }
 

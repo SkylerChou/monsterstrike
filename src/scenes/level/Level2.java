@@ -39,7 +39,6 @@ public class Level2 extends LevelScene {
     protected void genGameObject() {
         genBattleEnemies();
         genStones();
-        genProps();
     }
 
     private void updateStones() {
@@ -82,48 +81,38 @@ public class Level2 extends LevelScene {
     private void genStones() {
         if (this.sceneCount == 0) {
             for (int i = 0; i < 10; i++) {
-                this.stones.add(new Stone(ImgInfo.STONE_PATH, Global.SCREEN_X / 2,
-                        (i + 1) * (Global.SCREEN_Y - Global.INFO_H) / 11, 50, 50));
+                this.stones.add(new Stone(ImgInfo.STONE_PATH, Global.SCREEN_X / 2 - 25,
+                        30 + i * 50, 50, 50));
             }
-            for (int i = 0; i < Global.SCREEN_X / 100; i++) {
-                this.stones.add(new Stone(ImgInfo.STONE_PATH, (Global.SCREEN_X / 2 - 10) + (i + 1) * 50,
+            for (int i = 0; i < 8; i++) {
+                this.stones.add(new Stone(ImgInfo.STONE_PATH, Global.SCREEN_X / 2 + 30 + i * 80,
                         30, 50, 50));
-                this.stones.add(new Stone(ImgInfo.STONE_PATH, (Global.SCREEN_X / 2 - 10) + (i + 1) * 50,
+                this.stones.add(new Stone(ImgInfo.STONE_PATH, Global.SCREEN_X / 2 + 30 + i * 80,
                         (Global.SCREEN_Y - Global.INFO_H - 30), 50, 50));
             }
         } else if (this.sceneCount == 1) {
-            for (int i = 0; i < 10; i++) {
-                this.stones.add(new Stone(ImgInfo.STONE_PATH, 30,
-                        (i + 1) * (Global.SCREEN_Y - Global.INFO_H) / 11, 50, 50));
-            }
-            for (int i = 0; i < Global.SCREEN_X / 50; i++) {
-                this.stones.add(new Stone(ImgInfo.STONE_PATH, 30 + (i + 1) * 50,
+            for (int i = 0; i < 16; i++) {
+                this.stones.add(new Stone(ImgInfo.STONE_PATH, i * 81 + 25,
                         30, 50, 50));
-                this.stones.add(new Stone(ImgInfo.STONE_PATH, 30 + (i + 1) * 50,
+                this.stones.add(new Stone(ImgInfo.STONE_PATH, i * 81 + 25,
                         (Global.SCREEN_Y - Global.INFO_H - 30), 50, 50));
             }
         } else {
-            for (int i = 0; i < 10; i++) {
-                this.stones.add(new Stone(ImgInfo.STONE_PATH, 30,
-                        (i + 1) * (Global.SCREEN_Y - Global.INFO_H) / 11, 50, 50));
-                this.stones.add(new Stone(ImgInfo.STONE_PATH, Global.SCREEN_X - 30,
-                        (i + 1) * (Global.SCREEN_Y - Global.INFO_H) / 11, 50, 50));
-            }
-            for (int i = 0; i < Global.SCREEN_X / 50; i++) {
-                this.stones.add(new Stone(ImgInfo.STONE_PATH, 30 + (i + 1) * 50,
+            for (int i = 0; i < 16; i++) {
+                this.stones.add(new Stone(ImgInfo.STONE_PATH, i * 81 + 25,
                         30, 50, 50));
-                this.stones.add(new Stone(ImgInfo.STONE_PATH, 30 + (i + 1) * 50,
+                this.stones.add(new Stone(ImgInfo.STONE_PATH, i * 81 + 25,
                         (Global.SCREEN_Y - Global.INFO_H - 30), 50, 50));
             }
-            for (int i = 0; i < 5; i++) {
-                this.stones.add(new Stone(ImgInfo.STONE_PATH, (int) ((Global.SCREEN_X / 2 - 100) + (i * 40)),
+            for (int i = 0; i < 3; i++) {
+                this.stones.add(new Stone(ImgInfo.STONE_PATH, (int) ((Global.SCREEN_X / 2 - 105) + (i * 70)),
                         ((Global.SCREEN_Y - Global.INFO_H) / 2 - 100), 50, 50));
-                this.stones.add(new Stone(ImgInfo.STONE_PATH, (int) ((Global.SCREEN_X / 2 - 100) + (i * 40)),
-                        ((Global.SCREEN_Y - Global.INFO_H) / 2 + 100), 50, 50));
-                this.stones.add(new Stone(ImgInfo.STONE_PATH, (int) (Global.SCREEN_X / 2 - 100),
-                        ((Global.SCREEN_Y - Global.INFO_H) / 2 - 100) + (i * 40), 50, 50));
-                this.stones.add(new Stone(ImgInfo.STONE_PATH, (int) (Global.SCREEN_X / 2 + 100),
-                        ((Global.SCREEN_Y - Global.INFO_H) / 2 - 100) + (i * 40), 50, 50));
+                this.stones.add(new Stone(ImgInfo.STONE_PATH, (int) ((Global.SCREEN_X / 2 - 105) + ((i+1) * 70)),
+                        ((Global.SCREEN_Y - Global.INFO_H) / 2 + 110), 50, 50));
+                this.stones.add(new Stone(ImgInfo.STONE_PATH, (int) (Global.SCREEN_X / 2 - 105),
+                        ((Global.SCREEN_Y - Global.INFO_H) / 2 - 100) + ((i+1) * 70), 50, 50));
+                this.stones.add(new Stone(ImgInfo.STONE_PATH, (int) (Global.SCREEN_X / 2 + 110),
+                        ((Global.SCREEN_Y - Global.INFO_H) / 2 - 100) + (i * 70), 50, 50));
             }
         }
     }

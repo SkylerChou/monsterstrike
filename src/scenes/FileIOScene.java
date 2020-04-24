@@ -18,9 +18,9 @@ import player.PlayerInfo;
 
 public class FileIOScene extends Scene {
 
-    private Button home;
+    private ButtonRenderer home;
     private Background menu;
-    private Button shineFrame;
+    private ButtonRenderer shineFrame;
     private ArrayList<PlayerInfo> playersInfo;
     private PlayerInfo playerInfo;
     private ArrayList<Player> players;
@@ -81,16 +81,18 @@ public class FileIOScene extends Scene {
         this.showCheckWindow = false;
         this.isRead = false;
         this.again = false;
+        
     }
 
     @Override
     public void sceneBegin() {
+        this.isReleased = true;
         this.menu = new Background(ImgInfo.BACK_PATH, 0, 0, 1);
         if (this.isEmpty) {//讀取無存檔
-            this.home = new Button(ImgInfo.HOME, Global.SCREEN_X / 2 + 100, Global.SCREEN_Y / 2 - 20, ImgInfo.SETTING_INFO[0], ImgInfo.SETTING_INFO[1], 20);
+            this.home = new ButtonRenderer(ImgInfo.HOME, Global.SCREEN_X / 2 + 100, Global.SCREEN_Y / 2 - 20, ImgInfo.SETTING_INFO[0], ImgInfo.SETTING_INFO[1], 20);
         } else {
-            this.home = new Button(ImgInfo.HOME, Global.SCREEN_X - 30, 30, ImgInfo.SETTING_INFO[0], ImgInfo.SETTING_INFO[1], 20);
-            this.shineFrame = new Button(ImgInfo.SHINEFRAME_PATH, Global.SCREEN_X / 2, 150 + 120 * (1 + currentIdx),
+            this.home = new ButtonRenderer(ImgInfo.HOME, Global.SCREEN_X - 30, 30, ImgInfo.SETTING_INFO[0], ImgInfo.SETTING_INFO[1], 20);
+            this.shineFrame = new ButtonRenderer(ImgInfo.SHINEFRAME_PATH, Global.SCREEN_X / 2, 150 + 120 * (1 + currentIdx),
                     350, 100, 14);
             this.shineFrame.setIsShow(true);
             for (int i = 0; i < this.playersInfo.size(); i++) {
@@ -206,7 +208,6 @@ public class FileIOScene extends Scene {
                             "Name: " + this.playersInfo.get(i).getName(), 25, 140 + 120 * (1 + i), Global.SCREEN_X);
                     PaintText.paint(g, new Font("VinerHandITC", Font.PLAIN, 24), Color.WHITE,
                             "Level " + this.playersInfo.get(i).getLevel(), 3, 175 + 120 * (1 + i), Global.SCREEN_X);
-
                 } else {
                     PaintText.paint(g, new Font("VinerHandITC", Font.PLAIN, 24), Color.WHITE,
                             "Empty", 0, 160 + 120 * (1 + i), Global.SCREEN_X);
@@ -230,8 +231,12 @@ public class FileIOScene extends Scene {
 
         @Override
         public void keyPressed(int commandCode, long trigTime) {
-            if (isReleased && !isEmpty && !showWindow) {
-                isReleased = false;
+            
+        }
+
+        @Override
+        public void keyReleased(int commandCode, long trigTime) {
+            if (!isEmpty && !showWindow) {
                 int bound = playersInfo.size() - 1;
                 if (isSave) {
                     bound = 2;
@@ -257,11 +262,6 @@ public class FileIOScene extends Scene {
                     enterCount++;
                 }
             }
-        }
-
-        @Override
-        public void keyReleased(int commandCode, long trigTime) {
-            isReleased = true;
         }
 
         @Override

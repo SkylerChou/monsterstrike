@@ -11,10 +11,6 @@ import java.util.ArrayList;
 import monsterstrike.gameobject.marble.Marble;
 import player.PlayerInfo;
 
-/**
- *
- * @author yuin8
- */
 public class Level1 extends LevelScene {
 
     private static final int IDX = 0;
@@ -31,7 +27,6 @@ public class Level1 extends LevelScene {
     @Override
     protected void genGameObject() {
         genBattleEnemies();
-        genProps();
     }
 
     @Override

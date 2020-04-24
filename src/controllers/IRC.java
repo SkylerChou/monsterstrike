@@ -6,10 +6,12 @@
 package controllers;
 //ImageResourceController
 
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 
 public class IRC {
 

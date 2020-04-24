@@ -53,7 +53,7 @@ public class Tornado extends Skills {
                 }
                 target.get(i).getInfo().setHp(target.get(i).getInfo().getHp() - atk);
                 this.hitCount++;
-                System.out.println(target.get(i).getInfo().getName() + "血量:" + target.get(i).getInfo().getHp());
+//                System.out.println(target.get(i).getInfo().getName() + "血量:" + target.get(i).getInfo().getHp());
             }
         }
         return this.hitCount;

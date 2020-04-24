@@ -22,7 +22,7 @@ import player.Player;
 
 public class LevelMenu extends Scene {
 
-    private ArrayList<Button> buttons;
+    private ArrayList<ButtonRenderer> buttons;
     private Background menu;
     private int count;
     private int idx;
@@ -38,14 +38,13 @@ public class LevelMenu extends Scene {
     private Background mask;
     private Item lock;
     private int backIdx;
-    private boolean isReleased;
     private int x;
     private int y;
     private Delay delay;
     private int level;
     private Player p1;
 
-    private Button home;
+    private ButtonRenderer home;
     private boolean isEnter;
     private boolean isOnButton;
     private boolean isSkip;
@@ -80,7 +79,7 @@ public class LevelMenu extends Scene {
         this.x = 350;
         this.y = 200;
         this.backIdx = 0;
-        this.home = new Button(ImgInfo.HOME, Global.SCREEN_X - 30, 30, ImgInfo.SETTING_INFO[0], ImgInfo.SETTING_INFO[1], 20);
+        this.home = new ButtonRenderer(ImgInfo.HOME, Global.SCREEN_X - 30, 30, ImgInfo.SETTING_INFO[0], ImgInfo.SETTING_INFO[1], 20);
         this.background = new Background(ImgInfo.BACKGROUND_PATH[this.backIdx], 0, 0, this.backIdx);
         this.mask = new Background(ImgInfo.MASK_PATH, 0, 0, 0);
         this.lock = new Item(ImgInfo.LOCK_PATH, 900, 410, 50, 50);
@@ -92,14 +91,13 @@ public class LevelMenu extends Scene {
         }
         int unitX = Global.SCREEN_X / 5;
         for (int i = 0; i < 3; i++) {
-            buttons.add(new Button(ImgInfo.RIGHT, unitX + 190, 220, ImgInfo.CHOOSEBUTTON_INFO[0], ImgInfo.CHOOSEBUTTON_INFO[1]));
-            buttons.add(new Button(ImgInfo.LEFT, unitX, 220, ImgInfo.CHOOSEBUTTON_INFO[0], ImgInfo.CHOOSEBUTTON_INFO[1]));
+            buttons.add(new ButtonRenderer(ImgInfo.RIGHT, unitX + 190, 220, ImgInfo.CHOOSEBUTTON_INFO[0], ImgInfo.CHOOSEBUTTON_INFO[1]));
+            buttons.add(new ButtonRenderer(ImgInfo.LEFT, unitX, 220, ImgInfo.CHOOSEBUTTON_INFO[0], ImgInfo.CHOOSEBUTTON_INFO[1]));
             unitX += 290;
         }
-        buttons.add(new Button(ImgInfo.RIGHT, 970, 480, ImgInfo.CHOOSEBUTTON_INFO[0], ImgInfo.CHOOSEBUTTON_INFO[1]));
-        buttons.add(new Button(ImgInfo.LEFT, 300, 480, ImgInfo.CHOOSEBUTTON_INFO[0], ImgInfo.CHOOSEBUTTON_INFO[1]));
+        buttons.add(new ButtonRenderer(ImgInfo.RIGHT, 970, 480, ImgInfo.CHOOSEBUTTON_INFO[0], ImgInfo.CHOOSEBUTTON_INFO[1]));
+        buttons.add(new ButtonRenderer(ImgInfo.LEFT, 300, 480, ImgInfo.CHOOSEBUTTON_INFO[0], ImgInfo.CHOOSEBUTTON_INFO[1]));
         this.currentMarble = this.myMarbles.get(0);
-        this.isReleased = true;
         this.delay = new Delay(20);
         this.delay.start();
         for (int i = 0; i < this.isMask.length; i++) {
@@ -181,7 +179,6 @@ public class LevelMenu extends Scene {
             myMarbles.remove(idx);
             this.idx = 0;
             this.x += 290;
-
             for (int i = 0; i < myMarbles.size(); i++) {
                 this.myMarbles.get(i).setCenterX(this.x);
             }
@@ -261,45 +258,41 @@ public class LevelMenu extends Scene {
 
         @Override
         public void keyPressed(int commandCode, long trigTime) {
-            if (isReleased) {
-                isReleased = false;
-                switch (commandCode) {
-                    case Global.LEFT:
-                        if (count <= 3) {
-                            idx--;
-                            if (idx < 0) {
-                                idx = myMarbles.size() - 1;
-                            }
-                        } else {
-                            backIdx--;
-                            if (backIdx < 0) {
-                                backIdx = ImgInfo.BACKGROUND_PATH.length - 1;
-                            }
-                        }
-                        break;
-                    case Global.RIGHT:
-                        if (count <= 3) {
-                            idx++;
-                            if (idx >= myMarbles.size()) {
-                                idx = 0;
-                            }
-                        } else {
-                            backIdx++;
-                            if (backIdx >= ImgInfo.BACKGROUND_PATH.length) {
-                                backIdx = 0;
-                            }
-                        }
-                        break;
-                    case Global.ENTER:
-                        enter();
-                        break;
-                }
-            }
         }
 
         @Override
         public void keyReleased(int commandCode, long trigTime) {
-            isReleased = true;
+            switch (commandCode) {
+                case Global.LEFT:
+                    if (count <= 3) {
+                        idx--;
+                        if (idx < 0) {
+                            idx = myMarbles.size() - 1;
+                        }
+                    } else {
+                        backIdx--;
+                        if (backIdx < 0) {
+                            backIdx = ImgInfo.BACKGROUND_PATH.length - 1;
+                        }
+                    }
+                    break;
+                case Global.RIGHT:
+                    if (count <= 3) {
+                        idx++;
+                        if (idx >= myMarbles.size()) {
+                            idx = 0;
+                        }
+                    } else {
+                        backIdx++;
+                        if (backIdx >= ImgInfo.BACKGROUND_PATH.length) {
+                            backIdx = 0;
+                        }
+                    }
+                    break;
+                case Global.ENTER:
+                    enter();
+                    break;
+            }
         }
 
         @Override

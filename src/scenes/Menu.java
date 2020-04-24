@@ -21,7 +21,7 @@ public class Menu extends Scene {
 
     private Background menu;
     private Dino dino;
-    private ArrayList<Button> buttons;
+    private ArrayList<ButtonRenderer> buttons;
     private Delay delay;
     private int h;
 
@@ -40,9 +40,9 @@ public class Menu extends Scene {
         this.buttons = new ArrayList<>();
         this.h = 50;
         this.dino = new Dino(ImgInfo.DINO, Global.SCREEN_X / 2 - 120, Global.SCREEN_Y / 2, Dino.STEPS_WALK);
-        this.buttons.add(new Button(ImgInfo.SINGLE, Global.SCREEN_X / 2, Global.SCREEN_Y / 2, ImgInfo.MAINBUTTON_INFO[0], ImgInfo.MAINBUTTON_INFO[1]));
-        this.buttons.add(new Button(ImgInfo.CONTINUE, Global.SCREEN_X / 2, Global.SCREEN_Y / 2 + h, ImgInfo.MAINBUTTON_INFO[0], ImgInfo.MAINBUTTON_INFO[1]));
-        this.buttons.add(new Button(ImgInfo.EXIT, Global.SCREEN_X / 2, Global.SCREEN_Y / 2 + 2 * h, ImgInfo.MAINBUTTON_INFO[0], ImgInfo.MAINBUTTON_INFO[1]));
+        this.buttons.add(new ButtonRenderer(ImgInfo.SINGLE, Global.SCREEN_X / 2, Global.SCREEN_Y / 2, ImgInfo.MAINBUTTON_INFO[0], ImgInfo.MAINBUTTON_INFO[1]));
+        this.buttons.add(new ButtonRenderer(ImgInfo.CONTINUE, Global.SCREEN_X / 2, Global.SCREEN_Y / 2 + h, ImgInfo.MAINBUTTON_INFO[0], ImgInfo.MAINBUTTON_INFO[1]));
+        this.buttons.add(new ButtonRenderer(ImgInfo.EXIT, Global.SCREEN_X / 2, Global.SCREEN_Y / 2 + 2 * h, ImgInfo.MAINBUTTON_INFO[0], ImgInfo.MAINBUTTON_INFO[1]));
         this.isEnter = false;
         this.delay = new Delay(25);
         this.delay.start();

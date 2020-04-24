@@ -5,7 +5,6 @@
  */
 package monsterstrike.gameobject.marble;
 
-import controllers.ARC;
 import monsterstrike.util.Global;
 import interfaceskills.*;
 import java.awt.Graphics;
@@ -74,7 +73,6 @@ public class Marble extends GameObject {
         this.isCollide = false;
         this.skills = new Skills[]{new Explosion(), new Tornado(), new Laser(),
             new Bullet(), new Heal(), new Missile()};
-
         this.skillIdx = 0;
         this.useSkill = true;
         this.moveFic = 0.05f * info.getMass();
@@ -126,8 +124,7 @@ public class Marble extends GameObject {
     public void strike(Marble other) {
         this.isCollide = true;
         this.other = other;
-        Vector nor = new Vector(other.getCenterX() - this.getCenterX(),
-                other.getCenterY() - this.getCenterY());
+        Vector nor = new Vector(other.getCenterX() - this.getCenterX(), other.getCenterY() - this.getCenterY());
         if (nor.getValue() != 0) {
             updateDir(nor);
         }
@@ -136,10 +133,8 @@ public class Marble extends GameObject {
     private void updateDir(Vector nor) {
         this.norVec = this.goVec.getCosProjectionVec(nor);
         this.tanVec = this.goVec.getSinProjectionVec(nor);
-        System.out.println(this.norVec + " " + this.tanVec);
         this.other.setNorVec(this.other.goVec().getCosProjectionVec(nor.multiplyScalar(-1)));
         this.other.setTanVec(this.other.goVec().getSinProjectionVec(nor.multiplyScalar(-1)));
-
         float myM = this.getInfo().getMass();
         float enyM = this.other.getInfo().getMass();
         float m11 = (myM - enyM) / (myM + enyM);
@@ -148,7 +143,6 @@ public class Marble extends GameObject {
         float m22 = (enyM - myM) / (myM + enyM);
         Vector newNor1 = this.norVec.multiplyScalar(m11).plus(this.other.norVec().multiplyScalar(m12));
         Vector newNor2 = this.norVec.multiplyScalar(m21).plus(this.other.norVec().multiplyScalar(m22));
-
         this.norVec = newNor1;
         this.goVec = this.norVec.plus(this.tanVec);
         this.other.setNorVec(newNor2);
@@ -200,7 +194,6 @@ public class Marble extends GameObject {
                 spinCount = 0;
                 this.isSpin = false;
                 this.spinOver = true;
-//                System.out.println("!!!");
             }
         }
     }
@@ -266,7 +259,7 @@ public class Marble extends GameObject {
             float c = (float) (Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2)
                     - Math.pow(this.getR() + target.getR(), 2));
             float d = (float) ((-b - Math.sqrt(Math.pow(b, 2) - 4 * a * c)) / (2 * a));
-            if (Math.pow(b, 2) - 4 * a * c >= 0) {
+            if (Math.pow(b, 2) - 4 * a * c >= 0 && a>0) {
                 this.offset(this.goVec.getX() * d, this.goVec.getY() * d);
                 target.offset(target.goVec.getX() * d, target.goVec.getY() * d);
             }
@@ -291,7 +284,7 @@ public class Marble extends GameObject {
                 float c = (float) (Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2)
                         - Math.pow(this.getR() + target.getR(), 2));
                 float d = (float) ((-b - Math.sqrt(Math.pow(b, 2) - 4 * a * c)) / (2 * a));
-                if (Math.pow(b, 2) - 4 * a * c >= 0) {
+                if (Math.pow(b, 2) - 4 * a * c >= 0 && a>0) {
                     this.offset(this.goVec.getX() * d, this.goVec.getY() * d);
                 }
             }
@@ -422,10 +415,6 @@ public class Marble extends GameObject {
 
     public void paintShine(Graphics g) {
         this.shine.paintComponent(g);
-    }
-
-    public void paint(Graphics g, int x, int y, int w, int h, int unitX, int unitY) {
-        this.renderer.paint(g, x, y, w, h, unitX, unitY);
     }
 
     public void paintAll(Graphics g) {

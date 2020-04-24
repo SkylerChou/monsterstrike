@@ -22,9 +22,9 @@ public class SceneController {
 
         @Override
         public void run() {
+            currentScene.sceneBegin();
             kl = currentScene.getKeyListener();
             ml = currentScene.getMouseListener();
-            currentScene.sceneBegin();
             isLoading = false;
         }
     }
@@ -43,6 +43,8 @@ public class SceneController {
 
         isLoading = true;
         currentScene = scene;
+        kl = null;
+        ml = null;
         this.dino = new Dino(ImgInfo.DINO, 650, 300, Dino.STEPS_RUN);
         this.img = IRC.getInstance().tryGetImage(ImgInfo.LOADING_PATH);
         new LoadingThread(new Loading()).start();

@@ -29,7 +29,7 @@ public abstract class LevelScene extends Scene {
     private Background background;
     private Item item; //資訊欄
     private Item blood; //血條
-    private Button[] shineFrame; //資訊欄怪物亮框
+    private ButtonRenderer[] shineFrame; //資訊欄怪物亮框
     private Marble[] myMarbles; //資訊欄顯示怪物
     protected ArrayList<Marble> marbles; //我方出戰怪物
     private MarbleArray allEnemies; //敵方所有怪物
@@ -57,13 +57,14 @@ public abstract class LevelScene extends Scene {
     private PlayerInfo playerinfo;
     private int overCount;
 
-    private ArrayList<Button> buttons;
+    private ArrayList<ButtonRenderer> buttons;
     private boolean isEnter;
     private boolean isOnButton;
     private boolean isCount;
     private boolean isClick;
     protected boolean isWin;
     private boolean isDraw;
+    private boolean enemyIsAtk;
 
     private AudioClip music;
 
@@ -78,7 +79,7 @@ public abstract class LevelScene extends Scene {
                 Global.SCREEN_X, Global.INFO_H);
         this.blood = new Item(ImgInfo.BLOOD_PATH, ImgInfo.BLOOD_INFO[0], ImgInfo.BLOOD_INFO[1],
                 ImgInfo.BLOOD_INFO[2], ImgInfo.BLOOD_INFO[3]);
-        this.shineFrame = new Button[3];
+        this.shineFrame = new ButtonRenderer[3];
         this.atkRound = new int[3];
         this.marbles = new ArrayList<>();
         this.battleEnemies = new ArrayList<>();
@@ -110,6 +111,7 @@ public abstract class LevelScene extends Scene {
         this.overCount = 0;
         this.isWin = false;
         this.isDraw = false;
+        this.enemyIsAtk = false;
         this.music = MRC.getInstance().tryGetMusic("/resources/wav/battle.wav");
     }
 
@@ -123,11 +125,11 @@ public abstract class LevelScene extends Scene {
             this.marbles.get(i).setDetect(this.marbles.get(i).duplicate());
         }
         for (int i = 0; i < this.shineFrame.length; i++) {
-            this.shineFrame[i] = new Button(ImgInfo.SHINEFRAME_PATH, (int) this.myMarbles[i].getCenterX(), (int) this.myMarbles[i].getCenterY(),
+            this.shineFrame[i] = new ButtonRenderer(ImgInfo.SHINEFRAME_PATH, (int) this.myMarbles[i].getCenterX(), (int) this.myMarbles[i].getCenterY(),
                     ImgInfo.SHINEFRAME_INFO[0], ImgInfo.SHINEFRAME_INFO[1], 20);
             this.shineFrame[i].setIsShow(false);
         }
-        this.buttons.add(new Button(ImgInfo.HOME, Global.SCREEN_X - 50, Global.SCREEN_Y - 50, ImgInfo.SETTING_INFO[0], ImgInfo.SETTING_INFO[1], 20));
+        this.buttons.add(new ButtonRenderer(ImgInfo.HOME, Global.SCREEN_X - 50, Global.SCREEN_Y - 50, ImgInfo.SETTING_INFO[0], ImgInfo.SETTING_INFO[1], 20));
         this.arrow = new Arrow(ImgInfo.ARROW, 0, 0, ImgInfo.ARROW_INFO);
         this.currentIdx = 0;
         this.count = 0;
@@ -145,6 +147,7 @@ public abstract class LevelScene extends Scene {
         if (this.state == 0) { //設定背景起始位置， 敵人怪物降落           
             this.background.setX((this.sceneCount + 1) * ImgInfo.BACKGROUND_SIZE[idx][0]);
             if (dropEnemies()) {
+                pushMarbles();
                 genProps();
             }
         } else if (this.state == 1) { //遊戲開始
@@ -159,7 +162,7 @@ public abstract class LevelScene extends Scene {
             calculateHP();//計算我方HP
 
             enemyDie();//判斷敵人死亡
-            
+
             for (int i = 0; i < this.battleEnemies.size(); i++) {
                 if (this.battleEnemies.get(i).getIsCollide()) {
                     ARC.getInstance().play("/resources/wav/die.wav");
@@ -205,7 +208,7 @@ public abstract class LevelScene extends Scene {
             String mymarbleFile = "mymarbleInfoTmp.csv";
             FileIO.writeMarble(mymarbleFile, null);
             this.music.stop();
-            sceneController.changeScene(new FileIOScene(sceneController, this.playerinfo,"w"));
+            sceneController.changeScene(new FileIOScene(sceneController, this.playerinfo, "w"));
             return;
         }
         if (this.isOnButton) { //游標在Home
@@ -237,10 +240,6 @@ public abstract class LevelScene extends Scene {
         if (this.playerinfo.getLevel() - 1 == this.idx && this.playerinfo.getLevel() != 5) {
             this.playerinfo.setLevel(this.playerinfo.getLevel() + 1);
         }
-//        String mymarbleFile = "mymarbleInfo" + this.playerinfo.getName() + ".csv";
-//        FileIO.writePlayer("playerInfo.csv", this.playerinfo);
-//        FileIO.writeMarble(mymarbleFile, m.getInfo());
-
         System.out.println("抽中怪物:" + m.getInfo().getName());
         System.out.println(this.playerinfo);
         this.isDraw = true;
@@ -248,13 +247,44 @@ public abstract class LevelScene extends Scene {
 
     private void scrollScene() {
         if (this.background.getX() < (this.sceneCount + 2) * ImgInfo.BACKGROUND_SIZE[idx][0]) {
-            this.background.offset(15);
+            this.background.offset(12);
+            scrollMarbles();
         }
+
         if (this.background.getX() >= (this.sceneCount + 2) * ImgInfo.BACKGROUND_SIZE[idx][0]) {
             this.sceneCount++;
             this.hitCount = 0;
             genGameObject();
             this.state = 0;
+        }
+    }
+
+    private void scrollMarbles() {
+        for (int i = 0; i < this.marbles.size(); i++) {
+            float x = this.marbles.get(i).getCenterX();
+            float y = this.marbles.get(i).getCenterY();
+            if (x > Global.POSITION_X[i] + 20 || x < Global.POSITION_X[i] - 20) {
+                this.marbles.get(i).offset((Global.POSITION_X[i] - x) / 50f, 0);
+            }
+            if (y > Global.SCREEN_Y - Global.INFO_H - 80 || y < 80) {
+                this.marbles.get(i).offset(0, (Global.POSITION_Y[i] - y) / 50f);
+            }
+        }
+    }
+
+    private void pushMarbles() {
+        for (int i = 0; i < this.marbles.size(); i++) {
+            for (int j = i+1; j < this.marbles.size(); j++) {
+                if (this.marbles.get(i).isCollision(this.marbles.get(j))) {
+                    Vector vec = new Vector(this.marbles.get(j).getCenterX() - this.marbles.get(i).getCenterX(),
+                            this.marbles.get(j).getCenterY() - this.marbles.get(i).getCenterY());
+                    float value = vec.getValue();
+                    System.out.println(value);
+                    vec.resizeVec((70 - value) / 2);
+                    this.marbles.get(i).offset(-vec.getX(), -vec.getY());
+                    this.marbles.get(j).offset(vec.getX(), vec.getY());
+                }
+            } 
         }
     }
 
@@ -274,7 +304,6 @@ public abstract class LevelScene extends Scene {
         for (int i = 0; i < this.marbles.size(); i++) {
             this.marbles.get(i).setUseSkill(true);
         }
-
         if (this.count != 0 && !this.isCount) { //除了第一回合，更新要發動攻擊的我方怪物
             this.marbles.get(currentIdx).setShine(false);
             this.currentIdx = this.count % 3;
@@ -401,10 +430,6 @@ public abstract class LevelScene extends Scene {
                 if (this.marbles.get(i).getDetect().isCollision(this.marbles.get(j).getDetect())) {
                     this.marbles.get(i).detect(this.marbles.get(j));
                     this.marbles.get(i).strike(this.marbles.get(j));
-                    if (this.marbles.get(i).isOutOfBound()) {
-                        System.out.println(this.marbles.get(i).getInfo().getName() + " " + this.marbles.get(i).getCenterX() + " " + this.marbles.get(i).getCenterY());
-                        System.out.println(this.marbles.get(j).getInfo().getName() + " " + this.marbles.get(j).getCenterX() + " " + this.marbles.get(i).getCenterY());
-                    }
                     if (i == currentIdx && this.marbles.get(j).getUseSkill()) {
                         int r = Global.random(1, 3);
                         if (r == 4) {
@@ -461,6 +486,7 @@ public abstract class LevelScene extends Scene {
         for (int i = 0; i < this.battleEnemies.size(); i++) {
             if (enemyRound != 0 && enemyRound % this.battleEnemies.get(i).getInfo().getSkillRound() == 0) {
                 if (this.battleEnemies.get(i).getUseSkill() && this.delay.isTrig()) {
+                    enemyIsAtk = true;
                     this.battleEnemies.get(i).useSkill(5, this.marbles, 0);
                     this.battleEnemies.get(i).setUseSkill(false);
                 }
@@ -469,9 +495,10 @@ public abstract class LevelScene extends Scene {
             } else {
                 setCollide();
                 this.battleEnemies.get(i).setUseSkill(true);
-                for (int k = 0; k < 3; k++) {
-                }
             }
+        }
+        if (enemyIsAtk && this.allSkillStop(battleEnemies)) {
+            enemyIsAtk = false;
         }
     }
 
@@ -498,9 +525,6 @@ public abstract class LevelScene extends Scene {
                 battleEnemies.add(m.get(i).duplicate(Global.ENEMYPOS_X[i], -100, 120, 120));
             }
             battleEnemies.add(m.get(3).duplicate(Global.SCREEN_X / 2, -100, 180, 180));
-        }
-        for (int i = 0; i < this.battleEnemies.size(); i++) {
-//            this.battleEnemies.get(i).setDetect(this.battleEnemies.get(i).duplicate());
         }
     }
 
@@ -531,7 +555,6 @@ public abstract class LevelScene extends Scene {
         for (int i = 0; i < this.battleEnemies.size(); i++) {
             this.battleEnemies.get(i).update();
         }
-
         //我方怪物動畫更新
         for (int i = 0; i < this.marbles.size(); i++) {
             this.marbles.get(i).updateShine(); //光圈更新
@@ -696,14 +719,14 @@ public abstract class LevelScene extends Scene {
 
         @Override
         public void keyPressed(int commandCode, long trigTime) {
-            if ((isLose() || isWin) && commandCode == Global.ENTER) {
-                System.out.println("!");
-                isEnter = true;
-            }
+
         }
 
         @Override
         public void keyReleased(int commandCode, long trigTime) {
+            if ((isLose() || isWin) && commandCode == Global.ENTER) {
+                isEnter = true;
+            }
         }
 
         @Override
@@ -718,9 +741,11 @@ public abstract class LevelScene extends Scene {
         private float endX;
         private float endY;
         private boolean isPressed = false;
+        private boolean isDrag = false;
 
         @Override
         public void mouseTrig(MouseEvent e, CommandSolver.MouseState mouseState, long trigTime) {
+            //滑鼠按下Home鍵
             if (mouseState == CommandSolver.MouseState.PRESSED && e.getX() > Global.SCREEN_X - 50 - ImgInfo.SETTING_INFO[1] / 2 && e.getX() < Global.SCREEN_X - 50 + ImgInfo.SETTING_INFO[1] / 2
                     && e.getY() > Global.SCREEN_Y - 50 - ImgInfo.SETTING_INFO[1] / 2 && e.getY() < Global.SCREEN_Y - 50 + ImgInfo.SETTING_INFO[1] / 2) {
                 isClick = true;
@@ -732,14 +757,19 @@ public abstract class LevelScene extends Scene {
                 isOnButton = false;
             }
 
-            if (state == 1 && checkAllStop() && allSkillStop(battleEnemies)) {
-                arrow.setResizeMag(0);
+            if (state == 1 && checkAllStop() && !enemyIsAtk) {
 
                 if (mouseState == CommandSolver.MouseState.DRAGGED) {
                     if (!this.isPressed) {
+                        arrow.setResizeMag(0);
                         this.startX = e.getX();
                         this.startY = e.getY();
                         this.isPressed = true;
+                    }
+                    if (this.startX < 0 || this.startX > Global.SCREEN_X || this.startY < 0 || this.startY > Global.SCREEN_Y - Global.INFO_H) {
+                        this.isDrag = false;
+                        this.isPressed = false;
+                        return;
                     }
                     arrow.setCenterX(marbles.get(currentIdx).getCenterX());
                     arrow.setCenterY(marbles.get(currentIdx).getCenterY());
@@ -750,31 +780,36 @@ public abstract class LevelScene extends Scene {
                         arrow.setDegree((float) Math.acos(vector.getX() / vector.getValue()));
                     }
                     float value = vector.getValue();
-                    if (vector.getValue() > 10f * marbles.get(currentIdx).getR()) {
+
+                    if (value > 10f * marbles.get(currentIdx).getR()) {
                         value = 10f * marbles.get(currentIdx).getR();
+                    } else if (value < 10) {
+                        this.isDrag = false;
+                        return;
                     }
                     arrow.setResizeMag(value / arrow.getWidth());
                     arrow.setShow(true);
-                } else {
-                    arrow.setShow(false);
+                    this.isDrag = true;
                 }
-                if (mouseState == CommandSolver.MouseState.RELEASED) {
+                if (mouseState == CommandSolver.MouseState.RELEASED && this.isDrag) {
                     this.endX = e.getX();
                     this.endY = e.getY();
-                    Vector vector = new Vector(this.startX - this.endX, this.startY - this.endY);
-                    arrow.setDegree((float) Math.acos(vector.getX() / vector.getValue()));
-                    arrow.setResizeMag(vector.getValue() / arrow.getWidth());
-                    marbles.get(currentIdx).setGo(vector.resizeVec(marbles.get(currentIdx).getInfo().getV()));
+                    Vector vec = new Vector(this.startX - this.endX, this.startY - this.endY);
+                    arrow.setDegree((float) Math.acos(vec.getX() / vec.getValue()));
+                    arrow.setResizeMag(vec.getValue() / arrow.getWidth());
+                    marbles.get(currentIdx).setGo(vec.resizeVec(marbles.get(currentIdx).getInfo().getV()));
                     count++;
                     round++;
                     isCount = false;
                     this.isPressed = false;
                     arrow.setShow(false);
                 }
+
             }
 
             if (state == 1 && checkAllStop() && allSkillStop(battleEnemies) && mouseState == CommandSolver.MouseState.PRESSED
                     && mouseInRange(e) && shineFrame[currentIdx].getIsShow()) {
+                this.isDrag = false;
                 marbles.get(currentIdx).useSkill(4, marbles, 0);
                 atkRound[currentIdx] = marbles.get(currentIdx).getInfo().getSkillRound() + 1;
                 shineFrame[currentIdx].setIsShow(false);
@@ -782,6 +817,8 @@ public abstract class LevelScene extends Scene {
                 round++;
                 isCount = false;
                 resetBattle();
+            } else if (mouseState == CommandSolver.MouseState.PRESSED) {
+                this.isDrag = false;
             }
         }
 

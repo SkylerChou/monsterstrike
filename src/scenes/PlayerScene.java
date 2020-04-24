@@ -32,12 +32,12 @@ public class PlayerScene extends Scene {
     private String name;
     private boolean isReleased;
     private int currentIdx;
-    private Button[] shineFrame;
+    private ButtonRenderer[] shineFrame;
     private boolean isDone;
     private boolean isEnter;
     private boolean isOnButton;
     private boolean isClick;
-    private Button button;
+    private ButtonRenderer button;
     private int enterCount;
     private BufferedImage img;
     private AudioClip music;
@@ -47,7 +47,7 @@ public class PlayerScene extends Scene {
         this.playerInfo = FileIO.readPlayer("playerInfoInit.csv").get(0);
         this.img = IRC.getInstance().tryGetImage("/resources/items/input.png");
         this.players = new Player[2];
-        this.shineFrame = new Button[2];
+        this.shineFrame = new ButtonRenderer[2];
         this.currentIdx = 0;
         this.isDone = false;
         this.isEnter = false;
@@ -56,6 +56,7 @@ public class PlayerScene extends Scene {
         this.enterCount = 0;
         this.name = "";
         this.music=MRC.getInstance().tryGetMusic("/resources/wav/charaterSeletion.wav");
+        this.isReleased = true;
     }
     
     @Override
@@ -63,11 +64,11 @@ public class PlayerScene extends Scene {
         this.menu = new Background(ImgInfo.LEVELBACK_PATH, 0, 0, 1);
         for (int i = 0; i < this.players.length; i++) {
             players[i] = new Player(i, 0, 300 * (i + 1) + 100, 200, 150, 213);
-            shineFrame[i] = new Button(ImgInfo.SHINEFRAME_PATH, 300 * (i + 1) + 175, 305,
+            shineFrame[i] = new ButtonRenderer(ImgInfo.SHINEFRAME_PATH, 300 * (i + 1) + 175, 305,
                     180, 250, 20);
             this.shineFrame[i].setIsShow(true);
         }
-        this.button = new Button(ImgInfo.HOME, Global.SCREEN_X - 30, 30,
+        this.button = new ButtonRenderer(ImgInfo.HOME, Global.SCREEN_X - 30, 30,
                 ImgInfo.SETTING_INFO[0], ImgInfo.SETTING_INFO[1], 20);
         this.music.loop();
     }

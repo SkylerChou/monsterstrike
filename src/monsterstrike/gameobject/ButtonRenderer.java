@@ -7,18 +7,18 @@ package monsterstrike.gameobject;
 
 import java.awt.Graphics;
 
-public class Button extends SceneObject {
+public class ButtonRenderer extends SceneObject {
 
     private ObjectRenderer renderer;
     private boolean isShow;
 
-    public Button(String[] path, int x, int y, int width, int height) {
+    public ButtonRenderer(String[] path, int x, int y, int width, int height) {
         super(x, y, width, height);
         this.renderer = new ObjectRenderer(path, 0);
         this.isShow = true;
     }
 
-    public Button(String[] path, int x, int y, int width, int height, int frame) {
+    public ButtonRenderer(String[] path, int x, int y, int width, int height, int frame) {
         super(x, y, width, height);
         this.renderer = new ObjectRenderer(path, frame);
         this.isShow = true;

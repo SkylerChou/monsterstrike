@@ -28,6 +28,7 @@ public class PinBall extends Scene {
 
     public static final int POS_X = 50;
     public static final int POS_Y = 50;
+    public static final int THRESHOLD_SCORE = 0;
 
     private Background background;
     private Ball ball;
@@ -46,7 +47,7 @@ public class PinBall extends Scene {
     private boolean isOut;
     private int countHeart;
 
-    private ArrayList<Button> buttons;
+    private ArrayList<ButtonRenderer> buttons;
     private boolean isEnter;
     private boolean isOnButton;
     private boolean isEnd;
@@ -59,7 +60,7 @@ public class PinBall extends Scene {
     private PlayerInfo playerinfo;
     private AudioClip music;
 
-    public PinBall(SceneController sceneController, PlayerInfo playerinfo) {       
+    public PinBall(SceneController sceneController, PlayerInfo playerinfo) {
         super(sceneController);
         this.playerinfo = playerinfo;
         this.scoreBoard = IRC.getInstance().tryGetImage("/resources/score.png");
@@ -84,7 +85,7 @@ public class PinBall extends Scene {
             this.post.add(new Obstacle(ImgInfo.POSTS_PATH, 150 + i * 150, 150 + y,
                     ImgInfo.POST_INFO[0], ImgInfo.POST_INFO[1], ImgInfo.POST_INFO[2], ImgInfo.POST_INFO[3]));
         }
-        this.buttons.add(new Button(ImgInfo.HOME, Global.SCREEN_X - 30, 30, ImgInfo.SETTING_INFO[0], ImgInfo.SETTING_INFO[1], 20));
+        this.buttons.add(new ButtonRenderer(ImgInfo.HOME, Global.SCREEN_X - 30, 30, ImgInfo.SETTING_INFO[0], ImgInfo.SETTING_INFO[1], 20));
         this.home = new SpecialEffect(ImgInfo.BLACKHOLE, 1000, 500,
                 ImgInfo.BLACKHOLE_INFO[0], ImgInfo.BLACKHOLE_INFO[1], 40);
         this.home.setShine(true);
@@ -217,12 +218,12 @@ public class PinBall extends Scene {
             sceneController.changeScene(new PinBall(sceneController, this.playerinfo));
             this.music.stop();
         }
-        if (this.score >= 50 && this.isEnd && this.isPaint) {
+        if (this.score >= THRESHOLD_SCORE && this.isEnd && this.isPaint) {
             this.music.stop();
             ARC.getInstance().play("/resources/wav/win1.wav");
             lottery();
         }
-        if (this.score >= 50 && this.isEnd) {
+        if (this.score >= THRESHOLD_SCORE && this.isEnd) {
             this.music.stop();
             this.specialMarble.update();
         }
@@ -230,11 +231,10 @@ public class PinBall extends Scene {
 
     public void lottery() {
         this.specialMarble = this.Allteeth.get(Global.random(0, this.Allteeth.size() - 1));
-        this.specialMarble.setCenterX(550);
-        this.specialMarble.setCenterY(400);
+        this.specialMarble.setCenterX(630);
+        this.specialMarble.setCenterY(460);
         this.isPaint = false;
         this.playerinfo.addMyMarbleSerial(specialMarble.getInfo().getSerial());
-//        FileIO.writePlayer("playerInfo.csv", this.playerinfo);
         String fileName = "mymarbleInfo" + this.playerinfo.getSerial() + ".csv";
         FileIO.writeMarble(fileName, specialMarble.getInfo());
         System.out.println("抽中怪物:" + specialMarble.getInfo().getName());
@@ -315,12 +315,15 @@ public class PinBall extends Scene {
                 this.hearts[i].paintComponent(g);
             }
         }
-        if (this.score >= 50 && this.isEnd) {
+        if (this.score >= THRESHOLD_SCORE && this.isEnd) {
             PaintText.paintTwinkle(g, new Font("Showcard Gothic", Font.PLAIN, 48),
                     new Font("Showcard Gothic", Font.PLAIN, 54), Color.YELLOW, Color.BLACK,
                     "Press   \" SPACE \"  to Restart ", "You Gain", 0, 300, 2, Global.SCREEN_X, 30);
             PaintText.paintWithShadow(g, new Font("Showcard Gothic", Font.TRUETYPE_FONT, 44), Color.ORANGE, Color.BLACK, "Total Score: " + score, 0, Global.SCREEN_Y / 2 - 98, 2, Global.SCREEN_X);
-            this.specialMarble.paint(g, (int) this.specialMarble.getCenterX(), (int) this.specialMarble.getCenterY(), (int) this.specialMarble.getWidth(), (int) this.specialMarble.getHeight(), 228, 227);
+            if (this.specialMarble!= null) {
+                this.specialMarble.paintComponent(g);
+            }
+
         } else if (this.isEnd) {
             PaintText.paintTwinkle(g, new Font("Showcard Gothic", Font.PLAIN, 48),
                     new Font("Showcard Gothic", Font.PLAIN, 54), Color.YELLOW, Color.BLACK,
