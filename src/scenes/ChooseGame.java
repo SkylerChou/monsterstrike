@@ -90,7 +90,6 @@ public class ChooseGame extends Scene {
 
     @Override
     public void sceneEnd() {
-
     }
 
     @Override
@@ -135,7 +134,6 @@ public class ChooseGame extends Scene {
 
         @Override
         public void keyPressed(int commandCode, long trigTime) {
-
         }
 
         @Override
@@ -158,7 +156,6 @@ public class ChooseGame extends Scene {
 
         @Override
         public void keyTyped(char c, long trigTime) {
-
         }
     }
 
@@ -173,5 +170,4 @@ public class ChooseGame extends Scene {
             }
         }
     }
-
 }

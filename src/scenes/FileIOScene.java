@@ -47,7 +47,6 @@ public class FileIOScene extends Scene {
     private boolean isRead;   //寫入檔案後是否完成讀取
     private boolean again;    //是否重新選擇寫入位置
 
-
     private AudioClip music;
 
     public FileIOScene(SceneController sceneController, String state) {
@@ -124,8 +123,8 @@ public class FileIOScene extends Scene {
     @Override
     public void sceneUpdate() {
         if (this.isEmpty || (!isSave && !showWindow && this.playersInfo.isEmpty())) {
-            this.home.setX(Global.SCREEN_X / 2 + 100);
-            this.home.setY(Global.SCREEN_Y / 2 - 20);
+            this.home.setX(Global.SCREEN_X / 2 + 90);
+            this.home.setY(Global.SCREEN_Y / 2 - 40);
         } else {
             this.shineFrame.update();
             this.shineFrame.setCenterY(150 + 120 * (1 + currentIdx));
@@ -302,8 +301,8 @@ public class FileIOScene extends Scene {
             yes.update(e, state);
             no.update(e, state);
             if (isEmpty || (!isSave && !showWindow && playersInfo.isEmpty())) { //讀取無存檔
-                if (state == CommandSolver.MouseState.PRESSED && e.getX() > 710 && e.getX() < 755
-                        && e.getY() > 276 && e.getY() < 323) {
+                if (state == CommandSolver.MouseState.PRESSED && e.getX() > home.getLeft() && e.getX() < home.getRight()
+                        && e.getY() > home.getTop() && e.getY() < home.getBottom()) {
                     isClick = true;
                 }
             } else if (showWindow || showCheckWindow) {

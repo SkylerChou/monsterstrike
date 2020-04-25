@@ -259,29 +259,14 @@ public abstract class LevelScene extends Scene {
             float x = this.marbles.get(i).getCenterX();
             float y = this.marbles.get(i).getCenterY();
             if (x > Global.POSITION_X[i]) {
-                this.marbles.get(i).offset((Global.POSITION_X[i] - x) / 40f, 0);
+                this.marbles.get(i).offset((Global.POSITION_X[i] - x) / 35f, 0);
             }
             if (y > Global.POSITION_Y[i] + 10 || y < Global.POSITION_Y[i] - 10) {
-                this.marbles.get(i).offset(0, (Global.POSITION_Y[i] - y) / 40f);
+                this.marbles.get(i).offset(0, (Global.POSITION_Y[i] - y) / 35f);
             }
         }
     }
-
-    private void pushMarbles() {
-        for (int i = 0; i < this.marbles.size(); i++) {
-            for (int j = i + 1; j < this.marbles.size(); j++) {
-                if (this.marbles.get(i).isCollision(this.marbles.get(j))) {
-                    Vector vec = new Vector(this.marbles.get(j).getCenterX() - this.marbles.get(i).getCenterX(),
-                            this.marbles.get(j).getCenterY() - this.marbles.get(i).getCenterY());
-                    float value = vec.getValue();
-                    vec.resizeVec((70 - value) / 2);
-                    this.marbles.get(i).offset(-vec.getX(), -vec.getY());
-                    this.marbles.get(j).offset(vec.getX(), vec.getY());
-                }
-            }
-        }
-    }
-
+    
     private void calculateHP() {
         int tmp = 0;
         for (int i = 0; i < this.marbles.size(); i++) {
