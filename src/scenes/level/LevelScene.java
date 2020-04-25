@@ -5,6 +5,7 @@
  */
 package scenes.level;
 
+import monsterstrike.gameobject.button.*;
 import Props.*;
 import controllers.ARC;
 import controllers.MRC;
@@ -110,7 +111,7 @@ public abstract class LevelScene extends Scene {
         this.isDraw = false;
         this.enemyIsAtk = false;
         this.music = MRC.getInstance().tryGetMusic("/resources/wav/battle.wav");
-        this.home = new ButtonA(Global.SCREEN_X - 30 - ImgInfo.SETTING_INFO[0], Global.SCREEN_Y - 75, Global.SCREEN_X - 30, Global.SCREEN_Y -75 + ImgInfo.SETTING_INFO[1], ImgInfo.HOME, ImgInfo.SETTING_INFO[0], ImgInfo.SETTING_INFO[1]);
+        this.home = new ButtonA(ImgInfo.HOME, Global.SCREEN_X - 30 - ImgInfo.SETTING_INFO[0], Global.SCREEN_Y - 75, ImgInfo.SETTING_INFO[0], ImgInfo.SETTING_INFO[1]);
         this.home.setListener(new ButtonClickListener());
     }
 
@@ -137,6 +138,7 @@ public abstract class LevelScene extends Scene {
         this.round = 0;
         this.enemyRound = 0;
         genGameObject();
+        PaintText.setFlash(15);
     }
 
     @Override
@@ -145,7 +147,6 @@ public abstract class LevelScene extends Scene {
         if (this.state == 0) { //設定背景起始位置， 敵人怪物降落           
             this.background.setX((this.sceneCount + 1) * ImgInfo.BACKGROUND_SIZE[idx][0]);
             if (dropEnemies()) {
-                pushMarbles();
                 genProps();
             }
         } else if (this.state == 1) { //遊戲開始
@@ -257,28 +258,27 @@ public abstract class LevelScene extends Scene {
         for (int i = 0; i < this.marbles.size(); i++) {
             float x = this.marbles.get(i).getCenterX();
             float y = this.marbles.get(i).getCenterY();
-            if (x > Global.POSITION_X[i] + 20 || x < Global.POSITION_X[i] - 20) {
-                this.marbles.get(i).offset((Global.POSITION_X[i] - x) / 50f, 0);
+            if (x > Global.POSITION_X[i]) {
+                this.marbles.get(i).offset((Global.POSITION_X[i] - x) / 40f, 0);
             }
-            if (y > Global.SCREEN_Y - Global.INFO_H - 80 || y < 80) {
-                this.marbles.get(i).offset(0, (Global.POSITION_Y[i] - y) / 50f);
+            if (y > Global.POSITION_Y[i] + 10 || y < Global.POSITION_Y[i] - 10) {
+                this.marbles.get(i).offset(0, (Global.POSITION_Y[i] - y) / 40f);
             }
         }
     }
 
     private void pushMarbles() {
         for (int i = 0; i < this.marbles.size(); i++) {
-            for (int j = i+1; j < this.marbles.size(); j++) {
+            for (int j = i + 1; j < this.marbles.size(); j++) {
                 if (this.marbles.get(i).isCollision(this.marbles.get(j))) {
                     Vector vec = new Vector(this.marbles.get(j).getCenterX() - this.marbles.get(i).getCenterX(),
                             this.marbles.get(j).getCenterY() - this.marbles.get(i).getCenterY());
                     float value = vec.getValue();
-                    System.out.println(value);
                     vec.resizeVec((70 - value) / 2);
                     this.marbles.get(i).offset(-vec.getX(), -vec.getY());
                     this.marbles.get(j).offset(vec.getX(), vec.getY());
                 }
-            } 
+            }
         }
     }
 
@@ -450,10 +450,10 @@ public abstract class LevelScene extends Scene {
         for (int i = 0; i < this.marbles.size(); i++) {
             for (int j = 0; j < this.battleEnemies.size(); j++) {
                 if (this.marbles.get(i).getDetect().isCollision(this.battleEnemies.get(j))
-                        && this.marbles.get(i).goVec().getValue() > 0) {
+                        && this.marbles.get(i).goVec().getValue() > 0 && this.battleEnemies.get(j).getInfo().getHp() > 0) {
                     this.marbles.get(i).detectStill(this.battleEnemies.get(j));
                     this.battleEnemies.get(j).setIsCollide(true);
-                    this.battleEnemies.get(j).setGo(this.marbles.get(i).goVec());
+                    this.battleEnemies.get(j).setGo(this.marbles.get(i).goVec().resizeVec(10));
                     this.marbles.get(i).hit(this.battleEnemies.get(j));
                     this.hitCount += this.marbles.get(i).useSkill(0, this.battleEnemies, j);
                 }
@@ -597,9 +597,9 @@ public abstract class LevelScene extends Scene {
         if (this.background != null) {
             this.background.paint(g);
         }
-        this.item.paint(g);
-        paintGameObject(g);
+        this.item.paint(g);        
         this.blood.paintResize(g, this.ratio);
+        paintGameObject(g);
         this.home.paint(g);
         this.player.paint(g);
         if (this.arrow != null && this.arrow.getShow()) {
@@ -621,14 +621,20 @@ public abstract class LevelScene extends Scene {
         if (isLose()) {
             PaintText.paintTwinkle(g, new Font("Showcard Gothic", Font.PLAIN, 48),
                     new Font("Showcard Gothic", Font.PLAIN, 54), Color.gray, Color.BLACK,
-                    this.playerinfo.getName() + " Lose!", "", 0, 270, 2, Global.SCREEN_X, 30);
+                    this.playerinfo.getName() + " Lose!", "", 0, 270, 2, Global.SCREEN_X);
+            PaintText.paintTwinkle(g, new Font("Showcard Gothic", Font.PLAIN, 22),
+                    new Font("Showcard Gothic", Font.PLAIN, 24), Color.ORANGE, Color.BLACK,
+                    "Press   \" ENTER \"  to MENU", "", 450, 500, 2, Global.SCREEN_X);
             if (overCount == 100) {
                 overCount = 0;
             }
         } else if (isWin) {
             PaintText.paintTwinkle(g, new Font("Showcard Gothic", Font.PLAIN, 48),
                     new Font("Showcard Gothic", Font.PLAIN, 54), Color.YELLOW, Color.BLACK,
-                    this.playerinfo.getName() + " Win!", "You Gain", 0, 270, 2, Global.SCREEN_X, 30);
+                    this.playerinfo.getName() + " Win!", "You Gain", 0, 270, 2, Global.SCREEN_X);
+            PaintText.paintTwinkle(g, new Font("Showcard Gothic", Font.PLAIN, 22),
+                    new Font("Showcard Gothic", Font.PLAIN, 24), Color.ORANGE, Color.BLACK,
+                    "Press   \" ENTER \"  to MENU", "", 450, 500, 2, Global.SCREEN_X);
             m.paintAll(g);
             if (overCount == 1000) {
                 overCount = 0;
@@ -745,7 +751,6 @@ public abstract class LevelScene extends Scene {
             }
             if (state == 1 && checkAllStop() && allSkillStop(battleEnemies)) {
                 arrow.setResizeMag(0);
-
                 if (mouseState == CommandSolver.MouseState.DRAGGED) {
                     if (!this.isPressed) {
                         arrow.setResizeMag(0);
@@ -791,7 +796,6 @@ public abstract class LevelScene extends Scene {
                     this.isPressed = false;
                     arrow.setShow(false);
                 }
-
             }
 
             if (state == 1 && checkAllStop() && allSkillStop(battleEnemies) && mouseState == CommandSolver.MouseState.PRESSED

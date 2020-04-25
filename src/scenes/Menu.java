@@ -5,6 +5,7 @@
  */
 package scenes;
 
+import monsterstrike.gameobject.button.ButtonRenderer;
 import controllers.MRC;
 import controllers.SceneController;
 import java.applet.AudioClip;

@@ -5,9 +5,8 @@
  */
 package scenes;
 
-import controllers.IRC;
-import controllers.MRC;
-import controllers.SceneController;
+import monsterstrike.gameobject.button.*;
+import controllers.*;
 import java.applet.AudioClip;
 import java.awt.Color;
 import java.awt.Font;
@@ -31,7 +30,7 @@ public class PlayerScene extends Scene {
     private Player[] players;
     private String name;
     private int currentIdx;
-    private ButtonRenderer[] shineFrame;
+    private ButtonRenderer shineFrame;
     private boolean isDone;
     private boolean isEnter;
     private boolean isClick;
@@ -45,7 +44,6 @@ public class PlayerScene extends Scene {
         this.playerInfo = FileIO.readPlayer("playerInfoInit.csv").get(0);
         this.img = IRC.getInstance().tryGetImage("/resources/items/input.png");
         this.players = new Player[2];
-        this.shineFrame = new ButtonRenderer[2];
         this.currentIdx = 0;
         this.isDone = false;
         this.isEnter = false;
@@ -53,7 +51,7 @@ public class PlayerScene extends Scene {
         this.enterCount = 0;
         this.name = "";
         this.music = MRC.getInstance().tryGetMusic("/resources/wav/charaterSeletion.wav");
-        this.home = new ButtonA(Global.SCREEN_X - 5 - ImgInfo.SETTING_INFO[0], 5, Global.SCREEN_X - 5, 5 + ImgInfo.SETTING_INFO[1], ImgInfo.HOME, ImgInfo.SETTING_INFO[0], ImgInfo.SETTING_INFO[1]);
+        this.home = new ButtonA(ImgInfo.HOME, Global.SCREEN_X - 5 - ImgInfo.SETTING_INFO[0], 5,ImgInfo.SETTING_INFO[0], ImgInfo.SETTING_INFO[1]);
         this.home.setListener(new ButtonClickListener());
     }
 
@@ -62,11 +60,12 @@ public class PlayerScene extends Scene {
         this.menu = new Background(ImgInfo.LEVELBACK_PATH, 0, 0, 1);
         for (int i = 0; i < this.players.length; i++) {
             players[i] = new Player(i, 0, 300 * (i + 1) + 100, 200, 150, 213);
-            shineFrame[i] = new ButtonRenderer(ImgInfo.SHINEFRAME_PATH, 300 * (i + 1) + 175, 305,
+            shineFrame = new ButtonRenderer(ImgInfo.SHINEFRAME_PATH, 475, 305,
                     180, 250, 20);
-            this.shineFrame[i].setIsShow(true);
+            this.shineFrame.setIsShow(true);
         }
         this.music.loop();
+        PaintText.setFlash(15);
     }
 
     @Override
@@ -80,13 +79,13 @@ public class PlayerScene extends Scene {
                 }
                 this.players[i].update();
             }
-            this.shineFrame[currentIdx].update();
-        } else if (enterCount == 1) {
             if (currentIdx == 0) {
-                this.shineFrame[1].setIsShow(false);
+                this.shineFrame.setCenterX(475);
             } else {
-                this.shineFrame[0].setIsShow(false);
+                this.shineFrame.setCenterX(775);
             }
+            this.shineFrame.update();
+        } else if (enterCount == 1) {
         } else if (enterCount == 2) {
             this.playerInfo.setPlayerNum(currentIdx + 1);
             if (name.equals("")) {
@@ -113,11 +112,10 @@ public class PlayerScene extends Scene {
     public void paint(Graphics g) {
         this.menu.paintMenu(g);
         this.home.paint(g);
+        this.shineFrame.paint(g);
         for (int i = 0; i < this.players.length; i++) {
             this.players[i].paint(g);
-            this.shineFrame[i].paint(g);
         }
-
         if (enterCount > 0) {
             PaintText.paint(g, new Font("VinerHandITC", Font.PLAIN, 24),
                     Color.BLACK, "Player Name: ", -70, 500, Global.SCREEN_X);
@@ -132,14 +130,14 @@ public class PlayerScene extends Scene {
                     g.drawString(name, Global.SCREEN_X / 2 + 20, 500);
                     g.drawImage(img, Global.SCREEN_X / 2 + 10, 475, 150, 30, null);
                     PaintText.paintTwinkle(g, new Font("VinerHandITC", Font.BOLD, 24), Color.WHITE, "|", 15,
-                            495, Global.SCREEN_X, 30);
+                            495, Global.SCREEN_X);
                 }
             } else if (enterCount == 2) {
                 g.setFont(new Font("VinerHandITC", Font.PLAIN, 24));
                 g.setColor(Color.BLACK);
                 g.drawString(name, Global.SCREEN_X / 2 + 10, 500);
                 PaintText.paintTwinkle(g, new Font("Showcard Gothic", Font.PLAIN, 40), new Font("Showcard Gothic", Font.PLAIN, 44),
-                        Color.BLACK, "START", Global.SCREEN_X / 2 + 100, 550, Global.SCREEN_X / 2, 30);
+                        Color.BLACK, "START", Global.SCREEN_X / 2 + 100, 550, Global.SCREEN_X / 2);
             }
         }
 //        g.drawString("Level 1", Global.SCREEN_X / 2 - 70, 540);
@@ -164,11 +162,14 @@ public class PlayerScene extends Scene {
 
         @Override
         public void keyReleased(int commandCode, long trigTime) {
-            if (commandCode == Global.LEFT && currentIdx == 1) {
-                currentIdx = 0;
-            } else if (commandCode == Global.RIGHT && currentIdx == 0) {
-                currentIdx = 1;
-            } else if (commandCode == Global.ENTER) {
+            if (enterCount == 0) {
+                if (commandCode == Global.LEFT && currentIdx == 1) {
+                    currentIdx = 0;
+                } else if (commandCode == Global.RIGHT && currentIdx == 0) {
+                    currentIdx = 1;
+                }
+            }
+            if (commandCode == Global.ENTER) {
                 isDone = true;
                 enterCount++;
             }

@@ -103,8 +103,8 @@ public class ImgInfo {
     public static final int[] ARROW_INFO = {230, 230, 100};
 
     //LEVEL MENU 按鈕
-    public static final String[] RIGHT = {ITEM_ROOT + "right1.png", ITEM_ROOT + "right2.png"};
-    public static final String[] LEFT = {ITEM_ROOT + "left1.png", ITEM_ROOT + "left2.png"};
+    public static final String[] RIGHT = {ITEM_ROOT + "right1.png", ITEM_ROOT + "right2.png", ITEM_ROOT + "right3.png"};
+    public static final String[] LEFT = {ITEM_ROOT + "left1.png", ITEM_ROOT + "left2.png", ITEM_ROOT + "left3.png"};
     public static final int[] CHOOSEBUTTON_INFO = {50, 50};
 
     //Menu
@@ -167,13 +167,13 @@ public class ImgInfo {
     public static final int[][] PLAYERRUN_INFO = {{480, 695}, {480, 640}};
     public static final int[][] PLAYERSTAND_INFO = {{475, 674}, {475, 640}};
     
-     public static final String WRITE = ITEM_ROOT + "write.png";
-     public static final String SAVE = ITEM_ROOT + "save.png";
-     public static final String [] YES = { ITEM_ROOT + "yes1.png", ITEM_ROOT + "yes2.png"};
-     public static final String[] NO = { ITEM_ROOT + "no1.png", ITEM_ROOT + "no2.png"};
-     public static final String [] FIGHT = { ITEM_ROOT + "fight1.png", ITEM_ROOT + "fight2.png"};
-     public static final String[] FRIEND = { ITEM_ROOT + "friend1.png", ITEM_ROOT + "friend2.png"};
+     public static final String WRITE = ITEM_ROOT + "write1.png";
+     public static final String SAVE = ITEM_ROOT + "save1.png";
+     public static final String [] YES = { ITEM_ROOT + "yes3.png", ITEM_ROOT + "yes4.png"};
+     public static final String[] NO = { ITEM_ROOT + "no3.png", ITEM_ROOT + "no4.png"};
+     public static final String FIGHT = ITEM_ROOT + "fight.png";
+     public static final String FRIEND = ITEM_ROOT + "friend.png";
     
-     public static final int[] YesNo_INFO = {150, 50};//img_width, img_height  
-     public static final int[] WINDOW_INFO = {625, 273};//img_width, img_height  
+     public static final int[] YesNo_INFO = {80, 40};//img_width, img_height  
+     public static final int[] WINDOW_INFO = {256, 128};//img_width, img_height  
 }

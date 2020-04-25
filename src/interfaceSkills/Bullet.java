@@ -64,8 +64,8 @@ public class Bullet extends Skills {
                 this.skill[i] = new SkillComponent(SKILL_IDX, attr, SkillImg.SKILL_NUM[0][attr],
                         (int) (self.getCenterX() + dx), (int) (self.getCenterY() - r2 + dy), WIDTH, HEIGHT, DELAY);
                 Vector vec = new Vector(this.skill[i].getCenterX() - self.getCenterX(), this.skill[i].getCenterY() - self.getCenterY());
-                this.skill[i].setDx(vec.getUnitX() * 3);
-                this.skill[i].setDy(vec.getUnitY() * 3);
+                this.skill[i].setDx(vec.getUnitX() * 4);
+                this.skill[i].setDy(vec.getUnitY() * 4);
             }
         }
         ARC.getInstance().play("/resources/wav/shoot.wav");
@@ -88,7 +88,7 @@ public class Bullet extends Skills {
                 }
                 target.get(j).getInfo().setHp(target.get(j).getInfo().getHp() - atk);       
                 this.target.get(j).getInfo().setHp(this.target.get(j).getInfo().getHp() - this.self.getInfo().getAtk());
-                System.out.println(this.target.get(j).getInfo().getName() + "血量:" + this.target.get(j).getInfo().getHp());
+//                System.out.println(this.target.get(j).getInfo().getName() + "血量:" + this.target.get(j).getInfo().getHp());
                 this.target.get(j).setIsCollide(true);
                 return true;
             }

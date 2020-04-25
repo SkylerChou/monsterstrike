@@ -83,7 +83,7 @@ public class Missile extends Skills {
                     atk = self.getInfo().getAtk() / 2;
                 }
                 this.target.get(j).getInfo().setHp(this.target.get(j).getInfo().getHp() - atk);
-                System.out.println(this.target.get(j).getInfo().getName() + "血量:" + this.target.get(j).getInfo().getHp());
+//                System.out.println(this.target.get(j).getInfo().getName() + "血量:" + this.target.get(j).getInfo().getHp());
                 this.skill[idx].setIsBoom(true);
                 return true;
             }

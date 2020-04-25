@@ -5,6 +5,7 @@
  */
 package monsterstrike.gameobject.marble;
 
+import java.awt.Graphics;
 import monsterstrike.util.Delay;
 
 public class Stand implements Strike {
@@ -14,16 +15,24 @@ public class Stand implements Strike {
 
     public Stand() {
         this.moveDelay = new Delay(2);
-        this.moveCount = 0;       
+        this.moveCount = 0;
     }
 
     @Override
     public void update(Marble self) {
-        self.renderer.update();
         if (!self.isDie && self.isCollide) {
+            self.rendererHit.setIsCollide(true);
+            if(self.rendererHit.getIsStop()){
+                self.rendererHit.startHit();
+            }
             move(self);
         } else if (self.isDie) {
             self.rendererDie.updateHit();
+        }
+        if (self.rendererHit.getIsCollide()) {
+            self.rendererHit.updateHit();
+        } else {
+            self.renderer.update();
         }
     }
 

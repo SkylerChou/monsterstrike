@@ -5,6 +5,7 @@
  */
 package scenes;
 
+import monsterstrike.gameobject.button.*;
 import controllers.MRC;
 import scenes.level.*;
 import controllers.SceneController;
@@ -41,9 +42,7 @@ public class LevelMenu extends Scene {
     private int x;
     private int y;
     private Delay delay;
-    private int level;
     private Player p1;
-
     private Button home;
     private boolean isEnter;
     private boolean isSkip;
@@ -57,7 +56,6 @@ public class LevelMenu extends Scene {
         this.playerInfo = playerInfo;
         this.allMarbleInfo = FileIO.readMarble("marbleInfo.csv");
         this.myMarbleInfo = FileIO.readMarble(myMarbleFile);
-        this.level = playerInfo.getLevel();
         this.myMarbles = new ArrayList<>();
         this.enemies = new ArrayList<>();
         this.fightMarbles = new Marble[3];
@@ -66,7 +64,7 @@ public class LevelMenu extends Scene {
         this.music = MRC.getInstance().tryGetMusic("/resources/wav/menu1.wav");
         this.isSkip = isSkip;
         this.isMask = new boolean[5];
-        this.home = new ButtonA(Global.SCREEN_X - 5 - ImgInfo.SETTING_INFO[0], 5, Global.SCREEN_X - 5, 5 + ImgInfo.SETTING_INFO[1],ImgInfo.HOME,ImgInfo.SETTING_INFO[0], ImgInfo.SETTING_INFO[1]);
+        this.home = new ButtonA(ImgInfo.HOME, Global.SCREEN_X - 5 - ImgInfo.SETTING_INFO[0], 5, ImgInfo.SETTING_INFO[0], ImgInfo.SETTING_INFO[1]);
         this.home.setListener(new ButtonClickListener());
     }
 
@@ -82,7 +80,7 @@ public class LevelMenu extends Scene {
         this.backIdx = 0;
         this.background = new Background(ImgInfo.BACKGROUND_PATH[this.backIdx], 0, 0, this.backIdx);
         this.mask = new Background(ImgInfo.MASK_PATH, 0, 0, 0);
-        this.lock = new Item(ImgInfo.LOCK_PATH, 900, 410, 50, 50);
+        this.lock = new Item(ImgInfo.LOCK_PATH, 640, 480, 100, 100);
         for (int i = 0; i < this.allMarbleInfo.size(); i++) {
             this.enemies.add(new Marble(0, 0, 150, 150, this.allMarbleInfo.get(i)));
         }
@@ -112,9 +110,14 @@ public class LevelMenu extends Scene {
     @Override
     public void sceneUpdate() {
         this.p1.update();
-        if (count == 4) {
+        if (count >= 0 && count < 3) {
+            this.currentMarble = this.myMarbles.get(idx);
+            this.currentMarble.setShine(true);
+            this.currentMarble.update();
+            this.currentMarble.updateShine();
+        } else if (count == 3) {
             this.background = new Background(ImgInfo.BACKGROUND_PATH[backIdx], 0, 0, this.backIdx);
-        } else if (this.count == 5) {
+        } else if (this.count == 4) {
             for (int i = 0; i < this.enemies.size(); i++) {
                 if (this.enemies.get(i).getInfo().getAttribute() != backIdx) {
                     continue;
@@ -124,25 +127,48 @@ public class LevelMenu extends Scene {
             this.music.stop();
             sceneController.changeScene(chooseLevel());
             return;
-        } else {
-            this.currentMarble = this.myMarbles.get(idx);
-            this.currentMarble.setShine(true);
-            this.currentMarble.update();
-            this.currentMarble.updateShine();
         }
         if (this.delay.isTrig()) {
-            int i = 2 * (count - 1);
-            if (i == -2) {
-                i = 0;
-            } else if (i == 8) {
-                i = 6;
-            }
-            this.buttons.get(i).update();
-            this.buttons.get(i + 1).update();
+            this.buttons.get(2 * count).update();
+            this.buttons.get(2 * count + 1).update();
         }
         if (this.isEnter) {
             sceneController.changeScene(new FileIOScene(sceneController, playerInfo, "w"));
             this.music.stop();
+        }
+    }
+
+    private void enter() {
+        if (!(count == 3 && this.playerInfo.getLevel() < backIdx + 1)) {
+            this.count++;
+        }
+        if (count >= 4) {
+            count = 4;
+        }
+        if (this.count > 0 && this.count < 4) {
+            this.fightMarbles[this.count - 1] = currentMarble;
+            if (!myMarbles.isEmpty()) {
+                myMarbles.remove(idx);
+                this.idx = 0;
+                for (int i = 0; i < myMarbles.size(); i++) {
+                    this.myMarbles.get(i).setCenterX(350 + 290 * count);
+                }
+            }
+        }
+    }
+
+    private void back() {
+        count--;
+        if (count < 0) {
+            count = 0;
+        } else {
+            if (this.count >= 0 && this.count < 4) {
+                myMarbles.add(this.fightMarbles[this.count]);
+                this.fightMarbles[this.count] = null;
+                for (int i = 0; i < myMarbles.size(); i++) {
+                    this.myMarbles.get(i).setCenterX(350 + 290 * count);
+                }
+            }
         }
     }
 
@@ -167,24 +193,6 @@ public class LevelMenu extends Scene {
         return null;
     }
 
-    private void enter() {
-        if (count >= 5) {
-            count = 5;
-        }
-        if (this.count > 0 && this.count < 4) {
-            this.fightMarbles[this.count - 1] = currentMarble;
-            myMarbles.remove(idx);
-            this.idx = 0;
-            this.x += 290;
-            for (int i = 0; i < myMarbles.size(); i++) {
-                this.myMarbles.get(i).setCenterX(this.x);
-            }
-        }
-        if (this.backIdx + 1 <= this.level) {
-            this.count++;
-        }
-    }
-
     @Override
     public void sceneEnd() {
 
@@ -198,13 +206,10 @@ public class LevelMenu extends Scene {
                 Color.BLACK, this.playerInfo.getName(), 100, 300, 100);
         PaintText.paint(g, new Font("Arial Unicode MS", Font.BOLD, 20),
                 Color.BLACK, "Lv." + this.playerInfo.getLevel(), 105, 110, 100);
-        int c = count;
-        if (c == 0) {
-            c = 1;
-        }
-        if (this.currentMarble != null && count < 4) {
+
+        if (this.currentMarble != null && count < 3) {
             this.currentMarble.paintAll(g);
-            paintText(g, this.currentMarble, 280 + 290 * (c - 1), 140);
+            paintText(g, this.currentMarble, 280 + 290 * count, 140);
         }
 
         for (int i = 0; i < this.fightMarbles.length; i++) {
@@ -214,7 +219,7 @@ public class LevelMenu extends Scene {
             }
         }
 
-        if (this.count >= 4) {
+        if (this.count >= 3) {
             this.background.paintItem(g, 350, 380, 580, 200);
             if (isMask[backIdx]) {
                 this.mask.paintItem(g, 350, 380, 580, 200);
@@ -260,36 +265,39 @@ public class LevelMenu extends Scene {
         @Override
         public void keyReleased(int commandCode, long trigTime) {
             switch (commandCode) {
-                    case Global.LEFT:
-                        if (count <= 3) {
-                            idx--;
-                            if (idx < 0) {
-                                idx = myMarbles.size() - 1;
-                            }
-                        } else {
-                            backIdx--;
-                            if (backIdx < 0) {
-                                backIdx = ImgInfo.BACKGROUND_PATH.length - 1;
-                            }
+                case Global.LEFT:
+                    if (count <= 2) {
+                        idx--;
+                        if (idx < 0) {
+                            idx = myMarbles.size() - 1;
                         }
-                        break;
-                    case Global.RIGHT:
-                        if (count <= 3) {
-                            idx++;
-                            if (idx >= myMarbles.size()) {
-                                idx = 0;
-                            }
-                        } else {
-                            backIdx++;
-                            if (backIdx >= ImgInfo.BACKGROUND_PATH.length) {
-                                backIdx = 0;
-                            }
+                    } else {
+                        backIdx--;
+                        if (backIdx < 0) {
+                            backIdx = ImgInfo.BACKGROUND_PATH.length - 1;
                         }
-                        break;
-                    case Global.ENTER:
-                        enter();
-                        break;
-                }
+                    }
+                    break;
+                case Global.RIGHT:
+                    if (count <= 2) {
+                        idx++;
+                        if (idx >= myMarbles.size()) {
+                            idx = 0;
+                        }
+                    } else {
+                        backIdx++;
+                        if (backIdx >= ImgInfo.BACKGROUND_PATH.length) {
+                            backIdx = 0;
+                        }
+                    }
+                    break;
+                case Global.ENTER:
+                    enter();
+                    break;
+                case Global.BACKSPACE:
+                    back();
+                    break;
+            }
         }
 
         @Override
@@ -301,7 +309,7 @@ public class LevelMenu extends Scene {
 
         @Override
         public void mouseTrig(MouseEvent e, CommandSolver.MouseState state, long trigTime) {
-           home.update(e, state);
+            home.update(e, state);
             if (state == CommandSolver.MouseState.PRESSED && e.getX() > Global.SCREEN_X - 30 - ImgInfo.SETTING_INFO[1] / 2 && e.getX() < Global.SCREEN_X - 30 + ImgInfo.SETTING_INFO[1] / 2
                     && e.getY() > 30 - ImgInfo.SETTING_INFO[1] / 2 && e.getY() < 30 + ImgInfo.SETTING_INFO[1] / 2) {
                 isEnter = true;

@@ -45,6 +45,7 @@ public class Tutorial extends Scene {
     @Override
     public void sceneBegin() {
         this.music.loop();
+        PaintText.setFlash(30);
     }
 
     @Override
@@ -71,10 +72,10 @@ public class Tutorial extends Scene {
         this.howToPlay.paint(g, 0, 0, Global.SCREEN_X, Global.SCREEN_Y, ImgInfo.HOWTOPLAY_SIZE[0], ImgInfo.HOWTOPLAY_SIZE[1]);
         PaintText.paintTwinkle(g, new Font("Showcard Gothic", Font.PLAIN, 18),
                 new Font("Showcard Gothic", Font.PLAIN, 20), Color.WHITE, Color.BLACK,
-                "Press   \" SPACE \"  to Next Page", "", 450, 570, 2, Global.SCREEN_X, 60);
+                "Press   \" SPACE \"  to Next Page", "", 450, 570, 2, Global.SCREEN_X);
         PaintText.paintTwinkle(g, new Font("Showcard Gothic", Font.PLAIN, 18),
                 new Font("Showcard Gothic", Font.PLAIN, 20), Color.WHITE, Color.BLACK,
-                "Press   \" Z \"  to Skip", "", 450, 590, 2, Global.SCREEN_X, 60);
+                "Press   \" Z \"  to Skip", "", 450, 590, 2, Global.SCREEN_X);
     }
 
     @Override
@@ -106,14 +107,12 @@ public class Tutorial extends Scene {
         }
 
         @Override
-        public void keyReleased(int commandCode, long trigTime
-        ) {
+        public void keyReleased(int commandCode, long trigTime) {
             isEnter = false;
         }
 
         @Override
-        public void keyTyped(char c, long trigTime
-        ) {
+        public void keyTyped(char c, long trigTime) {
 
         }
 

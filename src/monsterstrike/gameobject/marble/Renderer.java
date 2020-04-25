@@ -55,8 +55,9 @@ public class Renderer {
     public void updateHit() {
         if (this.collideDelay.isTrig()) {
             if (this.imgIdx++ == this.imgNum - 1) {
-                this.imgIdx = this.imgNum - 1;
+                this.imgIdx = 2;
                 this.isStop = true;
+                this.isCollide = false;
                 this.stopHit();
             }
         }
@@ -85,6 +86,7 @@ public class Renderer {
     }
 
     public void setIsCollide(boolean isCollide) {
+        this.imgIdx = 2;
         this.isCollide = isCollide;
     }
 

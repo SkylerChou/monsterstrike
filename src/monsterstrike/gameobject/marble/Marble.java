@@ -24,6 +24,7 @@ public class Marble extends GameObject {
     private MarbleInfo info;
     protected Renderer renderer;
     protected Renderer rendererDie;
+    protected Renderer rendererHit;
     protected boolean isCollide;
     protected boolean isDie;
 
@@ -59,6 +60,7 @@ public class Marble extends GameObject {
         this.bloodItem[0] = new Item(ImgInfo.BLOODS_PATH[0], x, (int) (y - info.getR()), ImgInfo.BLOODS_INFO[0], ImgInfo.BLOODS_INFO[1]);
         this.bloodItem[1] = new Item(ImgInfo.BLOODS_PATH[1], x, (int) (y - info.getR()), ImgInfo.BLOODS_INFO[0], ImgInfo.BLOODS_INFO[1]);
         this.renderer = new Renderer(path + ".png", num, 20);
+        this.rendererHit = new Renderer(path + ".png", num, 20);
         this.rendererDie = new Renderer(path + "Die.png", 7, 10);
         int[] shineSize = {x, y, w - 10, h - 10};
         if (info.getAttribute() > 2) {
@@ -259,7 +261,7 @@ public class Marble extends GameObject {
             float c = (float) (Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2)
                     - Math.pow(this.getR() + target.getR(), 2));
             float d = (float) ((-b - Math.sqrt(Math.pow(b, 2) - 4 * a * c)) / (2 * a));
-            if (Math.pow(b, 2) - 4 * a * c >= 0 && a>0) {
+            if (Math.pow(b, 2) - 4 * a * c >= 0 && a > 0) {
                 this.offset(this.goVec.getX() * d, this.goVec.getY() * d);
                 target.offset(target.goVec.getX() * d, target.goVec.getY() * d);
             }
@@ -284,7 +286,7 @@ public class Marble extends GameObject {
                 float c = (float) (Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2)
                         - Math.pow(this.getR() + target.getR(), 2));
                 float d = (float) ((-b - Math.sqrt(Math.pow(b, 2) - 4 * a * c)) / (2 * a));
-                if (Math.pow(b, 2) - 4 * a * c >= 0 && a>0) {
+                if (Math.pow(b, 2) - 4 * a * c >= 0 && a > 0) {
                     this.offset(this.goVec.getX() * d, this.goVec.getY() * d);
                 }
             }
@@ -431,9 +433,15 @@ public class Marble extends GameObject {
     @Override
     public void paintComponent(Graphics g) {
         if (!this.isDie) {
-            this.renderer.paint(g, (int) (this.getX()), (int) (this.getY()),
-                    (int) (this.getWidth()), (int) (this.getHeight()),
-                    ImgInfo.MARBLE_UNIT_X, ImgInfo.MARBLE_UNIT_Y);
+            if (this.rendererHit.getIsCollide()) {
+                this.rendererHit.paint(g, (int) (this.getX()), (int) (this.getY()),
+                        (int) (this.getWidth()), (int) (this.getHeight()),
+                        ImgInfo.MARBLE_UNIT_X, ImgInfo.MARBLE_UNIT_Y);
+            } else {
+                this.renderer.paint(g, (int) (this.getX()), (int) (this.getY()),
+                        (int) (this.getWidth()), (int) (this.getHeight()),
+                        ImgInfo.MARBLE_UNIT_X, ImgInfo.MARBLE_UNIT_Y);
+            }
             if (info.getState() == 1) {
                 this.bloodItem[0].paint(g);
                 this.bloodItem[1].paintResize(g, bloodRatio);

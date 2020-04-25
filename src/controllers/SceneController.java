@@ -5,6 +5,8 @@
  */
 package controllers;
 
+import java.awt.Color;
+import java.awt.Font;
 import monsterstrike.util.CommandSolver.KeyListener;
 import monsterstrike.util.CommandSolver.MouseCommandListener;
 import java.awt.Graphics;
@@ -40,7 +42,6 @@ public class SceneController {
         if (this.currentScene != null) {
             this.currentScene.sceneEnd();
         }
-
         isLoading = true;
         currentScene = scene;
         kl = null;

@@ -5,6 +5,7 @@
  */
 package scenes;
 
+import monsterstrike.gameobject.button.*;
 import controllers.IRC;
 import controllers.MRC;
 import controllers.SceneController;
@@ -46,6 +47,7 @@ public class FileIOScene extends Scene {
     private boolean isRead;   //寫入檔案後是否完成讀取
     private boolean again;    //是否重新選擇寫入位置
 
+
     private AudioClip music;
 
     public FileIOScene(SceneController sceneController, String state) {
@@ -83,24 +85,24 @@ public class FileIOScene extends Scene {
         this.showCheckWindow = false;
         this.isRead = false;
         this.again = false;
-        
+
     }
 
     @Override
     public void sceneBegin() {
-        this.img1 = IRC.getInstance().tryGetImage("/resources/items/write.png");
-        this.img2 = IRC.getInstance().tryGetImage("/resources/items/save.png");
-        this.home = new ButtonA(Global.SCREEN_X - 5 - ImgInfo.SETTING_INFO[0], 5, Global.SCREEN_X - 5, 5 + ImgInfo.SETTING_INFO[1], ImgInfo.HOME, ImgInfo.SETTING_INFO[0], ImgInfo.SETTING_INFO[1]);
+        this.img1 = IRC.getInstance().tryGetImage(ImgInfo.SAVE);
+        this.img2 = IRC.getInstance().tryGetImage(ImgInfo.WRITE);
+        this.home = new ButtonA(ImgInfo.HOME, Global.SCREEN_X - 5 - ImgInfo.SETTING_INFO[0], 5, ImgInfo.SETTING_INFO[0], ImgInfo.SETTING_INFO[1]);
         this.home.setListener(new ButtonClickListener());
-        this.yes = new ButtonA(Global.SCREEN_X / 2 -170, Global.SCREEN_Y / 2 + 35, Global.SCREEN_X / 2 - 170 + ImgInfo.YesNo_INFO[0], Global.SCREEN_Y / 2 + 35 + ImgInfo.YesNo_INFO[1], ImgInfo.YES, ImgInfo.YesNo_INFO[0], ImgInfo.YesNo_INFO[1]);
+        this.yes = new ButtonA(ImgInfo.YES, Global.SCREEN_X / 2 - 100, Global.SCREEN_Y / 2, ImgInfo.YesNo_INFO[0], ImgInfo.YesNo_INFO[1]);
         this.yes.setListener(new ButtonClickListener());
-        this.no = new ButtonA(Global.SCREEN_X / 2 + 20, Global.SCREEN_Y / 2 + 35, Global.SCREEN_X / 2 + 20 + ImgInfo.YesNo_INFO[0], Global.SCREEN_Y / 2 + 35 + ImgInfo.YesNo_INFO[1], ImgInfo.NO, ImgInfo.YesNo_INFO[0], ImgInfo.YesNo_INFO[1]);
+        this.no = new ButtonA(ImgInfo.NO, Global.SCREEN_X / 2 + 20, Global.SCREEN_Y / 2, ImgInfo.YesNo_INFO[0], ImgInfo.YesNo_INFO[1]);
         this.no.setListener(new ButtonClickListener());
         this.music = MRC.getInstance().tryGetMusic("/resources/wav/charaterSeletion.wav");
         this.music.loop();
         this.menu = new Background(ImgInfo.BACK_PATH, 0, 0, 1);
         if (this.isEmpty) {//讀取無存檔
-            this.home = new ButtonA(Global.SCREEN_X / 2 + 100, Global.SCREEN_Y / 2 - 20, ImgInfo.SETTING_INFO[0], ImgInfo.SETTING_INFO[1], ImgInfo.HOME, ImgInfo.SETTING_INFO[0], ImgInfo.SETTING_INFO[1]);
+            this.home = new ButtonA(ImgInfo.HOME, Global.SCREEN_X / 2 + 100, Global.SCREEN_Y / 2 - 20, ImgInfo.SETTING_INFO[0], ImgInfo.SETTING_INFO[1]);
         } else {
             this.shineFrame = new ButtonRenderer(ImgInfo.SHINEFRAME_PATH, Global.SCREEN_X / 2, 150 + 120 * (1 + currentIdx),
                     350, 100, 14);
@@ -116,7 +118,7 @@ public class FileIOScene extends Scene {
                 this.back[i] = new Item("/resources/items/input.png", Global.SCREEN_X / 2, 150 + 120 * (1 + i), 330, 100);
             }
         }
-
+        PaintText.setFlash(30);
     }
 
     @Override
@@ -134,6 +136,7 @@ public class FileIOScene extends Scene {
                 if (this.playersInfo.get(currentIdx).playerNum() != 0) {
                     this.music.stop();
                     sceneController.changeScene(new ChooseGame(sceneController, this.playersInfo.get(currentIdx)));
+                    return;
                 }
             } else if (this.state.equals("w")) { //write               
                 if (!isWrite) {
@@ -141,6 +144,11 @@ public class FileIOScene extends Scene {
                         if (this.playersInfo.get(currentIdx).playerNum() != 0 && this.enterCount == 1) {
                             this.music.stop();
                             sceneController.changeScene(new ChooseGame(sceneController, this.playersInfo.get(currentIdx)));
+                            return;
+                        } else if (!showWindow) {
+                            this.music.stop();
+                            sceneController.changeScene(new Menu(sceneController));
+                            return;
                         }
                     } else if (enterCount == 1 && !again) { //要存檔
                         this.showCheckWindow = true; //顯示確認視窗
@@ -155,6 +163,7 @@ public class FileIOScene extends Scene {
                     if (this.playersInfo.get(currentIdx).playerNum() != 0) {
                         this.music.stop();
                         sceneController.changeScene(new ChooseGame(sceneController, this.playersInfo.get(currentIdx)));
+                        return;
                     }
                 }
             }
@@ -165,6 +174,7 @@ public class FileIOScene extends Scene {
         }
 
         if (this.isClick || (isCheck && isRead)) {
+//            this.showIsDone = true;
             this.music.stop();
             sceneController.changeScene(new Menu(sceneController));
         }
@@ -202,13 +212,13 @@ public class FileIOScene extends Scene {
         this.home.paint(g);
         if (isEmpty || (!isSave && !showWindow && this.playersInfo.isEmpty())) {
             PaintText.paintTwinkle(g, new Font("Arial Unicode MS", Font.PLAIN, 26), new Font("Arial Unicode MS", Font.PLAIN, 32),
-                    Color.BLACK, "尚無存檔！", 0, Global.SCREEN_Y / 2, Global.SCREEN_X, 30);
+                    Color.BLACK, "尚無存檔！", 0, Global.SCREEN_Y / 2, Global.SCREEN_X);
         } else if (this.showWindow) {
-            g.drawImage(img1, Global.SCREEN_X / 4, Global.SCREEN_Y / 4, ImgInfo.WINDOW_INFO[0], ImgInfo.WINDOW_INFO[1], null);
+            g.drawImage(img1, Global.SCREEN_X * 2 / 5, Global.SCREEN_Y / 3 + 30, ImgInfo.WINDOW_INFO[0], ImgInfo.WINDOW_INFO[1], null);
             this.yes.paint(g);
             this.no.paint(g);
         } else if (this.showCheckWindow) {
-            g.drawImage(img2, Global.SCREEN_X / 4, Global.SCREEN_Y / 4, ImgInfo.WINDOW_INFO[0], ImgInfo.WINDOW_INFO[1], null);
+            g.drawImage(img2, Global.SCREEN_X * 2 / 5, Global.SCREEN_Y / 3 + 30, ImgInfo.WINDOW_INFO[0], ImgInfo.WINDOW_INFO[1], null);
             this.yes.paint(g);
             this.no.paint(g);
         } else {
@@ -297,8 +307,8 @@ public class FileIOScene extends Scene {
                     isClick = true;
                 }
             } else if (showWindow || showCheckWindow) {
-              if (state == CommandSolver.MouseState.PRESSED && e.getX() >yes.getLeft() && e.getX() < yes.getLeft()+yes.getW()
-                        && e.getY() > yes.getTop() && e.getY() < yes.getTop()+yes.getH()) {
+                if (state == CommandSolver.MouseState.PRESSED && e.getX() > yes.getLeft() && e.getX() < yes.getLeft() + yes.getW()
+                        && e.getY() > yes.getTop() && e.getY() < yes.getTop() + yes.getH()) {
                     if (showWindow) {
                         isSave = true;
                         showWindow = false;
@@ -306,8 +316,8 @@ public class FileIOScene extends Scene {
                         isCheck = true;
                         showCheckWindow = false;
                     }
-                } else if (state == CommandSolver.MouseState.PRESSED && e.getX() >no.getLeft() && e.getX() < no.getLeft()+no.getW()
-                        && e.getY() > no.getTop() && e.getY() < no.getTop()+no.getH()) {
+                } else if (state == CommandSolver.MouseState.PRESSED && e.getX() > no.getLeft() && e.getX() < no.getLeft() + no.getW()
+                        && e.getY() > no.getTop() && e.getY() < no.getTop() + no.getH()) {
                     if (showWindow) {
                         isSave = false;
                         showWindow = false;

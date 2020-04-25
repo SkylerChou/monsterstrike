@@ -5,6 +5,7 @@
  */
 package scenes;
 
+import monsterstrike.gameobject.button.*;
 import Props.Heart;
 import Props.Prop;
 import controllers.*;
@@ -28,7 +29,7 @@ public class PinBall extends Scene {
 
     public static final int POS_X = 50;
     public static final int POS_Y = 50;
-    public static final int THRESHOLD_SCORE = 0;
+    public static final int THRESHOLD_SCORE = 50;
 
     private Background background;
     private Ball ball;
@@ -72,7 +73,7 @@ public class PinBall extends Scene {
             this.Allteeth.add(new Marble(0, 0, 150, 150, this.allMarbleInfo.get(i)));
         }
         this.music = MRC.getInstance().tryGetMusic("/resources/wav/pinBack.wav");
-        this.button = new ButtonA(Global.SCREEN_X - 5 - ImgInfo.SETTING_INFO[0], 5, Global.SCREEN_X - 5, 5 + ImgInfo.SETTING_INFO[1],ImgInfo.HOME, ImgInfo.SETTING_INFO[0], ImgInfo.SETTING_INFO[1]);
+        this.button = new ButtonA(ImgInfo.HOME, Global.SCREEN_X - 5 - ImgInfo.SETTING_INFO[0], 5, ImgInfo.SETTING_INFO[0], ImgInfo.SETTING_INFO[1]);
         this.button.setListener(new ButtonClickListener());
     }
 
@@ -105,6 +106,7 @@ public class PinBall extends Scene {
         for (int i = 0; i < this.hearts.length; i++) {
             this.hearts[i] = new Heart(ImgInfo.HEART, 850 + i * 60, 30, 80, 80, 40, ImgInfo.HEART_NUM, 10);
         }
+        PaintText.setFlash(15);
     }
 
     @Override
@@ -313,7 +315,7 @@ public class PinBall extends Scene {
         if (this.score >= THRESHOLD_SCORE && this.isEnd) {
             PaintText.paintTwinkle(g, new Font("Showcard Gothic", Font.PLAIN, 48),
                     new Font("Showcard Gothic", Font.PLAIN, 54), Color.YELLOW, Color.BLACK,
-                    "Press   \" SPACE \"  to Restart ", "You Gain", 0, 300, 2, Global.SCREEN_X, 30);
+                    "Press   \" SPACE \"  to Restart ", "You Gain", 0, 300, 2, Global.SCREEN_X);
             PaintText.paintWithShadow(g, new Font("Showcard Gothic", Font.TRUETYPE_FONT, 44), Color.ORANGE, Color.BLACK, "Total Score: " + score, 0, Global.SCREEN_Y / 2 - 98, 2, Global.SCREEN_X);
             if (this.specialMarble!= null) {
                 this.specialMarble.paintComponent(g);
@@ -322,7 +324,7 @@ public class PinBall extends Scene {
         } else if (this.isEnd) {
             PaintText.paintTwinkle(g, new Font("Showcard Gothic", Font.PLAIN, 48),
                     new Font("Showcard Gothic", Font.PLAIN, 54), Color.YELLOW, Color.BLACK,
-                    "Press   \" SPACE \"  to Restart ", "", 0, 300, 2, Global.SCREEN_X, 30);
+                    "Press   \" SPACE \"  to Restart ", "", 0, 300, 2, Global.SCREEN_X);
             PaintText.paintWithShadow(g, new Font("Showcard Gothic", Font.TRUETYPE_FONT, 44), Color.ORANGE, Color.BLACK, "Total Score: " + score, 0, Global.SCREEN_Y / 2 - 98, 2, Global.SCREEN_X);
         }
     }
