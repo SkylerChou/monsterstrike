@@ -5,6 +5,7 @@
  */
 package scenes;
 
+import controllers.IRC;
 import monsterstrike.gameobject.button.*;
 import controllers.MRC;
 import scenes.level.*;
@@ -14,6 +15,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import player.PlayerInfo;
 import monsterstrike.gameobject.*;
@@ -47,8 +49,9 @@ public class LevelMenu extends Scene {
     private boolean isEnter;
     private boolean isSkip;
     private boolean[] isMask;
-
+    private BufferedImage box;
     private AudioClip music;
+    
 
     //首次玩
     public LevelMenu(SceneController sceneController, PlayerInfo playerInfo, String myMarbleFile, boolean isSkip) {
@@ -105,6 +108,8 @@ public class LevelMenu extends Scene {
                 this.isMask[i] = true;
             }
         }
+        PaintText.setFlash(30);
+        this.box = IRC.getInstance().tryGetImage("/resources/items/say.png");
     }
 
     @Override
@@ -205,22 +210,17 @@ public class LevelMenu extends Scene {
         PaintText.paint(g, new Font("Arial Unicode MS", Font.BOLD, 24),
                 Color.BLACK, this.playerInfo.getName(), 100, 300, 100);
         PaintText.paint(g, new Font("Arial Unicode MS", Font.BOLD, 20),
-                Color.BLACK, "Lv." + this.playerInfo.getLevel(), 105, 110, 100);
+                Color.BLACK, "Lv." + this.playerInfo.getLevel(), 100, 330, 100);
 
         if (this.currentMarble != null && count < 3) {
             this.currentMarble.paintAll(g);
             paintText(g, this.currentMarble, 280 + 290 * count, 140);
         }
         
-        if(count==0){
-            PaintText.paintTwinkle(g, new Font("Showcard Gothic", Font.BOLD, 18), 
-                    new Font("Showcard Gothic", Font.BOLD, 20), Color.BLACK, 
-                    "Press \" ENTER \" To Join!", 150, 80, 60);
-        }else if(count==1){
-            PaintText.paintTwinkle(g, new Font("Showcard Gothic", Font.BOLD, 18), 
-                    new Font("Showcard Gothic", Font.BOLD, 20), Color.BLACK, 
-                    "Press \" BACKSPACE \" To Undo!", 150, 80, 60);
-        }
+        g.drawImage(box, 30, 40, 360, 90, null);
+        PaintText.paintStrongWord(g, new Font("Showcard Gothic", Font.BOLD, 18), 
+                    new Font("Showcard Gothic", Font.BOLD, 20), Color.BLACK, Color.ORANGE,
+                    "Press\"ENTER\"To Join", "Press\"BACKSPACE\"To Undo", 80, 70, 60, 95);
 
         for (int i = 0; i < this.fightMarbles.length; i++) {
             if (this.fightMarbles[i] != null) {

@@ -5,7 +5,6 @@
  */
 package scenes;
 
-import controllers.ARC;
 import controllers.MRC;
 import controllers.SceneController;
 import java.applet.AudioClip;
@@ -45,7 +44,7 @@ public class Tutorial extends Scene {
     @Override
     public void sceneBegin() {
         this.music.loop();
-        PaintText.setFlash(30);
+        PaintText.setFlash(40);
     }
 
     @Override
@@ -70,12 +69,15 @@ public class Tutorial extends Scene {
     @Override
     public void paint(Graphics g) {
         this.howToPlay.paint(g, 0, 0, Global.SCREEN_X, Global.SCREEN_Y, ImgInfo.HOWTOPLAY_SIZE[0], ImgInfo.HOWTOPLAY_SIZE[1]);
+//        PaintText.paintStrongWord(g, new Font("Showcard Gothic", Font.PLAIN, 18), 
+//                    new Font("Showcard Gothic", Font.PLAIN, 20), Color.WHITE, Color.ORANGE,
+//                    "Press\"SPACE\"To Next Page", "Press\"Z\"To Skip", 950, 570, 980, 600);
         PaintText.paintTwinkle(g, new Font("Showcard Gothic", Font.PLAIN, 18),
                 new Font("Showcard Gothic", Font.PLAIN, 20), Color.WHITE, Color.BLACK,
                 "Press   \" SPACE \"  to Next Page", "", 450, 570, 2, Global.SCREEN_X);
         PaintText.paintTwinkle(g, new Font("Showcard Gothic", Font.PLAIN, 18),
                 new Font("Showcard Gothic", Font.PLAIN, 20), Color.WHITE, Color.BLACK,
-                "Press   \" Z \"  to Skip", "", 450, 590, 2, Global.SCREEN_X);
+                "Press   \" Z \"  to Skip", "", 450, 600, 2, Global.SCREEN_X);
     }
 
     @Override
