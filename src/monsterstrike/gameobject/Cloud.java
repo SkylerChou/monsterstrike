@@ -7,7 +7,6 @@ package monsterstrike.gameobject;
 
 import java.awt.Graphics;
 import monsterstrike.gameobject.GameObject;
-import monsterstrike.gameobject.marble.Marble;
 import monsterstrike.gameobject.marble.Renderer;
 import monsterstrike.graph.Vector;
 import monsterstrike.util.Delay;

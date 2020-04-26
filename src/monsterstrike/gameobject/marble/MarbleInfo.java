@@ -50,6 +50,13 @@ public class MarbleInfo {
         this.species = species;
     }
 
+    public static MarbleInfo gen(int serial, String name, String imgName, int showIdx, int imgW, int imgH, float ratio,
+            float mass, float v, int attribute, int level, int hp,
+            int atk, int skillRound, int state, int species) {
+        return new MarbleInfo(serial, name, imgName, showIdx, imgW, imgH, ratio,
+                mass, v, attribute, level, hp, atk, skillRound, state, species);
+    }
+
     public static MarbleInfo gen(MarbleInfo info) {
         return new MarbleInfo(info.getSerial(), info.getName(), info.getImgName(), info.getShowIdx(), info.getImgW(), info.getImgH(),
                 info.getRatio(), info.getMass(), info.getV(), info.getAttribute(), info.getLevel(),

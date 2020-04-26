@@ -25,7 +25,6 @@ public class Obstacle extends GameObject {
     public Obstacle(String path, int x, int y, int w, int h, int r, float mass) {
         super(x, y, w, h, r);
         this.renderer = new Renderer(path,4, 20);
-
         this.goVec = new Vector(0, 0);
         this.isCollide = false;
         this.mass = mass;
@@ -56,6 +55,12 @@ public class Obstacle extends GameObject {
                 this.moveDelay.stop();
             }
         }
+    }
+    
+    public void strike(GameObject target){
+        Vector vec = new Vector(target.getCenterX()-this.getCenterX(), target.getCenterY()-this.getCenterY());
+        this.offset(-vec.getUnitX(), -vec.getUnitY());
+        target.offset(vec.getUnitX(), vec.getUnitY());
     }
 
     public void setGo(Vector go) {
