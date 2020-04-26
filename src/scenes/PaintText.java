@@ -52,6 +52,25 @@ public class PaintText {
         delay.restart();
         isTrig = true;
     }
+    
+    //重點加強字
+    public static void paintTwinkle(Graphics g, Font font1, Font font2, Color color, Color strong,
+            String text1, int x, int y) {
+        if (delay.isTrig()) {
+            isTrig = !isTrig;
+        }
+        String[] str = text1.split("\"");
+        String strongStr = str[1];
+        Graphics2D g2d = (Graphics2D) g;
+        int stringLen1 = (int) g2d.getFontMetrics().getStringBounds(str[0], g2d).getWidth();
+        
+        if (isTrig) {
+//            paint(g, font1, color, str[0], x, y, width);
+            
+        } else {
+//            paint(g, font2, color, text1, x, y, width);
+        }
+    }
 
     //字閃爍
     public static void paintTwinkle(Graphics g, Font font1, Color color,

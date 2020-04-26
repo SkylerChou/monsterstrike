@@ -37,6 +37,7 @@ public class ChooseGame extends Scene {
     private int enterCount;
     private boolean isClick;
     private AudioClip music;
+    private String file; 
 
     public ChooseGame(SceneController sceneController, PlayerInfo playerInfo) {
         super(sceneController);
@@ -51,6 +52,12 @@ public class ChooseGame extends Scene {
         this.home.setListener(new ButtonClickListener());
         this.fight = IRC.getInstance().tryGetImage(ImgInfo.FIGHT);
         this.friend = IRC.getInstance().tryGetImage(ImgInfo.FRIEND);
+        this.file = "mymarbleInfo" + playerInfo.getSerial() + ".csv";
+    }
+    
+    public ChooseGame(SceneController sceneController, PlayerInfo playerInfo, String myMarbleFile){
+        this(sceneController, playerInfo);
+        this.file = myMarbleFile;
     }
 
     @Override
@@ -149,7 +156,7 @@ public class ChooseGame extends Scene {
                             new PinBall(sceneController, playerInfo)));
                 } else {
                     sceneController.changeScene(new LevelMenu(sceneController,
-                            playerInfo, "mymarbleInfo" + playerInfo.getSerial() + ".csv", false));
+                            playerInfo, file, false));
                 }
             }
         }

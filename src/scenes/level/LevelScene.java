@@ -161,7 +161,7 @@ public abstract class LevelScene extends Scene {
             calculateHP();//計算我方HP
 
             enemyDie();//判斷敵人死亡
-
+            
             for (int i = 0; i < this.battleEnemies.size(); i++) {
                 if (this.battleEnemies.get(i).getIsCollide()) {
                     ARC.getInstance().play("/resources/wav/die.wav");
@@ -199,7 +199,7 @@ public abstract class LevelScene extends Scene {
                 String mymarbleFile = "mymarbleInfoTmp.csv";
                 FileIO.writeMarble(mymarbleFile, m.getInfo());
                 this.music.stop();
-                sceneController.changeScene(new LevelMenu(sceneController, this.playerinfo, mymarbleFile, false));
+                sceneController.changeScene(new ChooseGame(sceneController, this.playerinfo, mymarbleFile));
                 return;
             }
         }

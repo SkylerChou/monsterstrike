@@ -5,6 +5,8 @@
  */
 package monsterstrike.gameobject;
 
+import monsterstrike.gameobject.marble.Marble;
+import monsterstrike.gameobject.marble.MarbleInfo;
 import monsterstrike.util.Global;
 
 public class ImgInfo {
@@ -32,13 +34,12 @@ public class ImgInfo {
     public static final int[] BLACKHOLE_INFO = {200, 200};//img_width, img_height 
 
     //石頭
-    public static final String STONE_PATH = "/resources/items/rock.png";   
+    public static final String STONE_PATH = "/resources/items/rock.png";
     public static final String ROCK_PATH = "/resources/items/treeRock.png";
     public static final String ICESTONE_PATH = "/resources/items/iceRock.png";
     public static final int[] STONE_INFO = {590, 590};
     public static final String CLOUD_PATH = "/resources/items/cloud.png";
     public static final int[] CLOUD_INFO = {295, 295};
-    
 
     //村民
     private static final String PEOPLE_ROOT = "/resources/player/";
@@ -49,7 +50,7 @@ public class ImgInfo {
     private static final String BACKGROUND_ROOT = "/resources/backgrounds/";
     public static final String LEVELBACK_PATH = BACKGROUND_ROOT + "levelBackground.png";
     public static final String BACK_PATH = BACKGROUND_ROOT + "background.png";
-    
+
     private static final String GRASS_PATH = BACKGROUND_ROOT + "grass.png";
     private static final int[] GRASS_SIZE = {1280, 680}; //圖片寬高
     private static final String ICE_PATH = BACKGROUND_ROOT + "snow.png";
@@ -63,13 +64,12 @@ public class ImgInfo {
 
     public static final String[] BACKGROUND_PATH = {ICE_PATH, FIRE_PATH, GRASS_PATH, LIGHT_PATH, DARK_PATH};
     public static final int[][] BACKGROUND_SIZE = {ICE_SIZE, FIRE_SIZE, GRASS_SIZE, LIGHT_SIZE, DARK_SIZE};
-    
+
     public static final String MASK_PATH = BACKGROUND_ROOT + "mask.png";
     public static final String LOCK_PATH = BACKGROUND_ROOT + "lock.png";
-    
+
     public static final String[] GAME_PATH = {BACKGROUND_ROOT + "pinball.png", BACKGROUND_ROOT + "strike.png"};
 
-    
     //loading 
     public static final String LOADING_PATH = BACKGROUND_ROOT + "loading.png";
     public static final int[] LOADING_SIZE = {1920, 800};
@@ -139,9 +139,15 @@ public class ImgInfo {
     public static final String[] MYMARBLE_NAME = {"火球"};
     public static final int[][] MYMARBLE_INFO = {FIREBALL_INFO};
 
+//    public static final MarbleInfo BALL_INFO = MarbleInfo.gen(2, "火球", "fireBall",
+//            0, 1845, 615, 0.67f, 1f, 35f, 1, 1, 200, 50, 3, 0, 0);
+//    
+//    public static final MarbleInfo POST_INFO = MarbleInfo.gen(34, "香菇", "mushroom",
+//            0, 2460, 615, 0.67f, 1f, 35f, 1, 1, 200, 50, 3, 1, 1);
+    
     public static final String POSTS_PATH = MARBLE_ROOT + "mushroom.png";
     public static final int[] POST_INFO = {95, 95, 40, 2};
-    public static final int[] POST_ORIGIN_INFO = {315, 283};
+    public static final int[] POST_ORIGIN_INFO = {615, 615};
 
     public static final String PINGPONG = BACKGROUND_ROOT + "battleback6.png";
 
@@ -166,14 +172,14 @@ public class ImgInfo {
     public static final int[] PLAYERSTAND_NUM = {2, 2};
     public static final int[][] PLAYERRUN_INFO = {{480, 695}, {480, 640}};
     public static final int[][] PLAYERSTAND_INFO = {{475, 674}, {475, 640}};
-    
-     public static final String WRITE = ITEM_ROOT + "write1.png";
-     public static final String SAVE = ITEM_ROOT + "save1.png";
-     public static final String [] YES = { ITEM_ROOT + "yes3.png", ITEM_ROOT + "yes4.png"};
-     public static final String[] NO = { ITEM_ROOT + "no3.png", ITEM_ROOT + "no4.png"};
-     public static final String FIGHT = ITEM_ROOT + "fight.png";
-     public static final String FRIEND = ITEM_ROOT + "friend.png";
-    
-     public static final int[] YesNo_INFO = {80, 40};//img_width, img_height  
-     public static final int[] WINDOW_INFO = {256, 128};//img_width, img_height  
+
+    public static final String WRITE = ITEM_ROOT + "write1.png";
+    public static final String SAVE = ITEM_ROOT + "save1.png";
+    public static final String[] YES = {ITEM_ROOT + "yes3.png", ITEM_ROOT + "yes4.png"};
+    public static final String[] NO = {ITEM_ROOT + "no3.png", ITEM_ROOT + "no4.png"};
+    public static final String FIGHT = ITEM_ROOT + "fight.png";
+    public static final String FRIEND = ITEM_ROOT + "friend.png";
+
+    public static final int[] YesNo_INFO = {80, 40};//img_width, img_height  
+    public static final int[] WINDOW_INFO = {256, 128};//img_width, img_height  
 }

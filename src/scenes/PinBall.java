@@ -92,6 +92,7 @@ public class PinBall extends Scene {
         this.background = new Background(ImgInfo.PINGPONG, 0, 0);
         this.dino = new Dino(ImgInfo.GREENDINO, 500, 500, Dino.STEPS_WALKRIGHT);
         this.ball = new Ball(ImgInfo.MYMARBLE_PATH[0], POS_X, POS_Y, 100, 100, 25, 1);
+        this.ball.setDetect(new Ball(ImgInfo.MYMARBLE_PATH[0], POS_X, POS_Y, 100, 100, 25, 1));
         this.racket = Rect.genWithCenter(50, 600, 120, 20);
         this.arrow = new Arrow(ImgInfo.ARROW, 0, 0, ImgInfo.ARROW_INFO);
         this.background.setX(2 * ImgInfo.BACKGROUND_SIZE[idx][0]);
@@ -126,6 +127,8 @@ public class PinBall extends Scene {
                 }
             } else {
                 this.ball.update();
+                this.ball.getDetect().setCenterX(this.ball.getCenterX() + this.ball.getGoVec().getX());
+                this.ball.getDetect().setCenterY(this.ball.getCenterY() + this.ball.getGoVec().getY());
                 this.dino.update();
                 this.ball.isBound();
                 if ((racket.right() >= this.ball.getCenterX() - this.ball.getR()
@@ -139,7 +142,8 @@ public class PinBall extends Scene {
                     this.ball.move();
                 }
 
-                if (this.ball.isCollision(this.dino)) {
+                if (this.ball.getDetect().isCollision(this.dino)) {
+                    this.ball.detectStill(this.dino);
                     ARC.getInstance().play("/resources/wav/Pinball.wav");
                     this.ball.hit(dino);
                 }
@@ -149,8 +153,9 @@ public class PinBall extends Scene {
                     }
                 }
                 for (int i = 0; i < this.post.size(); i++) {
-                    if (this.ball.isCollision(this.post.get(i)) && this.ball.getGoVec().getValue() > 0) {
+                    if (this.ball.getDetect().isCollision(this.post.get(i)) && this.ball.getGoVec().getValue() > 0) {
                         this.post.get(i).setGo(this.ball.getGoVec());
+                        this.ball.detectStill(this.post.get(i));
                         this.ball.hit(this.post.get(i));
                         this.post.get(i).setIsCollide(true);
                         if (this.post.get(i).getIsCollide()) {
@@ -158,6 +163,15 @@ public class PinBall extends Scene {
                         }
                     }
                 }
+
+                for (int i = 0; i < this.post.size(); i++) {
+                    for (int j = 0; j < this.post.size(); j++) {
+                        if (i != j && this.post.get(i).isCollision(this.post.get(j))) {
+                            this.post.get(i).strike(this.post.get(j));
+                        }
+                    }
+                }
+
                 for (int i = 0; i < this.post.size(); i++) {
                     if (this.dino.isCollision(this.post.get(i))) {
                         this.dinoGetNum++;
@@ -232,8 +246,9 @@ public class PinBall extends Scene {
         this.specialMarble.setCenterY(460);
         this.isPaint = false;
         this.playerinfo.addMyMarbleSerial(specialMarble.getInfo().getSerial());
-        String fileName = "mymarbleInfo" + this.playerinfo.getSerial() + ".csv";
-        FileIO.writeMarble(fileName, specialMarble.getInfo());
+//        String fileName = "mymarbleInfo" + this.playerinfo.getSerial() + ".csv";
+//        FileIO.writeMarble(fileName, specialMarble.getInfo());
+        FileIO.writeMarble("mymarbleInfoTmp.csv", specialMarble.getInfo());
         System.out.println("抽中怪物:" + specialMarble.getInfo().getName());
 //        System.out.println(this.playerinfo);
     }
@@ -273,15 +288,16 @@ public class PinBall extends Scene {
     }
 
     private Vector dinoDir() {
+        int velocity = 10;
         switch (this.dino.getDir()) {
             case 5:
-                return new Vector(1, 0).multiplyScalar(this.dino.getVelocity());
+                return new Vector(velocity, 0);
             case 6:
-                return new Vector(-1, 0).multiplyScalar(this.dino.getVelocity());
+                return new Vector(-velocity, 0);
             case 7:
-                return new Vector(0, -1).multiplyScalar(this.dino.getVelocity());
+                return new Vector(0, -velocity);
             case 8:
-                return new Vector(0, 1).multiplyScalar(this.dino.getVelocity());
+                return new Vector(0, velocity);
         }
         return null;
     }
@@ -317,7 +333,7 @@ public class PinBall extends Scene {
                     new Font("Showcard Gothic", Font.PLAIN, 54), Color.YELLOW, Color.BLACK,
                     "Press   \" SPACE \"  to Restart ", "You Gain", 0, 300, 2, Global.SCREEN_X);
             PaintText.paintWithShadow(g, new Font("Showcard Gothic", Font.TRUETYPE_FONT, 44), Color.ORANGE, Color.BLACK, "Total Score: " + score, 0, Global.SCREEN_Y / 2 - 98, 2, Global.SCREEN_X);
-            if (this.specialMarble!= null) {
+            if (this.specialMarble != null) {
                 this.specialMarble.paintComponent(g);
             }
 
@@ -420,7 +436,7 @@ public class PinBall extends Scene {
 
         @Override
         public void mouseTrig(MouseEvent e, CommandSolver.MouseState state, long trigTime) {
-           button.update(e, state);
+            button.update(e, state);
             if (state == CommandSolver.MouseState.PRESSED && e.getX() > Global.SCREEN_X - 30 - ImgInfo.SETTING_INFO[1] / 2 && e.getX() < Global.SCREEN_X - 30 + ImgInfo.SETTING_INFO[1] / 2
                     && e.getY() > 30 - ImgInfo.SETTING_INFO[1] / 2 && e.getY() < 30 + ImgInfo.SETTING_INFO[1] / 2) {
                 isEnter = true;

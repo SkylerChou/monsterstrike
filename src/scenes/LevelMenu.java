@@ -211,6 +211,16 @@ public class LevelMenu extends Scene {
             this.currentMarble.paintAll(g);
             paintText(g, this.currentMarble, 280 + 290 * count, 140);
         }
+        
+        if(count==0){
+            PaintText.paintTwinkle(g, new Font("Showcard Gothic", Font.BOLD, 18), 
+                    new Font("Showcard Gothic", Font.BOLD, 20), Color.BLACK, 
+                    "Press \" ENTER \" To Join!", 150, 80, 60);
+        }else if(count==1){
+            PaintText.paintTwinkle(g, new Font("Showcard Gothic", Font.BOLD, 18), 
+                    new Font("Showcard Gothic", Font.BOLD, 20), Color.BLACK, 
+                    "Press \" BACKSPACE \" To Undo!", 150, 80, 60);
+        }
 
         for (int i = 0; i < this.fightMarbles.length; i++) {
             if (this.fightMarbles[i] != null) {
