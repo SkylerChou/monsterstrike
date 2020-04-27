@@ -46,15 +46,15 @@ public class Laser extends Skills {
         for (int i = 0; i < target.size(); i++) {
             int targetA = target.get(i).getInfo().getAttribute();
             if (inSkillRange(self, target.get(i))) {
+                target.get(i).setIsCollide(true);
                 int atk = (int) (self.getInfo().getAtk() * Math.random() * 2 + 1);
                 if ((selfA != 2 && selfA - targetA == -1) || (selfA == 2 && targetA == 0)
                         || (selfA == 4 && targetA == 3)) {
                     atk = 2 * self.getInfo().getAtk();
                 } else if ((selfA != 3 && selfA - targetA == 1) || (selfA == 0 && targetA == 2)
                         || (selfA == 3 && targetA == 4)) {
-                    atk = self.getInfo().getAtk()/2;    
+                    atk = self.getInfo().getAtk() / 2;
                 }
-                
                 target.get(i).getInfo().setHp(target.get(i).getInfo().getHp() - atk);
                 this.hitCount++;
 //                System.out.println(target.get(i).getInfo().getName() + "血量:" + target.get(i).getInfo().getHp());
@@ -101,7 +101,7 @@ public class Laser extends Skills {
             }
         }
     }
-    
+
     @Override
     public int explode(Marble self, GameObject target) {
         return 0;

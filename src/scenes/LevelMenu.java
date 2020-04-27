@@ -249,13 +249,13 @@ public class LevelMenu extends Scene {
     }
 
     public void paintText(Graphics g, Marble m, int x, int y) {
-        PaintText.paint(g, new Font("Arial Unicode MS", Font.BOLD, 32),
-                Color.BLACK, m.getInfo().getName(), x, y, (int) m.getWidth());
-        PaintText.paint(g, new Font("VinerHandITC", Font.BOLD, 24),
+        PaintText.paint(g, new Font("Arial Unicode MS", Font.BOLD, 28),
+                Color.BLACK, m.getInfo().getName(), x-5, y, (int) m.getWidth());
+        PaintText.paint(g, new Font("VinerHandITC", Font.BOLD, 20),
                 Color.BLACK, "HP: " + m.getInfo().getHp(), x - 8, y + 150, (int) m.getWidth());
-        PaintText.paint(g, new Font("VinerHandITC", Font.BOLD, 24),
+        PaintText.paint(g, new Font("VinerHandITC", Font.BOLD, 20),
                 Color.BLACK, "ATK: " + m.getInfo().getAtk(), x - 8, y + 180, (int) m.getWidth());
-        PaintText.paint(g, new Font("VinerHandITC", Font.BOLD, 24),
+        PaintText.paint(g, new Font("VinerHandITC", Font.BOLD, 20),
                 Color.BLACK, "Velocity: " + (int) m.getInfo().getV() + " m/s",
                 x - 8, y + 210, (int) m.getWidth());
     }

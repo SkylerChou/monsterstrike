@@ -75,6 +75,31 @@ public class Level5 extends LevelScene {
             this.blackholes.get(i).setShine(true);
         }
     }
+    
+    @Override
+    protected void genBattleEnemies() {
+        if (this.sceneCount == 3) {
+            sceneEnd();
+        }
+        ArrayList<Marble> m = this.allEnemies.sortByLevel();
+        if (this.sceneCount == 0) {
+            for (int i = 0; i < 2; i++) {
+                battleEnemies.add(m.get(0).duplicate(Global.ENEMYPOS_X[2 * i], -100, 120, 120));
+                battleEnemies.add(m.get(1).duplicate(Global.ENEMYPOS_X[2 * i + 1], -100, 120, 120));
+                battleEnemies.get(2 * i).getInfo().setName(battleEnemies.get(2 * i).getInfo().getName() + (i + 1));
+                battleEnemies.get(2 * i + 1).getInfo().setName(battleEnemies.get(2 * i + 1).getInfo().getName() + (i + 1));
+            }
+        } else if (this.sceneCount == 1) {
+            for (int i = 0; i < 4; i++) {
+                battleEnemies.add(m.get(i+2).duplicate(Global.ENEMYPOS_X[i], -100, 120, 120));         
+            }
+        } else {
+            for (int i = 0; i < 4; i++) {
+                battleEnemies.add(m.get(i+2).duplicate(Global.ENEMYPOS_X[i], -100, 120, 120));
+            }
+            battleEnemies.add(m.get(6).duplicate(Global.SCREEN_X / 2, -100, 240, 240));
+        }
+    }
 
     private void hitHoles() {
         for (int i = 0; i < this.marbles.size(); i++) {
