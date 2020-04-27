@@ -74,7 +74,6 @@ public class PaintText {
         for (int i = 0; i < 3; i++) {
             strLen1[i] = (int) g2d.getFontMetrics().getStringBounds(str1[i], g2d).getWidth();
             strLen2[i] = (int) g2d.getFontMetrics().getStringBounds(str2[i], g2d).getWidth();
-            System.out.println(str1[i]);
         }
         paint(g, font1, color, str1[0], x, y, strLen1[0]);
         paint(g, font1, color, str1[2], x + strLen1[0] + strLen1[1], y, strLen1[2]);

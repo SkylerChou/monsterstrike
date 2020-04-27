@@ -25,6 +25,8 @@ import player.Player;
 
 public class LevelMenu extends Scene {
 
+    private String[] LEVEL_NAME = {"level1.png", "level2.png", "level3.png", "level4.png", "level5.png"};
+    private Item[] title;
     private ArrayList<ButtonRenderer> buttons;
     private Background menu;
     private int count;
@@ -69,6 +71,7 @@ public class LevelMenu extends Scene {
         this.isMask = new boolean[5];
         this.home = new ButtonA(ImgInfo.HOME, Global.SCREEN_X - 5 - ImgInfo.SETTING_INFO[0], 5, ImgInfo.SETTING_INFO[0], ImgInfo.SETTING_INFO[1]);
         this.home.setListener(new ButtonClickListener());
+        this.title = new Item[5];
     }
 
     @Override
@@ -107,6 +110,7 @@ public class LevelMenu extends Scene {
             } else {
                 this.isMask[i] = true;
             }
+            this.title[i] = new Item("/resources/items/" + LEVEL_NAME[i], Global.SCREEN_X/2, 600, 233,80);
         }
         PaintText.setFlash(30);
         this.box = IRC.getInstance().tryGetImage("/resources/items/say.png");
@@ -235,6 +239,7 @@ public class LevelMenu extends Scene {
                 this.mask.paintItem(g, 350, 380, 580, 200);
                 this.lock.paint(g);
             }
+            this.title[backIdx].paint(g);
         }
 
         for (int i = 0; i < this.buttons.size(); i++) {
@@ -298,7 +303,7 @@ public class LevelMenu extends Scene {
                         backIdx++;
                         if (backIdx >= ImgInfo.BACKGROUND_PATH.length) {
                             backIdx = 0;
-                        }
+                        }                        
                     }
                     break;
                 case Global.ENTER:
