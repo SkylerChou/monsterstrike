@@ -68,6 +68,7 @@ public abstract class LevelScene extends Scene {
 
     private AudioClip music;
     public Renderer end;
+    private Item[] title;
 
     public LevelScene(SceneController sceneController, int backIdx,
             Marble[] myMarbles, ArrayList<Marble> enemies, PlayerInfo playerinfo) {
@@ -114,11 +115,13 @@ public abstract class LevelScene extends Scene {
         this.music = MRC.getInstance().tryGetMusic("/resources/wav/battle.wav");
         this.home = new ButtonA(ImgInfo.HOME, Global.SCREEN_X - 30 - ImgInfo.SETTING_INFO[0], Global.SCREEN_Y - 75, ImgInfo.SETTING_INFO[0], ImgInfo.SETTING_INFO[1]);
         this.home.setListener(new ButtonClickListener());
-         this.end = new Renderer("/resources/story/end.png", 6, 10);
+        this.end = new Renderer("/resources/story/end.png", 6, 10);
+        this.title = new Item[5];
     }
 
     @Override
     public void sceneBegin() {
+        this.title[idx] = new Item("/resources/items/" + ImgInfo.LEVEL_NAME[idx], 590, Global.SCREEN_Y - 30, 233, 80);
         this.music.loop();
         this.background = new Background(ImgInfo.BACKGROUND_PATH[idx], 3 * ImgInfo.BACKGROUND_SIZE[idx][0], ImgInfo.BACKGROUND_SIZE[idx][1], idx);
         for (int i = 0; i < 3; i++) {
@@ -211,7 +214,7 @@ public abstract class LevelScene extends Scene {
             this.music.stop();
             sceneController.changeScene(new FileIOScene(sceneController, this.playerinfo, "w"));
         }
-        if(this.idx==4&&this.isWin){
+        if (this.idx == 4 && this.isWin) {
             this.end.updateOnce();
         }
 //        }
@@ -581,6 +584,7 @@ public abstract class LevelScene extends Scene {
             this.background.paint(g);
         }
         this.item.paint(g);
+        this.title[idx].paint(g);
         this.blood.paintResize(g, this.ratio);
         paintGameObject(g);
         this.home.paint(g);
@@ -613,7 +617,7 @@ public abstract class LevelScene extends Scene {
             }
         } else if (isWin) {
             if (this.idx == 4) {
-               this.end.paint(g, 0, 0, Global.SCREEN_X, Global.SCREEN_Y, 1000, 824);  
+                this.end.paint(g, 0, 0, Global.SCREEN_X, Global.SCREEN_Y, 1000, 824);
             }
             PaintText.paintTwinkle(g, new Font("Showcard Gothic", Font.PLAIN, 48),
                     new Font("Showcard Gothic", Font.PLAIN, 54), Color.YELLOW, Color.BLACK,
@@ -659,7 +663,7 @@ public abstract class LevelScene extends Scene {
                 Color.BLACK, (int) this.currentHp + " / " + (int) this.myHp, 1120, Global.SCREEN_Y - 100, 2, 30);
         PaintText.paintWithNumber(g, new Font("Showcard Gothic", Font.PLAIN, 30),
                 new Font("Showcard Gothic", Font.PLAIN, 36), Color.BLACK, Color.GRAY,
-                "Battle", "" + (sceneCount + 1), 565, Global.SCREEN_Y - 40, 2, 20);
+                "Battle", "" + (sceneCount + 1), 565, Global.SCREEN_Y - 60, 2, 20);
         PaintText.paintWithShadow(g, new Font("VinerHandITC", Font.PLAIN, 18), Color.BLACK,
                 Color.GRAY, this.playerinfo.getName(), 740, Global.SCREEN_Y - 85, 1, 30);
         PaintText.paintWithShadow(g, new Font("VinerHandITC", Font.BOLD, 16), Color.BLACK,

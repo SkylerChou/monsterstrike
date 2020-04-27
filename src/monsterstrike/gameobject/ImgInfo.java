@@ -178,4 +178,8 @@ public class ImgInfo {
 
     public static final int[] YesNo_INFO = {80, 40};//img_width, img_height  
     public static final int[] WINDOW_INFO = {256, 128};//img_width, img_height  
+    
+    //關卡敘述
+    public static String[] LEVEL_NAME = {"level1.png", "level2.png", "level3.png", "level4.png", "level5.png"};
+     public static final int[]  LEVEL_NAME_INFO = {333, 113};//img_width, img_height  
 }

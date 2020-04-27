@@ -25,7 +25,6 @@ import player.Player;
 
 public class LevelMenu extends Scene {
 
-    private String[] LEVEL_NAME = {"level1.png", "level2.png", "level3.png", "level4.png", "level5.png"};
     private Item[] title;
     private ArrayList<ButtonRenderer> buttons;
     private Background menu;
@@ -110,7 +109,7 @@ public class LevelMenu extends Scene {
             } else {
                 this.isMask[i] = true;
             }
-            this.title[i] = new Item("/resources/items/" + LEVEL_NAME[i], Global.SCREEN_X/2, 600, 233,80);
+            this.title[i] = new Item("/resources/items/" + ImgInfo.LEVEL_NAME[i], Global.SCREEN_X/2, 600, 233,80);
         }
         PaintText.setFlash(30);
         this.box = IRC.getInstance().tryGetImage("/resources/items/say.png");
@@ -221,10 +220,10 @@ public class LevelMenu extends Scene {
             paintText(g, this.currentMarble, 280 + 290 * count, 140);
         }
         
-        g.drawImage(box, 30, 40, 360, 90, null);
-        PaintText.paintStrongWord(g, new Font("Showcard Gothic", Font.BOLD, 18), 
-                    new Font("Showcard Gothic", Font.BOLD, 20), Color.BLACK, Color.ORANGE,
-                    "Press\"ENTER\"To Join", "Press\"BACKSPACE\"To Undo", 80, 70, 60, 95);
+        g.drawImage(box, 20, Global.SCREEN_Y/2+50, 250, 200, null);
+//        PaintText.paintStrongWord(g, new Font("Showcard Gothic", Font.BOLD, 18), 
+//                    new Font("Showcard Gothic", Font.BOLD, 20), Color.BLACK, Color.ORANGE,
+//                    "Press\"ENTER\"To Join", "Press\"BACKSPACE\"To Undo", 80, 70, 60, 95);
 
         for (int i = 0; i < this.fightMarbles.length; i++) {
             if (this.fightMarbles[i] != null) {
