@@ -67,6 +67,7 @@ public abstract class LevelScene extends Scene {
     private boolean enemyIsAtk;
 
     private AudioClip music;
+    public Renderer end;
 
     public LevelScene(SceneController sceneController, int backIdx,
             Marble[] myMarbles, ArrayList<Marble> enemies, PlayerInfo playerinfo) {
@@ -113,6 +114,7 @@ public abstract class LevelScene extends Scene {
         this.music = MRC.getInstance().tryGetMusic("/resources/wav/battle.wav");
         this.home = new ButtonA(ImgInfo.HOME, Global.SCREEN_X - 30 - ImgInfo.SETTING_INFO[0], Global.SCREEN_Y - 75, ImgInfo.SETTING_INFO[0], ImgInfo.SETTING_INFO[1]);
         this.home.setListener(new ButtonClickListener());
+         this.end = new Renderer("/resources/story/end.png", 6, 10);
     }
 
     @Override
@@ -161,7 +163,7 @@ public abstract class LevelScene extends Scene {
             calculateHP();//計算我方HP
 
             enemyDie();//判斷敵人死亡
-            
+
             for (int i = 0; i < this.battleEnemies.size(); i++) {
                 if (this.battleEnemies.get(i).getIsCollide()) {
                     ARC.getInstance().play("/resources/wav/die.wav");
@@ -209,18 +211,14 @@ public abstract class LevelScene extends Scene {
             this.music.stop();
             sceneController.changeScene(new FileIOScene(sceneController, this.playerinfo, "w"));
         }
+        if(this.idx==4&&this.isWin){
+            this.end.updateOnce();
+        }
 //        }
     }
 
     @Override
     public void sceneEnd() {
-//        this.background = null;
-//        this.marbles = null;
-//        this.shine = null;
-//        this.enimies = null;
-//        this.arrow = null;
-//        this.sceneCount = 0;
-//        this.state = 0;
     }
 
     private void win() {
@@ -266,7 +264,7 @@ public abstract class LevelScene extends Scene {
             }
         }
     }
-    
+
     private void calculateHP() {
         int tmp = 0;
         for (int i = 0; i < this.marbles.size(); i++) {
@@ -582,7 +580,7 @@ public abstract class LevelScene extends Scene {
         if (this.background != null) {
             this.background.paint(g);
         }
-        this.item.paint(g);        
+        this.item.paint(g);
         this.blood.paintResize(g, this.ratio);
         paintGameObject(g);
         this.home.paint(g);
@@ -614,6 +612,9 @@ public abstract class LevelScene extends Scene {
                 overCount = 0;
             }
         } else if (isWin) {
+            if (this.idx == 4) {
+               this.end.paint(g, 0, 0, Global.SCREEN_X, Global.SCREEN_Y, 1000, 824);  
+            }
             PaintText.paintTwinkle(g, new Font("Showcard Gothic", Font.PLAIN, 48),
                     new Font("Showcard Gothic", Font.PLAIN, 54), Color.YELLOW, Color.BLACK,
                     this.playerinfo.getName() + " Win!", "You Gain", 0, 270, 2, Global.SCREEN_X);
@@ -621,11 +622,7 @@ public abstract class LevelScene extends Scene {
                     new Font("Showcard Gothic", Font.PLAIN, 24), Color.ORANGE, Color.BLACK,
                     "Press   \" ENTER \"  to MENU", "", 450, 500, 2, Global.SCREEN_X);
             m.paintAll(g);
-            if (overCount == 1000) {
-                overCount = 0;
-            }
         }
-
     }
 
     private void paintText(Graphics g) {

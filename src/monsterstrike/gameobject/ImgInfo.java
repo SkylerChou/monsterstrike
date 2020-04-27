@@ -5,8 +5,6 @@
  */
 package monsterstrike.gameobject;
 
-import monsterstrike.gameobject.marble.Marble;
-import monsterstrike.gameobject.marble.MarbleInfo;
 import monsterstrike.util.Global;
 
 public class ImgInfo {
@@ -127,8 +125,6 @@ public class ImgInfo {
 
     //動作按鈕
     public static final String[] SETTING = {MENU_ROOT + "setting1.png", MENU_ROOT + "setting2.png"};
-    public static final String[] SOUND = {MENU_ROOT + "turnon.png", MENU_ROOT + "turnoff.png"};
-    public static final String[] CONTROL = {MENU_ROOT + "start.png", MENU_ROOT + "stop.png"};
     public static final String[] HOME = {MENU_ROOT + "home1.png", MENU_ROOT + "home2.png"};
     public static final int[] SETTING_INFO = {50, 50};//img_width, img_height   
 

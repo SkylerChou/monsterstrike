@@ -5,7 +5,6 @@
  */
 package scenes.level;
 
-import controllers.ARC;
 import controllers.SceneController;
 import java.awt.Graphics;
 import java.util.ArrayList;

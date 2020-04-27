@@ -105,7 +105,6 @@ public class Tutorial extends Scene {
                         break;
                 }
             }
-
         }
 
         @Override
