@@ -36,6 +36,34 @@ public class Level4 extends LevelScene {
     }
 
     @Override
+    protected void genBattleEnemies() {
+        if (this.sceneCount == 3) {
+            sceneEnd();
+        }
+        ArrayList<Marble> m = this.allEnemies.sortByLevel();
+        if (this.sceneCount == 0) {
+            for (int i = 0; i < 2; i++) {
+                battleEnemies.add(m.get(0).duplicate(Global.ENEMYPOS_X[2 * i], -100, 120, 120));
+                battleEnemies.add(m.get(1).duplicate(Global.ENEMYPOS_X[2 * i + 1], -100, 120, 120));
+                battleEnemies.get(2 * i).getInfo().setName(battleEnemies.get(2 * i).getInfo().getName() + (i + 1));
+                battleEnemies.get(2 * i + 1).getInfo().setName(battleEnemies.get(2 * i + 1).getInfo().getName() + (i + 1));
+            }
+        } else if (this.sceneCount == 1) {
+            for (int i = 0; i < 2; i++) {
+                battleEnemies.add(m.get(2).duplicate(Global.ENEMYPOS_X[2 * i], -100, 120, 120));
+                battleEnemies.add(m.get(3).duplicate(Global.ENEMYPOS_X[2 * i + 1], -100, 120, 120));
+                battleEnemies.get(2 * i).getInfo().setName(battleEnemies.get(2 * i).getInfo().getName() + (i + 1));
+                battleEnemies.get(2 * i + 1).getInfo().setName(battleEnemies.get(2 * i + 1).getInfo().getName() + (i + 1));
+            }
+        } else {
+            for (int i = 0; i < 3; i++) {
+                battleEnemies.add(m.get(i+2).duplicate(Global.ENEMYPOS_X[i], -100, 120, 120));
+            }
+            battleEnemies.add(m.get(5).duplicate(Global.SCREEN_X / 2, -100, 180, 180));
+        }
+    }
+
+    @Override
     protected void genGameObject() {
         genBattleEnemies();
         genClouds();
@@ -82,7 +110,7 @@ public class Level4 extends LevelScene {
             for (int i = 0; i < this.marbles.size(); i++) {
                 for (int j = 0; j < this.clouds.size(); j++) {
                     if (this.marbles.get(i).getDetect().isCollision(this.clouds.get(j))) {
-                        if(this.marbles.get(i).goVec().getValue()!=0){
+                        if (this.marbles.get(i).goVec().getValue() != 0) {
                             ARC.getInstance().play("/resources/wav/collide.wav");
                         }
                         this.marbles.get(i).detectStill(this.clouds.get(j));

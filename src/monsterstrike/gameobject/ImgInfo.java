@@ -116,7 +116,8 @@ public class ImgInfo {
     public static final String[] PINBALL = {MENU_ROOT + "pinball1.png", MENU_ROOT + "pinball2.png"};
     public static final String[] SINGLE = {MENU_ROOT + "single1.png", MENU_ROOT + "single2.png"};
     public static final int[] MAINBUTTON_INFO = {200, 50};//img_width, img_height
-    //恐龍
+    
+//恐龍
     public static final String DINO = MENU_ROOT + "Dino.png";
     public static final int[] DINO_INFO = {50, 50};//img_width, img_height  
     //彈珠台恐龍
@@ -126,6 +127,8 @@ public class ImgInfo {
     //動作按鈕
     public static final String[] SETTING = {MENU_ROOT + "setting1.png", MENU_ROOT + "setting2.png"};
     public static final String[] HOME = {MENU_ROOT + "home1.png", MENU_ROOT + "home2.png"};
+    public static final String[] SAVEICON = {MENU_ROOT + "save1.png", MENU_ROOT + "save2.png"};
+    public static final String[] RETURN = {MENU_ROOT + "return1.png", MENU_ROOT + "return2.png"};
     public static final int[] SETTING_INFO = {50, 50};//img_width, img_height   
 
     //PingPong用
@@ -171,6 +174,7 @@ public class ImgInfo {
 
     public static final String WRITE = ITEM_ROOT + "write1.png";
     public static final String SAVE = ITEM_ROOT + "save1.png";
+    public static final String NOFILE = ITEM_ROOT + "nofile.png";
     public static final String[] YES = {ITEM_ROOT + "yes3.png", ITEM_ROOT + "yes4.png"};
     public static final String[] NO = {ITEM_ROOT + "no3.png", ITEM_ROOT + "no4.png"};
     public static final String FIGHT = ITEM_ROOT + "fight.png";
@@ -180,6 +184,7 @@ public class ImgInfo {
     public static final int[] WINDOW_INFO = {256, 128};//img_width, img_height  
     
     //關卡敘述
+    public static String[] LEVEL_NAME1 = {"level1.png", "level2W.png", "level3.png", "level4.png", "level5W.png"};
     public static String[] LEVEL_NAME = {"level1.png", "level2.png", "level3.png", "level4.png", "level5.png"};
-     public static final int[]  LEVEL_NAME_INFO = {333, 113};//img_width, img_height  
+    public static final int[]  LEVEL_NAME_INFO = {333, 113};//img_width, img_height  
 }

@@ -44,7 +44,7 @@ public class FileIO {
                 MarbleInfo m = new MarbleInfo(Integer.parseInt(tmp[0]), tmp[1], tmp[2], Integer.parseInt(tmp[3]), Integer.parseInt(tmp[4]),
                         Integer.parseInt(tmp[5]), Float.parseFloat(tmp[6]), Float.parseFloat(tmp[7]),
                         Float.parseFloat(tmp[8]), Integer.parseInt(tmp[9]), Integer.parseInt(tmp[10]), Integer.parseInt(tmp[11]),
-                        Integer.parseInt(tmp[12]), Integer.parseInt(tmp[13]), Integer.parseInt(tmp[14]), Integer.parseInt(tmp[15])
+                        Integer.parseInt(tmp[12]), Integer.parseInt(tmp[13]), Integer.parseInt(tmp[14]), Integer.parseInt(tmp[15]), Integer.parseInt(tmp[16])
                 );
                 arr.add(m);
             }
@@ -89,7 +89,6 @@ public class FileIO {
             BufferedWriter bw = new BufferedWriter((new FileWriter(Global.FILE_ROOT + to)));
             while (br.ready()) {
                 String str = br.readLine();
-                System.out.println();
                 bw.append(str);
                 bw.newLine();
             }
@@ -110,7 +109,7 @@ public class FileIO {
                         + m.getImgW() + "," + m.getImgH() + "," + m.getRatio() + "," + m.getMass() + ","
                         + m.getV() + "," + m.getAttribute() + "," + m.getLevel() + "," + m.getHp() + ","
                         + m.getAtk() + "," + m.getSkillRound() + "," + m.getState() + ","
-                        + m.getSpecies();
+                        + m.getSpecies() + "," + m.getSkill();
                 bw.append(tmp);
                 bw.newLine();
             }

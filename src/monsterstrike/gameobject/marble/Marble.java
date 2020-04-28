@@ -98,7 +98,7 @@ public class Marble extends GameObject {
         if (!this.isSpin()) {
             this.species.update(this);
         }
-        if (this.detect != null && this.isBound()) {
+        if (this.detect != null && (this.goVec.getValue()!= 0 && this.isBound())) {
             this.goVec.setValue(this.goVec.getValue() - this.wallFic);
         }
         this.skills[this.skillIdx].update();

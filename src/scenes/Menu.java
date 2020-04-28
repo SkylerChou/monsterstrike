@@ -76,6 +76,7 @@ public class Menu extends Scene {
             this.isEnter = false;
         } else if (this.isEnter && this.dino.getCenterY() == Global.SCREEN_Y / 2 + h) {
             this.music.stop();
+            FileIO.copy("mymarbleInfoInit.csv", "mymarbleInfoTmp.csv");
             sceneController.changeScene(new FileIOScene(sceneController, "r"));
             this.isEnter = false;
         } else if (this.isEnter && this.dino.getCenterY() == Global.SCREEN_Y / 2 + 2 * h) {
