@@ -32,13 +32,17 @@ public class ChooseGame extends Scene {
     private Player playerR;
     private Player playerL;
     private Button home;
+    private Button save;
     private ButtonRenderer[] shineFrame;
     private int currentIdx;
     private int enterCount;
     private boolean isClick;
+    private boolean isSave;
+    
     private AudioClip music;
     private String file; 
 
+    //從硬碟讀取
     public ChooseGame(SceneController sceneController, PlayerInfo playerInfo) {
         super(sceneController);
         this.playerInfo = playerInfo;
@@ -46,19 +50,23 @@ public class ChooseGame extends Scene {
         this.game = new Background[2];
         this.currentIdx = 0;
         this.isClick = false;
+        this.isSave = false;
         this.enterCount = 0;
         this.music = MRC.getInstance().tryGetMusic("/resources/wav/charaterSeletion.wav");
         this.home = new ButtonA(ImgInfo.HOME, Global.SCREEN_X - 5 - ImgInfo.SETTING_INFO[0], 5, ImgInfo.SETTING_INFO[0], ImgInfo.SETTING_INFO[1]);
         this.home.setListener(new ButtonClickListener());
+        this.save = new ButtonA(ImgInfo.SAVEICON, Global.SCREEN_X-10-2*ImgInfo.SETTING_INFO[0], 5, ImgInfo.SETTING_INFO[0], ImgInfo.SETTING_INFO[1]);
+        this.save.setListener(new ButtonClickListener());
         this.fight = IRC.getInstance().tryGetImage(ImgInfo.FIGHT);
         this.friend = IRC.getInstance().tryGetImage(ImgInfo.FRIEND);
-        this.file = "mymarbleInfo" + playerInfo.getSerial() + ".csv";
+//        this.file = "mymarbleInfo" + playerInfo.getSerial() + ".csv";
+        this.file = "mymarbleInfoTmp.csv";
     }
     
-    public ChooseGame(SceneController sceneController, PlayerInfo playerInfo, String myMarbleFile){
-        this(sceneController, playerInfo);
-        this.file = myMarbleFile;
-    }
+//    public ChooseGame(SceneController sceneController, PlayerInfo playerInfo, String myMarbleFile){
+//        this(sceneController, playerInfo);
+//        this.file = myMarbleFile;
+//    }
 
     @Override
     public void sceneBegin() {
@@ -93,6 +101,10 @@ public class ChooseGame extends Scene {
             this.music.stop();
             sceneController.changeScene(new Menu(sceneController));
         }
+        if (this.isSave) {
+            this.music.stop();
+            sceneController.changeScene(new FileIOScene(sceneController, playerInfo, "w"));
+        }
     }
 
     @Override
@@ -103,6 +115,7 @@ public class ChooseGame extends Scene {
     public void paint(Graphics g) {
         this.menu.paintMenu(g);
         this.home.paint(g);
+        this.save.paint(g);
         for (int i = 0; i < this.shineFrame.length; i++) {
             this.game[i].paintItem(g, 450 * (i + 1) - 228, 191, 360, 227);
             this.shineFrame[i].paint(g);
@@ -156,7 +169,7 @@ public class ChooseGame extends Scene {
                             new PinBall(sceneController, playerInfo)));
                 } else {
                     sceneController.changeScene(new LevelMenu(sceneController,
-                            playerInfo, file, false));
+                            playerInfo, file, true));
                 }
             }
         }
@@ -171,9 +184,14 @@ public class ChooseGame extends Scene {
         @Override
         public void mouseTrig(MouseEvent e, CommandSolver.MouseState state, long trigTime) {
             home.update(e, state);
+            save.update(e, state);
             if (state == CommandSolver.MouseState.PRESSED && e.getX() > Global.SCREEN_X - 30 - ImgInfo.SETTING_INFO[1] / 2 && e.getX() < Global.SCREEN_X - 30 + ImgInfo.SETTING_INFO[1] / 2
                     && e.getY() > 30 - ImgInfo.SETTING_INFO[1] / 2 && e.getY() < 30 + ImgInfo.SETTING_INFO[1] / 2) {
                 isClick = true;
+            }
+            if (state == CommandSolver.MouseState.PRESSED && e.getX() > Global.SCREEN_X - 10 - 2*ImgInfo.SETTING_INFO[0] && e.getX() < Global.SCREEN_X - 10 - ImgInfo.SETTING_INFO[0]
+                    && e.getY() > 5 && e.getY() < 5+ ImgInfo.SETTING_INFO[1]) {
+                isSave = true;
             }
         }
     }

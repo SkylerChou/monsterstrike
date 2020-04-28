@@ -46,13 +46,12 @@ public class LevelMenu extends Scene {
     private int y;
     private Delay delay;
     private Player p1;
-    private Button home;
+    private Button icon;
     private boolean isEnter;
     private boolean isSkip;
     private boolean[] isMask;
     private BufferedImage box;
     private AudioClip music;
-    
 
     //首次玩
     public LevelMenu(SceneController sceneController, PlayerInfo playerInfo, String myMarbleFile, boolean isSkip) {
@@ -68,8 +67,12 @@ public class LevelMenu extends Scene {
         this.music = MRC.getInstance().tryGetMusic("/resources/wav/menu1.wav");
         this.isSkip = isSkip;
         this.isMask = new boolean[5];
-        this.home = new ButtonA(ImgInfo.HOME, Global.SCREEN_X - 5 - ImgInfo.SETTING_INFO[0], 5, ImgInfo.SETTING_INFO[0], ImgInfo.SETTING_INFO[1]);
-        this.home.setListener(new ButtonClickListener());
+        if(!isSkip){
+        this.icon = new ButtonA(ImgInfo.HOME, Global.SCREEN_X - 5 - ImgInfo.SETTING_INFO[0], 5, ImgInfo.SETTING_INFO[0], ImgInfo.SETTING_INFO[1]);
+        }else{
+            this.icon = new ButtonA(ImgInfo.RETURN, Global.SCREEN_X - 5 - ImgInfo.SETTING_INFO[0], Global.SCREEN_Y - 5 - ImgInfo.SETTING_INFO[1], ImgInfo.SETTING_INFO[0], ImgInfo.SETTING_INFO[1]);
+        }
+        this.icon.setListener(new ButtonClickListener());
         this.title = new Item[5];
     }
 
@@ -109,7 +112,7 @@ public class LevelMenu extends Scene {
             } else {
                 this.isMask[i] = true;
             }
-            this.title[i] = new Item("/resources/items/" + ImgInfo.LEVEL_NAME1[i], Global.SCREEN_X/2, 575, 233,80);
+            this.title[i] = new Item("/resources/items/" + ImgInfo.LEVEL_NAME1[i], Global.SCREEN_X / 2, 565, 233, 80);
         }
         PaintText.setFlash(30);
         this.box = IRC.getInstance().tryGetImage("/resources/items/say.png");
@@ -136,12 +139,23 @@ public class LevelMenu extends Scene {
             sceneController.changeScene(chooseLevel());
             return;
         }
+        for(int i=0; i<this.buttons.size(); i++){
+            if(i==2* count || i==2*count+1){
+                this.buttons.get(i).setFocus(true);
+            }else{
+                this.buttons.get(i).setFocus(false);
+            }
+        }
         if (this.delay.isTrig()) {
             this.buttons.get(2 * count).update();
             this.buttons.get(2 * count + 1).update();
         }
         if (this.isEnter) {
-            sceneController.changeScene(new FileIOScene(sceneController, playerInfo, "w"));
+            if(!isSkip){
+            sceneController.changeScene(new Menu(sceneController));
+            }else{
+                sceneController.changeScene(new ChooseGame(sceneController, this.playerInfo));
+            }
             this.music.stop();
         }
     }
@@ -219,11 +233,8 @@ public class LevelMenu extends Scene {
             this.currentMarble.paintAll(g);
             paintText(g, this.currentMarble, 280 + 290 * count, 140);
         }
-        
-        g.drawImage(box, 20, Global.SCREEN_Y/2+50, 250, 200, null);
-//        PaintText.paintStrongWord(g, new Font("Showcard Gothic", Font.BOLD, 18), 
-//                    new Font("Showcard Gothic", Font.BOLD, 20), Color.BLACK, Color.ORANGE,
-//                    "Press\"ENTER\"To Join", "Press\"BACKSPACE\"To Undo", 80, 70, 60, 95);
+
+        g.drawImage(box, 20, Global.SCREEN_Y / 2 + 50, 250, 200, null);
 
         for (int i = 0; i < this.fightMarbles.length; i++) {
             if (this.fightMarbles[i] != null) {
@@ -244,12 +255,12 @@ public class LevelMenu extends Scene {
         for (int i = 0; i < this.buttons.size(); i++) {
             this.buttons.get(i).paint(g);
         }
-        this.home.paint(g);
+        this.icon.paint(g);
     }
 
     public void paintText(Graphics g, Marble m, int x, int y) {
         PaintText.paint(g, new Font("Arial Unicode MS", Font.BOLD, 28),
-                Color.BLACK, m.getInfo().getName(), x-5, y, (int) m.getWidth());
+                Color.BLACK, m.getInfo().getName(), x - 5, y, (int) m.getWidth());
         PaintText.paint(g, new Font("VinerHandITC", Font.BOLD, 20),
                 Color.BLACK, "HP: " + m.getInfo().getHp(), x - 8, y + 150, (int) m.getWidth());
         PaintText.paint(g, new Font("VinerHandITC", Font.BOLD, 20),
@@ -302,7 +313,7 @@ public class LevelMenu extends Scene {
                         backIdx++;
                         if (backIdx >= ImgInfo.BACKGROUND_PATH.length) {
                             backIdx = 0;
-                        }                        
+                        }
                     }
                     break;
                 case Global.ENTER:
@@ -323,9 +334,12 @@ public class LevelMenu extends Scene {
 
         @Override
         public void mouseTrig(MouseEvent e, CommandSolver.MouseState state, long trigTime) {
-            home.update(e, state);
-            if (state == CommandSolver.MouseState.PRESSED && e.getX() > Global.SCREEN_X - 30 - ImgInfo.SETTING_INFO[1] / 2 && e.getX() < Global.SCREEN_X - 30 + ImgInfo.SETTING_INFO[1] / 2
-                    && e.getY() > 30 - ImgInfo.SETTING_INFO[1] / 2 && e.getY() < 30 + ImgInfo.SETTING_INFO[1] / 2) {
+            icon.update(e, state);
+            if (!isSkip && state == CommandSolver.MouseState.PRESSED && e.getX() > Global.SCREEN_X - 5 - ImgInfo.SETTING_INFO[0] && e.getX() < Global.SCREEN_X - 5
+                    && e.getY() > 5 && e.getY() < 5 + ImgInfo.SETTING_INFO[1]) {
+                isEnter = true;
+            }else if(isSkip && state == CommandSolver.MouseState.PRESSED && e.getX() > Global.SCREEN_X - 5 - ImgInfo.SETTING_INFO[0] && e.getX() < Global.SCREEN_X - 5
+                    && e.getY() > Global.SCREEN_Y-5 - ImgInfo.SETTING_INFO[1] && e.getY() < Global.SCREEN_Y-5){
                 isEnter = true;
             }
         }

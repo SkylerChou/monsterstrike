@@ -23,8 +23,10 @@ import player.PlayerInfo;
 
 public class FileIOScene extends Scene {
 
-    private BufferedImage img1;
-    private BufferedImage img2;
+    private BufferedImage imgSave;
+    private BufferedImage imgWrite;
+    private BufferedImage imgNofile;
+    private Delay delay;
     private Button home;
     private Button yes;
     private Button no;
@@ -35,6 +37,7 @@ public class FileIOScene extends Scene {
     private ArrayList<Player> players;
     private int currentIdx;
     private int enterCount;
+    private boolean isTrig;
     private boolean isClick;    //是否按下Home鍵
     private boolean isEmpty;    //讀取狀態是否沒有玩家資料
     private boolean isSave;     //決定是否儲存
@@ -89,8 +92,12 @@ public class FileIOScene extends Scene {
 
     @Override
     public void sceneBegin() {
-        this.img1 = IRC.getInstance().tryGetImage(ImgInfo.SAVE);
-        this.img2 = IRC.getInstance().tryGetImage(ImgInfo.WRITE);
+        this.delay = new Delay(30);
+        this.delay.start();
+        this.isTrig = true;
+        this.imgSave = IRC.getInstance().tryGetImage(ImgInfo.SAVE);
+        this.imgWrite = IRC.getInstance().tryGetImage(ImgInfo.WRITE);
+        this.imgNofile = IRC.getInstance().tryGetImage(ImgInfo.NOFILE);
         this.home = new ButtonA(ImgInfo.HOME, Global.SCREEN_X - 5 - ImgInfo.SETTING_INFO[0], 5, ImgInfo.SETTING_INFO[0], ImgInfo.SETTING_INFO[1]);
         this.home.setListener(new ButtonClickListener());
         this.yes = new ButtonA(ImgInfo.YES, Global.SCREEN_X / 2 - 100, Global.SCREEN_Y / 2, ImgInfo.YesNo_INFO[0], ImgInfo.YesNo_INFO[1]);
@@ -133,6 +140,8 @@ public class FileIOScene extends Scene {
             }
             if (this.state.equals("r") && this.enterCount == 1) { //read
                 if (this.playersInfo.get(currentIdx).playerNum() != 0) {
+                    String file = "mymarbleInfo" + this.playersInfo.get(currentIdx).getSerial() + ".csv";
+                    FileIO.copy(file, "mymarbleInfoTmp.csv");
                     this.music.stop();
                     sceneController.changeScene(new ChooseGame(sceneController, this.playersInfo.get(currentIdx)));
                     return;
@@ -158,13 +167,15 @@ public class FileIOScene extends Scene {
                             isWrite = true; //寫完檔
                         }
                     }
-                } else if (enterCount == 2) {
-                    if (this.playersInfo.get(currentIdx).playerNum() != 0) {
-                        this.music.stop();
-                        sceneController.changeScene(new ChooseGame(sceneController, this.playersInfo.get(currentIdx)));
-                        return;
-                    }
-                }
+                } 
+//                else if (enterCount == 2) {
+//                    if (this.playersInfo.get(currentIdx).playerNum() != 0) {
+//                        this.music.stop();
+//                        System.out.println("!!!!!!");
+//                        sceneController.changeScene(new ChooseGame(sceneController, this.playersInfo.get(currentIdx)));
+//                        return;
+//                    }
+//                }
             }
         }
 
@@ -210,14 +221,20 @@ public class FileIOScene extends Scene {
         this.menu.paintMenu(g);
         this.home.paint(g);
         if (isEmpty || (!isSave && !showWindow && this.playersInfo.isEmpty())) {
-            PaintText.paintTwinkle(g, new Font("Arial Unicode MS", Font.PLAIN, 26), new Font("Arial Unicode MS", Font.PLAIN, 32),
-                    Color.BLACK, "尚無存檔！", 0, Global.SCREEN_Y / 2, Global.SCREEN_X);
+            if (delay.isTrig()) {
+                isTrig = !isTrig;
+            }
+            if (isTrig) {
+                g.drawImage(imgNofile, Global.SCREEN_X / 2 - 125, Global.SCREEN_Y / 2 - 55, 250, 89, null);
+            } else {
+                g.drawImage(imgNofile, Global.SCREEN_X / 2 - 105, Global.SCREEN_Y / 2 - 50, 211, 75, null);
+            }
         } else if (this.showWindow) {
-            g.drawImage(img1, Global.SCREEN_X * 2 / 5, Global.SCREEN_Y / 3 + 30, ImgInfo.WINDOW_INFO[0], ImgInfo.WINDOW_INFO[1], null);
+            g.drawImage(imgSave, Global.SCREEN_X * 2 / 5, Global.SCREEN_Y / 3 + 30, ImgInfo.WINDOW_INFO[0], ImgInfo.WINDOW_INFO[1], null);
             this.yes.paint(g);
             this.no.paint(g);
         } else if (this.showCheckWindow) {
-            g.drawImage(img2, Global.SCREEN_X * 2 / 5, Global.SCREEN_Y / 3 + 30, ImgInfo.WINDOW_INFO[0], ImgInfo.WINDOW_INFO[1], null);
+            g.drawImage(imgWrite, Global.SCREEN_X * 2 / 5, Global.SCREEN_Y / 3 + 30, ImgInfo.WINDOW_INFO[0], ImgInfo.WINDOW_INFO[1], null);
             this.yes.paint(g);
             this.no.paint(g);
         } else {

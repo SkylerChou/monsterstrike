@@ -58,7 +58,7 @@ public class PinBall extends Scene {
     private Marble specialMarble; //抽中怪物  
     private PlayerInfo playerinfo;
     private AudioClip music;
-    private Button button;
+    private Button returnIcon;
 
     public PinBall(SceneController sceneController, PlayerInfo playerinfo) {
         super(sceneController);
@@ -73,8 +73,8 @@ public class PinBall extends Scene {
             this.Allteeth.add(new Marble(0, 0, 150, 150, this.allMarbleInfo.get(i)));
         }
         this.music = MRC.getInstance().tryGetMusic("/resources/wav/pinBack.wav");
-        this.button = new ButtonA(ImgInfo.HOME, Global.SCREEN_X - 5 - ImgInfo.SETTING_INFO[0], 5, ImgInfo.SETTING_INFO[0], ImgInfo.SETTING_INFO[1]);
-        this.button.setListener(new ButtonClickListener());
+        this.returnIcon = new ButtonA(ImgInfo.RETURN, Global.SCREEN_X - 5 - ImgInfo.SETTING_INFO[0], Global.SCREEN_Y - 5 - ImgInfo.SETTING_INFO[1], ImgInfo.SETTING_INFO[0], ImgInfo.SETTING_INFO[1]);
+        this.returnIcon.setListener(new ButtonClickListener());
     }
 
     @Override
@@ -223,7 +223,7 @@ public class PinBall extends Scene {
         }
         if (this.isEnter) {
             this.music.stop();
-            sceneController.changeScene(new Menu(sceneController));
+            sceneController.changeScene(new ChooseGame(sceneController, playerinfo));
         }
         if (this.isReplay) {
             sceneController.changeScene(new PinBall(sceneController, this.playerinfo));
@@ -312,7 +312,7 @@ public class PinBall extends Scene {
     @Override
     public void paint(Graphics g) {
         this.background.paintMenu(g);
-        this.button.paint(g);
+        this.returnIcon.paint(g);
         this.arrow.paint(g);
         this.home.paint(g);
         this.dino.paint(g);
@@ -436,9 +436,9 @@ public class PinBall extends Scene {
 
         @Override
         public void mouseTrig(MouseEvent e, CommandSolver.MouseState state, long trigTime) {
-            button.update(e, state);
-            if (state == CommandSolver.MouseState.PRESSED && e.getX() > Global.SCREEN_X - 30 - ImgInfo.SETTING_INFO[1] / 2 && e.getX() < Global.SCREEN_X - 30 + ImgInfo.SETTING_INFO[1] / 2
-                    && e.getY() > 30 - ImgInfo.SETTING_INFO[1] / 2 && e.getY() < 30 + ImgInfo.SETTING_INFO[1] / 2) {
+            returnIcon.update(e, state);
+            if (state == CommandSolver.MouseState.PRESSED && e.getX() > Global.SCREEN_X - 5 - ImgInfo.SETTING_INFO[0] && e.getX() < Global.SCREEN_X - 5
+                    && e.getY() > Global.SCREEN_Y - 5 - ImgInfo.SETTING_INFO[1] && e.getY() < Global.SCREEN_Y - 5) {
                 isEnter = true;
             }
             if (checkStop()) {
