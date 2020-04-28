@@ -81,6 +81,7 @@ public class PlayerScene extends Scene {
             } else {
                 this.shineFrame.setCenterX(775);
             }
+            this.shineFrame.setFocus(true);
             this.shineFrame.update();
         } else if (enterCount == 1) {
         } else if (enterCount == 2) {
