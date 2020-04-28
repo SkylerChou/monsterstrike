@@ -48,6 +48,9 @@ public class Menu extends Scene {
         this.delay = new Delay(25);
         this.delay.start();
         this.music.loop();
+        for(int i=0; i<this.buttons.size(); i++){
+            this.buttons.get(i).setFocus(true);
+        }
     }
 
     @Override
@@ -55,7 +58,7 @@ public class Menu extends Scene {
         this.dino.update();
         if (this.delay.isTrig()) {
             int tmp = 0;
-            for (int i = 0; i < this.buttons.size(); i++) {
+            for (int i = 0; i < this.buttons.size(); i++) {                
                 if (this.dino.getCenterY() == this.buttons.get(i).getCenterY()) {
                     tmp = i;
                     this.buttons.get(i).update();

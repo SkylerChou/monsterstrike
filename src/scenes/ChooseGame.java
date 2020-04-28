@@ -33,20 +33,19 @@ public class ChooseGame extends Scene {
     private Player playerL;
     private Button home;
     private Button save;
-    private ButtonRenderer[] shineFrame;
+    private ButtonRenderer shineFrame;
     private int currentIdx;
     private int enterCount;
     private boolean isClick;
     private boolean isSave;
-    
+
     private AudioClip music;
-    private String file; 
+    private String file;
 
     //從硬碟讀取
     public ChooseGame(SceneController sceneController, PlayerInfo playerInfo) {
         super(sceneController);
         this.playerInfo = playerInfo;
-        this.shineFrame = new ButtonRenderer[2];
         this.game = new Background[2];
         this.currentIdx = 0;
         this.isClick = false;
@@ -55,31 +54,32 @@ public class ChooseGame extends Scene {
         this.music = MRC.getInstance().tryGetMusic("/resources/wav/charaterSeletion.wav");
         this.home = new ButtonA(ImgInfo.HOME, Global.SCREEN_X - 5 - ImgInfo.SETTING_INFO[0], 5, ImgInfo.SETTING_INFO[0], ImgInfo.SETTING_INFO[1]);
         this.home.setListener(new ButtonClickListener());
-        this.save = new ButtonA(ImgInfo.SAVEICON, Global.SCREEN_X-10-2*ImgInfo.SETTING_INFO[0], 5, ImgInfo.SETTING_INFO[0], ImgInfo.SETTING_INFO[1]);
+        this.save = new ButtonA(ImgInfo.SAVEICON, Global.SCREEN_X - 10 - 2 * ImgInfo.SETTING_INFO[0], 5, ImgInfo.SETTING_INFO[0], ImgInfo.SETTING_INFO[1]);
         this.save.setListener(new ButtonClickListener());
         this.fight = IRC.getInstance().tryGetImage(ImgInfo.FIGHT);
         this.friend = IRC.getInstance().tryGetImage(ImgInfo.FRIEND);
 //        this.file = "mymarbleInfo" + playerInfo.getSerial() + ".csv";
         this.file = "mymarbleInfoTmp.csv";
     }
-    
+
 //    public ChooseGame(SceneController sceneController, PlayerInfo playerInfo, String myMarbleFile){
 //        this(sceneController, playerInfo);
 //        this.file = myMarbleFile;
 //    }
-
     @Override
     public void sceneBegin() {
         this.music.loop();
         this.menu = new Background(ImgInfo.BACK_PATH, 0, 0, 1);
         this.playerR = new Player(this.playerInfo.playerNum() - 1, 0, 40, 450, 100, 150);
         this.playerL = new Player(this.playerInfo.playerNum() - 1, 1, Global.SCREEN_X - 140, 450, 100, 150);
-        for (int i = 0; i < this.shineFrame.length; i++) {
-            shineFrame[i] = new ButtonRenderer(ImgInfo.SHINEFRAME_PATH, 450 * (i + 1) - 50, 305,
-                    400, 250, 15);
-            this.shineFrame[i].setIsShow(true);
+        shineFrame = new ButtonRenderer(ImgInfo.SHINEFRAME_PATH, 400, 305,
+                400, 250, 15);
+        this.shineFrame.setIsShow(true);
+        this.shineFrame.setFocus(true);
+        for (int i = 0; i < this.game.length; i++) {
             this.game[i] = new Background(ImgInfo.GAME_PATH[i], 0, 0, 0);
         }
+
         PaintText.setFlash(15);
     }
 
@@ -88,15 +88,13 @@ public class ChooseGame extends Scene {
         this.playerR.update();
         this.playerL.update();
         if (enterCount == 0) {
-            this.shineFrame[currentIdx].update();
+            this.shineFrame.update();
             if (currentIdx == 0) {
-                this.shineFrame[0].setIsShow(true);
-                this.shineFrame[1].setIsShow(false);
+                this.shineFrame.setCenterX(400);
             } else {
-                this.shineFrame[0].setIsShow(false);
-                this.shineFrame[1].setIsShow(true);
+                this.shineFrame.setCenterX(850);
             }
-        } 
+        }
         if (this.isClick) {
             this.music.stop();
             sceneController.changeScene(new Menu(sceneController));
@@ -116,10 +114,10 @@ public class ChooseGame extends Scene {
         this.menu.paintMenu(g);
         this.home.paint(g);
         this.save.paint(g);
-        for (int i = 0; i < this.shineFrame.length; i++) {
+        for (int i = 0; i < this.game.length; i++) {
             this.game[i].paintItem(g, 450 * (i + 1) - 228, 191, 360, 227);
-            this.shineFrame[i].paint(g);
         }
+        this.shineFrame.paint(g);
         if (this.currentIdx == 0) {
             this.playerR.paint(g);
             g.drawImage(friend, 150, 450, 500, 100, null);
@@ -129,14 +127,12 @@ public class ChooseGame extends Scene {
                     Color.BLACK, "PinBall", 90, 150, Global.SCREEN_X / 2);
         } else {
             this.playerL.paint(g);
-            g.drawImage(fight, 150 + 470, 450, 500, 100, null);            
+            g.drawImage(fight, 150 + 470, 450, 500, 100, null);
             PaintText.paintTwinkle(g, new Font("Showcard Gothic", Font.PLAIN, 40), new Font("Showcard Gothic", Font.PLAIN, 44),
                     Color.BLACK, "Strike", 90 + 450, 150, Global.SCREEN_X / 2);
             PaintText.paint(g, new Font("Showcard Gothic", Font.PLAIN, 40),
                     Color.BLACK, "PinBall", 90, 150, Global.SCREEN_X / 2);
         }
-        
-        
 
     }
 
@@ -189,8 +185,8 @@ public class ChooseGame extends Scene {
                     && e.getY() > 30 - ImgInfo.SETTING_INFO[1] / 2 && e.getY() < 30 + ImgInfo.SETTING_INFO[1] / 2) {
                 isClick = true;
             }
-            if (state == CommandSolver.MouseState.PRESSED && e.getX() > Global.SCREEN_X - 10 - 2*ImgInfo.SETTING_INFO[0] && e.getX() < Global.SCREEN_X - 10 - ImgInfo.SETTING_INFO[0]
-                    && e.getY() > 5 && e.getY() < 5+ ImgInfo.SETTING_INFO[1]) {
+            if (state == CommandSolver.MouseState.PRESSED && e.getX() > Global.SCREEN_X - 10 - 2 * ImgInfo.SETTING_INFO[0] && e.getX() < Global.SCREEN_X - 10 - ImgInfo.SETTING_INFO[0]
+                    && e.getY() > 5 && e.getY() < 5 + ImgInfo.SETTING_INFO[1]) {
                 isSave = true;
             }
         }

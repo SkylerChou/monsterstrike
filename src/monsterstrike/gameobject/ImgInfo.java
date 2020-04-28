@@ -97,8 +97,8 @@ public class ImgInfo {
     public static final String[] BLOODS_PATH = {ITEM_ROOT + "bloodRed.png", ITEM_ROOT + "blood.png"};
     public static final int[] BLOODS_INFO = {100, 10}; //w, h
 
-    public static final String ARROW = "/resources/arrow.png";
-    public static final int[] ARROW_INFO = {230, 230, 100};
+    public static final String ARROW = "/resources/arrow1.png";
+    public static final int[] ARROW_INFO = {500, 500, 125};
 
     //LEVEL MENU 按鈕
     public static final String[] RIGHT = {ITEM_ROOT + "right1.png", ITEM_ROOT + "right2.png", ITEM_ROOT + "right3.png"};
@@ -175,8 +175,10 @@ public class ImgInfo {
     public static final String WRITE = ITEM_ROOT + "write1.png";
     public static final String SAVE = ITEM_ROOT + "save1.png";
     public static final String NOFILE = ITEM_ROOT + "nofile.png";
-    public static final String[] YES = {ITEM_ROOT + "yes3.png", ITEM_ROOT + "yes4.png"};
-    public static final String[] NO = {ITEM_ROOT + "no3.png", ITEM_ROOT + "no4.png"};
+    public static final String DONE = ITEM_ROOT + "done.png";
+    public static final String[] YES = {ITEM_ROOT + "yes1.png", ITEM_ROOT + "yes2.png"};
+    public static final String[] NO = {ITEM_ROOT + "no1.png", ITEM_ROOT + "no2.png"};
+    public static final String[] OK = {ITEM_ROOT + "ok1.png", ITEM_ROOT + "ok2.png"};
     public static final String FIGHT = ITEM_ROOT + "fight.png";
     public static final String FRIEND = ITEM_ROOT + "friend.png";
 
