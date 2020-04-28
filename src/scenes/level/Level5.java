@@ -5,12 +5,14 @@
  */
 package scenes.level;
 
+import controllers.ARC;
 import controllers.SceneController;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import monsterstrike.gameobject.GameObject;
 import monsterstrike.gameobject.ImgInfo;
 import monsterstrike.gameobject.SpecialEffect;
+import monsterstrike.gameobject.Stone;
 import monsterstrike.gameobject.marble.Marble;
 import monsterstrike.graph.Vector;
 import monsterstrike.util.Global;
@@ -20,10 +22,12 @@ public class Level5 extends LevelScene {
 
     private static final int IDX = 4;
     private ArrayList<SpecialEffect> blackholes;
+    private ArrayList<Stone> stones;
 
     public Level5(SceneController sceneController, Marble[] myMarbles, ArrayList<Marble> enemies, PlayerInfo playerinfo) {
         super(sceneController, IDX, myMarbles, enemies, playerinfo);
         this.blackholes = new ArrayList<>();
+        this.stones = new ArrayList<>();
     }
 
     @Override
@@ -36,6 +40,7 @@ public class Level5 extends LevelScene {
 
     @Override
     protected void updateGameObject() {
+        updateStones();
         updateProps();
         updateHoles();
     }
@@ -43,6 +48,7 @@ public class Level5 extends LevelScene {
     @Override
     protected void genGameObject() {
         genBattleEnemies();
+        genStones();
         genHoles();
     }
 
@@ -50,6 +56,15 @@ public class Level5 extends LevelScene {
     protected void hitGameObject() {
         hitProp();
         hitHoles();
+        strikeStones();
+    }
+
+    private void updateStones() {
+        for (int i = 0; i < this.stones.size(); i++) {
+            if (this.stones.get(i).getCollide()) {
+                ARC.getInstance().play("/resources/wav/damage.wav");
+            }
+        }
     }
 
     private boolean removeHoles() {
@@ -68,6 +83,15 @@ public class Level5 extends LevelScene {
         }
     }
 
+    private void genStones() {
+        for (int i = 0; i < 8; i++) {
+            this.stones.add(new Stone(ImgInfo.DARKSTONE_PATH, i * 160 + 50,
+                    30, 60, 60));
+            this.stones.add(new Stone(ImgInfo.DARKSTONE_PATH, i * 160 + 50,
+                    (Global.SCREEN_Y - Global.INFO_H - 30), 60, 60));
+        }
+    }
+
     private void genHoles() {
         for (int i = 0; i < 3; i++) {
             this.blackholes.add(new SpecialEffect(ImgInfo.HOLE, 200 + 400 * i,
@@ -75,7 +99,7 @@ public class Level5 extends LevelScene {
             this.blackholes.get(i).setShine(true);
         }
     }
-    
+
     @Override
     protected void genBattleEnemies() {
         if (this.sceneCount == 3) {
@@ -91,13 +115,24 @@ public class Level5 extends LevelScene {
             }
         } else if (this.sceneCount == 1) {
             for (int i = 0; i < 4; i++) {
-                battleEnemies.add(m.get(i+2).duplicate(Global.ENEMYPOS_X[i], -100, 120, 120));         
+                battleEnemies.add(m.get(i + 2).duplicate(Global.ENEMYPOS_X[i], -100, 120, 120));
             }
         } else {
             for (int i = 0; i < 4; i++) {
-                battleEnemies.add(m.get(i+2).duplicate(Global.ENEMYPOS_X[i], -100, 120, 120));
+                battleEnemies.add(m.get(i + 2).duplicate(Global.ENEMYPOS_X[i], -100, 120, 120));
             }
             battleEnemies.add(m.get(6).duplicate(Global.SCREEN_X / 2, -100, 240, 240));
+        }
+    }
+
+    private void strikeStones() {
+        for (int i = 0; i < this.marbles.size(); i++) {
+            for (int j = 0; j < this.stones.size(); j++) {
+                if (this.marbles.get(i).getDetect().isCollision(this.stones.get(j)) && this.marbles.get(i).goVec().getValue() > 0) {
+                    this.marbles.get(i).detectStill(this.stones.get(j));
+                    this.marbles.get(i).hit(this.stones.get(j));
+                }
+            }
         }
     }
 
@@ -154,6 +189,7 @@ public class Level5 extends LevelScene {
 
     @Override
     protected void paintGameObject(Graphics g) {
+        paintStones(g);
         paintProps(g);
         paintHoles(g);
     }
@@ -161,6 +197,12 @@ public class Level5 extends LevelScene {
     private void paintHoles(Graphics g) {
         for (int i = 0; i < this.blackholes.size(); i++) {
             this.blackholes.get(i).paintComponent(g);
+        }
+    }
+
+    private void paintStones(Graphics g) {
+        for (int i = 0; i < this.stones.size(); i++) {
+            this.stones.get(i).paint(g);
         }
     }
 

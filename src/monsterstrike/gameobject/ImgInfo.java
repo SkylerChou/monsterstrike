@@ -35,6 +35,7 @@ public class ImgInfo {
     public static final String STONE_PATH = "/resources/items/rock.png";
     public static final String ROCK_PATH = "/resources/items/treeRock.png";
     public static final String ICESTONE_PATH = "/resources/items/iceRock.png";
+    public static final String DARKSTONE_PATH = "/resources/items/darkRock.png";
     public static final int[] STONE_INFO = {590, 590};
     public static final String CLOUD_PATH = "/resources/items/cloud.png";
     public static final int[] CLOUD_INFO = {295, 295};
