@@ -16,7 +16,7 @@ import monsterstrike.gameobject.marble.Marble;
 public class Laser extends Skills {
 
     private static final int SKILL_IDX = 2;
-    private static final int DELAY = 20; //技能變化動畫
+    private static final int DELAY = 10; //技能變化動畫
     private static final int NUM = 4;
     private static final int WIDTH = 150;
     private static final int HEIGHT = 1300;

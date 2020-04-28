@@ -25,7 +25,7 @@ public class SkillImg {
         SKILL_ROOT + "lightBeam.png", SKILL_ROOT + "darkBeam.png"};
     private static final int[] LASER_UNIT_X = {150, 150, 150, 150, 150};
     private static final int[] LASER_UNIT_Y = {1300, 1300, 1300, 1300, 1300};
-    private static final int[] LASER_NUM = {4, 4, 4, 4, 4};
+    private static final int[] LASER_NUM = {7, 7, 7, 7, 7};
 
     private static final String[] BULLET_PATH = {SKILL_ROOT + "iceBullet.png", SKILL_ROOT + "fireBullet.png", SKILL_ROOT + "grassBullet.png",
         SKILL_ROOT + "lightBullet.png", SKILL_ROOT + "darkBullet.png"};
