@@ -81,50 +81,50 @@ public class Level5 extends LevelScene {
         if (this.sceneCount == 3) {
             sceneEnd();
         }
-        ArrayList<Marble> m = this.allEnemies.sortByLevel();
+        ArrayList<Marble> m = this.allMarbleArrs.allEnemies.sortByLevel();
         if (this.sceneCount == 0) {
             for (int i = 0; i < 2; i++) {
-                battleEnemies.add(m.get(0).duplicate(Global.ENEMYPOS_X[2 * i], -100, 120, 120));
-                battleEnemies.add(m.get(1).duplicate(Global.ENEMYPOS_X[2 * i + 1], -100, 120, 120));
-                battleEnemies.get(2 * i).getInfo().setName(battleEnemies.get(2 * i).getInfo().getName() + (i + 1));
-                battleEnemies.get(2 * i + 1).getInfo().setName(battleEnemies.get(2 * i + 1).getInfo().getName() + (i + 1));
+                this.allMarbleArrs.battleEnemies.add(m.get(0).duplicate(Global.ENEMYPOS_X[2 * i], -100, 120, 120));
+                this.allMarbleArrs.battleEnemies.add(m.get(1).duplicate(Global.ENEMYPOS_X[2 * i + 1], -100, 120, 120));
+                this.allMarbleArrs.battleEnemies.get(2 * i).getInfo().setName(this.allMarbleArrs.battleEnemies.get(2 * i).getInfo().getName() + (i + 1));
+                this.allMarbleArrs.battleEnemies.get(2 * i + 1).getInfo().setName(this.allMarbleArrs.battleEnemies.get(2 * i + 1).getInfo().getName() + (i + 1));
             }
         } else if (this.sceneCount == 1) {
             for (int i = 0; i < 4; i++) {
-                battleEnemies.add(m.get(i+2).duplicate(Global.ENEMYPOS_X[i], -100, 120, 120));         
+                this.allMarbleArrs.battleEnemies.add(m.get(i+2).duplicate(Global.ENEMYPOS_X[i], -100, 120, 120));         
             }
         } else {
             for (int i = 0; i < 4; i++) {
-                battleEnemies.add(m.get(i+2).duplicate(Global.ENEMYPOS_X[i], -100, 120, 120));
+               this.allMarbleArrs.battleEnemies.add(m.get(i+2).duplicate(Global.ENEMYPOS_X[i], -100, 120, 120));
             }
-            battleEnemies.add(m.get(6).duplicate(Global.SCREEN_X / 2, -100, 240, 240));
+            this.allMarbleArrs.battleEnemies.add(m.get(6).duplicate(Global.SCREEN_X / 2, -100, 240, 240));
         }
     }
 
     private void hitHoles() {
-        for (int i = 0; i < this.marbles.size(); i++) {
+        for (int i = 0; i < this.allMarbleArrs.marbles.size(); i++) {
             for (int j = 0; j < this.blackholes.size(); j++) {
-                if (dist(this.marbles.get(i), this.blackholes.get(j)) < 30
-                        && !this.marbles.get(i).isSpin() && !this.marbles.get(i).spinOver()) {
-                    this.marbles.get(i).spin(this.blackholes.get(j).getCenterX(), this.blackholes.get(j).getCenterY());
-                    this.marbles.get(i).setSpin(true);
+                if (dist(this.allMarbleArrs.marbles.get(i), this.blackholes.get(j)) < 30
+                        && !this.allMarbleArrs.marbles.get(i).isSpin() && !this.allMarbleArrs.marbles.get(i).spinOver()) {
+                    this.allMarbleArrs.marbles.get(i).spin(this.blackholes.get(j).getCenterX(), this.blackholes.get(j).getCenterY());
+                    this.allMarbleArrs.marbles.get(i).setSpin(true);
                 }
-                if (this.marbles.get(i).spinOver()) {
+                if (this.allMarbleArrs.marbles.get(i).spinOver()) {
                     int r = chooseHole(j);
-                    this.marbles.get(i).setCenterX(this.blackholes.get(r).getCenterX());
-                    this.marbles.get(i).setCenterY(this.blackholes.get(r).getCenterY());
-                    this.marbles.get(i).setGo(this.marbles.get(i).goVec().multiplyScalar(0.6f));
-                    if (this.marbles.get(i).goVec().getValue() <= 1) {
-                        this.marbles.get(i).offset(0, 40);
-                    } else if (this.marbles.get(i).goVec().getValue() < 40) {
-                        Vector vec = this.marbles.get(i).goVec().resizeVec(40);
-                        this.marbles.get(i).offset(vec.getX(), vec.getY());
-                        System.out.println(dist(this.marbles.get(i), this.blackholes.get(r)));
+                    this.allMarbleArrs.marbles.get(i).setCenterX(this.blackholes.get(r).getCenterX());
+                    this.allMarbleArrs.marbles.get(i).setCenterY(this.blackholes.get(r).getCenterY());
+                    this.allMarbleArrs.marbles.get(i).setGo(this.allMarbleArrs.marbles.get(i).goVec().multiplyScalar(0.6f));
+                    if (this.allMarbleArrs.marbles.get(i).goVec().getValue() <= 1) {
+                        this.allMarbleArrs.marbles.get(i).offset(0, 40);
+                    } else if (this.allMarbleArrs.marbles.get(i).goVec().getValue() < 40) {
+                        Vector vec = this.allMarbleArrs.marbles.get(i).goVec().resizeVec(40);
+                        this.allMarbleArrs.marbles.get(i).offset(vec.getX(), vec.getY());
+                        System.out.println(dist(this.allMarbleArrs.marbles.get(i), this.blackholes.get(r)));
                     } else {
-                        this.marbles.get(i).offset(this.marbles.get(i).goVec().getX(), this.marbles.get(i).goVec().getY());
+                        this.allMarbleArrs.marbles.get(i).offset(this.allMarbleArrs.marbles.get(i).goVec().getX(), this.allMarbleArrs.marbles.get(i).goVec().getY());
                     }
                 }
-                this.marbles.get(i).setSpinOver(false);
+                this.allMarbleArrs.marbles.get(i).setSpinOver(false);
             }
         }
     }

@@ -40,26 +40,26 @@ public class Level4 extends LevelScene {
         if (this.sceneCount == 3) {
             sceneEnd();
         }
-        ArrayList<Marble> m = this.allEnemies.sortByLevel();
+        ArrayList<Marble> m = this.allMarbleArrs.allEnemies.sortByLevel();
         if (this.sceneCount == 0) {
             for (int i = 0; i < 2; i++) {
-                battleEnemies.add(m.get(0).duplicate(Global.ENEMYPOS_X[2 * i], -100, 120, 120));
-                battleEnemies.add(m.get(1).duplicate(Global.ENEMYPOS_X[2 * i + 1], -100, 120, 120));
-                battleEnemies.get(2 * i).getInfo().setName(battleEnemies.get(2 * i).getInfo().getName() + (i + 1));
-                battleEnemies.get(2 * i + 1).getInfo().setName(battleEnemies.get(2 * i + 1).getInfo().getName() + (i + 1));
+                this.allMarbleArrs.battleEnemies.add(m.get(0).duplicate(Global.ENEMYPOS_X[2 * i], -100, 120, 120));
+                this.allMarbleArrs.battleEnemies.add(m.get(1).duplicate(Global.ENEMYPOS_X[2 * i + 1], -100, 120, 120));
+                this.allMarbleArrs.battleEnemies.get(2 * i).getInfo().setName(this.allMarbleArrs.battleEnemies.get(2 * i).getInfo().getName() + (i + 1));
+                this.allMarbleArrs.battleEnemies.get(2 * i + 1).getInfo().setName(this.allMarbleArrs.battleEnemies.get(2 * i + 1).getInfo().getName() + (i + 1));
             }
         } else if (this.sceneCount == 1) {
             for (int i = 0; i < 2; i++) {
-                battleEnemies.add(m.get(2).duplicate(Global.ENEMYPOS_X[2 * i], -100, 120, 120));
-                battleEnemies.add(m.get(3).duplicate(Global.ENEMYPOS_X[2 * i + 1], -100, 120, 120));
-                battleEnemies.get(2 * i).getInfo().setName(battleEnemies.get(2 * i).getInfo().getName() + (i + 1));
-                battleEnemies.get(2 * i + 1).getInfo().setName(battleEnemies.get(2 * i + 1).getInfo().getName() + (i + 1));
+                this.allMarbleArrs.battleEnemies.add(m.get(2).duplicate(Global.ENEMYPOS_X[2 * i], -100, 120, 120));
+                this.allMarbleArrs.battleEnemies.add(m.get(3).duplicate(Global.ENEMYPOS_X[2 * i + 1], -100, 120, 120));
+                this.allMarbleArrs.battleEnemies.get(2 * i).getInfo().setName(this.allMarbleArrs.battleEnemies.get(2 * i).getInfo().getName() + (i + 1));
+                this.allMarbleArrs.battleEnemies.get(2 * i + 1).getInfo().setName(this.allMarbleArrs.battleEnemies.get(2 * i + 1).getInfo().getName() + (i + 1));
             }
         } else {
             for (int i = 0; i < 3; i++) {
-                battleEnemies.add(m.get(i+2).duplicate(Global.ENEMYPOS_X[i], -100, 120, 120));
+                this.allMarbleArrs.battleEnemies.add(m.get(i + 2).duplicate(Global.ENEMYPOS_X[i], -100, 120, 120));
             }
-            battleEnemies.add(m.get(5).duplicate(Global.SCREEN_X / 2, -100, 180, 180));
+            this.allMarbleArrs.battleEnemies.add(m.get(5).duplicate(Global.SCREEN_X / 2, -100, 180, 180));
         }
     }
 
@@ -107,16 +107,16 @@ public class Level4 extends LevelScene {
 
     private void hitClouds() {
         if (!isWin && !isLose()) {
-            for (int i = 0; i < this.marbles.size(); i++) {
+            for (int i = 0; i < this.allMarbleArrs.marbles.size(); i++) {
                 for (int j = 0; j < this.clouds.size(); j++) {
-                    if (this.marbles.get(i).getDetect().isCollision(this.clouds.get(j))) {
-                        if (this.marbles.get(i).goVec().getValue() != 0) {
+                    if (this.allMarbleArrs.marbles.get(i).getDetect().isCollision(this.clouds.get(j))) {
+                        if (this.allMarbleArrs.marbles.get(i).goVec().getValue() != 0) {
                             ARC.getInstance().play("/resources/wav/collide.wav");
                         }
-                        this.marbles.get(i).detectStill(this.clouds.get(j));
+                        this.allMarbleArrs.marbles.get(i).detectStill(this.clouds.get(j));
                         this.clouds.get(j).setCollide(true);
-                        this.clouds.get(j).setGo(this.marbles.get(i).goVec());
-                        this.marbles.get(i).hit(this.clouds.get(j));
+                        this.clouds.get(j).setGo(this.allMarbleArrs.marbles.get(i).goVec());
+                        this.allMarbleArrs.marbles.get(i).hit(this.clouds.get(j));
                     }
                 }
             }

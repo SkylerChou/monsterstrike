@@ -15,7 +15,7 @@ import monsterstrike.util.Delay;
 
 public class Marble extends GameObject {
 
-    private static final Strike[] SPECIES = {new Rebound(), new Penetrate(), new Stand()};
+    private static final Strike[] SPECIES = {new Rebound(), new Stand()};
     protected Vector goVec;
     protected Vector norVec;
     protected Vector tanVec;
@@ -87,7 +87,7 @@ public class Marble extends GameObject {
         this.spinDelay.start();
         this.spinOver = false;
         if (info.getState() == 1) {
-            this.species = SPECIES[2];
+            this.species = SPECIES[1];
         } else {
             this.species = SPECIES[info.getSpecies()];
         }

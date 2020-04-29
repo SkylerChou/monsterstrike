@@ -110,21 +110,21 @@ public class Level3 extends LevelScene {
     }
 
     private void strikeStones() {
-        for (int i = 0; i < this.marbles.size(); i++) {
+        for (int i = 0; i < this.allMarbleArrs.marbles.size(); i++) {
             for (int j = 0; j < this.stones.size(); j++) {
-                if (this.marbles.get(i).getDetect().isCollision(this.stones.get(j)) && this.marbles.get(i).goVec().getValue() > 0) {
-                    this.marbles.get(i).detectStill(this.stones.get(j));
-                    this.marbles.get(i).hit(this.stones.get(j));
+                if (this.allMarbleArrs.marbles.get(i).getDetect().isCollision(this.stones.get(j)) && this.allMarbleArrs.marbles.get(i).goVec().getValue() > 0) {
+                    this.allMarbleArrs.marbles.get(i).detectStill(this.stones.get(j));
+                    this.allMarbleArrs.marbles.get(i).hit(this.stones.get(j));
                     this.stones.get(j).setCollide(true);
-                    this.hitCount += this.marbles.get(i).explode(this.stones.get(j));
+                    this.hitCount += this.allMarbleArrs.marbles.get(i).explode(this.stones.get(j));
                 }
             }
         }
     }
 
     private void hitPeople() {
-        for (int i = 0; i < this.marbles.size(); i++) {
-            if (!this.people.get(this.sceneCount).getSet() && this.marbles.get(i).isCollision(this.people.get(this.sceneCount))) {
+        for (int i = 0; i < this.allMarbleArrs.marbles.size(); i++) {
+            if (!this.people.get(this.sceneCount).getSet() && this.allMarbleArrs.marbles.get(i).isCollision(this.people.get(this.sceneCount))) {
                 this.people.get(this.sceneCount).setCollide(true);
                 float x = (Global.SCREEN_X / 2 + 165 + (this.sceneCount + 1) * 65
                         - this.people.get(this.sceneCount).getCenterX()) / 10;
@@ -136,12 +136,12 @@ public class Level3 extends LevelScene {
 
     @Override
     protected void endBattle() {
-        if (((this.battleEnemies.isEmpty() && (this.people != null && this.people.get(this.sceneCount).getSet() && !this.people.get(this.sceneCount).getCollide()))
+        if (((this.allMarbleArrs.battleEnemies.isEmpty() && (this.people != null && this.people.get(this.sceneCount).getSet() && !this.people.get(this.sceneCount).getCollide()))
                 || (this.people != null && this.people.get(this.sceneCount).getSet() && !this.people.get(this.sceneCount).getCollide()))
-                && allSkillStop(this.marbles)) {
+                && allSkillStop(this.allMarbleArrs.marbles)) {
 
             if (removeEnemies() && removeStones()) {
-                this.marbles.get(currentIdx).setShine(false);
+                this.allMarbleArrs.marbles.get(currentIdx).setShine(false);
                 this.round = 0;
                 this.enemyRound = 0;
                 this.state = 2;
@@ -182,6 +182,32 @@ public class Level3 extends LevelScene {
     private void paintPeople(Graphics g) {
         for (int i = 0; i < this.people.size(); i++) {
             this.people.get(i).paint(g);
+        }
+    }
+
+    @Override
+    protected void genBattleEnemies() {
+        if (this.sceneCount == 3) {
+            sceneEnd();
+        }
+        ArrayList<Marble> m = this.allMarbleArrs.allEnemies.sortByLevel();
+        if (this.sceneCount == 0) {
+            for (int i = 0; i < 3; i++) {
+                this.allMarbleArrs.battleEnemies.add(m.get(0).duplicate(Global.ENEMYPOS_X[i], -100, 120, 120));
+                this.allMarbleArrs.battleEnemies.get(i).getInfo().setName(this.allMarbleArrs.battleEnemies.get(i).getInfo().getName() + (i + 1));
+            }
+        } else if (this.sceneCount == 1) {
+            for (int i = 0; i < 2; i++) {
+                this.allMarbleArrs.battleEnemies.add(m.get(1).duplicate(Global.ENEMYPOS_X[2 * i], -100, 120, 120));
+                this.allMarbleArrs.battleEnemies.add(m.get(2).duplicate(Global.ENEMYPOS_X[2 * i + 1], -100, 120, 120));
+                this.allMarbleArrs.battleEnemies.get(2 * i).getInfo().setName(this.allMarbleArrs.battleEnemies.get(2 * i).getInfo().getName() + (i + 1));
+                this.allMarbleArrs.battleEnemies.get(2 * i + 1).getInfo().setName(this.allMarbleArrs.battleEnemies.get(2 * i + 1).getInfo().getName() + (i + 1));
+            }
+        } else {
+            for (int i = 0; i < 3; i++) {
+                this.allMarbleArrs.battleEnemies.add(m.get(i).duplicate(Global.ENEMYPOS_X[i], -100, 120, 120));
+            }
+            this.allMarbleArrs.battleEnemies.add(m.get(3).duplicate(Global.SCREEN_X / 2, -100, 180, 180));
         }
     }
 }
