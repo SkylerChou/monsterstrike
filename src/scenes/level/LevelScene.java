@@ -526,6 +526,7 @@ public abstract class LevelScene extends Scene {
         this.title[idx].paint(g);
         this.blood.paintResize(g, this.ratio);
         paintGameObject(g);
+        
         this.returnIcon.paint(g);
         this.player.paint(g);
         if (this.arrow != null && this.arrow.getShow()) {
