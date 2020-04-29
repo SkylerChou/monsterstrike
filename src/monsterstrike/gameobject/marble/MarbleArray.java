@@ -82,5 +82,8 @@ public class MarbleArray extends ArrayList<Marble> {
     public Marble luckyDraw() {
         return this.arr.get(Global.random(0, this.arr.size() - 1));
     }
-
+   
+    public ArrayList<Marble> getArray() {
+        return this.arr;
+    }
 }

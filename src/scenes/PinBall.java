@@ -101,7 +101,6 @@ public class PinBall extends Scene {
         this.isEnd = false;
         this.isReplay = false;
         this.isPaint = true;
-
         this.countHeart = 2;
         this.isOut = false;
         for (int i = 0; i < this.hearts.length; i++) {
@@ -246,11 +245,8 @@ public class PinBall extends Scene {
         this.specialMarble.setCenterY(460);
         this.isPaint = false;
         this.playerinfo.addMyMarbleSerial(specialMarble.getInfo().getSerial());
-//        String fileName = "mymarbleInfo" + this.playerinfo.getSerial() + ".csv";
-//        FileIO.writeMarble(fileName, specialMarble.getInfo());
         FileIO.writeMarble("mymarbleInfoTmp.csv", specialMarble.getInfo());
         System.out.println("抽中怪物:" + specialMarble.getInfo().getName());
-//        System.out.println(this.playerinfo);
     }
 
     @Override
@@ -412,7 +408,6 @@ public class PinBall extends Scene {
                         break;
                 }
             }
-
         }
 
         @Override
@@ -422,7 +417,6 @@ public class PinBall extends Scene {
 
         @Override
         public void keyTyped(char c, long trigTime) {
-
         }
 
     }
@@ -445,9 +439,7 @@ public class PinBall extends Scene {
                 if (state == CommandSolver.MouseState.PRESSED) {
                     this.startX = e.getX();
                     this.startY = e.getY();
-
                 }
-
                 if (state == CommandSolver.MouseState.DRAGGED) {
                     arrow.setCenterX(ball.getCenterX());
                     arrow.setCenterY(ball.getCenterY());
@@ -476,5 +468,4 @@ public class PinBall extends Scene {
             }
         }
     }
-
 }
