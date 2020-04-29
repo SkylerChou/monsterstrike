@@ -23,6 +23,10 @@ public class Level5 extends LevelScene {
     private static final int IDX = 4;
     private ArrayList<SpecialEffect> blackholes;
     private ArrayList<Stone> stones;
+    private static final int[] SPOS_X = {300, 400, 650, 800};
+    private static final int[] SPOS_Y = {150, 360, 120, 300};
+    private static final int[] HPOS_X = {120, 600, 1150};
+    private static final int[] HPOS_Y = {250, 380, 200};
 
     public Level5(SceneController sceneController, Marble[] myMarbles, ArrayList<Marble> enemies, PlayerInfo playerinfo) {
         super(sceneController, IDX, myMarbles, enemies, playerinfo);
@@ -32,7 +36,7 @@ public class Level5 extends LevelScene {
 
     @Override
     protected boolean removeGameObject() {
-        if (removeHoles()) {
+        if (removeHoles() && removeStones()) {
             return true;
         }
         return false;
@@ -67,6 +71,16 @@ public class Level5 extends LevelScene {
         }
     }
 
+    private boolean removeStones() {
+        for (int i = 0; i < this.stones.size(); i++) {
+            this.stones.remove(i);
+        }
+        if (this.stones.isEmpty()) {
+            return true;
+        }
+        return false;
+    }
+
     private boolean removeHoles() {
         for (int i = 0; i < this.blackholes.size(); i++) {
             this.blackholes.remove(i);
@@ -84,18 +98,16 @@ public class Level5 extends LevelScene {
     }
 
     private void genStones() {
-        for (int i = 0; i < 8; i++) {
-            this.stones.add(new Stone(ImgInfo.DARKSTONE_PATH, i * 160 + 50,
-                    30, 60, 60));
-            this.stones.add(new Stone(ImgInfo.DARKSTONE_PATH, i * 160 + 50,
-                    (Global.SCREEN_Y - Global.INFO_H - 30), 60, 60));
+        for (int i = 0; i < 4; i++) {
+            this.stones.add(new Stone(ImgInfo.DARKSTONE_PATH, SPOS_X[i],
+                    SPOS_Y[i], 60, 60));
         }
+
     }
 
     private void genHoles() {
         for (int i = 0; i < 3; i++) {
-            this.blackholes.add(new SpecialEffect(ImgInfo.HOLE, 200 + 400 * i,
-                    Global.random(100, Global.SCREEN_Y - Global.INFO_H - 100), 200, 200, 50));
+            this.blackholes.add(new SpecialEffect(ImgInfo.HOLE, HPOS_X[i], HPOS_Y[i], 200, 200, 50));
             this.blackholes.get(i).setShine(true);
         }
     }
@@ -128,8 +140,8 @@ public class Level5 extends LevelScene {
     private void strikeStones() {
         for (int i = 0; i < this.marbles.size(); i++) {
             for (int j = 0; j < this.stones.size(); j++) {
-                if (this.marbles.get(i).getDetect().isCollision(this.stones.get(j)) && this.marbles.get(i).goVec().getValue() > 0) {
-                    this.marbles.get(i).detectStill(this.stones.get(j));
+                if (this.marbles.get(i).isCollision(this.stones.get(j)) && this.marbles.get(i).goVec().getValue() > 0) {
+//                    this.marbles.get(i).detectStill(this.stones.get(j));
                     this.marbles.get(i).hit(this.stones.get(j));
                 }
             }

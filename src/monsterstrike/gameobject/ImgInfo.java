@@ -34,15 +34,17 @@ public class ImgInfo {
     //石頭
     public static final String STONE_PATH = "/resources/items/rock.png";
     public static final String ROCK_PATH = "/resources/items/treeRock.png";
-    public static final String ICESTONE_PATH = "/resources/items/iceRock.png";
+    public static final String ROCK_PATH2 = "/resources/items/treeRock2.png";
     public static final String DARKSTONE_PATH = "/resources/items/darkRock.png";
     public static final int[] STONE_INFO = {590, 590};
     public static final String CLOUD_PATH = "/resources/items/cloud.png";
     public static final int[] CLOUD_INFO = {295, 295};
+    public static final String AXE_PATH = "/resources/items/axe.png";
+    
 
     //村民
     private static final String PEOPLE_ROOT = "/resources/player/";
-    public static final String PEOPLE_PATH[] = {PEOPLE_ROOT + "jumpBoy.png", PEOPLE_ROOT + "redHair.png", PEOPLE_ROOT + "girl.png"};
+    public static final String PEOPLE_PATH[] = {PEOPLE_ROOT + "jumpBoy.png", PEOPLE_ROOT + "brownHair.png", PEOPLE_ROOT + "girl.png"};
     public static final int[] PEOPLE_INFO = {165, 240};
 
     //背景
@@ -188,6 +190,6 @@ public class ImgInfo {
     
     //關卡敘述
     public static String[] LEVEL_NAME1 = {"level1.png", "level2W.png", "level3.png", "level4.png", "level5W.png"};
-    public static String[] LEVEL_NAME = {"level1.png", "level2.png", "level3.png", "level4.png", "level5.png"};
+    public static String[] LEVEL_NAME = {"level1.png", "level2R.png", "level3R.png", "level4R.png", "level5.png"};
     public static final int[]  LEVEL_NAME_INFO = {333, 113};//img_width, img_height  
 }

@@ -179,7 +179,7 @@ public class FileIOScene extends Scene {
             }
         }
 
-        if (this.showIsDone == 1) {
+        if (isClick || this.showIsDone == 1) {
             this.music.stop();
             sceneController.changeScene(new Menu(sceneController));
             return;
@@ -189,7 +189,7 @@ public class FileIOScene extends Scene {
             readAgain();
         }
 
-        if (this.isClick || (isCheck && isRead)) {
+        if (isCheck && isRead) {
             this.showIsDone = 0;
         }
 

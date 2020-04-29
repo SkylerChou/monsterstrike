@@ -112,7 +112,7 @@ public class LevelMenu extends Scene {
             } else {
                 this.isMask[i] = true;
             }
-            this.title[i] = new Item("/resources/items/" + ImgInfo.LEVEL_NAME1[i], Global.SCREEN_X / 2, 565, 233, 80);
+            this.title[i] = new Item("/resources/items/" + ImgInfo.LEVEL_NAME1[i], Global.SCREEN_X / 2 +10, 565, 233, 80);
         }
         PaintText.setFlash(30);
         this.box = IRC.getInstance().tryGetImage("/resources/items/say.png");
