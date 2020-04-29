@@ -16,6 +16,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import player.PlayerInfo;
 import monsterstrike.gameobject.*;
@@ -68,6 +69,8 @@ public abstract class LevelScene extends Scene {
     private AudioClip music;
     public Renderer end;
     private Item[] title;
+    protected boolean isStart;
+    
 
     public LevelScene(SceneController sceneController, int backIdx,
             Marble[] myMarbles, ArrayList<Marble> enemies, PlayerInfo playerinfo) {
@@ -113,6 +116,7 @@ public abstract class LevelScene extends Scene {
         this.returnIcon.setListener(new ButtonClickListener());
         this.end = new Renderer("/resources/story/end.png", 6, 10);
         this.title = new Item[5];
+        this.isStart = false;
     }
 
     @Override
@@ -143,7 +147,8 @@ public abstract class LevelScene extends Scene {
 //        if (this.delay.isTrig()) { //慢動作delay，Debug再開
         if (this.state == 0) { //設定背景起始位置， 敵人怪物降落           
             this.background.setX((this.sceneCount + 1) * ImgInfo.BACKGROUND_SIZE[idx][0]);
-            if (dropEnemies()) {
+            updateSweet();
+            if (isStart && dropEnemies()) {
                 genProps();
             }
         } else if (this.state == 1) { //遊戲開始
@@ -496,6 +501,10 @@ public abstract class LevelScene extends Scene {
     }
 
     //Update
+    protected void updateSweet(){
+        isStart = true;
+    }
+    
     private void updateMarbles() {
         this.allMarbleArrs.updateMarbles();
         //我方怪物動畫更新

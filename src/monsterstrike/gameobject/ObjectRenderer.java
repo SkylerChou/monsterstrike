@@ -39,10 +39,10 @@ public class ObjectRenderer {
         }
     }
 
-    public void restImg(){
-        this.currentImg=this.img1;
+    public void restImg() {
+        this.currentImg = this.img1;
     }
-    
+
     public void paint(Graphics g, int x, int y, int w, int h) {
         g.drawImage(currentImg, x, y, w, h, null);
     }

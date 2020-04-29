@@ -22,20 +22,29 @@ import player.PlayerInfo;
  */
 public class Level3 extends LevelScene {
 
+    private static final int[] POS_X = {850, 700, 612};
+    private static final int[] POS_Y = {410, 257, 251};
     private static final int IDX = 2;
     private ArrayList<People> people;
     private ArrayList<Stone> stones;
     private Stone rocks;
     private Axes axe;
     private int idxGetAxes;
-    private static final int[] POS_X = {850, 700, 612};
-    private static final int[] POS_Y = {410, 257, 251};
+    private int imgCount;
+
+    private ObjectRenderer img;
 
     public Level3(SceneController sceneController, Marble[] myMarbles, ArrayList<Marble> enemies, PlayerInfo playerinfo) {
         super(sceneController, IDX, myMarbles, enemies, playerinfo);
         this.people = new ArrayList<>();
         this.stones = new ArrayList<>();
+        this.img = new ObjectRenderer(ImgInfo.LV3_SWEET, 20);
+        this.imgCount = 0;
+    }
 
+    @Override
+    protected void updateSweet() {
+        this.img.update();
     }
 
     @Override
@@ -160,7 +169,7 @@ public class Level3 extends LevelScene {
 
     private void strikeRocks() {
         for (int i = 0; i < this.allMarbleArrs.marbles.size(); i++) {
-            if (this.rocks != null && this.allMarbleArrs.marbles.get(i).getDetect().isCollision(this.rocks) 
+            if (this.rocks != null && this.allMarbleArrs.marbles.get(i).getDetect().isCollision(this.rocks)
                     && this.allMarbleArrs.marbles.get(i).goVec().getValue() > 0) {
                 this.allMarbleArrs.marbles.get(i).detectStill(this.rocks);
                 this.allMarbleArrs.marbles.get(i).hit(this.rocks);
@@ -222,11 +231,20 @@ public class Level3 extends LevelScene {
 
     @Override
     protected void paintGameObject(Graphics g) {
-        paintStones(g);
-        if (this.rocks != null) {
-            paintRocks(g);
+        if (!isStart && this.imgCount < 400) {
+            this.img.paint(g, Global.SCREEN_X / 2 - 250, 150, 500, 250);
+            imgCount++;
         }
-        paintPeople(g);
+        if (imgCount == 400) {
+            isStart = true;
+        }
+        if (isStart) {
+            paintStones(g);
+            if (this.rocks != null) {
+                paintRocks(g);
+            }
+            paintPeople(g);
+        }
     }
 
     private void paintStones(Graphics g) {

@@ -167,4 +167,5 @@ public class Level2 extends LevelScene {
             this.allMarbleArrs.battleEnemies.add(m.get(3).duplicate(Global.SCREEN_X / 2, -100, 180, 180));
         }
     }
+
 }

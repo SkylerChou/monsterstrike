@@ -120,7 +120,7 @@ public class ImgInfo {
     public static final String[] SINGLE = {MENU_ROOT + "single1.png", MENU_ROOT + "single2.png"};
     public static final int[] MAINBUTTON_INFO = {200, 50};//img_width, img_height
     
-//恐龍
+    //恐龍
     public static final String DINO = MENU_ROOT + "Dino.png";
     public static final int[] DINO_INFO = {50, 50};//img_width, img_height  
     //彈珠台恐龍
@@ -141,12 +141,6 @@ public class ImgInfo {
     public static final String[] MYMARBLE_NAME = {"火球"};
     public static final int[][] MYMARBLE_INFO = {FIREBALL_INFO};
 
-//    public static final MarbleInfo BALL_INFO = MarbleInfo.gen(2, "火球", "fireBall",
-//            0, 1845, 615, 0.67f, 1f, 35f, 1, 1, 200, 50, 3, 0, 0);
-//    
-//    public static final MarbleInfo POST_INFO = MarbleInfo.gen(34, "香菇", "mushroom",
-//            0, 2460, 615, 0.67f, 1f, 35f, 1, 1, 200, 50, 3, 1, 1);
-    
     public static final String POSTS_PATH = MARBLE_ROOT + "mushroom.png";
     public static final int[] POST_INFO = {95, 95, 40, 2};
     public static final int[] POST_ORIGIN_INFO = {615, 615};
@@ -189,7 +183,11 @@ public class ImgInfo {
     public static final int[] WINDOW_INFO = {256, 128};//img_width, img_height  
     
     //關卡敘述
-    public static String[] LEVEL_NAME1 = {"level1.png", "level2W.png", "level3.png", "level4.png", "level5W.png"};
-    public static String[] LEVEL_NAME = {"level1.png", "level2R.png", "level3R.png", "level4R.png", "level5.png"};
+    public static final String[] LEVEL_NAME1 = {"level1.png", "level2W.png", "level3.png", "level4.png", "level5W.png"};
+    public static final String[] LEVEL_NAME = {"level1.png", "level2R.png", "level3R.png", "level4R.png", "level5.png"};
     public static final int[]  LEVEL_NAME_INFO = {333, 113};//img_width, img_height  
+    
+    //Sweet
+    public static final String[] LV1_SWEET = {ITEM_ROOT + "lv1Sweet1.png", ITEM_ROOT + "lv1Sweet2.png"};
+    public static final String[] LV3_SWEET = {ITEM_ROOT + "lv3Sweet1.png", ITEM_ROOT + "lv3Sweet2.png"};
 }

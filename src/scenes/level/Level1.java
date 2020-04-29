@@ -5,9 +5,12 @@
  */
 package scenes.level;
 
+import controllers.IRC;
 import controllers.SceneController;
 import java.awt.Graphics;
 import java.util.ArrayList;
+import monsterstrike.gameobject.ImgInfo;
+import monsterstrike.gameobject.ObjectRenderer;
 import monsterstrike.gameobject.marble.Marble;
 import monsterstrike.util.Global;
 import player.PlayerInfo;
@@ -15,9 +18,18 @@ import player.PlayerInfo;
 public class Level1 extends LevelScene {
 
     private static final int IDX = 0;
+    private ObjectRenderer img;
+    private int imgCount;
 
     public Level1(SceneController sceneController, Marble[] myMarbles, ArrayList<Marble> enemies, PlayerInfo playerinfo) {
         super(sceneController, IDX, myMarbles, enemies, playerinfo);
+        this.img = new ObjectRenderer(ImgInfo.LV1_SWEET, 20);
+        this.imgCount = 0;
+    }
+    
+    @Override
+    protected void updateSweet(){
+        this.img.update();
     }
 
     @Override
@@ -32,6 +44,13 @@ public class Level1 extends LevelScene {
 
     @Override
     protected void paintGameObject(Graphics g) {
+        if (!isStart && this.imgCount < 300) {
+            this.img.paint(g, Global.SCREEN_X/2-250, 180, 500, 125);
+            imgCount++;
+        }
+        if (imgCount == 200) {
+            isStart = true;
+        }
         paintProps(g);
     }
 
