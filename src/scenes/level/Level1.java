@@ -48,6 +48,7 @@ public class Level1 extends LevelScene {
             imgCount++;
         }
         if (imgCount == 200) {
+            
             isStart = true;
         }
         paintProps(g);
