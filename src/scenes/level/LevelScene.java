@@ -16,7 +16,6 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import player.PlayerInfo;
 import monsterstrike.gameobject.*;
@@ -70,7 +69,6 @@ public abstract class LevelScene extends Scene {
     public Renderer end;
     private Item[] title;
     protected boolean isStart;
-    
 
     public LevelScene(SceneController sceneController, int backIdx,
             Marble[] myMarbles, ArrayList<Marble> enemies, PlayerInfo playerinfo) {
@@ -160,10 +158,10 @@ public abstract class LevelScene extends Scene {
             strikeEnemies(); //攻擊敵人
             teamHelp(); //撞到隊友，隊友使出技能
             hitGameObject(); //撞到其他物品
-            
+
             calculateHP();//計算我方HP
             enemyDie();//判斷敵人死亡
-            if(idx==4){
+            if (idx == 4) {
                 check();
             }
 
@@ -240,7 +238,7 @@ public abstract class LevelScene extends Scene {
     private void check() {
         this.allMarbleArrs.check();
     }
-    
+
     private void win() {
         this.music.stop();
         ARC.getInstance().play("/resources/wav/win2.wav");
@@ -286,15 +284,15 @@ public abstract class LevelScene extends Scene {
         this.currentHp = tmp;
         this.ratio = this.currentHp / this.myHp;
     }
-    
-    private void moveEnemies(){
-        if (idx == 0 && this.count != 0 && moveCount < 24) {
+
+    private void moveEnemies() {
+        if (idx == 0 && this.count != 0 && round > 0 && moveCount < 24) {
             for (int i = 0; i < this.allMarbleArrs.battleEnemies.size(); i++) {
                 this.allMarbleArrs.battleEnemies.get(i).offset(-7, 0);
             }
             moveCount++;
         }
-        if(idx == 0 && this.count != 0 && moveCount==24){
+        if (idx == 0 && this.count != 0 && moveCount == 24) {
             allMarbleArrs.checkEnemies();
         }
     }
@@ -329,7 +327,7 @@ public abstract class LevelScene extends Scene {
                 this.round = 0;
                 this.enemyRound = 0;
                 this.state = 2;
-                this.count = 0;
+//                this.count = 0;
             }
         }
     }
@@ -501,10 +499,10 @@ public abstract class LevelScene extends Scene {
     }
 
     //Update
-    protected void updateSweet(){
+    protected void updateSweet() {
         isStart = true;
     }
-    
+
     private void updateMarbles() {
         this.allMarbleArrs.updateMarbles();
         //我方怪物動畫更新
@@ -747,7 +745,7 @@ public abstract class LevelScene extends Scene {
                     Vector vec = new Vector(this.startX - this.endX, this.startY - this.endY);
                     arrow.setDegree((float) Math.acos(vec.getX() / vec.getValue()));
                     arrow.setResizeMag(vec.getValue() / arrow.getWidth());
-                   allMarbleArrs. marbles.get(currentIdx).setGo(vec.resizeVec(allMarbleArrs.marbles.get(currentIdx).getInfo().getV()));
+                    allMarbleArrs.marbles.get(currentIdx).setGo(vec.resizeVec(allMarbleArrs.marbles.get(currentIdx).getInfo().getV()));
                     count++;
                     round++;
                     isCount = false;

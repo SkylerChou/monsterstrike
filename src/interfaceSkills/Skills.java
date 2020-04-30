@@ -26,6 +26,10 @@ public abstract class Skills {
             }
         }
     }
+    
+    public int getHitCount(){
+        return 0;
+    }
 
     public abstract int useSkill(Marble self, ArrayList<Marble> target, int idx);
     

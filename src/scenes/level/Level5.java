@@ -140,8 +140,8 @@ public class Level5 extends LevelScene {
     private void strikeStones() {
         for (int i = 0; i < this.allMarbleArrs.marbles.size(); i++) {
             for (int j = 0; j < this.stones.size(); j++) {
-                if (this.allMarbleArrs.marbles.get(i).isCollision(this.stones.get(j)) && this.allMarbleArrs.marbles.get(i).goVec().getValue() > 0) {
-//                    this.marbles.get(i).detectStill(this.stones.get(j));
+                if (this.allMarbleArrs.marbles.get(i).getDetect().isCollision(this.stones.get(j)) && this.allMarbleArrs.marbles.get(i).goVec().getValue() > 0) {
+                    this.allMarbleArrs.marbles.get(i).detectStill(this.stones.get(j));
                     this.allMarbleArrs.marbles.get(i).hit(this.stones.get(j));
                 }
             }
@@ -166,7 +166,7 @@ public class Level5 extends LevelScene {
                     } else if (this.allMarbleArrs.marbles.get(i).goVec().getValue() < 40) {
                         Vector vec = this.allMarbleArrs.marbles.get(i).goVec().resizeVec(40);
                         this.allMarbleArrs.marbles.get(i).offset(vec.getX(), vec.getY());
-                        System.out.println(dist(this.allMarbleArrs.marbles.get(i), this.blackholes.get(r)));
+//                        System.out.println(dist(this.allMarbleArrs.marbles.get(i), this.blackholes.get(r)));
                     } else {
                         this.allMarbleArrs.marbles.get(i).offset(this.allMarbleArrs.marbles.get(i).goVec().getX(), this.allMarbleArrs.marbles.get(i).goVec().getY());
                     }

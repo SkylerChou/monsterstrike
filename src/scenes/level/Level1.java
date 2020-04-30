@@ -44,7 +44,7 @@ public class Level1 extends LevelScene {
     @Override
     protected void paintGameObject(Graphics g) {
         if (!isStart && this.imgCount < 200) {
-            this.img.paint(g, Global.SCREEN_X/2-250, 180, 500, 125);
+            this.img.paint(g, Global.SCREEN_X/2-250, 180, 500, 150);
             imgCount++;
         }
         if (imgCount == 200) {

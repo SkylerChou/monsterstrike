@@ -212,7 +212,7 @@ public class PinBall extends Scene {
                     if (!this.isEnd) {
                         this.ball.setCenterX(POS_X);
                         this.ball.setCenterY(POS_Y);
-                        this.ball.setGo(new Vector(1, -3));
+                        this.ball.setGo(new Vector(5, -3));
                         this.isOut = false;
                     }
                 }

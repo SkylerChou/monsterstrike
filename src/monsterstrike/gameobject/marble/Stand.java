@@ -5,7 +5,6 @@
  */
 package monsterstrike.gameobject.marble;
 
-import java.awt.Graphics;
 import monsterstrike.util.Delay;
 
 public class Stand implements Strike {
