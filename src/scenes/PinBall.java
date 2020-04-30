@@ -217,9 +217,7 @@ public class PinBall extends Scene {
                     }
                 }
             }
-        } else {
-
-        }
+        } 
         if (this.isEnter) {
             this.music.stop();
             sceneController.changeScene(new ChooseGame(sceneController, playerinfo));
