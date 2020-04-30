@@ -26,7 +26,7 @@ public class Level5 extends LevelScene {
     private static final int[] SPOS_X = {300, 400, 650, 800};
     private static final int[] SPOS_Y = {150, 360, 120, 300};
     private static final int[] HPOS_X = {120, 600, 1150};
-    private static final int[] HPOS_Y = {250, 380, 200};
+    private static final int[] HPOS_Y = {350, 380, 200};
 
     public Level5(SceneController sceneController, Marble[] myMarbles, ArrayList<Marble> enemies, PlayerInfo playerinfo) {
         super(sceneController, IDX, myMarbles, enemies, playerinfo);

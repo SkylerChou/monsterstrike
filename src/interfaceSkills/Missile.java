@@ -82,7 +82,20 @@ public class Missile extends Skills {
                         || (selfA == 3 && targetA == 4)) {
                     atk = self.getInfo().getAtk() / 2;
                 }
-                this.target.get(j).getInfo().setHp(this.target.get(j).getInfo().getHp() - atk);
+                if (this.target.get(j).getInfo().getHp() > 0) {
+                    this.target.get(j).getInfo().setHp(this.target.get(j).getInfo().getHp() - atk);
+                } else {
+                    if (j == 0) {
+                        this.target.get(1).getInfo().setHp(this.target.get(1).getInfo().getHp() - atk / 2);
+                        this.target.get(2).getInfo().setHp(this.target.get(2).getInfo().getHp() - atk / 2);
+                    } else if (j == 1) {
+                        this.target.get(2).getInfo().setHp(this.target.get(2).getInfo().getHp() - atk / 2);
+                        this.target.get(0).getInfo().setHp(this.target.get(0).getInfo().getHp() - atk / 2);
+                    } else {
+                        this.target.get(1).getInfo().setHp(this.target.get(1).getInfo().getHp() - atk / 2);
+                        this.target.get(0).getInfo().setHp(this.target.get(0).getInfo().getHp() - atk / 2);
+                    }
+                }
 //                System.out.println(this.target.get(j).getInfo().getName() + "血量:" + this.target.get(j).getInfo().getHp());
                 this.skill[idx].setIsBoom(true);
                 return true;
@@ -109,7 +122,7 @@ public class Missile extends Skills {
             }
         }
     }
-    
+
     @Override
     public int explode(Marble self, GameObject target) {
         return 0;

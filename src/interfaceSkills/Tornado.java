@@ -37,7 +37,7 @@ public class Tornado extends Skills {
         }
         for (int i = target.size(); i < 8; i++) {
             this.skill[i] = new SkillComponent(SKILL_IDX, attr, SkillImg.SKILL_NUM[SKILL_IDX][attr],
-                    (int) (Global.random(50, Global.SCREEN_X - 50)), (int) (Global.random(50, Global.SCREEN_Y - 50)), WIDTH, HEIGHT, DELAY);
+                    (int) (Global.random(50, Global.SCREEN_X - 50)), (int) (Global.random(50, Global.SCREEN_Y - Global.INFO_H - 50)), WIDTH, HEIGHT, DELAY);
         }
         int selfA = self.getInfo().getAttribute();
         int atk = self.getInfo().getAtk();
@@ -67,7 +67,7 @@ public class Tornado extends Skills {
         }
         return false;
     }
-    
+
     @Override
     public int explode(Marble self, GameObject target) {
         return 0;
