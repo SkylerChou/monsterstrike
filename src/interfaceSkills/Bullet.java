@@ -75,7 +75,6 @@ public class Bullet extends Skills {
     private boolean checkStrike(int idx, ArrayList<Marble> target) {
         int selfA = self.getInfo().getAttribute();
         int atk = self.getInfo().getAtk();
-        
         for (int j = 0; j < target.size(); j++) {
             int targetA = target.get(j).getInfo().getAttribute();
             if (this.skill[idx].isCollision(target.get(j)) && !this.target.get(j).getIsCollide()) {
@@ -90,10 +89,16 @@ public class Bullet extends Skills {
                 this.target.get(j).getInfo().setHp(this.target.get(j).getInfo().getHp() - this.self.getInfo().getAtk());
 //                System.out.println(this.target.get(j).getInfo().getName() + "血量:" + this.target.get(j).getInfo().getHp());
                 this.target.get(j).setIsCollide(true);
+                this.hitCount++;
                 return true;
             }
         }
         return false;
+    }
+    
+    @Override
+    public int getHitCount(){
+        return this.hitCount;
     }
 
     @Override

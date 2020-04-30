@@ -231,11 +231,11 @@ public class Level3 extends LevelScene {
 
     @Override
     protected void paintGameObject(Graphics g) {
-        if (!isStart && this.imgCount < 400) {
+        if (!isStart && this.imgCount < 300) {
             this.img.paint(g, Global.SCREEN_X / 2 - 250, 150, 500, 250);
             imgCount++;
         }
-        if (imgCount == 400) {
+        if (imgCount == 300) {
             isStart = true;
         }
         if (isStart) {

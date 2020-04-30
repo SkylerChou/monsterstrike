@@ -5,7 +5,6 @@
  */
 package scenes.level;
 
-import controllers.IRC;
 import controllers.SceneController;
 import java.awt.Graphics;
 import java.util.ArrayList;
@@ -44,8 +43,8 @@ public class Level1 extends LevelScene {
 
     @Override
     protected void paintGameObject(Graphics g) {
-        if (!isStart && this.imgCount < 300) {
-            this.img.paint(g, Global.SCREEN_X/2-250, 180, 500, 125);
+        if (!isStart && this.imgCount < 200) {
+            this.img.paint(g, Global.SCREEN_X/2-250, 180, 500, 150);
             imgCount++;
         }
         if (imgCount == 200) {
